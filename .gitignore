@@ -1,0 +1,10 @@
+# Không đưa lên GitHub: tài liệu gốc của thầy/hãng (Drive), mô hình nguồn (.io/.ldr),
+# công cụ/prompt cũ, bản sao lưu và ảnh kiểm thử. App chỉ cần PDF sách lắp 3,7 MB.
+.backup/
+.dist/
+references/*
+!references/official/
+references/official/*
+!references/official/Bai9_Thong_tin_lien_lac_vu_tru.pdf
+tests/screenshots/
+node_modules/

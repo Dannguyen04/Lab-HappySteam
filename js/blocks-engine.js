@@ -1,0 +1,313 @@
+// js/blocks-engine.js - ZMrobo Visual Block Programming Engine
+(function() {
+  'use strict';
+
+  const SVG_ICONS = {
+    start: `<svg viewBox="0 0 40 40"><path d="M12 34V6" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M13 7h17l-4.5 6 4.5 6H13z" fill="currentColor"/></svg>`,
+    repeatStart: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 33c-6 0-8-4-8-9s3-9 9-9h17"/><path d="M26 9l6 6-6 6"/><circle cx="31" cy="4.5" r="2.4" stroke-width="2.2"/><circle cx="36" cy="4.5" r="2.4" stroke-width="2.2"/></svg>`,
+    repeatEnd: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10h17c6 0 9 4 9 9s-3 9-9 9H10"/><path d="M15 22l-6 6 6 6"/><circle cx="9" cy="35.5" r="2.4" stroke-width="2.2"/><circle cx="14" cy="35.5" r="2.4" stroke-width="2.2"/></svg>`,
+    motorHighCW: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><path d="M31 11a14 14 0 1 0 3 12"/><path d="M33 4v8h-8" stroke-linejoin="round"/><circle cx="20" cy="21" r="7" fill="#fff" stroke="none"/><g fill="#1E9BD7" stroke="none"><circle cx="20" cy="17" r="1.6"/><circle cx="20" cy="25" r="1.6"/><circle cx="16" cy="21" r="1.6"/><circle cx="24" cy="21" r="1.6"/></g></svg>`,
+    motorHighCCW: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><path d="M9 11a14 14 0 1 1-3 12"/><path d="M7 4v8h8" stroke-linejoin="round"/><circle cx="20" cy="21" r="7" fill="#fff" stroke="none"/><g fill="#1E9BD7" stroke="none"><circle cx="20" cy="17" r="1.6"/><circle cx="20" cy="25" r="1.6"/><circle cx="16" cy="21" r="1.6"/><circle cx="24" cy="21" r="1.6"/></g></svg>`,
+    motorLow: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M30 13a13 13 0 1 0 2 11"/><path d="M31 7v7h-7" stroke-linejoin="round"/><circle cx="20" cy="21" r="6" fill="#fff" stroke="none"/></svg>`,
+    motorStop: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><circle cx="20" cy="20" r="12"/><path d="M14 20h12" stroke-width="4"/></svg>`,
+    melody: (tune) => `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3"><circle cx="21" cy="22" r="13"/><text x="21" y="28.5" text-anchor="middle" fill="#fff" stroke="none" font-family="'Chakra Petch', sans-serif" font-weight="700" font-size="18">${tune}</text><path d="M5 4v8" stroke-width="2.2"/><circle cx="3.6" cy="12" r="2.2" fill="#fff" stroke="none"/></svg>`,
+    wait: (s) => `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.5"><path d="M12 8h16M12 32h16M15 8v4c0 3 5 6 5 8s-5 5-5 8v4M25 8v4c0 3-5 6-5 8s5 5 5 8v4" stroke-linecap="round"/><circle cx="20" cy="25" r="2.2" fill="#fff"/></svg>`,
+    display: `<svg viewBox="0 0 40 40" fill="#fff"><rect x="9" y="9" width="5" height="5" rx="1.5"/><rect x="17.5" y="9" width="5" height="5" rx="1.5"/><rect x="26" y="9" width="5" height="5" rx="1.5"/><rect x="9" y="17.5" width="5" height="5" rx="1.5"/><rect x="17.5" y="17.5" width="5" height="5" rx="1.5"/><rect x="26" y="17.5" width="5" height="5" rx="1.5"/><rect x="9" y="26" width="5" height="5" rx="1.5"/><rect x="17.5" y="26" width="5" height="5" rx="1.5"/><rect x="26" y="26" width="5" height="5" rx="1.5"/></svg>`,
+    motorReverse: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15h18l-5-5M30 25H12l5 5"/></svg>`,
+    obstacle: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><rect x="8" y="15" width="24" height="14" rx="3"/><circle cx="15" cy="22" r="2.8" fill="#fff"/><circle cx="25" cy="22" r="2.8" fill="#fff"/><path d="M14 10a8 8 0 0 1 12 0"/></svg>`,
+    // Motor Power: đồng hồ tốc độ, số mức 1–8 ở giữa
+    motorPower: p => `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M7 27a14 14 0 1 1 26 0"/><path d="M20 27l${(-7 + p * 1.75).toFixed(1)} -9" stroke-width="3.5"/><text x="20" y="38" text-anchor="middle" fill="#fff" stroke="none" font-family="Chakra Petch, sans-serif" font-weight="800" font-size="11">${p}</text></svg>`,
+    touch: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><rect x="9" y="24" width="22" height="7" rx="2" fill="#fff"/><path d="M20 7v13M14 15l6 6 6-6"/></svg>`
+  };
+
+  const BLOCK_TEMPLATES = {
+    start: { type: 'start', name: 'Start', color: 'start', label: 'Bắt đầu' },
+    repeatStart: { type: 'repeatStart', name: 'Repeat Start', color: 'control', label: 'Bắt đầu lặp' },
+    repeatEnd: { type: 'repeatEnd', name: 'Repeat End', color: 'control', label: 'Lặp lại' },
+    melodyA: { type: 'melody', name: 'Melody A', tune: 'A', color: 'melody', label: 'Âm thanh A' },
+    melodyB: { type: 'melody', name: 'Melody B', tune: 'B', color: 'melody', label: 'Âm thanh B' },
+    highSpeed: { type: 'motor', name: 'High Speed', speed: 'high', dir: 'cw', color: 'motor', label: 'Quay nhanh' },
+    lowSpeed: { type: 'motor', name: 'Low Speed', speed: 'low', dir: 'cw', color: 'motor', label: 'Quay chậm' },
+    motorPower: { type: 'motor_power', name: 'Motor Power', power: 8, color: 'motor', label: 'Tốc độ động cơ' },
+    motorReverse: { type: 'motor_reverse', name: 'Motor This Way', color: 'motor', label: 'Đổi chiều quay' },
+    motorStop: { type: 'stop', name: 'Stop', color: 'motor', label: 'Dừng motor' },
+    wait: { type: 'wait', name: 'Wait', duration: 3, color: 'wait', label: 'Chờ' },
+    display: { type: 'display', name: 'Display', icon: 'smile', color: 'display', label: 'Màn hình' },
+    obstacle: { type: 'sensor_obstacle', name: 'Chờ vật cản', color: 'sensor', label: 'Chờ vật cản' },
+    touch: { type: 'sensor_touch', name: 'Wait Pressed', color: 'sensor', label: 'Chờ nút bấm' }
+  };
+
+  class BlockEngine {
+    constructor(containerId, toolboxId) {
+      this.container = document.getElementById(containerId);
+      this.toolbox = document.getElementById(toolboxId);
+      this.blocks = [];
+      this.activeBlockIndex = -1;
+      this.onChangeCallback = null;
+    }
+
+    init() {
+      this.renderToolbox();
+      // Bắt đầu với chương trình trống: học sinh tự ghép theo sách (NV2); nút "Mẫu trong sách" nạp mẫu
+      this.clearProgram();
+    }
+
+    setOnChange(cb) {
+      this.onChangeCallback = cb;
+    }
+
+    notifyChange() {
+      if (this.onChangeCallback) {
+        this.onChangeCallback(this.blocks);
+      }
+    }
+
+    // Chương trình mẫu trong sách (ảnh "Lập trình.png" của Bài 9): phát âm A, quay nhanh 3 giây,
+    // phát âm B, quay tiếp 3 giây, lặp lại liên tục
+    loadDefaultProgram() {
+      this.blocks = [
+        { ...BLOCK_TEMPLATES.start },
+        { ...BLOCK_TEMPLATES.repeatStart },
+        { ...BLOCK_TEMPLATES.melodyA },
+        { ...BLOCK_TEMPLATES.highSpeed },
+        { ...BLOCK_TEMPLATES.wait, duration: 3 },
+        { ...BLOCK_TEMPLATES.melodyB },
+        { ...BLOCK_TEMPLATES.highSpeed },
+        { ...BLOCK_TEMPLATES.wait, duration: 3 },
+        { ...BLOCK_TEMPLATES.repeatEnd }
+      ];
+      this.render();
+      this.notifyChange();
+    }
+
+    clearProgram() {
+      this.blocks = [
+        { ...BLOCK_TEMPLATES.start },
+        { ...BLOCK_TEMPLATES.repeatStart },
+        { ...BLOCK_TEMPLATES.repeatEnd }
+      ];
+      this.render();
+      this.notifyChange();
+    }
+
+    renderToolbox() {
+      if (!this.toolbox) return;
+      this.toolbox.innerHTML = '';
+
+      const available = [
+        'melodyA', 'melodyB', 'highSpeed', 'motorPower', 'motorReverse', 'wait', 'motorStop', 'obstacle'
+      ];
+
+      available.forEach(key => {
+        const tpl = BLOCK_TEMPLATES[key];
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `zb-item zb-${tpl.color}`;
+        btn.title = `Thêm khối ${tpl.name}`;
+        
+        let iconHtml = '';
+        if (tpl.type === 'start') iconHtml = SVG_ICONS.start;
+        else if (tpl.type === 'repeatStart') iconHtml = SVG_ICONS.repeatStart;
+        else if (tpl.type === 'repeatEnd') iconHtml = SVG_ICONS.repeatEnd;
+        else if (tpl.type === 'melody') iconHtml = SVG_ICONS.melody(tpl.tune);
+        else if (tpl.type === 'motor') iconHtml = tpl.speed === 'high' ? SVG_ICONS.motorHighCW : SVG_ICONS.motorLow;
+        else if (tpl.type === 'motor_power') iconHtml = SVG_ICONS.motorPower(tpl.power);
+        else if (tpl.type === 'motor_reverse') iconHtml = SVG_ICONS.motorReverse;
+        else if (tpl.type === 'stop') iconHtml = SVG_ICONS.motorStop;
+        else if (tpl.type === 'wait') iconHtml = `<span class="zb-param-val">${tpl.duration || 3}s</span>`;
+        else if (tpl.type === 'sensor_obstacle') iconHtml = SVG_ICONS.obstacle;
+
+        btn.innerHTML = `
+          <div class="zb-icon-wrap">${iconHtml}</div>
+          <span class="zb-caption">${tpl.label}</span>
+          <span class="zb-plus">+ Thêm</span>
+        `;
+
+        btn.addEventListener('click', () => {
+          if (window.SFX) window.SFX.click();
+          this.insertBlock({ ...tpl });
+        });
+
+        this.toolbox.appendChild(btn);
+      });
+    }
+
+    insertBlock(blockData, index = -1) {
+      // Chèn trước khối Repeat End nếu có
+      if (index === -1) {
+        const endIdx = this.blocks.findIndex(b => b.type === 'repeatEnd');
+        if (endIdx !== -1) {
+          this.blocks.splice(endIdx, 0, blockData);
+        } else {
+          this.blocks.push(blockData);
+        }
+      } else {
+        this.blocks.splice(index, 0, blockData);
+      }
+      this.render();
+      this.notifyChange();
+    }
+
+    removeBlock(index) {
+      if (index >= 0 && index < this.blocks.length) {
+        const b = this.blocks[index];
+        // Không xóa Start hoặc Repeat End bắt buộc
+        if (b.type === 'start') return;
+        this.blocks.splice(index, 1);
+        if (window.SFX) window.SFX.click();
+        this.render();
+        this.notifyChange();
+      }
+    }
+
+    moveBlock(fromIdx, toIdx) {
+      if (toIdx < 1 || toIdx >= this.blocks.length) return; // Không vượt trước Start
+      const item = this.blocks.splice(fromIdx, 1)[0];
+      this.blocks.splice(toIdx, 0, item);
+      if (window.SFX) window.SFX.click();
+      this.render();
+      this.notifyChange();
+    }
+
+    cycleParam(index) {
+      const b = this.blocks[index];
+      if (!b) return;
+
+      if (b.type === 'wait') {
+        const options = [1, 2, 3, 4, 5];
+        const curIdx = options.indexOf(b.duration);
+        b.duration = options[(curIdx + 1) % options.length];
+      } else if (b.type === 'melody') {
+        b.tune = b.tune === 'A' ? 'B' : 'A';
+        b.name = 'Melody ' + b.tune;
+        b.label = 'Âm thanh ' + b.tune;
+      } else if (b.type === 'motor_power') {
+        // Giáo án: đổi mức mặc định 8 xuống 2 – mỗi lần chạm giảm 1 mức, sau 1 quay về 8
+        b.power = b.power > 1 ? b.power - 1 : 8;
+      } else if (b.type === 'motor') {
+        b.speed = b.speed === 'high' ? 'low' : 'high';
+        b.name = b.speed === 'high' ? 'High Speed' : 'Low Speed';
+        b.label = b.speed === 'high' ? 'Quay nhanh' : 'Quay chậm';
+      }
+
+      if (window.SFX) window.SFX.click();
+      this.render();
+      this.notifyChange();
+    }
+
+    setActiveBlock(index) {
+      this.activeBlockIndex = index;
+      const allDomBlocks = this.container.querySelectorAll('.zb-block');
+      allDomBlocks.forEach((el, i) => {
+        if (i === index) {
+          el.classList.add('is-active');
+          el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } else {
+          el.classList.remove('is-active');
+        }
+      });
+    }
+
+    render() {
+      if (!this.container) return;
+      this.container.innerHTML = '';
+
+      this.blocks.forEach((b, i) => {
+        const el = document.createElement('div');
+        el.className = `zb-block zb-${b.color}` + (b.type === 'start' ? ' zb-block-start' : '') + (b.type === 'repeatEnd' ? ' zb-block-end' : '');
+        el.id = `code-block-${i}`;
+        el.title = b.name;
+        if (b.type === 'motor_power') el.dataset.power = b.power;
+
+        let iconContent = '';
+        let paramLabel = b.name;
+
+        if (b.type === 'start') {
+          iconContent = SVG_ICONS.start;
+          paramLabel = 'Start';
+        } else if (b.type === 'repeatStart') {
+          iconContent = SVG_ICONS.repeatStart;
+          paramLabel = 'Repeat';
+        } else if (b.type === 'repeatEnd') {
+          iconContent = SVG_ICONS.repeatEnd;
+          paramLabel = 'Lặp lại';
+        } else if (b.type === 'melody') {
+          iconContent = SVG_ICONS.melody(b.tune);
+          paramLabel = `Melody ${b.tune} (chạm để đổi)`;
+        } else if (b.type === 'motor') {
+          iconContent = b.speed === 'high' ? SVG_ICONS.motorHighCW : SVG_ICONS.motorLow;
+          paramLabel = b.speed === 'high' ? 'High (chạm đổi)' : 'Low (chạm đổi)';
+        } else if (b.type === 'motor_power') {
+          iconContent = SVG_ICONS.motorPower(b.power);
+          paramLabel = `Tốc độ mức ${b.power} (chạm để đổi)`;
+        } else if (b.type === 'motor_reverse') {
+          iconContent = SVG_ICONS.motorReverse;
+          paramLabel = 'Đổi chiều quay';
+        } else if (b.type === 'stop') {
+          iconContent = SVG_ICONS.motorStop;
+          paramLabel = 'Stop';
+        } else if (b.type === 'wait') {
+          iconContent = `<span class="zb-big-time">${b.duration}s</span>`;
+          paramLabel = `Chờ ${b.duration}s (chạm đổi)`;
+        } else if (b.type === 'sensor_obstacle') {
+          iconContent = SVG_ICONS.obstacle;
+          paramLabel = 'Chờ vật cản';
+        }
+
+        // Inner HTML
+        el.innerHTML = `
+          <div class="zb-badge-idx">${i + 1}</div>
+          <div class="zb-inner-icon">${iconContent}</div>
+          <span class="zb-text-tag">${b.name}</span>
+          ${b.type !== 'start' && b.type !== 'repeatStart' && b.type !== 'repeatEnd' ? `
+            <button type="button" class="zb-del-btn" title="Xóa khối này" aria-label="Xóa khối">×</button>
+          ` : ''}
+          ${i > 1 && i < this.blocks.length - 1 ? `
+            <div class="zb-move-btns">
+              <button type="button" class="zb-mv-btn zb-mv-l" title="Dịch sang trái">◀</button>
+              <button type="button" class="zb-mv-btn zb-mv-r" title="Dịch sang phải">▶</button>
+            </div>
+          ` : ''}
+        `;
+
+        // Click on block to cycle parameters if interactive
+        el.addEventListener('click', (e) => {
+          if (e.target.closest('.zb-del-btn') || e.target.closest('.zb-mv-btn')) return;
+          if (b.type === 'wait' || b.type === 'melody' || b.type === 'motor' || b.type === 'motor_power') {
+            this.cycleParam(i);
+          }
+        });
+
+        // Delete button listener
+        const delBtn = el.querySelector('.zb-del-btn');
+        if (delBtn) {
+          delBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.removeBlock(i);
+          });
+        }
+
+        // Move buttons listeners
+        const mvL = el.querySelector('.zb-mv-l');
+        if (mvL) {
+          mvL.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.moveBlock(i, i - 1);
+          });
+        }
+        const mvR = el.querySelector('.zb-mv-r');
+        if (mvR) {
+          mvR.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.moveBlock(i, i + 1);
+          });
+        }
+
+        this.container.appendChild(el);
+      });
+    }
+  }
+
+  window.BlockEngine = BlockEngine;
+  window.BLOCK_TEMPLATES = BLOCK_TEMPLATES;
+})();
