@@ -586,3 +586,6 @@ html[data-mode="kid"] .bomtable td code { display: none; }
 @keyframes hand-pulse { 50% { transform: scale(1.12); box-shadow: 0 0 0 10px color-mix(in srgb, var(--zb-sensor) 30%, transparent); } }
 @media (prefers-reduced-motion: reduce) { .hand-btn.is-waiting { animation: none; } }
 .scene-wrap[data-mode="robot"] .hand-btn { left: auto; right: 14px; bottom: 60px; }
+/* Bài 10: nút đỏ (cảm biến chạm) */
+.press-btn span { display: block; width: 34px; height: 34px; margin: auto; border-radius: 50%; background: #e53935; box-shadow: inset 0 -5px 0 rgba(0, 0, 0, .25); }
+.press-btn:active span { transform: translateY(2px); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .25); }

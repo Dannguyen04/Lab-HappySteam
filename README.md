@@ -2,7 +2,7 @@
 
 Ứng dụng học tập cho học sinh tiểu học (bộ ZMrobo Alpha 330): lắp mô hình 3D theo sách hướng dẫn, sáng tạo, lập trình bằng khối và mô phỏng. Giao diện tiếng Việt, chạy **trực tiếp từ tệp `index.html`**, không cần máy chủ, npm hay tài khoản.
 
-**Trang chọn bài (`index.html`):** chọn **Lớp 1–5 → Học kì I/II → bài học**. Danh mục bài nằm ở `js/catalog.js` (Lớp 1 đủ 35 tuần theo khung chương trình; Lớp 2–5 theo thư mục tài liệu hiện có). Bài đã làm xong mở được, các bài khác hiện mờ "Sắp có". Có thể gửi thẳng link một lớp/học kì: `index.html?lop=1&hk=2`. Hiện đã có **Lớp 1 · Bài 3 – Robot thám hiểm Milo** (`lop1-bai03.html`) và **Lớp 1 · Bài 9 – Thông tin liên lạc vũ trụ** (`lop1-bai09.html`); phần dưới đây mô tả Bài 9, Bài 3 tóm tắt ở mục "Bài 3".
+**Trang chọn bài (`index.html`):** chọn **Lớp 1–5 → Học kì I/II → bài học**. Danh mục bài nằm ở `js/catalog.js` (Lớp 1 đủ 35 tuần theo khung chương trình; Lớp 2–5 theo thư mục tài liệu hiện có). Bài đã làm xong mở được, các bài khác hiện mờ "Sắp có". Có thể gửi thẳng link một lớp/học kì: `index.html?lop=1&hk=2`. Hiện đã có **Lớp 1 · Bài 3 – Robot thám hiểm Milo** (`lop1-bai03.html`), **Bài 9 – Thông tin liên lạc vũ trụ** (`lop1-bai09.html`) và **Bài 10 – Bạn gió tinh nghịch (cối xoay gió)** (`lop1-bai10.html`); phần dưới đây mô tả Bài 9, Bài 3 và Bài 10 tóm tắt ngay sau.
 
 **Thêm một bài mới (khung dùng chung):**
 1. Giải nén `model2.ldr` từ file `.io` của bài, viết `scripts/baiXX-plan.js` (linh kiện từng bước theo sách), `scripts/baiXX-parts.js` (mã ZMROBO – dò bằng `RBB_Studio/io2rbb match`) và `scripts/generate-baiXX.js` (gọi `scripts/lib/cad-lesson.js`) → `js/data-bai-XX.js`.
@@ -10,6 +10,8 @@
 3. Tạo `lopX-baiYY.html` từ trang bài có sẵn, ảnh sách vào `assets/baiXX/`, rồi điền `href`/`cover` trong `js/catalog.js`. Kiểu bài trong danh mục: `model`, `project`, `theory`, `test`.
 
 **Bài 3 – Robot thám hiểm Milo:** 40 linh kiện CAD gốc, 22 bước theo sách (`assets/bai03/`). Một động cơ quay thẳng hai bánh: mức 8 ≈ 39,3 cm/giây. Chặng ③ là cảnh sao Hỏa: chạm Start, bấm ✋ để đưa tay trước cảm biến siêu âm (khối "Chờ vật cản"), robot chở mẫu cây từ Trạm A tới điểm B (80 cm). Nhiệm vụ: NV1 lắp 22 bước, NV2 chương trình mẫu (Start → Chờ vật cản → Quay nhanh → Chờ 3s → Dừng), NV3 dừng đúng B mà mẫu không rơi (từ mức 6, không có thùng chở thì mẫu rơi), NV4 gói sáng tạo (thùng chở, ăng-ten–đèn, pin mặt trời, tay gắp); Nâng cao NV5: điểm B đổi chỗ, chở đúng 3 vị trí. Hình cảnh đẹp do `js/bai03/art.js` (phiếu giao việc `docs/giao-viec/01-bai03-ve-canh-sao-hoa.md`); khi chưa có file này trang dùng hình đơn giản.
+
+**Bài 10 – Cối xoay gió:** 41 linh kiện CAD gốc (file .io không chia cụm), 15 bước theo sách (`assets/bai10/`), cảm biến chạm BE-2257. Chặng ③ là cánh đồng gió: chạm Start, nhấn **nút đỏ** trên cảnh (hoặc phím cách) – mỗi lần nhấn cánh quạt đổi chậm → vừa → nhanh → dừng (56 / 94 / 150 vòng/phút); cánh quay sạc pin, pin có điện thì ngôi nhà sáng đèn. Nhiệm vụ: NV1 lắp 15 bước, NV2 chương trình mẫu (Start → Repeat → Chờ nhấn → Quay chậm → Chờ nhấn → Quay vừa → Chờ nhấn → Quay nhanh → Chờ nhấn → Dừng → Repeat End), NV3 sạc đầy pin, NV4 gói sáng tạo (cánh dài, thêm cánh, đèn, đuôi lái gió – cánh dài/thêm cánh sạc nhanh hơn); Nâng cao NV5: thời tiết đổi gió nhẹ → mạnh → bão → nhẹ, quay trong bão quá 1,5 giây thì gãy cánh, phải dừng rồi sạc đầy sau bão. Hình cảnh đẹp do `js/bai10/art.js` (phiếu giao việc `docs/giao-viec/02-bai10-ve-canh-canh-dong-gio.md`).
 
 ## 1. Mở và sử dụng
 
@@ -90,6 +92,7 @@ Lab-HappySteam/
 ├── index.html                    # Trang chọn bài: Lớp → Học kì → Bài
 ├── lop1-bai03.html               # Lớp 1 · Bài 3 – Robot thám hiểm Milo
 ├── lop1-bai09.html               # Lớp 1 · Bài 9 – Thông tin liên lạc vũ trụ
+├── lop1-bai10.html               # Lớp 1 · Bài 10 – Cối xoay gió
 ├── README.md
 ├── css/
 │   └── lab.css                   # Giao diện "bệ thử" (cùng phong cách Bài 7)
@@ -98,6 +101,8 @@ Lab-HappySteam/
 │   ├── home.js                   # Trang chọn bài
 │   ├── bai03/                    # Bài 3: lesson.js (cấu hình), rover-engine.js, mars-scene.js, art.js
 │   ├── bai09/lesson.js           # Bài 9: cấu hình (nhiệm vụ, khối lệnh, gói sáng tạo…)
+│   ├── bai10/                    # Bài 10: lesson.js, wind-engine.js, wind-scene.js, art.js
+│   ├── data-bai-10.js
 │   ├── data-bai-03.js
 │   ├── app.js
 │   ├── assembly-viewer.js
@@ -110,7 +115,7 @@ Lab-HappySteam/
 │   ├── mission-tracker.js
 │   └── audio-sfx.js
 ├── assets/official-assembly/      # Hình in từng bước của sách lắp (Bài 9)
-├── assets/bai03/                  # Hình từng bước sách lắp Bài 3
+├── assets/bai03/, assets/bai10/   # Hình từng bước sách lắp Bài 3, Bài 10
 ├── assets/covers/                 # Ảnh thẻ bài trên trang chọn bài
 ├── scripts/                       # Dựng dữ liệu 3D: lib/cad-lesson.js (dùng chung), generate-*.js, *-plan.js, *-parts.js
 ├── docs/giao-viec/                # Phiếu giao việc nhẹ cho công cụ AI khác
@@ -124,6 +129,7 @@ Lab-HappySteam/
     ├── home.smoke.js              # Trang chọn bài
     ├── bai03.test.js              # Bài 3: dữ liệu 3D + bộ mô phỏng
     ├── bai03.smoke.js             # Bài 3: giao diện
+    ├── bai10.test.js, bai10.smoke.js   # Bài 10: dữ liệu + mô phỏng, giao diện
     ├── legacy-browser-test.js
     └── screenshots/
 ```
@@ -143,6 +149,8 @@ node tests/ui.smoke.js
 node tests/home.smoke.js
 node tests/bai03.test.js
 node tests/bai03.smoke.js
+node tests/bai10.test.js
+node tests/bai10.smoke.js
 ```
 
 Kiểm thử giao diện mở chính tệp `file:///lop1-bai09.html` (và trang chọn bài `index.html`) trên desktop **1280×800** và mobile **375×667**, kiểm tra mô hình 3D, giao diện Sáng/Tối, nâng cấp, chương trình hoàn thành **4/4 nhiệm vụ** và ảnh chụp trong `tests/screenshots/`. Kết quả cuối cùng cần dựa trên lần chạy kiểm thử thực tế; nội dung này không khẳng định đã kiểm thử toàn bộ điện thoại, phiên bản trình duyệt hay thiết bị robot thật.

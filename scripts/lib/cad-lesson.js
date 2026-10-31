@@ -57,12 +57,17 @@ function readSections(source) {
 
 // Trải mô hình chính → danh sách linh kiện theo thứ tự file: mỗi dòng của mô hình chính là một mô hình con
 // (SubModel Group …), linh kiện trong mô hình con được đặt vào toạ độ mô hình chính.
-function flattenRoot(sections, rootName, expected) {
+// flat = true: file không chia mô hình con, mỗi dòng của mô hình chính là một linh kiện.
+function flattenRoot(sections, rootName, expected, flat = false) {
   if (!sections.has(rootName)) throw Error('Thiếu mô hình chính: ' + rootName);
   const parts = [];
   for (const line of sections.get(rootName)) {
     if (!line.startsWith('1 ')) continue;
     const group = readRef(line);
+    if (flat) {
+      parts.push({ file: group.file, color: group.color, pos: group.pos, rot: group.rot });
+      continue;
+    }
     if (!sections.has(group.file)) throw Error('Thiếu nhóm CAD: ' + group.file);
     for (const child of sections.get(group.file)) {
       if (!child.startsWith('1 ')) continue;

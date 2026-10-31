@@ -9,6 +9,8 @@
     motorHighCW: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><path d="M31 11a14 14 0 1 0 3 12"/><path d="M33 4v8h-8" stroke-linejoin="round"/><circle cx="20" cy="21" r="7" fill="#fff" stroke="none"/><g fill="#1E9BD7" stroke="none"><circle cx="20" cy="17" r="1.6"/><circle cx="20" cy="25" r="1.6"/><circle cx="16" cy="21" r="1.6"/><circle cx="24" cy="21" r="1.6"/></g></svg>`,
     motorHighCCW: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><path d="M9 11a14 14 0 1 1-3 12"/><path d="M7 4v8h8" stroke-linejoin="round"/><circle cx="20" cy="21" r="7" fill="#fff" stroke="none"/><g fill="#1E9BD7" stroke="none"><circle cx="20" cy="17" r="1.6"/><circle cx="20" cy="25" r="1.6"/><circle cx="16" cy="21" r="1.6"/><circle cx="24" cy="21" r="1.6"/></g></svg>`,
     motorLow: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M30 13a13 13 0 1 0 2 11"/><path d="M31 7v7h-7" stroke-linejoin="round"/><circle cx="20" cy="21" r="6" fill="#fff" stroke="none"/></svg>`,
+    // Quay vừa: vòng cung dài hơn Low, ngắn hơn High
+    motorMedium: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3.3" stroke-linecap="round"><path d="M30 12a13.5 13.5 0 1 0 2.5 11.5"/><path d="M32 5.5v7.5h-7.5" stroke-linejoin="round"/><circle cx="20" cy="21" r="6.5" fill="#fff" stroke="none"/><g fill="#1E9BD7" stroke="none"><circle cx="20" cy="18" r="1.4"/><circle cx="20" cy="24" r="1.4"/></g></svg>`,
     motorStop: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><circle cx="20" cy="20" r="12"/><path d="M14 20h12" stroke-width="4"/></svg>`,
     melody: (tune) => `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3"><circle cx="21" cy="22" r="13"/><text x="21" y="28.5" text-anchor="middle" fill="#fff" stroke="none" font-family="'Chakra Petch', sans-serif" font-weight="700" font-size="18">${tune}</text><path d="M5 4v8" stroke-width="2.2"/><circle cx="3.6" cy="12" r="2.2" fill="#fff" stroke="none"/></svg>`,
     wait: (s) => `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.5"><path d="M12 8h16M12 32h16M15 8v4c0 3 5 6 5 8s-5 5-5 8v4M25 8v4c0 3-5 6-5 8s5 5 5 8v4" stroke-linecap="round"/><circle cx="20" cy="25" r="2.2" fill="#fff"/></svg>`,
@@ -33,13 +35,14 @@
     melodyB: { type: 'melody', name: 'Melody B', tune: 'B', color: 'melody', label: 'Âm thanh B' },
     highSpeed: { type: 'motor', name: 'High Speed', speed: 'high', dir: 'cw', color: 'motor', label: 'Quay nhanh' },
     lowSpeed: { type: 'motor', name: 'Low Speed', speed: 'low', dir: 'cw', color: 'motor', label: 'Quay chậm' },
+    mediumSpeed: { type: 'motor', name: 'Medium Speed', speed: 'medium', dir: 'cw', color: 'motor', label: 'Quay vừa' },
     motorPower: { type: 'motor_power', name: 'Motor Power', power: 8, color: 'motor', label: 'Tốc độ động cơ' },
     motorReverse: { type: 'motor_reverse', name: 'Motor This Way', color: 'motor', label: 'Đổi chiều quay' },
     motorStop: { type: 'stop', name: 'Stop', color: 'motor', label: 'Dừng motor' },
     wait: { type: 'wait', name: 'Wait', duration: 3, color: 'wait', label: 'Chờ' },
     display: { type: 'display', name: 'Display', icon: 'smile', color: 'display', label: 'Màn hình' },
     obstacle: { type: 'sensor_obstacle', name: 'Chờ vật cản', color: 'sensor', label: 'Chờ vật cản' },
-    touch: { type: 'sensor_touch', name: 'Wait Pressed', color: 'sensor', label: 'Chờ nút bấm' },
+    touch: { type: 'sensor_touch', name: 'Waiting for Pressed', color: 'sensor', label: 'Chờ nhấn nút' },
     // Nâng cao (cấp 2–3)
     waitClear: { type: 'wait_clear', name: 'Đợi đường trống', color: 'sensor', label: 'Đợi đường trống' },
     ifSee: { type: 'if_see', name: 'Nếu thấy vật lạ', color: 'control', label: 'Nếu thấy vật lạ' },
@@ -111,7 +114,7 @@
         else if (tpl.type === 'repeatStart') iconHtml = SVG_ICONS.repeatStart;
         else if (tpl.type === 'repeatEnd') iconHtml = SVG_ICONS.repeatEnd;
         else if (tpl.type === 'melody') iconHtml = SVG_ICONS.melody(tpl.tune);
-        else if (tpl.type === 'motor') iconHtml = tpl.speed === 'high' ? SVG_ICONS.motorHighCW : SVG_ICONS.motorLow;
+        else if (tpl.type === 'motor') iconHtml = motorIcon(tpl.speed);
         else if (tpl.type === 'motor_power') iconHtml = SVG_ICONS.motorPower(tpl.power);
         else if (tpl.type === 'motor_reverse') iconHtml = SVG_ICONS.motorReverse;
         else if (tpl.type === 'stop') iconHtml = SVG_ICONS.motorStop;
@@ -200,9 +203,10 @@
         // Giáo án: đổi mức mặc định 8 xuống 2 – mỗi lần chạm giảm 1 mức, sau 1 quay về 8
         b.power = b.power > 1 ? b.power - 1 : 8;
       } else if (b.type === 'motor') {
-        b.speed = b.speed === 'high' ? 'low' : 'high';
-        b.name = b.speed === 'high' ? 'High Speed' : 'Low Speed';
-        b.label = b.speed === 'high' ? 'Quay nhanh' : 'Quay chậm';
+        const order = (this.opts.toolbox || []).includes('mediumSpeed') ? ['low', 'medium', 'high'] : ['low', 'high'];
+        b.speed = order[(order.indexOf(b.speed) + 1) % order.length];
+        b.name = SPEEDS[b.speed].name;
+        b.label = SPEEDS[b.speed].label;
       }
 
       if (window.SFX) window.SFX.click();
@@ -259,8 +263,8 @@
           iconContent = SVG_ICONS.melody(b.tune);
           paramLabel = `Melody ${b.tune} (chạm để đổi)`;
         } else if (b.type === 'motor') {
-          iconContent = b.speed === 'high' ? SVG_ICONS.motorHighCW : SVG_ICONS.motorLow;
-          paramLabel = b.speed === 'high' ? 'High (chạm đổi)' : 'Low (chạm đổi)';
+          iconContent = motorIcon(b.speed);
+          paramLabel = SPEEDS[b.speed].name + ' (chạm đổi)';
         } else if (b.type === 'motor_power') {
           iconContent = SVG_ICONS.motorPower(b.power);
           paramLabel = `Tốc độ mức ${b.power} (chạm để đổi)`;
@@ -379,13 +383,23 @@
     if (b.type === 'repeatStart') return SVG_ICONS.repeatStart;
     if (b.type === 'repeatEnd') return SVG_ICONS.repeatEnd;
     if (b.type === 'melody') return SVG_ICONS.melody(b.tune);
-    if (b.type === 'motor') return b.speed === 'high' ? SVG_ICONS.motorHighCW : SVG_ICONS.motorLow;
+    if (b.type === 'motor') return motorIcon(b.speed);
+    if (b.type === 'sensor_touch') return SVG_ICONS.touch;
+    if (b.type === 'sensor_obstacle') return SVG_ICONS.obstacle;
     if (b.type === 'wait') return `<span class="zb-big-time">${b.duration}s</span>`;
     if (b.type === 'wait_clear') return SVG_ICONS.waitClear;
     if (b.type === 'if_see') return SVG_ICONS.ifSee;
     if (b.type === 'if_end') return SVG_ICONS.ifEnd;
     if (b.type === 'photo') return SVG_ICONS.photo;
     return '';
+  }
+  const SPEEDS = {
+    low: { name: 'Low Speed', label: 'Quay chậm' },
+    medium: { name: 'Medium Speed', label: 'Quay vừa' },
+    high: { name: 'High Speed', label: 'Quay nhanh' }
+  };
+  function motorIcon(speed) {
+    return speed === 'high' ? SVG_ICONS.motorHighCW : speed === 'medium' ? SVG_ICONS.motorMedium : SVG_ICONS.motorLow;
   }
   function matchIfEnd(blocks, i) {
     let depth = 0;

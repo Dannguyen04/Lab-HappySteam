@@ -34,7 +34,11 @@
       cover: 'assets/covers/lop1-bai09.jpg',
       about: 'Lắp vệ tinh 28 bước, gắn thêm chi tiết, lập trình anten bắt sóng và tránh thiên thạch.'
     }),
-    L(1, 1, 10, 'Bạn gió tinh nghịch, gió ở đâu?', 'model', { about: 'Lợi ích của năng lượng gió; mô hình cối xoay gió.' }),
+    L(1, 1, 10, 'Bạn gió tinh nghịch, gió ở đâu?', 'model', {
+      href: 'lop1-bai10.html',
+      cover: 'assets/covers/lop1-bai10.jpg',
+      about: 'Lắp cối xoay gió 15 bước, nhấn nút đổi tốc độ cánh quạt, sạc pin thắp sáng ngôi nhà.'
+    }),
     L(1, 1, 11, 'Nước từ đâu đến', 'model', { about: 'Vòng tuần hoàn của nước; bánh xe nước, bánh răng truyền động.' }),
     L(1, 1, 12, 'Thiên tai, lũ lụt – Đê ngăn lũ', 'model', { about: 'Cửa đê tự động điều chỉnh mực nước sông.' }),
     L(1, 1, 13, 'Hiện tượng thiên nhiên – Tuyết rơi', 'model', { about: 'Tuyết hình thành thế nào; xe dọn tuyết với cảm biến.' }),
