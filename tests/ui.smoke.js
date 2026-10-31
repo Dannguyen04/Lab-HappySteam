@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 let chromium;
+const { pageUrl } = require('./helpers/page-url');
 try {
   ({ chromium } = require('playwright'));
 } catch {
@@ -19,7 +20,7 @@ async function main() {
   ].filter(Boolean).find(p => fs.existsSync(p));
   const browser = await chromium.launch({ headless: true, ...(executablePath ? { executablePath } : {}) });
   try {
-    const url = 'file:///' + path.join(path.resolve(__dirname, '..'), 'lop1-bai09.html').replace(/\\/g, '/');
+    const url = pageUrl('bai.html?id=lop1-bai09');
     const shots = path.join(__dirname, 'screenshots');
     fs.mkdirSync(shots, { recursive: true });
     const stats = page => page.evaluate(() => window.robotViewer.stats());
@@ -32,6 +33,7 @@ async function main() {
     await page.evaluate(() => localStorage.clear());
     await page.reload();
     await page.waitForFunction(() => window.robotViewer, null, { timeout: 20000 });
+    await page.locator('#lesson-loading').waitFor({ state: 'detached', timeout: 20000 });
     assert.match(await page.title(), /Vệ tinh ZMrobo/);
     assert.equal(await page.locator('html').getAttribute('data-theme'), 'light', 'Mặc định giao diện sáng như Bài 7');
     assert.equal(await page.locator('#mission-summary-badge').innerText(), '0/4 nhiệm vụ');
@@ -125,6 +127,7 @@ async function main() {
     assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
     await page.reload();
     await page.waitForFunction(() => window.robotViewer, null, { timeout: 20000 });
+    await page.locator('#lesson-loading').waitFor({ state: 'detached', timeout: 20000 });
     assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
     assert.equal(await page.locator('#tab-btn-creative').getAttribute('aria-selected'), 'true', 'Nhớ chặng đang học');
     await page.click('#btn-toggle-theme');

@@ -357,6 +357,7 @@ details.more > summary::-webkit-details-marker { display: none; }
 .zb-block-end::after { display: none; }
 .zb-inner-icon, .zb-icon-wrap { display: grid; place-items: center; height: 38px; }
 .zb-inner-icon svg, .zb-icon-wrap svg { width: 36px; height: 36px; }
+.zb-port { position: absolute; right: 8px; top: 4px; font: 800 12px/1 "Chakra Petch", sans-serif; color: #fff; letter-spacing: .02em; z-index: 2; }
 .zb-text-tag, .zb-caption { font: 600 10px/1.1 var(--f-body); text-align: center; padding: 0 4px; max-width: 74px; }
 .zb-big-time, .zb-param-val { font: italic 700 28px/1 var(--f-display); }
 .zb-badge-idx { position: absolute; left: 6px; top: 4px; font: 600 9px/1 var(--f-mono); opacity: .75; }
@@ -451,6 +452,8 @@ html[data-mode="kid"] .pro-only { display: none !important; }
 .scene-toast { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 6; width: min(420px, calc(100% - 32px)); padding: 18px 20px; border-radius: 14px; background: var(--surface); color: var(--ink); border: 3px solid var(--accent); text-align: center; box-shadow: 0 12px 40px rgba(0, 0, 0, .35); }
 .scene-toast[data-k="bad"] { border-color: var(--bad); }
 .scene-toast[data-k="ok"] { border-color: var(--ok); }
+.scene-toast[data-k="warn"] { border-color: var(--warn); }
+.scene-toast[data-k="warn"] b { color: var(--warn); }
 .scene-toast b { display: block; font: 700 26px/1.2 var(--f-display); }
 .scene-toast[data-k="bad"] b { color: var(--bad); }
 .scene-toast[data-k="ok"] b { color: var(--ok); }

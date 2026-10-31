@@ -7,7 +7,7 @@
   const $ = id => document.getElementById(id);
   const L = window.LESSON;
 
-  document.addEventListener('DOMContentLoaded', () => {
+  zmReady(() => {
     if (window.SFX) window.SFX.init();
 
     const missionTracker = new window.MissionTracker();
@@ -162,9 +162,10 @@
         localStorage.setItem(L.store + 'mode', mode);
       } catch (e) {}
     }
-    let uiMode = 'kid';
+    // Chế độ mặc định theo bài (L.defaultMode, vd. Lớp 3 mở ở Nâng cao); học sinh đổi thì nhớ theo bài
+    let uiMode = L.defaultMode || 'kid';
     try {
-      uiMode = localStorage.getItem(L.store + 'mode') || 'kid';
+      uiMode = localStorage.getItem(L.store + 'mode') || uiMode;
     } catch (e) {}
     applyMode(uiMode);
     btnMode.addEventListener('click', () => {

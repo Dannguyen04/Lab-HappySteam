@@ -1,0 +1,23 @@
+{
+  "name": "lab-happysteam",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node tests/run-suite.js logic && vitest run",
+    "test:smoke": "node tests/run-suite.js smoke",
+    "test:all": "npm run test && npm run test:smoke",
+    "test:dist": "npm run build && node tests/run-dist.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "playwright": "^1.58.2",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.1",
+    "vite-plugin-static-copy": "^2.3.2",
+    "vitest": "^3.2.4"
+  }
+}

@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>S-06 Giáo viên mở buổi học · Happy STEAM Lab</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    /* S-06 Layout Styles (Laptop 1366px chiếu bảng) */
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .session-container {
+      max-width: 1366px;
+      margin: 0 auto;
+      padding: 20px 24px 40px;
+      width: 100%;
+    }
+
+    /* Sub-header with session info */
+    .session-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 20px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      margin-bottom: 20px;
+    }
+
+    .session-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .session-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .session-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-family: var(--f-mono);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .session-status-badge.open {
+      background: var(--ok-soft);
+      color: var(--ok);
+      border: 1px solid var(--ok);
+    }
+
+    .session-status-badge.closed {
+      background: var(--bad-soft);
+      color: var(--bad);
+      border: 1px solid var(--bad);
+    }
+
+    .session-status-badge.ready {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    /* Grid 2 cột: Cột trái (Mã khổng lồ + Đồng hồ), Cột phải (Lưới học sinh vào) */
+    .session-stage-grid {
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    @media (max-width: 1024px) {
+      .session-stage-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Panel Mã 4 số khổng lồ (Chiếu bảng đọc từ cuối lớp) */
+    .code-stage-card {
+      background: var(--surface);
+      border: 2px solid var(--accent);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 28px 24px;
+      text-align: center;
+      position: sticky;
+      top: 76px;
+    }
+
+    .code-stage-label {
+      font-family: var(--f-mono);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    /* Chữ số cực to 96px để đọc được từ khoảng cách 15m trong lớp */
+    .giant-code-display {
+      font-family: var(--f-mono);
+      font-size: clamp(72px, 7.5vw, 108px);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: .08em;
+      color: var(--ink);
+      background: var(--sunk);
+      border: 3px solid var(--line);
+      border-radius: 20px;
+      padding: 16px 12px;
+      margin: 12px 0 16px;
+      user-select: all;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .code-instruction {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    /* Đồng hồ đếm ngược 90 phút (GD-11) */
+    .timer-box {
+      background: var(--stage);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .timer-label {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .timer-clock {
+      font-family: var(--f-mono);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-clock.low {
+      color: var(--bad);
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Cột phải: Lưới học sinh */
+    .roster-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .roster-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .roster-count-badge {
+      font-family: var(--f-mono);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ok);
+      background: var(--ok-soft);
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      border: 1px solid color-mix(in srgb, var(--ok) 35%, var(--line));
+    }
+
+    /* Progress bar học sinh vào */
+    .roster-progress-track {
+      width: 100%;
+      height: 8px;
+      background: var(--sunk);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .roster-progress-fill {
+      height: 100%;
+      background: var(--ok);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    /* Lưới 28 em */
+    .roster-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .roster-item {
+      background: var(--surface);
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    /* Chưa vào */
+    .roster-item.not-in {
+      opacity: 0.45;
+      background: var(--sunk);
+      border-style: dashed;
+    }
+
+    .roster-item.not-in .roster-status-chip {
+      color: var(--muted);
+      background: transparent;
+    }
+
+    /* Đã vào */
+    .roster-item.is-in {
+      opacity: 1;
+      background: var(--surface);
+      border-color: var(--ok);
+      box-shadow: 0 2px 6px rgba(28, 138, 76, 0.15);
+      animation: popIn 0.25s ease-out;
+    }
+
+    .roster-avatar {
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .roster-name {
+      font-family: var(--f-display);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .roster-status-chip {
+      font-family: var(--f-mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      background: var(--ok-soft);
+      color: var(--ok);
+    }
+
+    /* Thanh điều khiển giả lập bên dưới */
+    .simulation-control-box {
+      margin-top: 24px;
+      padding: 14px 18px;
+      background: var(--sunk);
+      border: 1px dashed var(--line);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 13.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar điều hướng wireframe -->
+  <header class="wf-nav">
+    <a href="index.html" class="wf-nav-brand">
+      <span class="wf-badge-logo">Happy STEAM</span>
+      <span class="wf-nav-title">S-06 · Giáo viên mở buổi học</span>
+    </a>
+    <div class="wf-nav-links">
+      <span class="wf-tag-mock">Giao diện máy chiếu 1366px</span>
+      <a href="index.html" class="wf-nav-btn">← Tổng quan</a>
+      <a href="s01-vao-buoi-hoc.html" class="wf-nav-btn">S-01 Vào buổi</a>
+      <a href="s06-gv-mo-buoi.html" class="wf-nav-btn active">S-06 GV Mở buổi</a>
+      <a href="s07-bang-lop-cham.html" class="wf-nav-btn">S-07 Bảng lớp & Chấm</a>
+    </div>
+  </header>
+
+  <main class="session-container">
+
+    <!-- Thanh thông tin lớp & buổi học -->
+    <div class="session-bar">
+      <div class="session-meta">
+        <div>
+          <div class="eyebrow">Giáo viên chủ lớp: Cô Mai Hương · Học kì I</div>
+          <div class="session-title">Lớp 1A — Bài 9: Robot thám hiểm địa hình (Tuần 9)</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px">
+        <span class="session-status-badge ready" id="session-badge">Sẵn sàng mở</span>
+        <button type="button" class="btn btn-primary" id="btn-start-session" onclick="startSession()">
+          ▶ Bắt đầu buổi học
+        </button>
+      </div>
+    </div>
+
+    <!-- Màn hình trạng thái: Khi chưa bấm "Bắt đầu buổi học" -->
+    <div class="card card-pad" id="pre-start-card" style="text-align:center; padding: 60px 20px;">
+      <div style="font-size:54px; margin-bottom:12px">🏫</div>
+      <h2 style="font-size:26px; margin-bottom:8px">Phòng học Lớp 1A đã sẵn sàng</h2>
+      <p class="lede" style="max-width:560px; margin:0 auto 24px">
+        Bấm nút bên dưới để tạo mã vào buổi học và chiếu lên bảng thông minh cho học sinh kết nối máy tính bảng.
+      </p>
+      <button type="button" class="btn btn-huge btn-primary" onclick="startSession()">
+        Bắt đầu buổi học ngay (Tạo mã 4 số)
+      </button>
+    </div>
+
+    <!-- Màn hình trạng thái: Khi ĐÃ BẮT ĐẦU BUỔI HỌC (Chiếu bảng) -->
+    <div class="session-stage-grid" id="active-session-stage" hidden>
+
+      <!-- CỘT TRÁI: MÃ KHỔNG LỒ + ĐỒNG HỒ 90 PHÚT -->
+      <aside class="code-stage-card" aria-label="Bảng chiếu mã vào buổi học">
+        <div class="code-stage-label">MÃ BUỔI HỌC TRÊN LỚP</div>
+        <div class="giant-code-display" id="giant-code">2468</div>
+        <div class="code-instruction">
+          Học sinh mở máy tính bảng, chọn <strong>"Em ở trên lớp"</strong> và nhập 4 chữ số trên.
+        </div>
+
+        <!-- Đồng hồ 90 phút (GD-11) -->
+        <div class="timer-box">
+          <div class="timer-label">
+            <span>⏱️ Buổi học còn lại:</span>
+          </div>
+          <div class="timer-clock" id="timer-display">01:29:50</div>
+        </div>
+
+        <div style="display:grid; gap:10px">
+          <button type="button" class="btn btn-outline-accent" onclick="copyCode()">
+            📋 Sao chép mã
+          </button>
+          <button type="button" class="btn btn-outline-danger" onclick="openEndSessionModal()">
+            ⏹ Kết thúc buổi học
+          </button>
+        </div>
+      </aside>
+
+      <!-- CỘT PHẢI: LƯỚI 28 HỌC SINH + THEO DÕI VÀO LỚP -->
+      <section class="roster-card" aria-label="Danh sách học sinh vào lớp">
+        <div class="roster-header">
+          <div>
+            <h2 style="font-size:20px; margin-bottom:4px">Học sinh trong buổi học</h2>
+            <div style="color:var(--muted); font-size:13.5px">Các em đã kết nối thành công sẽ sáng màu xanh</div>
+          </div>
+          <div class="roster-count-badge">
+            <span id="entered-count">18</span> / 28 em đã vào
+          </div>
+        </div>
+
+        <!-- Thanh phần trăm học sinh vào -->
+        <div class="roster-progress-track">
+          <div class="roster-progress-fill" id="roster-fill" style="width: 64%;"></div>
+        </div>
+
+        <!-- Lưới 28 em học sinh -->
+        <div class="roster-grid" id="roster-grid">
+          <!-- Rendered via JS -->
+        </div>
+
+        <!-- Thanh công cụ giả lập (Dành cho người kiểm thử/demo) -->
+        <div class="simulation-control-box">
+          <div style="font-weight:600">
+            🧪 Công cụ giả lập học sinh:
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap">
+            <button type="button" class="btn btn-sm" onclick="simulateAddOneStudent()">
+              + Giả lập 1 em vào
+            </button>
+            <button type="button" class="btn btn-sm" onclick="simulateAllStudentsIn()">
+              Tất cả 28 em vào (100%)
+            </button>
+            <button type="button" class="btn btn-sm" onclick="simulateResetToDefault()">
+              Đặt lại 18/28 em
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- Modal xác nhận Kết thúc buổi học (Mọi máy tự thoát theo F-02 bước 4) -->
+  <div class="modal-overlay" id="modal-end-session" hidden>
+    <div class="modal-dialog" role="alertdialog" aria-modal="true" aria-labelledby="end-session-title">
+      <div class="modal-header">
+        <h3 id="end-session-title" style="color:var(--bad)">⏹ Xác nhận kết thúc buổi học?</h3>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex; gap:14px; align-items:flex-start">
+          <span style="font-size:36px; line-height:1">⚠️</span>
+          <div>
+            <p style="margin:0 0 10px; font-weight:700; font-size:16px; color:var(--ink)">
+              Mọi máy trong buổi sẽ tự thoát!
+            </p>
+            <p style="margin:0 0 10px; font-size:14px; color:var(--muted)">
+              Theo quy trình <strong>F-02 bước 4</strong>: Khi giáo viên bấm kết thúc hoặc hết 90 phút, toàn bộ máy tính bảng của học sinh sẽ lưu tiến độ bài làm và tự động đăng xuất về màn hình chờ.
+            </p>
+            <p style="margin:0; font-size:13px; color:var(--ink); background:var(--warn-soft); padding:8px 12px; border-radius:6px; border:1px solid var(--warn)">
+              Bắt buộc kết thúc để học sinh ca sau không bị ghi đè dữ liệu vào tài khoản em trước.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" onclick="closeEndSessionModal()">Huỷ bỏ, tiếp tục học</button>
+        <button type="button" class="btn btn-danger" onclick="confirmEndSession()">Đồng ý kết thúc</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ============================================================
+       DỮ LIỆU GIẢ 28 HỌC SINH LỚP 1A (MẶC ĐỊNH 18 EM ĐÃ VÀO)
+       ============================================================ */
+    const STUDENTS_S06 = [
+      { id: 1, name: "Nam B.", animal: "🦁", in: true, time: "07:58" },
+      { id: 2, name: "An", animal: "🐼", in: true, time: "07:59" },
+      { id: 3, name: "Bảo", animal: "🐨", in: true, time: "08:00" },
+      { id: 4, name: "Chi", animal: "🦊", in: true, time: "08:01" },
+      { id: 5, name: "Dũng", animal: "🐰", in: true, time: "08:01" },
+      { id: 6, name: "Đạt", animal: "🐻", in: true, time: "08:02" },
+      { id: 7, name: "Hà", animal: "🐵", in: true, time: "08:02" },
+      { id: 8, name: "Hải", animal: "🐬", in: true, time: "08:03" },
+      { id: 9, name: "Hiếu", animal: "🐸", in: true, time: "08:03" },
+      { id: 10, name: "Hương", animal: "🦄", in: true, time: "08:04" },
+      { id: 11, name: "Khánh", animal: "🦉", in: true, time: "08:04" },
+      { id: 12, name: "Khoa", animal: "🐧", animalName: "Cánh cụt", in: true, time: "08:05" },
+      { id: 13, name: "Lâm", animal: "🦒", in: true, time: "08:05" },
+      { id: 14, name: "Linh", animal: "🦔", in: true, time: "08:06" },
+      { id: 15, name: "Mai", animal: "🐝", in: true, time: "08:06" },
+      { id: 16, name: "Minh", animal: "🐢", in: true, time: "08:07" },
+      { id: 17, name: "My", animal: "🐘", in: true, time: "08:07" },
+      { id: 18, name: "Nhi", animal: "🦩", in: true, time: "08:08" },
+      // 10 em chưa vào:
+      { id: 19, name: "Phong", animal: "🦭", in: false, time: null },
+      { id: 20, name: "Phúc", animal: "🦀", in: false, time: null },
+      { id: 21, name: "Quang", animal: "🦋", in: false, time: null },
+      { id: 22, name: "Quân", animal: "🦖", in: false, time: null },
+      { id: 23, name: "Sơn", animal: "🐳", in: false, time: null },
+      { id: 24, name: "Thảo", animal: "🦜", in: false, time: null },
+      { id: 25, name: "Trâm", animal: "🦘", in: false, time: null },
+      { id: 26, name: "Tú", animal: "🐺", in: false, time: null },
+      { id: 27, name: "Việt", animal: "🐯", in: false, time: null },
+      { id: 28, name: "Vũ", animal: "🦚", in: false, time: null }
+    ];
+
+    let sessionActive = false;
+    let timerSeconds = 90 * 60 - 15; // 89 phút 45 giây
+    let timerInterval = null;
+
+    /* ========== BẮT ĐẦU BUỔI HỌC ========== */
+    function startSession() {
+      sessionActive = true;
+      document.getElementById("pre-start-card").hidden = true;
+      document.getElementById("active-session-stage").hidden = false;
+      document.getElementById("btn-start-session").hidden = true;
+
+      const badge = document.getElementById("session-badge");
+      badge.className = "session-status-badge open";
+      badge.textContent = "● Đang mở (Tiết học)";
+
+      renderRoster();
+      startTimer();
+    }
+
+    /* ========== RENDER LƯỚI HỌC SINH ========== */
+    function renderRoster() {
+      const container = document.getElementById("roster-grid");
+      container.innerHTML = "";
+
+      let countIn = 0;
+      STUDENTS_S06.forEach(s => {
+        if (s.in) countIn++;
+        const item = document.createElement("div");
+        item.className = "roster-item " + (s.in ? "is-in" : "not-in");
+        item.innerHTML = `
+          <div class="roster-avatar">${s.animal}</div>
+          <div class="roster-name" title="${s.name}">${s.name}</div>
+          <div class="roster-status-chip">
+            ${s.in ? `✓ ${s.time || "Đã vào"}` : "Chưa vào"}
+          </div>
+        `;
+        container.appendChild(item);
+      });
+
+      document.getElementById("entered-count").textContent = countIn;
+      const pct = Math.round((countIn / STUDENTS_S06.length) * 100);
+      document.getElementById("roster-fill").style.width = pct + "%";
+    }
+
+    /* ========== GIẢ LẬP HỌC SINH VÀO DẦN ========== */
+    function simulateAddOneStudent() {
+      const nextNot = STUDENTS_S06.find(s => !s.in);
+      if (nextNot) {
+        nextNot.in = true;
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        nextNot.time = `${hh}:${mm}`;
+        renderRoster();
+      } else {
+        alert("Tất cả 28/28 học sinh đã vào lớp!");
+      }
+    }
+
+    function simulateAllStudentsIn() {
+      STUDENTS_S06.forEach(s => {
+        s.in = true;
+        if (!s.time) s.time = "08:12";
+      });
+      renderRoster();
+    }
+
+    function simulateResetToDefault() {
+      STUDENTS_S06.forEach((s, idx) => {
+        s.in = (idx < 18);
+        s.time = (idx < 18) ? `08:0${Math.min(idx, 9)}` : null;
+      });
+      renderRoster();
+    }
+
+    /* ========== ĐỒNG HỒ 90 PHÚT ========== */
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      updateTimerDisplay();
+
+      timerInterval = setInterval(() => {
+        if (timerSeconds > 0) {
+          timerSeconds--;
+          updateTimerDisplay();
+        } else {
+          clearInterval(timerInterval);
+          alert("Hết 90 phút buổi học! Theo GD-11, buổi học tự động kết thúc.");
+          confirmEndSession();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const display = document.getElementById("timer-display");
+      const hrs = Math.floor(timerSeconds / 3600);
+      const mins = Math.floor((timerSeconds % 3600) / 60);
+      const secs = timerSeconds % 60;
+
+      const formatted = `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      display.textContent = formatted;
+
+      if (timerSeconds < 300) {
+        display.classList.add("low");
+      } else {
+        display.classList.remove("low");
+      }
+    }
+
+    /* ========== KẾT THÚC BUỔI HỌC (MODAL F-02.4) ========== */
+    function openEndSessionModal() {
+      document.getElementById("modal-end-session").hidden = false;
+    }
+
+    function closeEndSessionModal() {
+      document.getElementById("modal-end-session").hidden = true;
+    }
+
+    function confirmEndSession() {
+      closeEndSessionModal();
+      if (timerInterval) clearInterval(timerInterval);
+      sessionActive = false;
+
+      const badge = document.getElementById("session-badge");
+      badge.className = "session-status-badge closed";
+      badge.textContent = "● Đã kết thúc";
+
+      document.getElementById("active-session-stage").innerHTML = `
+        <div class="card card-pad" style="grid-column: 1 / -1; text-align: center; padding: 48px 24px;">
+          <div style="font-size: 52px; margin-bottom: 12px">⏹</div>
+          <h2 style="font-size: 24px; margin-bottom: 8px">Buổi học đã kết thúc thành công</h2>
+          <p style="color: var(--muted); font-size: 15px; max-width: 500px; margin: 0 auto 20px;">
+            Mọi thiết bị học sinh đã tự động lưu dữ liệu bài làm và trở về màn hình chờ ban đầu (F-02 bước 4).
+          </p>
+          <div style="display:flex; justify-content:center; gap:12px">
+            <a href="s07-bang-lop-cham.html" class="btn btn-primary">Chuyển sang Bảng lớp để chấm bài (S-07) →</a>
+            <button type="button" class="btn" onclick="location.reload()">Mở lại buổi học mới</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function copyCode() {
+      navigator.clipboard?.writeText("2468");
+      alert("Đã sao chép mã buổi học: 2468");
+    }
+
+    // Tự động mở sẵn chế độ đang hoạt động để người review thấy ngay mã to
+    startSession();
+  </script>
+</body>
+</html>

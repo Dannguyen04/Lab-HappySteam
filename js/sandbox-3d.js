@@ -1,6 +1,7 @@
 // Sa bàn 3D (chặng ③): mô hình 3D học sinh vừa lắp (kèm gói nâng cấp đã đưa từ xưởng sáng tạo) chuyển động theo
 // chương trình đang chạy. Trình xem 3D (#app) được chuyển vào #sim-stage khi mở và trả về chặng lắp ráp khi rời.
-// Tư thế lấy từ bộ mô phỏng của bài: simEngine.pose3d() → { output: góc (rad), motor: góc (rad), offset?: [x, y, z] }.
+// Tư thế lấy từ bộ mô phỏng của bài: simEngine.pose3d() → { output: góc (rad), motor: góc (rad), offset?: [x, y, z] }
+// (hoặc góc theo tên bộ truyền khác trong DATA.drive, vd. tilt).
 (function () {
   'use strict';
 
@@ -25,7 +26,7 @@
     if (now - lastFrame < 33) return; // ~30 khung hình/giây là đủ, nhẹ cho máy tính bảng
     lastFrame = now;
     const a = pose();
-    const key = [a.output, a.motor, ...(a.offset || [])].map(v => (v || 0).toFixed(4)).join();
+    const key = Object.keys(a).sort().flatMap(k => [k, ...[].concat(a[k]).map(v => (v || 0).toFixed(4))]).join();
     if (key === last) return;
     last = key;
     window.robotViewer.setSpin(a);
@@ -61,7 +62,7 @@
     if (window.robotViewer && window.robotViewer.setCreative) window.robotViewer.setCreative(null);
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  zmReady(() => {
     // Đổi khung lớn: 3D ⇄ bản đồ quỹ đạo 2D
     $('sim-swap-view')?.addEventListener('click', () => {
       const wrap = document.querySelector('.sim-stage-wrap');

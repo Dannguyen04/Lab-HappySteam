@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Happy STEAM Lab · Danh mục Wireframe Duyệt Giao diện</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      padding-bottom: 60px;
+    }
+
+    .hero-banner {
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      padding: 36px 24px;
+      margin-bottom: 32px;
+    }
+
+    .hero-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero-title {
+      font-size: clamp(28px, 3.5vw, 40px);
+      margin: 8px 0;
+    }
+
+    .wireframe-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .wf-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .wf-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--accent);
+    }
+
+    .wf-card-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--line);
+      background: var(--sunk);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .wf-code-badge {
+      font-family: var(--f-mono);
+      font-weight: 700;
+      font-size: 13px;
+      background: var(--ink);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+    }
+
+    .wf-card-body {
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .wf-feature-list {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .wf-card-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--line);
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Checklist nghiệm thu */
+    .checklist-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 40px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 14.5px;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .check-item:last-child {
+      border-bottom: none;
+    }
+
+    .check-icon {
+      color: var(--ok);
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    /* 5 Quyết định thiết kế */
+    .decisions-card {
+      background: #f0f7fb;
+      border: 2px solid var(--accent);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+
+    .decision-item {
+      margin-bottom: 16px;
+      padding-left: 20px;
+      position: relative;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .decision-item::before {
+      content: "★";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--accent);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="wf-nav">
+    <a href="index.html" class="wf-nav-brand">
+      <span class="wf-badge-logo">Happy STEAM</span>
+      <span class="wf-nav-title">Phòng Lab ZMrobo ảo · Wireframe Hub</span>
+    </a>
+    <div class="wf-nav-links">
+      <span class="wf-tag-mock">Phiếu giao việc 04</span>
+      <a href="s01-vao-buoi-hoc.html" class="wf-nav-btn">S-01 Vào buổi học</a>
+      <a href="s06-gv-mo-buoi.html" class="wf-nav-btn">S-06 GV Mở buổi học</a>
+      <a href="s07-bang-lop-cham.html" class="wf-nav-btn">S-07 Bảng lớp & Chấm</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-banner">
+    <div class="hero-content">
+      <div class="eyebrow">Dự án Lab-HappySteam · Tài liệu thiết kế giao diện</div>
+      <h1 class="hero-title">Bản phác giao diện (Wireframe)</h1>
+      <p class="lede" style="max-width:760px">
+        Phác thảo giao diện tương tác cho 3 màn hình cốt lõi: Học sinh vào buổi học (S-01), Giáo viên mở buổi học chiếu bảng (S-06), và Bảng lớp chấm điểm cuối tuần (S-07). Thuần HTML/CSS/JS, chạy trực tiếp trên mọi trình duyệt.
+      </p>
+    </div>
+  </section>
+
+  <main class="wrap">
+
+    <!-- 3 Thẻ Wireframe Chính -->
+    <div class="wireframe-cards-grid">
+
+      <!-- CARD 1: S-01 -->
+      <article class="wf-card">
+        <div class="wf-card-header">
+          <span class="wf-code-badge">MÀN HÌNH S-01</span>
+          <span class="chip chip-htt">ƯU TIÊN P0</span>
+        </div>
+        <div class="wf-card-body">
+          <h2 style="font-size:20px">Học sinh vào buổi học</h2>
+          <p class="lede">Dành cho học sinh Lớp 1 (6–7 tuổi, chưa đọc thạo). Tối ưu tablet 1024×768 và mobile 375px. 25–30 em làm cùng lúc, mục tiêu ≤ 20 giây.</p>
+          <ul class="wf-feature-list">
+            <li><strong>Bước 1:</strong> 4 ô số to + bàn phím số riêng (nút ≥ 64px). Mã mẫu: <code>2468</code>. Báo rung & đỏ khi sai.</li>
+            <li><strong>Bước 2:</strong> Lưới 28 em với ảnh con vật to không trùng + tên ngắn. 1 em đang học máy khác có biểu tượng 💻 và cảnh báo <strong>BR-BH-02</strong>.</li>
+            <li><strong>Bước 3:</strong> Chào [Tên] + nút lớn "Vào học" và nút "Không phải em".</li>
+          </ul>
+        </div>
+        <div class="wf-card-footer">
+          <span style="font-size:12px; color:var(--muted)">File: <code>s01-vao-buoi-hoc.html</code></span>
+          <a href="s01-vao-buoi-hoc.html" class="btn btn-primary btn-sm">Mở giao diện S-01 →</a>
+        </div>
+      </article>
+
+      <!-- CARD 2: S-06 -->
+      <article class="wf-card">
+        <div class="wf-card-header">
+          <span class="wf-code-badge">MÀN HÌNH S-06</span>
+          <span class="chip chip-ht">GIÁO VIÊN CHIẾU BẢNG</span>
+        </div>
+        <div class="wf-card-body">
+          <h2 style="font-size:20px">Giáo viên mở buổi học</h2>
+          <p class="lede">Giao diện laptop 1366px, giáo viên kết nối máy chiếu / bảng thông minh trước cả lớp.</p>
+          <ul class="wf-feature-list">
+            <li>Nút "Bắt đầu buổi học", tạo <strong>mã 4 số khổng lồ</strong> (đọc được từ cuối lớp 15m).</li>
+            <li>Đồng hồ đếm ngược 90 phút (<strong>GD-11</strong>).</li>
+            <li>Lưới 28 học sinh hiển thị trực quan trạng thái kết nối (đếm 18/28 đã vào + công cụ giả lập thêm em).</li>
+            <li>Nút "Kết thúc buổi học" kèm hộp xác nhận: "Mọi máy trong buổi sẽ tự thoát" (<strong>F-02 bước 4</strong>).</li>
+          </ul>
+        </div>
+        <div class="wf-card-footer">
+          <span style="font-size:12px; color:var(--muted)">File: <code>s06-gv-mo-buoi.html</code></span>
+          <a href="s06-gv-mo-buoi.html" class="btn btn-primary btn-sm">Mở giao diện S-06 →</a>
+        </div>
+      </article>
+
+      <!-- CARD 3: S-07 -->
+      <article class="wf-card">
+        <div class="wf-card-header">
+          <span class="wf-code-badge">MÀN HÌNH S-07</span>
+          <span class="chip chip-cht">CHẤM ĐIỂM & ĐÁNH GIÁ</span>
+        </div>
+        <div class="wf-card-body">
+          <h2 style="font-size:20px">Bảng lớp & Chấm</h2>
+          <p class="lede">Bảng ma trận 28 học sinh × 10 bài học đã mở, giáo viên chấm cuối tuần với dữ liệu tiến độ trực quan.</p>
+          <ul class="wf-feature-list">
+            <li>Bảng cuộn 2 chiều, <strong>cột tên học sinh cố định (sticky)</strong> khi cuộn ngang.</li>
+            <li>Ô bài làm: Tiến độ (3/4), chip HTT / HT / CHT, cờ cam "tiến bộ mới".</li>
+            <li><strong>Ngăn kéo bên phải (Drawer):</strong> Nhiệm vụ cơ bản + nâng cao tách riêng (GD-06), mockup khối lệnh, mức máy gợi ý (BRD 6.2), cảnh báo vàng <strong>BR-DG-01</strong>, ô nhận xét ≤ 500 ký tự.</li>
+            <li>Khóa nhận xét cho 5 em chưa có đồng ý phụ huynh (<strong>BR-DY-02 & GD-14</strong>), có biểu tượng <code>🛡️ Chờ PH</code>.</li>
+            <li>Chức năng <strong>Chấm nhanh</strong>: chọn nhiều ô → "Chấp nhận mức gợi ý (n ô)".</li>
+          </ul>
+        </div>
+        <div class="wf-card-footer">
+          <span style="font-size:12px; color:var(--muted)">File: <code>s07-bang-lop-cham.html</code></span>
+          <a href="s07-bang-lop-cham.html" class="btn btn-primary btn-sm">Mở giao diện S-07 →</a>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Tiêu chí nghiệm thu (Acceptance Criteria) -->
+    <section class="checklist-card">
+      <div class="eyebrow" style="margin-bottom:8px">Kiểm tra tiêu chí nghiệm thu</div>
+      <h2 style="font-size:22px; margin-bottom:16px">Bảng đối soát yêu cầu kỹ thuật & nghiệp vụ</h2>
+      
+      <div class="check-item">
+        <span class="check-icon">✓</span>
+        <div><strong>Khởi chạy độc lập:</strong> Mở trực tiếp từng file HTML trong trình duyệt (qua giao thức <code>file:///...</code>), không phát sinh lỗi console, không phụ thuộc server hay thư viện CDN bên ngoài.</div>
+      </div>
+      <div class="check-item">
+        <span class="check-icon">✓</span>
+        <div><strong>Đáp ứng màn hình S-01:</strong> Chạy mượt trên cả 375px (mobile) và 1024×768 (tablet ngang), không bị tràn cuộn ngang; mọi nút bấm số và thẻ tên đều có kích thước vùng chạm ≥ 64px.</div>
+      </div>
+      <div class="check-item">
+        <span class="check-icon">✓</span>
+        <div><strong>Hiệu năng ma trận S-07:</strong> Thể hiện đầy đủ 28 hàng học sinh × 10 cột bài học, cuộn mượt mà; cột học sinh cố định ở bên trái khi cuộn ngang và hàng tiêu đề cố định ở trên khi cuộn dọc.</div>
+      </div>
+      <div class="check-item">
+        <span class="check-icon">✓</span>
+        <div><strong>Bảo đảm trọn vẹn quy tắc nghiệp vụ:</strong>
+          <br>• <strong>BR-BH-02:</strong> Cảnh báo khi học sinh chọn tên đang đăng nhập ở máy khác nhưng vẫn cho phép tiếp tục vào học.
+          <br>• <strong>BR-DG-01:</strong> Cho phép giáo viên chọn mức khác mức gợi ý của máy nhưng kích hoạt cảnh báo màu vàng.
+          <br>• <strong>BR-DY-02 & GD-14:</strong> Khóa ô nhận xét và dán nhãn <code>🛡️ Chờ PH</code> cho đúng 5 em chưa có phụ huynh đồng ý lưu dữ liệu.
+          <br>• <strong>F-02.4:</strong> Hộp thoại cảnh báo "Mọi máy trong buổi sẽ tự thoát" khi giáo viên kết thúc buổi học.
+        </div>
+      </div>
+      <div class="check-item">
+        <span class="check-icon">✓</span>
+        <div><strong>Giữ nguyên vẹn mã nguồn:</strong> Chỉ tạo file trong <code>docs/wireframes/</code>, không sửa bất kỳ file nào khác trong dự án.</div>
+      </div>
+    </section>
+
+    <!-- 5 Quyết định thiết kế đã tự chọn -->
+    <section class="decisions-card">
+      <div class="eyebrow" style="color:var(--accent); margin-bottom:6px">Tài liệu kiến trúc giao diện</div>
+      <h2 style="font-size:22px; margin-bottom:14px; color:var(--ink)">5 Quyết định thiết kế đã tự chọn</h2>
+      
+      <div class="decision-item">
+        <strong>1. Bàn phím số chuyên dụng trên màn hình (Custom On-Screen Numeric Keypad) cho S-01:</strong> 
+        Thay vì dùng thẻ <code>&lt;input type="number"&gt;</code> kích hoạt bàn phím ảo mặc định của hệ điều hành (thường che khuất nửa dưới màn hình và khó thao tác với trẻ 6–7 tuổi), thiết kế dùng bàn phím số riêng với kích thước nút lớn (72px ≥ chuẩn 64px), phím bấm nổi bật và tự động chuyển bước ngay khi đủ 4 số giúp trẻ lớp 1 vào lớp trong ≤ 20 giây mà không cần bấm thêm nút "Đồng ý".
+      </div>
+
+      <div class="decision-item">
+        <strong>2. Bộ nhận diện 28 con vật độc bản (Unique Animal Avatars) không trùng lặp:</strong> 
+        Theo nghiệp vụ GD-14, trước khi phụ huynh đồng ý, hệ thống chỉ lưu tên gọi ngắn và ảnh con vật. Để trẻ lớp 1 chưa đọc thạo chữ vẫn nhận diện chính xác danh tính của mình trong lưới 28 em, mỗi học sinh trong lớp được gán một con vật riêng biệt với kích thước avatar lớn (40px trong lưới và 120px ở bước xác nhận), giảm thiểu tối đa tình trạng chọn nhầm tên bạn.
+      </div>
+
+      <div class="decision-item">
+        <strong>3. Kiểu chữ số khổng lồ (Giant Typography ~96px) tương phản cao cho S-06:</strong> 
+        Màn hình S-06 được thiết kế dành riêng cho tình huống giáo viên chiếu projector hoặc bảng tương tác lên đầu lớp. Cụm mã 4 số được đặt trong hộp viền nổi bật với cỡ chữ 96px (font JetBrains Mono), kết hợp đồng hồ đếm ngược 90 phút có thể đọc rõ ràng từ khoảng cách 10–15 mét ở cuối phòng học.
+      </div>
+
+      <div class="decision-item">
+        <strong>4. Cấu trúc bảng cố định 2 chiều kết hợp Ngăn kéo trượt (Sticky Matrix & Right Drawer) cho S-07:</strong> 
+        Với ma trận 28 hàng × 10 cột, việc dùng ngăn kéo trượt bên phải (Slide Drawer) thay vì pop-up modal giúp giáo viên xem chi tiết từng bài làm (nhiệm vụ cơ bản, nâng cao, khối lệnh và mức gợi ý) mà vẫn giữ nguyên tầm mắt và vị trí cuộn trên bảng tổng thể của lớp, giảm thao tác đóng/mở làm gián đoạn việc chấm điểm.
+      </div>
+
+      <div class="decision-item">
+        <strong>5. Phân tầng màu sắc và hình thái độc lập cho 3 mức đánh giá (HTT / HT / CHT):</strong> 
+        Để giáo viên không chỉ phụ thuộc vào màu sắc (tránh nhầm lẫn thị giác khi làm việc lâu hoặc người có thị lực màu hạn chế), cả 3 mức đánh giá đều được thiết kế kèm chữ viết tắt rõ ràng, viền phân biệt và biểu tượng chip riêng biệt (Xanh lá - HTT, Xanh dương - HT, Cam đất - CHT), đồng thời nhiệm vụ Nâng cao (M5–M6) được tách hẳn khỏi khu vực tính mức theo đúng giả định GD-06.
+      </div>
+    </section>
+
+  </main>
+
+  <footer style="text-align:center; padding:24px; color:var(--muted); font-size:13px">
+    Happy STEAM Lab · Bộ wireframe duyệt giao diện hoàn thành theo Phiếu giao việc 04
+  </footer>
+
+</body>
+</html>

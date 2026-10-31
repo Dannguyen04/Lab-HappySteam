@@ -264,7 +264,7 @@
     if (window.robotViewer && window.robotViewer.setCreative) window.robotViewer.setCreative(null);
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  zmReady(() => {
     if (!$('creative-presets')) return;
     renderPanel(window.LESSON_3D_DATA);
     $('creative-reset').onclick = () => {

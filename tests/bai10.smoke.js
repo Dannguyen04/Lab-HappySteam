@@ -3,22 +3,23 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const { chromium } = require('playwright');
+const { pageUrl } = require('./helpers/page-url');
 
 (async () => {
   const executablePath = [process.env.ZM_CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe']
     .filter(Boolean).find(p => fs.existsSync(p));
   const browser = await chromium.launch({ headless: true, ...(executablePath ? { executablePath } : {}) });
   try {
-    const root = path.resolve(__dirname, '..').split(path.sep).join('/');
     const page = await browser.newPage({ viewport: { width: 1366, height: 860 }, reducedMotion: 'reduce' });
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
     // js/bai10/art.js (hình vẽ cảnh) có thể chưa có – trang tự dùng hình đơn giản
     page.on('requestfailed', r => !/bai10\/art\.js$/.test(r.url()) && errors.push('Không tải được ' + r.url()));
-    await page.goto(`file:///${root}/lop1-bai10.html`);
+    await page.goto(pageUrl('bai.html?id=lop1-bai10'));
     await page.evaluate(() => localStorage.clear());
     await page.reload();
     await page.waitForFunction(() => window.robotViewer, null, { timeout: 20000 });
+    await page.locator('#lesson-loading').waitFor({ state: 'detached', timeout: 20000 });
     assert.match(await page.title(), /Bài 10/);
     assert.equal(await page.evaluate(() => window.robotViewer.stats().instances), 41);
     await page.evaluate(() => window.robotViewer.setStep(14));
@@ -78,7 +79,7 @@ const { chromium } = require('playwright');
     await page.click('#scene-toggle');
 
     const mobile = await browser.newPage({ viewport: { width: 375, height: 760 }, isMobile: true });
-    await mobile.goto(`file:///${root}/lop1-bai10.html`);
+    await mobile.goto(pageUrl('bai.html?id=lop1-bai10'));
     await mobile.waitForFunction(() => window.robotViewer, null, { timeout: 20000 });
     for (const tab of ['#tab-btn-asm', '#tab-btn-creative', '#tab-btn-sim']) {
       await mobile.click(tab);

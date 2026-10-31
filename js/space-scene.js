@@ -730,7 +730,7 @@
     window.ZMSandbox?.close();
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  zmReady(() => {
     cv = $('space-scene');
     if (!cv) return;
     ctx = cv.getContext('2d');

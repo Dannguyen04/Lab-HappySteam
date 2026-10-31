@@ -6,12 +6,13 @@ const vm = require('node:vm');
 const plan = require('../scripts/assembly-plan');
 
 const root = path.join(__dirname, '..');
+(async () => {
 const context = {
   window: { addEventListener() {} },
   document: { getElementById() { return null; } },
   performance: { now: () => 0 },
 };
-vm.runInNewContext(fs.readFileSync(path.join(root, 'js/data-bai-09.js'), 'utf8'), context);
+await require('./helpers/lesson-3d')(context, 'lop1/bai09');
 const model = context.window.LESSON_3D_DATA;
 assert.equal(model.instances.length, 61, 'Mô hình gốc phải có 61 linh kiện');
 assert.equal(model.steps, 28, 'Sách hướng dẫn chính thức có 28 bước');
@@ -212,3 +213,5 @@ const skip = runAdv([B.start, { type: 'if_see' }, { type: 'photo' }, { type: 'if
 assert.ok(!skip.events.some(e => e.startsWith('photo')), 'Không thấy vật lạ thì bỏ qua các khối trong Nếu');
 
 console.log('PASS: hình học CAD gốc 61 linh kiện/32 mesh, 28 bước theo sách, mã/màu ZMROBO, 4 nhiệm vụ + Motor Power, 18 tình huống mô phỏng/chấm điểm, 8 tình huống Nâng cao.');
+
+})().catch(err => { console.error(err); process.exit(1); });

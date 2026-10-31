@@ -1,4 +1,4 @@
-// Tạo dữ liệu 3D Bài 10 – cối xoay gió (js/data-bai-10.js) từ hình CAD nhúng trong file .io.
+// Tạo dữ liệu 3D Bài 10 – cối xoay gió (content/lop1/bai10/build.json) từ hình CAD nhúng trong file .io.
 // Cần references/drive_bai10/model2.ldr (giải nén từ "Bài 10 - Bạn gió tinh nghịch, gió ở đâu.io", chỉ có ở máy).
 // File này không chia mô hình con (flat). Bước theo sách: scripts/bai10-plan.js; mã/tên/màu: scripts/bai10-parts.js.
 'use strict';
@@ -9,7 +9,6 @@ const table = require('./bai10-parts');
 
 const ROOT = path.join(__dirname, '..');
 const source = path.join(ROOT, 'references', 'drive_bai10', 'model2.ldr');
-const target = path.join(ROOT, 'js', 'data-bai-10.js');
 
 const sections = cad.readSections(source);
 const rootParts = cad.flattenRoot(sections, 'bài 10 - bạn gió tinh nghịch, gió ở đâu', plan.count, true);
@@ -55,7 +54,7 @@ const creative = {
   ]
 };
 
-cad.writeData(target, {
+cad.writeData({
   source: 'Bài 10 - Bạn gió tinh nghịch, gió ở đâu.io (hình CAD gốc, 41 linh kiện); 15 bước theo sách hướng dẫn lắp',
   label: 'Bài 10',
   meshes, textures: [], instances,
@@ -64,4 +63,4 @@ cad.writeData(target, {
   labels: cad.labelsOf(table),
   creative,
   drive: DRIVE,
-}, `CAD gốc: ${sections.size} section, ${rootParts.length} chi tiết, ${meshes.length} mesh, ${stats.triangles} tam giác;`);
+}, `CAD gốc: ${sections.size} section, ${rootParts.length} chi tiết, ${meshes.length} mesh, ${stats.triangles} tam giác;`, 'lop1/bai10');

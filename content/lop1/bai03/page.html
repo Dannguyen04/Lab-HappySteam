@@ -1,0 +1,99 @@
+<title>Robot thám hiểm Milo · Lớp 1 · Bài 3 · Happy STEAM</title>
+<template data-slot="header-copy">
+      <div class="eyebrow">Lớp 1 · Bài 3 · Robot thám hiểm</div>
+      <h1>Robot thám hiểm Milo</h1>
+      <p class="lede pro-only">Lắp robot Milo theo 22 bước của sách, gắn thêm chi tiết sáng tạo, rồi lập trình cho robot thấy vật cản mới chạy và chở mẫu cây trên sao Hỏa từ Trạm A tới điểm B.</p>
+</template>
+
+<template data-slot="mission-chips">
+    <span class="chip" id="chip-m1" title="Bấm “Đã lắp xong bước này” ở cả 22 bước"><i>1</i>Lắp xong 22 bước</span>
+    <span class="chip" id="chip-m2" title="Start · Chờ vật cản · Quay nhanh · Chờ 3s · Dừng"><i>2</i>Lập trình theo mẫu</span>
+    <span class="chip" id="chip-m3" title="Dừng đúng ở điểm B, mẫu cây không rơi"><i>3</i>Chở mẫu tới B</span>
+    <span class="chip" id="chip-m4" title="Gắn gói nâng cấp ở chặng Sáng tạo, đưa vào sa bàn và cho động cơ chạy"><i>4</i>Thử nâng cấp sáng tạo</span>
+    <span class="chip pro-only" id="chip-m5" title="Nâng cao: điểm B đổi chỗ, tính tốc độ × thời gian, chở đúng 3 vị trí"><i>5</i>Đo quãng đường</span>
+</template>
+
+<template data-slot="victory-copy">
+      <p>Em đã lắp xong robot Milo, lập trình đúng theo sách, chở mẫu cây tới điểm B và thử nâng cấp sáng tạo của mình.</p>
+      <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM3</code></p>
+</template>
+
+<template data-slot="assembly-tab">
+      <i>1</i><span><b>Lắp ráp</b><small>22 bước theo sách</small></span>
+</template>
+
+<template data-slot="assembly-count">
+          <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 22</span></span>
+</template>
+
+<template data-slot="assembly-canvas">
+              <canvas id="view" aria-label="Mô hình robot Milo 3D: kéo để xoay, cuộn để phóng to"></canvas>
+</template>
+
+<template data-slot="assembly-slider">
+                <input id="slider" type="range" min="1" max="22" value="1" aria-label="Chọn bước lắp">
+</template>
+
+<template data-slot="assembly-meter-step">
+          <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 22</small></div><div class="s" id="am-step-s">Thân robot</div></dd></div>
+</template>
+
+<template data-slot="assembly-meter-done">
+          <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 22</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+</template>
+
+<template data-slot="book-image">
+          <img id="book-img" src="assets/bai03/step-01.jpg" alt="Hình bước 1 trong sách hướng dẫn lắp ráp">
+</template>
+
+<template data-slot="book-link">
+          <a id="book-pdf" class="link" href="assets/bai03/step-01.jpg" target="_blank" rel="noopener">Mở hình lớn ↗</a>
+</template>
+
+<template data-slot="creative-intro">
+          <p class="status-text">Robot Milo sắp đi thám hiểm sao Hỏa. Hãy làm robot <b>chở được nhiều hơn</b> và <b>thông minh hơn</b>. Chọn gói gợi ý hoặc tự gắn chi tiết, chi tiết mới sẽ rơi vào mô hình.</p>
+</template>
+
+<template data-slot="creative-canvas">
+        <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình robot Milo 3D đang sáng tạo"></div>
+</template>
+
+<template data-slot="creative-slot-label">
+        <div class="panel-h"><h2>Tự gắn chi tiết</h2><small>4 vị trí trên robot</small></div>
+</template>
+
+<template data-slot="creative-result-label">
+        <div class="panel-h"><h2>Robot của em sẽ có</h2></div>
+</template>
+
+<template data-slot="sim-upgrade-label">
+            <small id="sim-active-upgrade-badge" class="status-tag">Robot cơ bản</small>
+</template>
+
+<template data-slot="sim-scene">
+          <canvas id="space-scene" aria-label="Cảnh sao Hỏa: robot Milo chạy từ Trạm A tới điểm B theo chương trình"></canvas>
+          <div class="sim-stage" id="sim-stage" aria-label="Robot Milo 3D chạy theo chương trình"></div>
+          <p class="scene-idle" id="scene-idle">Chạm khối <b>Start</b> màu vàng hoặc nút <b>▶</b>, rồi bấm <b>✋</b> để đưa tay trước cảm biến</p>
+          <button type="button" class="hand-btn" id="scene-hand" title="Đưa tay trước cảm biến siêu âm" aria-label="Đưa tay trước cảm biến">✋</button>
+</template>
+
+<template data-slot="sim-meters">
+        <dl class="meters pro-only">
+          <div class="meter"><dt>Tốc độ</dt><dd><div class="v" id="m-speed">0<small>cm/giây</small></div><div class="s" id="m-speed-note">Mức 8/8</div></dd></div>
+          <div class="meter"><dt>Đã đi</dt><dd><div class="v" id="m-dist">0<small>cm</small></div><div class="s">tính từ Trạm A</div></dd></div>
+          <div class="meter"><dt>Điểm B</dt><dd><div class="v" id="m-target">80<small>cm</small></div><div class="s" id="m-target-note">Dừng trong ±6 cm</div></dd></div>
+          <div class="meter"><dt>Mẫu cây</dt><dd><div class="v" id="m-sample">Còn</div><div class="s">trên robot</div></dd></div>
+        </dl>
+</template>
+
+<template data-slot="sim-calculation">
+        <div class="panel-h"><h2>Tính toán</h2><small>Tốc độ × thời gian = quãng đường</small></div>
+        <div class="pad calc">
+          <p class="calc-eq" id="calc-eq1"></p>
+          <p class="calc-eq" id="calc-eq2"></p>
+        </div>
+</template>
+
+<template data-slot="sim-hint">
+            <p class="hint"><b>NV2</b> ghép đúng chương trình trong phiếu học tập, chạy rồi đưa tay trước cảm biến. <b>NV3</b> dừng robot trong vùng vàng ở điểm B mà mẫu cây không rơi: mức tốc độ từ 6 trở lên làm rơi mẫu nếu chưa có thùng chở. Mức 8 đi ≈ 39 cm mỗi giây, mức 4 ≈ 20 cm mỗi giây.</p>
+</template>

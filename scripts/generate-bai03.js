@@ -1,4 +1,4 @@
-// Tạo dữ liệu 3D Bài 3 – Robot thám hiểm Milo (js/data-bai-03.js) từ hình CAD nhúng trong file .io.
+// Tạo dữ liệu 3D Bài 3 – Robot thám hiểm Milo (content/lop1/bai03/build.json) từ hình CAD nhúng trong file .io.
 // Cần references/drive_bai3/model2.ldr (giải nén từ "Bài 3 - Robot thám hiểm.io", chỉ có ở máy).
 // Bước theo sách: scripts/bai03-plan.js; mã/tên/màu: scripts/bai03-parts.js.
 'use strict';
@@ -9,7 +9,6 @@ const table = require('./bai03-parts');
 
 const ROOT = path.join(__dirname, '..');
 const source = path.join(ROOT, 'references', 'drive_bai3', 'model2.ldr');
-const target = path.join(ROOT, 'js', 'data-bai-03.js');
 
 const sections = cad.readSections(source);
 const rootParts = cad.flattenRoot(sections, 'bài 3 - robot thám hiểm', plan.count);
@@ -73,7 +72,7 @@ const creative = {
   ]
 };
 
-cad.writeData(target, {
+cad.writeData({
   source: 'Bài 3 - Robot thám hiểm.io (hình CAD gốc, 40 linh kiện); 22 bước theo sách hướng dẫn lắp',
   label: 'Bài 3',
   meshes, textures: [], instances,
@@ -82,4 +81,4 @@ cad.writeData(target, {
   labels: cad.labelsOf(table),
   creative,
   drive: DRIVE,
-}, `CAD gốc: ${sections.size} section, ${rootParts.length} chi tiết, ${meshes.length} mesh, ${stats.triangles} tam giác;`);
+}, `CAD gốc: ${sections.size} section, ${rootParts.length} chi tiết, ${meshes.length} mesh, ${stats.triangles} tam giác;`, 'lop1/bai03');

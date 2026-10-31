@@ -1,0 +1,42 @@
+const { readdirSync } = require('node:fs');
+const path = require('node:path');
+const { spawnSync, fork } = require('node:child_process');
+
+const kind = process.argv[2];
+if (kind !== 'logic' && kind !== 'smoke') {
+  console.error('Usage: node tests/run-suite.js logic|smoke');
+  process.exit(2);
+}
+
+function startServer() {
+  const server = fork(path.join(__dirname, 'helpers/static-server.js'), [], {
+    stdio: ['ignore', 'inherit', 'inherit', 'ipc']
+  });
+  return new Promise((resolve, reject) => {
+    server.once('message', ({ port }) => resolve({ server, base: `http://127.0.0.1:${port}` }));
+    server.once('error', reject);
+    server.once('exit', code => reject(new Error(`Static server exited: ${code}`)));
+  });
+}
+
+async function main() {
+  // test:dist đã cung cấp BASE_URL của Vite preview.
+  const hosted = kind === 'smoke' && !process.env.BASE_URL ? await startServer() : null;
+  try {
+    const suffix = kind === 'logic' ? '.test.js' : '.smoke.js';
+    const cases = readdirSync(__dirname).filter(name => name.endsWith(suffix)).sort();
+    for (const name of cases) {
+      console.log(`\n[${kind}] ${name}`);
+      const result = spawnSync(process.execPath, [path.join(__dirname, name)], {
+        stdio: 'inherit',
+        env: { ...process.env, ...(hosted ? { BASE_URL: hosted.base } : {}) }
+      });
+      if (result.error) throw result.error;
+      if (result.status !== 0) { process.exitCode = result.status ?? 1; return; }
+    }
+    console.log(`\nPASS: ${cases.length} ${kind} tests`);
+  } finally {
+    if (hosted) hosted.server.kill();
+  }
+}
+main().catch(err => { console.error(err); process.exitCode = 1; });

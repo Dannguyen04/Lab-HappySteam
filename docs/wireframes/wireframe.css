@@ -1,0 +1,451 @@
+/* Happy STEAM Lab — Wireframe Stylesheet (docs/wireframes/wireframe.css)
+   Tuân thủ phong cách Lab-HappySteam: nền #ebeff2, thẻ bo 12px, font Chakra Petch / Be Vietnam Pro / JetBrains Mono.
+   Thuần HTML/CSS/JS, không phụ thuộc tài nguyên ngoài. */
+
+:root {
+  --bg: #ebeff2;
+  --surface: #ffffff;
+  --sunk: #f2f5f7;
+  --ink: #15212b;
+  --muted: #56687a;
+  --line: #d2dae1;
+
+  --accent: #0080b8;
+  --accent-ink: #ffffff;
+  --accent-soft: #dff0f8;
+  --accent-hover: #006b99;
+
+  --ok: #1c8a4c;
+  --ok-soft: #e1f3e8;
+  --ok-ink: #ffffff;
+
+  --warn: #a35f00;
+  --warn-soft: #faeed8;
+  --warn-ink: #543100;
+
+  --bad: #c92e35;
+  --bad-soft: #fbe2e3;
+  --bad-ink: #ffffff;
+
+  --stage: #f6f9fb;
+  --stud: #e3e9ee;
+
+  --f-display: "Chakra Petch", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  --f-body: "Be Vietnam Pro", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-full: 999px;
+
+  --shadow-sm: 0 1px 3px rgba(21, 33, 43, 0.06);
+  --shadow-md: 0 4px 12px rgba(21, 33, 43, 0.08);
+  --shadow-lg: 0 12px 32px rgba(21, 33, 43, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.55 var(--f-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ---------- Typography & Utility ---------- */
+.eyebrow {
+  font: 600 12px/1 var(--f-mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--f-display);
+  color: var(--ink);
+  margin: 0;
+}
+
+.lede {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14.5px;
+}
+
+.mono {
+  font-family: var(--f-mono);
+}
+
+/* ---------- Top Navigation Banner ---------- */
+.wf-nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.wf-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.wf-badge-logo {
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  letter-spacing: .04em;
+}
+
+.wf-nav-title {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.wf-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.wf-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all .15s;
+}
+
+.wf-nav-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.wf-nav-btn.active {
+  background: var(--ink);
+  color: var(--surface);
+  border-color: var(--ink);
+}
+
+.wf-tag-mock {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--warn-soft);
+  color: var(--warn);
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+/* ---------- Container Wrap ---------- */
+.wrap {
+  max-width: 1366px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.wrap-fluid {
+  max-width: 100%;
+  padding: 20px 24px;
+}
+
+/* ---------- Cards & Panels ---------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-pad {
+  padding: 20px;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all .15s ease-in-out;
+  user-select: none;
+  text-decoration: none;
+}
+
+.btn:hover {
+  border-color: var(--muted);
+  background: var(--sunk);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: #fff;
+}
+
+.btn-success {
+  background: var(--ok);
+  color: #fff;
+  border-color: var(--ok);
+}
+
+.btn-success:hover {
+  filter: brightness(1.08);
+}
+
+.btn-danger {
+  background: var(--bad);
+  color: #fff;
+  border-color: var(--bad);
+}
+
+.btn-danger:hover {
+  filter: brightness(1.08);
+}
+
+.btn-outline-danger {
+  background: transparent;
+  color: var(--bad);
+  border-color: var(--bad);
+}
+
+.btn-outline-danger:hover {
+  background: var(--bad-soft);
+}
+
+.btn-outline-accent {
+  background: transparent;
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.btn-outline-accent:hover {
+  background: var(--accent-soft);
+}
+
+.btn-huge {
+  min-height: 64px;
+  padding: 16px 28px;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: var(--radius-lg);
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: var(--radius-sm);
+}
+
+.btn:disabled, .btn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ---------- Chips & Badges ---------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--f-mono);
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+
+.chip-htt {
+  background: var(--ok-soft);
+  color: var(--ok);
+  border: 1px solid color-mix(in srgb, var(--ok) 35%, var(--line));
+}
+
+.chip-ht {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line));
+}
+
+.chip-cht {
+  background: var(--warn-soft);
+  color: var(--warn);
+  border: 1px solid color-mix(in srgb, var(--warn) 35%, var(--line));
+}
+
+.chip-empty {
+  background: var(--sunk);
+  color: var(--muted);
+  border: 1px dashed var(--line);
+  font-weight: 500;
+}
+
+.badge-new-dot {
+  width: 8px;
+  height: 8px;
+  background: #f06a00;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 0 2px var(--surface);
+}
+
+/* ---------- Modal Dialog ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 19, 24, 0.55);
+  backdrop-filter: blur(2px);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: fadeIn .15s ease-out;
+}
+
+.modal-dialog {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  max-width: 480px;
+  width: 100%;
+  overflow: hidden;
+  animation: popIn .2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header h3 {
+  font-size: 17px;
+}
+
+.modal-body {
+  padding: 20px;
+  font-size: 15px;
+}
+
+.modal-footer {
+  padding: 14px 20px;
+  background: var(--sunk);
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ---------- Toast Notification ---------- */
+.toast-notice {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--ink);
+  color: var(--surface);
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 2000;
+  font-size: 14px;
+  font-weight: 500;
+  animation: slideUp .2s ease-out;
+}
+
+/* ---------- Keyframes ---------- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+.shake {
+  animation: shake 0.4s ease-in-out;
+}

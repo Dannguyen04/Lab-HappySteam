@@ -2,6 +2,7 @@
 # công cụ/prompt cũ, bản sao lưu và ảnh kiểm thử. App chỉ cần PDF sách lắp 3,7 MB.
 .backup/
 .dist/
+dist/
 references/*
 !references/official/
 references/official/*

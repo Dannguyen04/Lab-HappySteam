@@ -68,6 +68,11 @@ function flattenRoot(sections, rootName, expected, flat = false) {
       parts.push({ file: group.file, color: group.color, pos: group.pos, rot: group.rot });
       continue;
     }
+    // Mô hình chính trộn nhóm con + linh kiện rời (Lớp 3 Bài 8): dòng .dat là linh kiện (nhóm con không có đuôi)
+    if (group.file.endsWith('.dat')) {
+      parts.push({ file: group.file, color: group.color, pos: group.pos, rot: group.rot });
+      continue;
+    }
     if (!sections.has(group.file)) throw Error('Thiếu nhóm CAD: ' + group.file);
     for (const child of sections.get(group.file)) {
       if (!child.startsWith('1 ')) continue;
@@ -91,10 +96,25 @@ const ldrawPalette = {
 };
 const inheritedColor = (num, parent) => (num === '-1' || num === '16' || num === '-2' || num === '24') ? parent : num;
 
+// Primitive LDraw chuẩn mà file .io đôi khi không nhúng (Lớp 3 Bài 8: 60483 dùng 1-16cyli, 1-16edge):
+// n-16cyli = n phần 16 mặt trụ bán kính 1, cao 1 (y 0…1), cùng thứ tự đỉnh như bản gốc; n-16edge chỉ có đường viền.
+function primitive(name) {
+  const m = /^(\d+)-16(cyli|edge)\.dat$/.exec(name);
+  if (!m) return null;
+  if (m[2] === 'edge') return [];
+  const lines = [];
+  for (let i = 0; i < Number(m[1]); i++) {
+    const [a0, a1] = [i, i + 1].map(k => (k * Math.PI) / 8);
+    const [c0, s0, c1, s1] = [Math.cos(a0), Math.sin(a0), Math.cos(a1), Math.sin(a1)].map(v => +v.toFixed(6));
+    lines.push(`4 16 ${c0} 1 ${s0} ${c1} 1 ${s1} ${c1} 0 ${s1} ${c0} 0 ${s0}`);
+  }
+  return lines;
+}
+
 function geometry(sections, stats, file, rootColor) {
   const buckets = new Map();
   function visit(name, pos, rot, inherited, stack) {
-    const lines = sections.get(name);
+    const lines = sections.get(name) || primitive(name);
     if (!lines) { stats.missing.add(name); return; }
     if (stack.has(name)) throw Error('CAD tham chiếu vòng: ' + [...stack, name].join(' -> '));
     const next = new Set([...stack, name]);
@@ -251,9 +271,12 @@ function discTris(c, r, depth, n = 24) {
   return out;
 }
 
-function writeData(target, data, summary) {
-  fs.writeFileSync(target, 'window.LESSON_3D_DATA = ' + JSON.stringify(data) + ';\n');
-  console.log(summary, (fs.statSync(target).size / 1024 / 1024).toFixed(2), 'MiB');
+// lesson ('lop1/bai09') bắt buộc; chỉ ghi content/ (kit và build.json).
+function writeData(data, summary, lesson) {
+  if (!lesson || typeof lesson !== 'string') throw new Error('writeData: lesson là tham số bắt buộc');
+  const r = require('./kit-library').writeLessonContent(lesson, data);
+  console.log(summary);
+  console.log(`  content/${lesson}/build.json ${r.buildKiB.toFixed(1)} KiB, ${r.meshes} hình (${r.added} hình mới trong kit ${r.kit})`);
 }
 
 module.exports = {

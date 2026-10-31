@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>S-01 Học sinh vào buổi học · Happy STEAM Lab</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    /* S-01 Custom Styles */
+    :root {
+      --key-size: 72px;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Device frame wrapper for interactive preview */
+    .viewport-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .device-frame {
+      width: 100%;
+      max-width: 1024px;
+      background: var(--surface);
+      border-radius: 20px;
+      border: 2px solid var(--line);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      min-height: 680px;
+      overflow: hidden;
+      position: relative;
+      transition: width 0.3s ease, max-width 0.3s ease;
+    }
+
+    /* Device mode presets */
+    .viewport-container[data-device="mobile"] .device-frame {
+      max-width: 375px;
+      min-height: 720px;
+      border-radius: 36px;
+      border: 8px solid #202b33;
+    }
+
+    .viewport-container[data-device="tablet"] .device-frame {
+      max-width: 1024px;
+      height: 768px;
+      border-radius: 24px;
+      border: 8px solid #202b33;
+    }
+
+    /* Top bar inside the device */
+    .student-app-header {
+      background: var(--sunk);
+      border-bottom: 1px solid var(--line);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-logo-txt {
+      font-family: var(--f-display);
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--accent);
+    }
+
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--f-mono);
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .step-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--line);
+    }
+
+    .step-dot.active {
+      background: var(--accent);
+      width: 22px;
+      border-radius: 4px;
+    }
+
+    .step-dot.done {
+      background: var(--ok);
+    }
+
+    /* Screen content panels */
+    .step-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 20px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ===== BƯỚC 1: NHẬP MÃ 4 SỐ ===== */
+    .p1-container {
+      max-width: 420px;
+      margin: auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .p1-title {
+      font-size: clamp(22px, 4vw, 28px);
+      margin-bottom: 6px;
+    }
+
+    .p1-lede {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .code-slots {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .code-slot {
+      width: 68px;
+      height: 76px;
+      border: 3px solid var(--line);
+      border-radius: 14px;
+      background: var(--sunk);
+      display: grid;
+      place-items: center;
+      font-family: var(--f-mono);
+      font-size: 38px;
+      font-weight: 700;
+      color: var(--ink);
+      transition: all 0.15s ease;
+    }
+
+    .code-slot.active {
+      border-color: var(--accent);
+      background: var(--surface);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+
+    .code-slot.filled {
+      border-color: var(--ink);
+      background: var(--surface);
+    }
+
+    .code-slot.error {
+      border-color: var(--bad);
+      background: var(--bad-soft);
+      color: var(--bad);
+    }
+
+    .code-msg {
+      min-height: 28px;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--bad);
+      margin-bottom: 16px;
+    }
+
+    /* On-screen numeric keypad */
+    .numpad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      width: 100%;
+      max-width: 340px;
+      user-select: none;
+    }
+
+    .numkey {
+      min-height: 64px;
+      height: var(--key-size);
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      font-family: var(--f-mono);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--ink);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: 0 2px 0 var(--line);
+      transition: all 0.1s ease;
+      touch-action: manipulation;
+    }
+
+    .numkey:hover {
+      background: var(--sunk);
+      border-color: var(--muted);
+    }
+
+    .numkey:active {
+      transform: translateY(2px);
+      box-shadow: none;
+      background: var(--accent-soft);
+      border-color: var(--accent);
+    }
+
+    .numkey-fn {
+      font-size: 18px;
+      background: var(--sunk);
+      color: var(--muted);
+      font-family: var(--f-body);
+    }
+
+    .quick-hint {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .quick-hint code {
+      background: var(--sunk);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--line);
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* ===== BƯỚC 2: LƯỚI CHỌN TÊN ===== */
+    .p2-header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .p2-title {
+      font-size: clamp(22px, 3.5vw, 30px);
+      color: var(--ink);
+    }
+
+    .p2-sub {
+      color: var(--muted);
+      font-size: 15px;
+      margin-top: 4px;
+    }
+
+    .students-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
+      gap: 12px;
+      padding-bottom: 24px;
+    }
+
+    /* On mobile 375px: 2 clean columns */
+    .viewport-container[data-device="mobile"] .students-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    /* On tablet landscape 1024px: 7 columns x 4 rows */
+    .viewport-container[data-device="tablet"] .students-grid {
+      grid-template-columns: repeat(7, 1fr);
+      gap: 12px;
+    }
+
+    .student-card-btn {
+      min-height: 84px;
+      background: var(--surface);
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+      position: relative;
+    }
+
+    .student-card-btn:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .student-card-btn:active {
+      transform: translateY(1px);
+    }
+
+    .student-avatar {
+      font-size: 34px;
+      line-height: 1;
+      display: block;
+    }
+
+    .student-name {
+      font-family: var(--f-display);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    /* Student on another machine (BR-BH-02) */
+    .student-card-btn.is-other-machine {
+      opacity: 0.65;
+      background: var(--sunk);
+      border-style: dashed;
+      border-color: var(--warn);
+    }
+
+    .student-card-btn.is-other-machine:hover {
+      opacity: 1;
+      background: var(--warn-soft);
+      border-color: var(--warn);
+    }
+
+    .badge-other-device {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      font-size: 11px;
+      background: var(--warn-soft);
+      color: var(--warn);
+      border: 1px solid var(--warn);
+      border-radius: var(--radius-full);
+      padding: 1px 5px;
+      font-family: var(--f-mono);
+      font-weight: 700;
+    }
+
+    /* ===== BƯỚC 3: XÁC NHẬN CHÀO EM ===== */
+    .p3-container {
+      max-width: 480px;
+      margin: auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px;
+    }
+
+    .confirm-avatar-box {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      border: 4px solid var(--accent);
+      display: grid;
+      place-items: center;
+      font-size: 64px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-md);
+      animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .confirm-greeting {
+      font-size: clamp(28px, 4.5vw, 36px);
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+
+    .confirm-sub {
+      color: var(--muted);
+      font-size: 16px;
+      margin-bottom: 32px;
+    }
+
+    .confirm-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .btn-enter-lesson {
+      min-height: 64px;
+      font-size: 20px;
+      font-weight: 700;
+      border-radius: 16px;
+      background: var(--ok);
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 12px rgba(28, 138, 76, 0.35);
+      cursor: pointer;
+    }
+
+    .btn-enter-lesson:hover {
+      filter: brightness(1.08);
+      transform: translateY(-2px);
+    }
+
+    .btn-not-me {
+      min-height: 48px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .btn-not-me:hover {
+      background: var(--sunk);
+      color: var(--ink);
+    }
+
+    /* Success State View */
+    .success-view {
+      max-width: 480px;
+      margin: auto;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    .success-icon {
+      font-size: 60px;
+      margin-bottom: 12px;
+    }
+
+    /* Simulation Bar for Reviewer */
+    .reviewer-toolbar {
+      background: #1c2730;
+      color: #e2e8f0;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 13px;
+    }
+
+    .sim-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sim-btn {
+      background: #2d3d4a;
+      color: #fff;
+      border: 1px solid #4a5d6e;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .sim-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .sim-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar điều hướng wireframe -->
+  <header class="wf-nav">
+    <a href="index.html" class="wf-nav-brand">
+      <span class="wf-badge-logo">Happy STEAM</span>
+      <span class="wf-nav-title">S-01 · Vào buổi học</span>
+    </a>
+    <div class="wf-nav-links">
+      <span class="wf-tag-mock">Mockup kiểm thử</span>
+      <a href="index.html" class="wf-nav-btn">← Tổng quan</a>
+      <a href="s01-vao-buoi-hoc.html" class="wf-nav-btn active">S-01 Vào buổi</a>
+      <a href="s06-gv-mo-buoi.html" class="wf-nav-btn">S-06 GV Mở buổi</a>
+      <a href="s07-bang-lop-cham.html" class="wf-nav-btn">S-07 Bảng lớp & Chấm</a>
+    </div>
+  </header>
+
+  <!-- Reviewer simulation bar -->
+  <aside class="reviewer-toolbar" aria-label="Thanh công cụ kiểm thử kích thước">
+    <div class="sim-group">
+      <span>📐 Khung nhìn:</span>
+      <button type="button" class="sim-btn" onclick="setDeviceMode('mobile')">📱 Điện thoại (375px)</button>
+      <button type="button" class="sim-btn active" onclick="setDeviceMode('tablet')">💻 Máy tính bảng (1024×768)</button>
+      <button type="button" class="sim-btn" onclick="setDeviceMode('responsive')">🖥️ Co giãn tự do</button>
+    </div>
+    <div class="sim-group">
+      <span>⚡ Phím tắt test:</span>
+      <button type="button" class="sim-btn" onclick="quickFillCode('2468')">Mã đúng: 2468</button>
+      <button type="button" class="sim-btn" onclick="quickFillCode('9999')">Mã sai: 9999</button>
+      <button type="button" class="sim-btn" onclick="quickSelectStudent('Hải')">Chọn bạn "Hải" (máy khác)</button>
+      <button type="button" class="sim-btn" onclick="resetFlow()">Làm lại từ đầu</button>
+    </div>
+  </aside>
+
+  <main class="viewport-container" id="viewport-box" data-device="tablet">
+    <div class="device-frame" id="device-screen">
+
+      <!-- Header bên trong ứng dụng học sinh -->
+      <div class="student-app-header">
+        <div class="brand-group">
+          <span class="brand-logo-txt">Happy STEAM</span>
+          <span style="color:var(--line)">|</span>
+          <span id="app-header-sub" style="font-weight:600; font-size:14px; color:var(--ink)">Vào buổi học</span>
+        </div>
+        <div class="step-indicator" aria-label="Tiến độ các bước">
+          <span class="step-dot active" id="dot-step1"></span>
+          <span class="step-dot" id="dot-step2"></span>
+          <span class="step-dot" id="dot-step3"></span>
+          <span id="step-txt" style="margin-left:4px">Bước 1/3</span>
+        </div>
+      </div>
+
+      <!-- ==================== BƯỚC 1: NHẬP MÃ 4 CHỮ SỐ ==================== -->
+      <section class="step-panel" id="panel-step1">
+        <div class="p1-container">
+          <div class="eyebrow" style="margin-bottom:8px">Tiết học trên lớp</div>
+          <h1 class="p1-title">Nhập mã buổi học</h1>
+          <p class="p1-lede">Nhìn lên bảng của cô giáo và bấm 4 số nhé!</p>
+
+          <!-- 4 ô hiển thị số to -->
+          <div class="code-slots" id="code-slots" aria-live="polite">
+            <div class="code-slot active" id="slot-0"></div>
+            <div class="code-slot" id="slot-1"></div>
+            <div class="code-slot" id="slot-2"></div>
+            <div class="code-slot" id="slot-3"></div>
+          </div>
+
+          <!-- Dòng thông báo mã sai -->
+          <div class="code-msg" id="code-msg" role="alert"></div>
+
+          <!-- Bàn phím số riêng trên màn hình (Nút ≥ 64px) -->
+          <div class="numpad" role="group" aria-label="Bàn phím số">
+            <button type="button" class="numkey" onclick="pressDigit('1')">1</button>
+            <button type="button" class="numkey" onclick="pressDigit('2')">2</button>
+            <button type="button" class="numkey" onclick="pressDigit('3')">3</button>
+
+            <button type="button" class="numkey" onclick="pressDigit('4')">4</button>
+            <button type="button" class="numkey" onclick="pressDigit('5')">5</button>
+            <button type="button" class="numkey" onclick="pressDigit('6')">6</button>
+
+            <button type="button" class="numkey" onclick="pressDigit('7')">7</button>
+            <button type="button" class="numkey" onclick="pressDigit('8')">8</button>
+            <button type="button" class="numkey" onclick="pressDigit('9')">9</button>
+
+            <button type="button" class="numkey numkey-fn" onclick="clearCode()">Xoá hết</button>
+            <button type="button" class="numkey" onclick="pressDigit('0')">0</button>
+            <button type="button" class="numkey numkey-fn" onclick="backspaceCode()" aria-label="Xoá một số">⌫</button>
+          </div>
+
+          <div class="quick-hint">
+            Mã mẫu hợp lệ cho buổi hôm nay: <code>2468</code> (hoặc gõ phím vật lý)
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== BƯỚC 2: LƯỚI CHỌN TÊN ==================== -->
+      <section class="step-panel" id="panel-step2" hidden>
+        <div class="p2-header">
+          <div class="eyebrow" style="margin-bottom:4px">Mã buổi học: 2468 · Phòng Lab ZMrobo</div>
+          <h2 class="p2-title">Lớp 1A: Em là ai?</h2>
+          <p class="p2-sub">Chạm vào hình con vật và tên của em để vào nhé!</p>
+        </div>
+
+        <!-- Lưới 28 em học sinh với con vật không trùng -->
+        <div class="students-grid" id="students-grid" role="list" aria-label="Danh sách học sinh Lớp 1A">
+          <!-- Rendered via JS -->
+        </div>
+      </section>
+
+      <!-- ==================== BƯỚC 3: XÁC NHẬN CHÀO EM ==================== -->
+      <section class="step-panel" id="panel-step3" hidden>
+        <div class="p3-container">
+          <div class="confirm-avatar-box" id="confirm-avatar">🦁</div>
+          <h2 class="confirm-greeting" id="confirm-greeting">Chào Nam B.!</h2>
+          <p class="confirm-sub">Đúng là em rồi, chúc em có một buổi học thật vui và sáng tạo!</p>
+
+          <div class="confirm-actions">
+            <button type="button" class="btn-enter-lesson" onclick="completeLogin()">
+              Vào học ngay →
+            </button>
+            <button type="button" class="btn-not-me" onclick="backToStep2()">
+              Không phải em (chọn lại)
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== MÀN HÌNH HOÀN TẤT VÀO BUỔI ==================== -->
+      <section class="step-panel" id="panel-step-success" hidden>
+        <div class="success-view">
+          <div class="success-icon">🎉</div>
+          <h2 style="font-size:28px; margin-bottom:8px">Đã vào buổi học thành công!</h2>
+          <p style="color:var(--muted); font-size:16px; margin-bottom:24px">
+            Chào mừng <strong id="success-student-name" style="color:var(--ink)">Nam B.</strong> đã sẵn sàng tại <strong>Máy số 04</strong>.
+          </p>
+          <div class="card card-pad" style="max-width:360px; margin:0 auto 24px; text-align:left; background:var(--sunk)">
+            <div style="font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase" class="mono">Bài học hôm nay</div>
+            <div style="font-size:17px; font-weight:700; margin-top:4px; font-family:var(--f-display)">Bài 9: Robot thám hiểm địa hình</div>
+            <div style="font-size:13px; color:var(--ok); font-weight:600; margin-top:4px">✓ Đã mở tiết 1 (Tuần 9)</div>
+          </div>
+          <button type="button" class="btn btn-huge btn-primary" onclick="alert('Đây là bản phác thảo wireframe để duyệt giao diện!')">
+            Bắt đầu bài học
+          </button>
+          <div style="margin-top:16px">
+            <button type="button" class="btn btn-sm" onclick="resetFlow()">Thử lại luồng đăng nhập</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Modal cảnh báo BR-BH-02: Bạn này đang học ở máy khác -->
+  <div class="modal-overlay" id="modal-other-device" hidden>
+    <div class="modal-dialog" role="alertdialog" aria-modal="true" aria-labelledby="other-modal-title">
+      <div class="modal-header">
+        <h3 id="other-modal-title">⚠️ Cảnh báo thiết bị</h3>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:14px">
+          <span style="font-size:44px" id="other-modal-avatar">🐬</span>
+          <div>
+            <div style="font-size:18px; font-weight:700" id="other-modal-name">Hải</div>
+            <div style="font-size:13px; color:var(--muted)">Đang đăng nhập tại <strong>Máy tính bảng #12</strong></div>
+          </div>
+        </div>
+        <p style="margin:0; font-size:15px; color:var(--ink)">
+          <strong>Bạn này đang học ở máy khác. Đúng là em không?</strong>
+        </p>
+        <p style="margin:8px 0 0; font-size:13px; color:var(--muted)">
+          Theo quy định <strong>BR-BH-02</strong>: Hệ thống phát cảnh báo để tránh chọn nhầm tên bạn. Nếu đúng là em chuyển sang máy mới, hệ thống vẫn cho phép em vào học tiếp.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" onclick="closeOtherModal()">Không phải em, chọn lại</button>
+        <button type="button" class="btn btn-primary" onclick="confirmOtherDeviceStudent()">Đúng là em, tiếp tục</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ============================================================
+       DỮ LIỆU GIẢ 28 HỌC SINH LỚP 1A (28 CON VẬT KHÔNG TRÙNG NHAU)
+       ============================================================ */
+    const STUDENTS = [
+      { id: 1, name: "Nam B.", animal: "🦁", animalName: "Sư tử", otherDevice: false },
+      { id: 2, name: "An", animal: "🐼", animalName: "Gấu trúc", otherDevice: false },
+      { id: 3, name: "Bảo", animal: "🐨", animalName: "Koala", otherDevice: false },
+      { id: 4, name: "Chi", animal: "🦊", animalName: "Cáo đỏ", otherDevice: false },
+      { id: 5, name: "Dũng", animal: "🐰", animalName: "Thỏ trắng", otherDevice: false },
+      { id: 6, name: "Đạt", animal: "🐻", animalName: "Gấu nâu", otherDevice: false },
+      { id: 7, name: "Hà", animal: "🐵", animalName: "Khỉ", otherDevice: false },
+      { id: 8, name: "Hải", animal: "🐬", animalName: "Cá heo", otherDevice: true }, // BR-BH-02: Đang học máy khác
+      { id: 9, name: "Hiếu", animal: "🐸", animalName: "Ếch xanh", otherDevice: false },
+      { id: 10, name: "Hương", animal: "🦄", animalName: "Kỳ lân", otherDevice: false },
+      { id: 11, name: "Khánh", animal: "🦉", animalName: "Cú mèo", otherDevice: false },
+      { id: 12, name: "Khoa", animal: "🐧", animalName: "Cánh cụt", otherDevice: false },
+      { id: 13, name: "Lâm", animal: "🦒", animalName: "Hươu cao cổ", otherDevice: false },
+      { id: 14, name: "Linh", animal: "🦔", animalName: "Nhím gai", otherDevice: false },
+      { id: 15, name: "Mai", animal: "🐝", animalName: "Ong vàng", otherDevice: false },
+      { id: 16, name: "Minh", animal: "🐢", animalName: "Rùa xanh", otherDevice: false },
+      { id: 17, name: "My", animal: "🐘", animalName: "Voi con", otherDevice: false },
+      { id: 18, name: "Nhi", animal: "🦩", animalName: "Hồng hạc", otherDevice: false },
+      { id: 19, name: "Phong", animal: "🦭", animalName: "Hải cẩu", otherDevice: false },
+      { id: 20, name: "Phúc", animal: "🦀", animalName: "Cua đỏ", otherDevice: false },
+      { id: 21, name: "Quang", animal: "🦋", animalName: "Bướm xinh", otherDevice: false },
+      { id: 22, name: "Quân", animal: "🦖", animalName: "Khủng long", otherDevice: false },
+      { id: 23, name: "Sơn", animal: "🐳", animalName: "Cá voi", otherDevice: false },
+      { id: 24, name: "Thảo", animal: "🦜", animalName: "Vẹt sắc màu", otherDevice: false },
+      { id: 25, name: "Trâm", animal: "🦘", animalName: "Kangaroo", otherDevice: false },
+      { id: 26, name: "Tú", animal: "🐺", animalName: "Sói tuyết", otherDevice: false },
+      { id: 27, name: "Việt", animal: "🐯", animalName: "Hổ vằn", otherDevice: false },
+      { id: 28, name: "Vũ", animal: "🦚", animalName: "Chim công", otherDevice: false }
+    ];
+
+    const VALID_CODE = "2468";
+    let enteredCode = "";
+    let selectedStudent = null;
+    let pendingOtherStudent = null;
+
+    /* ========== LOGIC BƯỚC 1: BÀN PHÍM VÀ MÃ ========== */
+    function updateCodeDisplay() {
+      const slots = [
+        document.getElementById("slot-0"),
+        document.getElementById("slot-1"),
+        document.getElementById("slot-2"),
+        document.getElementById("slot-3")
+      ];
+      const msg = document.getElementById("code-msg");
+      msg.textContent = "";
+
+      for (let i = 0; i < 4; i++) {
+        slots[i].classList.remove("error");
+        if (i < enteredCode.length) {
+          slots[i].textContent = enteredCode[i];
+          slots[i].classList.add("filled");
+          slots[i].classList.remove("active");
+        } else if (i === enteredCode.length) {
+          slots[i].textContent = "";
+          slots[i].classList.remove("filled");
+          slots[i].classList.add("active");
+        } else {
+          slots[i].textContent = "";
+          slots[i].classList.remove("filled", "active");
+        }
+      }
+
+      // Khi đủ 4 số, tự động kiểm tra
+      if (enteredCode.length === 4) {
+        verifyCode();
+      }
+    }
+
+    function pressDigit(d) {
+      if (enteredCode.length < 4) {
+        enteredCode += d;
+        updateCodeDisplay();
+      }
+    }
+
+    function backspaceCode() {
+      if (enteredCode.length > 0) {
+        enteredCode = enteredCode.slice(0, -1);
+        updateCodeDisplay();
+      }
+    }
+
+    function clearCode() {
+      enteredCode = "";
+      updateCodeDisplay();
+    }
+
+    function verifyCode() {
+      if (enteredCode === VALID_CODE) {
+        // Đúng mã: sang Bước 2 mượt mà
+        goToStep(2);
+      } else {
+        // Sai mã: Rung nhẹ + chữ đỏ
+        const slotsContainer = document.getElementById("code-slots");
+        const msg = document.getElementById("code-msg");
+        slotsContainer.classList.add("shake");
+        msg.textContent = "Mã chưa đúng, hỏi cô nhé";
+
+        for (let i = 0; i < 4; i++) {
+          const slot = document.getElementById(`slot-${i}`);
+          slot.classList.add("error");
+        }
+
+        setTimeout(() => {
+          slotsContainer.classList.remove("shake");
+          enteredCode = "";
+          updateCodeDisplay();
+        }, 1200);
+      }
+    }
+
+    // Hỗ trợ gõ bàn phím vật lý trên máy tính
+    window.addEventListener("keydown", (e) => {
+      const p1 = document.getElementById("panel-step1");
+      if (!p1.hidden) {
+        if (e.key >= "0" && e.key <= "9") {
+          pressDigit(e.key);
+        } else if (e.key === "Backspace") {
+          backspaceCode();
+        } else if (e.key === "Escape") {
+          clearCode();
+        }
+      }
+    });
+
+    /* ========== LOGIC BƯỚC 2: RENDER VÀ CHỌN TÊN ========== */
+    function renderStudentsGrid() {
+      const container = document.getElementById("students-grid");
+      container.innerHTML = "";
+
+      STUDENTS.forEach(student => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "student-card-btn" + (student.otherDevice ? " is-other-machine" : "");
+        btn.setAttribute("role", "listitem");
+        btn.setAttribute("aria-label", `${student.name}, biểu tượng ${student.animalName}` + (student.otherDevice ? " (đang học ở máy khác)" : ""));
+
+        let otherBadge = "";
+        if (student.otherDevice) {
+          otherBadge = `<span class="badge-other-device" title="BR-BH-02: Đang mở trên máy khác">💻 Máy khác</span>`;
+        }
+
+        btn.innerHTML = `
+          ${otherBadge}
+          <span class="student-avatar">${student.animal}</span>
+          <span class="student-name">${student.name}</span>
+        `;
+
+        btn.onclick = () => onSelectStudent(student);
+        container.appendChild(btn);
+      });
+    }
+
+    function onSelectStudent(student) {
+      if (student.otherDevice) {
+        // BR-BH-02: Cảnh báo đang học ở máy khác
+        pendingOtherStudent = student;
+        document.getElementById("other-modal-avatar").textContent = student.animal;
+        document.getElementById("other-modal-name").textContent = student.name;
+        document.getElementById("modal-other-device").hidden = false;
+      } else {
+        chooseStudent(student);
+      }
+    }
+
+    function closeOtherModal() {
+      document.getElementById("modal-other-device").hidden = true;
+      pendingOtherStudent = null;
+    }
+
+    function confirmOtherDeviceStudent() {
+      document.getElementById("modal-other-device").hidden = true;
+      if (pendingOtherStudent) {
+        chooseStudent(pendingOtherStudent);
+        pendingOtherStudent = null;
+      }
+    }
+
+    function chooseStudent(student) {
+      selectedStudent = student;
+      document.getElementById("confirm-avatar").textContent = student.animal;
+      document.getElementById("confirm-greeting").textContent = `Chào ${student.name}!`;
+      goToStep(3);
+    }
+
+    function backToStep2() {
+      selectedStudent = null;
+      goToStep(2);
+    }
+
+    function completeLogin() {
+      document.getElementById("success-student-name").textContent = selectedStudent ? selectedStudent.name : "em";
+      document.getElementById("panel-step3").hidden = true;
+      document.getElementById("panel-step-success").hidden = false;
+      document.getElementById("step-txt").textContent = "Hoàn tất";
+      document.getElementById("dot-step3").classList.add("done");
+    }
+
+    /* ========== ĐIỀU HƯỚNG CÁC BƯỚC ========== */
+    function goToStep(step) {
+      const p1 = document.getElementById("panel-step1");
+      const p2 = document.getElementById("panel-step2");
+      const p3 = document.getElementById("panel-step3");
+      const pSuccess = document.getElementById("panel-step-success");
+
+      p1.hidden = (step !== 1);
+      p2.hidden = (step !== 2);
+      p3.hidden = (step !== 3);
+      pSuccess.hidden = true;
+
+      const d1 = document.getElementById("dot-step1");
+      const d2 = document.getElementById("dot-step2");
+      const d3 = document.getElementById("dot-step3");
+      const txt = document.getElementById("step-txt");
+      const headerSub = document.getElementById("app-header-sub");
+
+      if (step === 1) {
+        d1.className = "step-dot active";
+        d2.className = "step-dot";
+        d3.className = "step-dot";
+        txt.textContent = "Bước 1/3";
+        headerSub.textContent = "Vào buổi học";
+      } else if (step === 2) {
+        d1.className = "step-dot done";
+        d2.className = "step-dot active";
+        d3.className = "step-dot";
+        txt.textContent = "Bước 2/3";
+        headerSub.textContent = "Lớp 1A · Chọn tên em";
+      } else if (step === 3) {
+        d1.className = "step-dot done";
+        d2.className = "step-dot done";
+        d3.className = "step-dot active";
+        txt.textContent = "Bước 3/3";
+        headerSub.textContent = "Xác nhận";
+      }
+    }
+
+    function resetFlow() {
+      enteredCode = "";
+      selectedStudent = null;
+      pendingOtherStudent = null;
+      updateCodeDisplay();
+      goToStep(1);
+    }
+
+    /* ========== REVIEWER SIMULATION HELPERS ========== */
+    function setDeviceMode(mode) {
+      const box = document.getElementById("viewport-box");
+      box.setAttribute("data-device", mode);
+
+      document.querySelectorAll(".reviewer-toolbar .sim-btn").forEach(btn => {
+        if (btn.textContent.includes(mode === 'mobile' ? 'Điện thoại' : (mode === 'tablet' ? 'Máy tính bảng' : 'Co giãn'))) {
+          btn.classList.add("active");
+        } else if (btn.textContent.includes('Điện thoại') || btn.textContent.includes('Máy tính bảng') || btn.textContent.includes('Co giãn')) {
+          btn.classList.remove("active");
+        }
+      });
+    }
+
+    function quickFillCode(code) {
+      enteredCode = code;
+      updateCodeDisplay();
+    }
+
+    function quickSelectStudent(name) {
+      quickFillCode("2468");
+      const found = STUDENTS.find(s => s.name === name);
+      if (found) {
+        setTimeout(() => {
+          onSelectStudent(found);
+        }, 100);
+      }
+    }
+
+    // Khởi tạo ban đầu
+    renderStudentsGrid();
+    updateCodeDisplay();
+  </script>
+</body>
+</html>

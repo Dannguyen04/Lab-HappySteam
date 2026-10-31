@@ -3,20 +3,20 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const { chromium } = require('playwright');
+const { pageUrl } = require('./helpers/page-url');
 
 (async () => {
   const executablePath = [process.env.ZM_CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe']
     .filter(Boolean).find(p => fs.existsSync(p));
   const browser = await chromium.launch({ headless: true, ...(executablePath ? { executablePath } : {}) });
   try {
-    const root = path.resolve(__dirname, '..').split(path.sep).join('/');
     const page = await browser.newPage({ viewport: { width: 1366, height: 900 }, reducedMotion: 'reduce' });
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
     page.on('requestfailed', r => errors.push('Không tải được ' + r.url()));
     page.on('dialog', d => d.accept());
     // Vào từ thẻ tuần 15 trên trang chọn bài → mở đúng chặng ②
-    await page.goto(`file:///${root}/index.html?lop=1&hk=1`);
+    await page.goto(pageUrl('index.html?lop=1&hk=1'));
     await page.evaluate(() => localStorage.clear());
     await page.click('a.lesson-card[href="lop1-du-an.html?hk=1&chang=2"]');
     await page.waitForSelector('#stage-2:not([hidden])');
@@ -70,18 +70,18 @@ const { chromium } = require('playwright');
 
     // Tuần sau mở lại: bài làm còn nguyên
     await page.waitForTimeout(400);
-    await page.goto(`file:///${root}/lop1-du-an.html?hk=1`);
+    await page.goto(pageUrl('lop1-du-an.html?hk=1'));
     await page.waitForSelector('#stage-4:not([hidden])');
     assert.match(await page.locator('#mission-summary-badge').innerText(), /Đạt 4\/4/);
     assert.equal(await page.locator('#program-canvas-chain .zb-block').count(), 4, 'Start + 3 khối được lưu');
     // Học kì II là sổ riêng
-    await page.goto(`file:///${root}/lop1-du-an.html?hk=2`);
+    await page.goto(pageUrl('lop1-du-an.html?hk=2'));
     assert.match(await page.locator('#proj-eyebrow').textContent(), /học kì II/);
     assert.equal(await page.locator('#mission-summary-badge').innerText(), '0/4 nhiệm vụ');
 
     // Phòng trưng bày (tuần 18): nạp ảnh poster, trình chiếu, bình chọn
     const poster = path.join(__dirname, 'screenshots', 'project-poster.png');
-    await page.goto(`file:///${root}/index.html?lop=1&hk=1`);
+    await page.goto(pageUrl('index.html?lop=1&hk=1'));
     await page.click('a.lesson-card[href="lop1-trung-bay.html?hk=1"]');
     await page.setInputFiles('#show-files', [poster, poster]);
     assert.equal(await page.locator('.show-card').count(), 2);
@@ -95,7 +95,7 @@ const { chromium } = require('playwright');
     assert.match(await page.locator('#rank').innerText(), /⭐ 2/);
 
     const mobile = await browser.newPage({ viewport: { width: 375, height: 760 }, isMobile: true });
-    await mobile.goto(`file:///${root}/lop1-du-an.html?hk=1`);
+    await mobile.goto(pageUrl('lop1-du-an.html?hk=1'));
     for (const tab of ['#tab-idea', '#tab-build', '#tab-poster', '#tab-share']) {
       await mobile.click(tab);
       const d = await mobile.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);

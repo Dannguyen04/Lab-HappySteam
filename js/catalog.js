@@ -20,7 +20,7 @@
     L(1, 1, 1, 'Làm quen bộ công cụ', 'model', { about: 'Nhận biết thanh thẳng, trục, chốt; lắp xe trượt dốc.' }),
     L(1, 1, 2, 'Động cơ', 'model', { about: 'Động cơ hoạt động thế nào; lắp và lập trình xe leo dốc.' }),
     L(1, 1, 3, 'Robot thám hiểm', 'model', {
-      href: 'lop1-bai03.html',
+      href: 'bai.html?id=lop1-bai03',
       cover: 'assets/covers/lop1-bai03.jpg',
       about: 'Lắp robot Milo 22 bước, lập trình thấy vật cản rồi chở mẫu cây trên sao Hỏa.'
     }),
@@ -30,12 +30,12 @@
     L(1, 1, 7, 'Trò chơi của bé', 'model', { about: 'Mô hình xích đu, khu vui chơi; lập trình động cơ.' }),
     L(1, 1, 8, 'Ngôi nhà thông minh', 'model', { about: 'Thiết bị tự động trong nhà; lập trình cửa tự động.' }),
     L(1, 1, 9, 'Thông tin liên lạc vũ trụ', 'model', {
-      href: 'lop1-bai09.html',
+      href: 'bai.html?id=lop1-bai09',
       cover: 'assets/covers/lop1-bai09.jpg',
       about: 'Lắp vệ tinh 28 bước, gắn thêm chi tiết, lập trình anten bắt sóng và tránh thiên thạch.'
     }),
     L(1, 1, 10, 'Bạn gió tinh nghịch, gió ở đâu?', 'model', {
-      href: 'lop1-bai10.html',
+      href: 'bai.html?id=lop1-bai10',
       cover: 'assets/covers/lop1-bai10.jpg',
       about: 'Lắp cối xoay gió 15 bước, nhấn nút đổi tốc độ cánh quạt, sạc pin thắp sáng ngôi nhà.'
     }),

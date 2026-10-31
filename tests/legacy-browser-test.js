@@ -1,5 +1,5 @@
 // assets/test_fixes.js - Test fixes for Audio, Tab loops, and Mobile responsiveness
-const { chromium } = require('C:\\Users\\DAN\\Documents\\RBB_Studio\\node_modules\\@playwright\\test');
+const { chromium } = require('playwright');
 const path = require('path');
 
 (async () => {

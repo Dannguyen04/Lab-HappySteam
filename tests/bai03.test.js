@@ -6,6 +6,7 @@ const vm = require('node:vm');
 const plan = require('../scripts/bai03-plan');
 
 const root = path.join(__dirname, '..');
+(async () => {
 const context = {
   window: { addEventListener() {} },
   document: { getElementById() { return null; } },
@@ -13,7 +14,7 @@ const context = {
   setTimeout: fn => fn(),
   Math
 };
-vm.runInNewContext(fs.readFileSync(path.join(root, 'js/data-bai-03.js'), 'utf8'), context);
+await require('./helpers/lesson-3d')(context, 'lop1/bai03');
 const model = context.window.LESSON_3D_DATA;
 assert.equal(model.instances.length, 40, 'Robot Milo có 40 linh kiện');
 assert.equal(model.steps, 22, 'Sách hướng dẫn có 22 bước');
@@ -104,3 +105,5 @@ for (let k = 0; k < 3; k++) {
 assert.ok(ps.at(-1).m5, 'Ba vị trí B khác nhau đạt NV5');
 
 console.log('PASS: Bài 3 – 40 linh kiện/22 bước theo sách, bánh quay trục ngang, 4 gói sáng tạo; mô phỏng tốc độ 39,3 cm/giây, chờ tay, rơi mẫu, đụng đá, NV2–NV5.');
+
+})().catch(err => { console.error(err); process.exit(1); });

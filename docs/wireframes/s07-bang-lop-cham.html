@@ -1,0 +1,1248 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>S-07 Bảng lớp & Chấm · Happy STEAM Lab</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    /* S-07 Bảng lớp & Chấm (1366px Desktop/Laptop) */
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .grading-workspace {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding: 16px 24px 32px;
+      gap: 16px;
+    }
+
+    /* Thanh điều khiển trên cùng */
+    .grading-toolbar {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .toolbar-left, .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .select-control {
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .search-input {
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      font-size: 13.5px;
+      width: 170px;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    /* Thanh tác vụ chọn nhiều (Chấm nhanh) */
+    .batch-bar {
+      background: var(--ink);
+      color: var(--surface);
+      border-radius: var(--radius-md);
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 13.5px;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .batch-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Bảng lớp cuộn 2 chiều với cột cố định */
+    .table-viewport-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .table-scroll-wrapper {
+      overflow: auto;
+      max-height: calc(100vh - 230px);
+      min-height: 480px;
+      position: relative;
+    }
+
+    .matrix-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    /* Th / Td chung */
+    .matrix-table th, .matrix-table td {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 8px 10px;
+      vertical-align: middle;
+      background: var(--surface);
+    }
+
+    /* Cột đầu: Cố định khi cuộn ngang */
+    .col-student-fixed {
+      position: sticky;
+      left: 0;
+      z-index: 10;
+      width: 210px;
+      min-width: 210px;
+      max-width: 210px;
+      background: var(--surface) !important;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Header hàng đầu: Cố định khi cuộn dọc */
+    .matrix-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--sunk) !important;
+      font-family: var(--f-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: .04em;
+      white-space: nowrap;
+      text-align: center;
+      padding: 10px 12px;
+    }
+
+    /* Góc giao nhau trên cùng bên trái: Z-index cao nhất */
+    .corner-th-fixed {
+      position: sticky;
+      left: 0;
+      top: 0;
+      z-index: 30 !important;
+      background: var(--sunk) !important;
+      text-align: left !important;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Thẻ học sinh ở cột cố định */
+    .student-cell-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .student-cell-avatar {
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .student-cell-name {
+      font-family: var(--f-display);
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Biểu tượng GD-14 / BR-DY-02: Chưa có đồng ý */
+    .badge-no-consent {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      padding: 1px 5px;
+      border-radius: var(--radius-full);
+      background: var(--warn-soft);
+      color: var(--warn);
+      border: 1px solid var(--warn);
+      font-family: var(--f-mono);
+      font-weight: 700;
+      cursor: help;
+    }
+
+    /* Ô bài làm (Cell matrix) */
+    .lesson-cell {
+      cursor: pointer;
+      min-width: 122px;
+      width: 122px;
+      transition: background 0.15s ease;
+      position: relative;
+      user-select: none;
+    }
+
+    .lesson-cell:hover {
+      background: var(--accent-soft) !important;
+    }
+
+    .lesson-cell.selected {
+      background: #e2f2ff !important;
+      box-shadow: inset 0 0 0 2px var(--accent);
+    }
+
+    .lesson-cell.active-drawer {
+      background: #cce7f6 !important;
+      box-shadow: inset 0 0 0 2px var(--accent);
+    }
+
+    .cell-box {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cell-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .cell-progress-text {
+      font-family: var(--f-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    /* Thanh mini tiến độ */
+    .mini-progress-track {
+      width: 100%;
+      height: 4px;
+      background: var(--sunk);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .mini-progress-fill {
+      height: 100%;
+      background: var(--ok);
+      border-radius: 2px;
+    }
+
+    /* Cờ tiến bộ mới (chấm cam) */
+    .dot-recent-progress {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #e65100;
+      display: inline-block;
+      box-shadow: 0 0 0 2px var(--surface);
+    }
+
+    /* Checkbox trong ô */
+    .cell-checkbox {
+      margin: 0;
+      cursor: pointer;
+      width: 14px;
+      height: 14px;
+      accent-color: var(--accent);
+    }
+
+    /* ==================== NGĂN KÉO CHẤM BÀI (RIGHT DRAWER) ==================== */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(12, 19, 24, 0.3);
+      z-index: 500;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .drawer-container {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 480px;
+      max-width: 90vw;
+      background: var(--surface);
+      border-left: 2px solid var(--line);
+      box-shadow: -8px 0 24px rgba(0, 0, 0, 0.15);
+      z-index: 600;
+      display: flex;
+      flex-direction: column;
+      animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+
+    .drawer-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--sunk);
+    }
+
+    .drawer-header-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .drawer-body {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .drawer-section-title {
+      font-size: 12px;
+      font-family: var(--f-mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    /* Danh sách nhiệm vụ ✓ / – */
+    .mission-checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: var(--sunk);
+      padding: 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+    }
+
+    .mission-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+    }
+
+    .mission-status-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex: none;
+    }
+
+    .mission-status-icon.done {
+      background: var(--ok);
+      color: #fff;
+    }
+
+    .mission-status-icon.undone {
+      background: var(--line);
+      color: var(--muted);
+    }
+
+    /* Khung ảnh mockup chương trình khối lệnh */
+    .code-preview-box {
+      background: #1e293b;
+      color: #f8fafc;
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      font-family: var(--f-mono);
+      font-size: 12.5px;
+      line-height: 1.6;
+      border: 1px solid #334155;
+    }
+
+    .code-block-mock {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+      font-weight: 600;
+      font-size: 11.5px;
+    }
+
+    .cb-yellow { background: #d97706; color: #fff; }
+    .cb-blue { background: #0284c7; color: #fff; }
+    .cb-orange { background: #ea580c; color: #fff; }
+    .cb-green { background: #16a34a; color: #fff; }
+
+    /* Mức máy gợi ý (Công thức 6.2) */
+    .suggested-grade-box {
+      background: var(--stage);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .formula-explanation {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* 3 nút chọn mức */
+    .grade-btn-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .grade-pick-btn {
+      padding: 10px 8px;
+      border-radius: var(--radius-md);
+      border: 2px solid var(--line);
+      background: var(--surface);
+      font-weight: 700;
+      font-size: 13.5px;
+      font-family: var(--f-mono);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      transition: all 0.15s ease;
+    }
+
+    .grade-pick-btn:hover {
+      border-color: var(--muted);
+    }
+
+    .grade-pick-btn[data-grade="HTT"].active {
+      border-color: var(--ok);
+      background: var(--ok-soft);
+      color: var(--ok);
+      box-shadow: 0 0 0 2px var(--ok-soft);
+    }
+
+    .grade-pick-btn[data-grade="HT"].active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+
+    .grade-pick-btn[data-grade="CHT"].active {
+      border-color: var(--warn);
+      background: var(--warn-soft);
+      color: var(--warn);
+      box-shadow: 0 0 0 2px var(--warn-soft);
+    }
+
+    /* Cảnh báo vàng BR-DG-01 */
+    .warn-diff-grade-box {
+      background: var(--warn-soft);
+      border: 1px solid var(--warn);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--warn-ink);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      animation: fadeIn 0.15s ease;
+    }
+
+    /* Ô nhận xét & Bộ đếm ký tự */
+    .comment-area-wrap {
+      position: relative;
+    }
+
+    .comment-textarea {
+      width: 100%;
+      min-height: 100px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      font-size: 13.5px;
+      resize: vertical;
+      font-family: var(--f-body);
+    }
+
+    .comment-textarea:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    .comment-textarea:disabled {
+      background: var(--sunk);
+      color: var(--muted);
+      cursor: not-allowed;
+      border-style: dashed;
+    }
+
+    .char-counter {
+      text-align: right;
+      font-family: var(--f-mono);
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .consent-lock-alert {
+      background: var(--warn-soft);
+      border: 1px solid var(--warn);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      font-size: 12.5px;
+      color: var(--warn-ink);
+      margin-top: 6px;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .drawer-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--line);
+      background: var(--sunk);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar điều hướng wireframe -->
+  <header class="wf-nav">
+    <a href="index.html" class="wf-nav-brand">
+      <span class="wf-badge-logo">Happy STEAM</span>
+      <span class="wf-nav-title">S-07 · Bảng lớp & Chấm</span>
+    </a>
+    <div class="wf-nav-links">
+      <span class="wf-tag-mock">Laptop 1366px · Cuối tuần</span>
+      <a href="index.html" class="wf-nav-btn">← Tổng quan</a>
+      <a href="s01-vao-buoi-hoc.html" class="wf-nav-btn">S-01 Vào buổi</a>
+      <a href="s06-gv-mo-buoi.html" class="wf-nav-btn">S-06 GV Mở buổi</a>
+      <a href="s07-bang-lop-cham.html" class="wf-nav-btn active">S-07 Bảng lớp & Chấm</a>
+    </div>
+  </header>
+
+  <main class="grading-workspace">
+
+    <!-- Thanh công cụ lọc & chọn lớp -->
+    <div class="grading-toolbar">
+      <div class="toolbar-left">
+        <label style="font-weight:700; font-size:13.5px">Lớp:</label>
+        <select class="select-control" aria-label="Chọn lớp">
+          <option value="1A">Lớp 1A (2026-2027) — 28 học sinh</option>
+          <option value="1B" disabled>Lớp 1B (Đang mở)</option>
+        </select>
+
+        <label style="font-weight:700; font-size:13.5px; margin-left:8px">Học kì:</label>
+        <select class="select-control" aria-label="Chọn học kì">
+          <option value="1">Học kì I (Tuần 1 – 10 đã mở)</option>
+          <option value="2" disabled>Học kì II (Chưa mở)</option>
+        </select>
+
+        <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:13.5px; margin-left:8px">
+          <input type="checkbox" id="filter-ungraded" onchange="toggleFilterUngraded(this.checked)">
+          <span>Chỉ hiện ô <strong>chưa chấm</strong></span>
+        </label>
+      </div>
+
+      <div class="toolbar-right">
+        <input type="search" class="search-input" id="search-student" placeholder="Tìm tên học sinh..." oninput="filterStudentRows(this.value)">
+        <button type="button" class="btn btn-outline-accent" onclick="exportSpreadsheet()">
+          📊 Xuất bảng tính (F-07)
+        </button>
+      </div>
+    </div>
+
+    <!-- Thanh chấm nhanh khi chọn nhiều ô -->
+    <div class="batch-bar" id="batch-bar" hidden>
+      <div style="display:flex; align-items:center; gap:10px">
+        <span>☑️ Đã chọn: <strong id="batch-selected-count">0</strong> ô bài làm</span>
+        <button type="button" class="btn btn-sm" style="background:#2d3d4a; color:#fff; border-color:#4a5d6e" onclick="selectAllUngradedCells()">
+          Chọn tất cả ô chưa chấm
+        </button>
+      </div>
+      <div class="batch-actions">
+        <button type="button" class="btn btn-sm btn-success" id="btn-accept-suggested" onclick="batchAcceptSuggested()">
+          ⚡ Chấp nhận mức gợi ý (<span id="batch-btn-count">0</span> ô)
+        </button>
+        <button type="button" class="btn btn-sm" style="background:#2d3d4a; color:#fff; border-color:#4a5d6e" onclick="clearCellSelection()">
+          Bỏ chọn
+        </button>
+      </div>
+    </div>
+
+    <!-- Bảng lớp 28 hàng × 10 cột bài đã mở -->
+    <div class="table-viewport-card">
+      <div class="table-scroll-wrapper" id="table-scroll">
+        <table class="matrix-table" id="matrix-table" aria-label="Bảng đánh giá Lớp 1A">
+          <thead>
+            <tr>
+              <!-- Cột cố định: Học sinh -->
+              <th class="corner-th-fixed" style="width:210px; min-width:210px">
+                <div style="display:flex; align-items:center; justify-content:space-between">
+                  <span>HỌC SINH (28)</span>
+                  <span style="font-size:11px; font-weight:normal; color:var(--muted)">Cuộn ngang →</span>
+                </div>
+              </th>
+              <!-- 10 Cột bài đã mở -->
+              <th title="Tuần 1: Robot làm quen">BÀI 1<br><span style="font-weight:400; font-size:11px">Tuần 1</span></th>
+              <th title="Tuần 2: Đèn giao thông">BÀI 2<br><span style="font-weight:400; font-size:11px">Tuần 2</span></th>
+              <th title="Tuần 3: Quạt gió thông minh">BÀI 3<br><span style="font-weight:400; font-size:11px">Tuần 3</span></th>
+              <th title="Tuần 4: Xe đua F1">BÀI 4<br><span style="font-weight:400; font-size:11px">Tuần 4</span></th>
+              <th title="Tuần 5: Cần cẩu bến cảng">BÀI 5<br><span style="font-weight:400; font-size:11px">Tuần 5</span></th>
+              <th title="Tuần 6: Khủng long gầm">BÀI 6<br><span style="font-weight:400; font-size:11px">Tuần 6</span></th>
+              <th title="Tuần 7: Bệ phóng tên lửa">BÀI 7<br><span style="font-weight:400; font-size:11px">Tuần 7</span></th>
+              <th title="Tuần 8: Vòng đu quay">BÀI 8<br><span style="font-weight:400; font-size:11px">Tuần 8</span></th>
+              <th title="Tuần 9: Robot thám hiểm" style="border-left:2px solid var(--accent); background:#e6f3fa !important; color:var(--accent)">
+                BÀI 9 ★<br><span style="font-weight:700; font-size:11px">Tuần 9 (Mới)</span>
+              </th>
+              <th title="Tuần 10: Băng chuyền phân loại">BÀI 10<br><span style="font-weight:400; font-size:11px">Tuần 10</span></th>
+            </tr>
+          </thead>
+          <tbody id="matrix-tbody">
+            <!-- 28 hàng tạo bằng JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== NGĂN KÉO CHẤM BÀI BÊN PHẢI (RIGHT DRAWER) ==================== -->
+  <div class="drawer-overlay" id="drawer-overlay" hidden onclick="closeDrawer()"></div>
+  <aside class="drawer-container" id="grading-drawer" hidden aria-label="Ngăn kéo chấm bài">
+    
+    <div class="drawer-header">
+      <div class="drawer-header-info">
+        <span style="font-size:32px" id="dw-avatar">🦁</span>
+        <div>
+          <div style="font-family:var(--f-display); font-size:17px; font-weight:700" id="dw-student-name">Nam B.</div>
+          <div style="font-size:12.5px; color:var(--muted)" id="dw-lesson-name">Bài 9: Robot thám hiểm (Tuần 9)</div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-sm" onclick="closeDrawer()" aria-label="Đóng ngăn kéo">✕</button>
+    </div>
+
+    <div class="drawer-body">
+
+      <!-- Phần 1: Nhiệm vụ hoàn thành (Cơ bản + Nâng cao tách riêng) -->
+      <div>
+        <div class="drawer-section-title">1. Nhiệm vụ bài làm</div>
+        
+        <!-- 4 Nhiệm vụ cơ bản -->
+        <div style="font-size:12px; font-weight:600; color:var(--ink); margin-bottom:4px">Nhiệm vụ Cơ bản (Dùng để tính mức gợi ý):</div>
+        <div class="mission-checklist" id="dw-basic-missions">
+          <!-- Rendered via JS -->
+        </div>
+
+        <!-- 2 Nhiệm vụ nâng cao tách riêng (GD-06) -->
+        <div style="font-size:12px; font-weight:600; color:var(--muted); margin:10px 0 4px">
+          Nhiệm vụ Nâng cao (Tham khảo, không tính vào mức - GD-06):
+        </div>
+        <div class="mission-checklist" id="dw-adv-missions" style="background:var(--stage)">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <!-- Phần 2: Xem chương trình khối lệnh gần nhất -->
+      <div>
+        <div class="drawer-section-title">2. Chương trình khối lệnh gần nhất</div>
+        <div class="code-preview-box">
+          <div><span class="code-block-mock cb-yellow">▶ Khi cờ xanh bấm</span></div>
+          <div style="margin-left:14px"><span class="code-block-mock cb-blue">⚙️ Động cơ M1 quay tới tốc độ 80%</span></div>
+          <div style="margin-left:14px"><span class="code-block-mock cb-orange">⏳ Đợi cảm biến siêu âm &lt; 15 cm</span></div>
+          <div style="margin-left:14px"><span class="code-block-mock cb-green">🎵 Phát nốt Sol + Đổi hướng lùi</span></div>
+          <div style="margin-top:6px; font-size:11px; color:#94a3b8">
+            ✓ Lưu lúc 08:35 tại Bàn máy số 04
+          </div>
+        </div>
+      </div>
+
+      <!-- Phần 3: Mức máy gợi ý (Công thức BRD 6.2) -->
+      <div>
+        <div class="drawer-section-title">3. Mức máy gợi ý (Mục 6.2 BRD)</div>
+        <div class="suggested-grade-box">
+          <div>
+            <div style="font-weight:700; font-size:14px" id="dw-suggest-title">Máy gợi ý: HT (Hoàn thành)</div>
+            <div class="formula-explanation" id="dw-suggest-formula">
+              C = 4 cơ bản, X = 3 đã xong. (X ≥ ⌈4/2⌉ = 2).
+            </div>
+          </div>
+          <span class="chip chip-ht" id="dw-suggest-chip">GỢI Ý: HT</span>
+        </div>
+      </div>
+
+      <!-- Phần 4: Giáo viên chọn mức -->
+      <div>
+        <div class="drawer-section-title">4. Đánh giá của giáo viên</div>
+        <div class="grade-btn-group">
+          <button type="button" class="grade-pick-btn" data-grade="HTT" onclick="selectGrade('HTT')">
+            <span class="chip chip-htt">HTT</span>
+            <span style="font-size:11px; font-weight:600">Hoàn thành tốt</span>
+          </button>
+          <button type="button" class="grade-pick-btn" data-grade="HT" onclick="selectGrade('HT')">
+            <span class="chip chip-ht">HT</span>
+            <span style="font-size:11px; font-weight:600">Hoàn thành</span>
+          </button>
+          <button type="button" class="grade-pick-btn" data-grade="CHT" onclick="selectGrade('CHT')">
+            <span class="chip chip-cht">CHT</span>
+            <span style="font-size:11px; font-weight:600">Chưa hoàn thành</span>
+          </button>
+        </div>
+
+        <!-- Cảnh báo BR-DG-01 khi chọn khác mức gợi ý -->
+        <div class="warn-diff-grade-box" id="warn-diff-grade" hidden style="margin-top:10px">
+          <span>⚠️</span>
+          <div>
+            <strong>Cảnh báo (BR-DG-01):</strong> Mức bạn chọn khác với mức máy gợi ý (<span id="diff-grade-name">HT</span>). Bạn vẫn có thể lưu đánh giá này theo chuyên môn.
+          </div>
+        </div>
+      </div>
+
+      <!-- Phần 5: Nhận xét (Khóa nếu chưa có phụ huynh đồng ý - BR-DY-02) -->
+      <div>
+        <div class="drawer-section-title">5. Nhận xét (Tối đa 500 ký tự)</div>
+        <div class="comment-area-wrap">
+          <textarea class="comment-textarea" id="dw-comment-text" maxlength="500" placeholder="Nhập nhận xét khích lệ em..." oninput="updateCharCounter()"></textarea>
+          <div class="char-counter" id="dw-char-counter">0 / 500 ký tự</div>
+        </div>
+
+        <!-- Cảnh báo khóa theo BR-DY-02 -->
+        <div class="consent-lock-alert" id="consent-lock-notice" hidden>
+          <span>🔒</span>
+          <div>
+            <strong>Chờ phụ huynh đồng ý (BR-DY-02):</strong> Học sinh chưa có đồng ý lưu dữ liệu định danh (GD-14). Ô nhận xét bị khoá, hệ thống chỉ lưu mức đánh giá.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="drawer-footer">
+      <button type="button" class="btn" onclick="closeDrawer()">Đóng</button>
+      <button type="button" class="btn btn-primary" onclick="saveGrading()">Lưu đánh giá</button>
+    </div>
+
+  </aside>
+
+  <!-- Toast thông báo -->
+  <div class="toast-notice" id="toast-notice" hidden>
+    <span id="toast-msg">Đã lưu đánh giá thành công!</span>
+  </div>
+
+  <script>
+    /* ============================================================
+       DỮ LIỆU GIẢ: 28 HỌC SINH × 10 BÀI HỌC
+       - 5 em chưa có đồng ý phụ huynh (BR-DY-02): An (id 2), Đạt (id 6), Linh (id 14), Quang (id 21), Trâm (id 25)
+       - Khoảng 40% ô đã chấm
+       - Mỗi bài có 4 cơ bản (M1-M4) + 2 nâng cao (M5-M6)
+       - Công thức gợi ý BRD 6.2: X = C (4) -> HTT; X >= 2 & < 4 -> HT; X < 2 -> CHT
+       ============================================================ */
+    const STUDENTS_S07 = [
+      { id: 1, name: "Nam B.", animal: "🦁", hasConsent: true },
+      { id: 2, name: "An", animal: "🐼", hasConsent: false }, // 1/5 chưa có đồng ý
+      { id: 3, name: "Bảo", animal: "🐨", hasConsent: true },
+      { id: 4, name: "Chi", animal: "🦊", hasConsent: true },
+      { id: 5, name: "Dũng", animal: "🐰", hasConsent: true },
+      { id: 6, name: "Đạt", animal: "🐻", hasConsent: false }, // 2/5 chưa có đồng ý
+      { id: 7, name: "Hà", animal: "🐵", hasConsent: true },
+      { id: 8, name: "Hải", animal: "🐬", hasConsent: true },
+      { id: 9, name: "Hiếu", animal: "🐸", hasConsent: true },
+      { id: 10, name: "Hương", animal: "🦄", hasConsent: true },
+      { id: 11, name: "Khánh", animal: "🦉", hasConsent: true },
+      { id: 12, name: "Khoa", animal: "🐧", hasConsent: true },
+      { id: 13, name: "Lâm", animal: "🦒", hasConsent: true },
+      { id: 14, name: "Linh", animal: "🦔", hasConsent: false }, // 3/5 chưa có đồng ý
+      { id: 15, name: "Mai", animal: "🐝", hasConsent: true },
+      { id: 16, name: "Minh", animal: "🐢", hasConsent: true },
+      { id: 17, name: "My", animal: "🐘", hasConsent: true },
+      { id: 18, name: "Nhi", animal: "🦩", hasConsent: true },
+      { id: 19, name: "Phong", animal: "🦭", hasConsent: true },
+      { id: 20, name: "Phúc", animal: "🦀", hasConsent: true },
+      { id: 21, name: "Quang", animal: "🦋", hasConsent: false }, // 4/5 chưa có đồng ý
+      { id: 22, name: "Quân", animal: "🦖", hasConsent: true },
+      { id: 23, name: "Sơn", animal: "🐳", hasConsent: true },
+      { id: 24, name: "Thảo", animal: "🦜", hasConsent: true },
+      { id: 25, name: "Trâm", animal: "🦘", hasConsent: false }, // 5/5 chưa có đồng ý
+      { id: 26, name: "Tú", animal: "🐺", hasConsent: true },
+      { id: 27, name: "Việt", animal: "🐯", hasConsent: true },
+      { id: 28, name: "Vũ", animal: "🦚", hasConsent: true }
+    ];
+
+    const LESSONS = [
+      { id: 1, week: 1, title: "Bài 1: Robot làm quen", basicMissions: ["Lắp khung bánh xe", "Gắn động cơ", "Chạy tiến thẳng", "Chạy lùi dừng"] },
+      { id: 2, week: 2, title: "Bài 2: Đèn giao thông", basicMissions: ["Lắp cột đèn LED", "Nối dây tín hiệu", "Lập trình đèn xanh", "Lập trình chu kỳ"] },
+      { id: 3, week: 3, title: "Bài 3: Quạt gió thông minh", basicMissions: ["Lắp cánh quạt", "Gắn cảm biến chạm", "Bật quạt khi ấn", "Đổi 2 tốc độ"] },
+      { id: 4, week: 4, title: "Bài 4: Xe đua F1", basicMissions: ["Lắp trục truyền động", "Tối ưu trọng lượng", "Lập trình tăng tốc", "Đo thời gian về đích"] },
+      { id: 5, week: 5, title: "Bài 5: Cần cẩu bến cảng", basicMissions: ["Lắp ròng rọc tời", "Móc tải trọng", "Nâng hạ hàng", "Quay cần trục 90°"] },
+      { id: 6, week: 6, title: "Bài 6: Khủng long gầm", basicMissions: ["Lắp khớp hàm răng", "Gắn cảm biến chuyển động", "Gầm khi có người qua", "Vẫy đuôi"] },
+      { id: 7, week: 7, title: "Bài 7: Bệ phóng tên lửa", basicMissions: ["Lắp góc nghiêng bệ", "Khoá chốt an toàn", "Đếm ngược 3-2-1", "Phóng tên lửa"] },
+      { id: 8, week: 8, title: "Bài 8: Vòng đu quay", basicMissions: ["Lắp trục tâm quay", "Gắn 4 cabin", "Quay đều êm", "Dừng theo nhịp"] },
+      { id: 9, week: 9, title: "Bài 9: Robot thám hiểm", basicMissions: ["Lắp bánh xích vượt dốc", "Gắn mắt siêu âm", "Lập trình tránh đá", "Thoát khỏi mê cung"] },
+      { id: 10, week: 10, title: "Bài 10: Băng chuyền phân loại", basicMissions: ["Lắp dây băng tải", "Gắn cảm biến màu", "Dừng khi có hàng", "Gạt sản phẩm"] }
+    ];
+
+    const ADV_MISSIONS_COMMON = [
+      "M5 Nâng cao: Tích hợp âm thanh đa âm",
+      "M6 Nâng cao: Tối ưu thuật toán xử lý nhanh"
+    ];
+
+    // Bảng lưu trạng thái ô: key = `${studentId}_${lessonId}`
+    const cellDataStore = {};
+
+    function initMockCellData() {
+      STUDENTS_S07.forEach(student => {
+        LESSONS.forEach(lesson => {
+          const key = `${student.id}_${lesson.id}`;
+
+          // Nhiệm vụ cơ bản hoàn thành (0 đến 4)
+          // Bài tuần đầu (Bài 1..4) đa số làm xong nhiều hơn bài sau (Bài 9..10)
+          let baseDone = 0;
+          if (lesson.id <= 4) {
+            baseDone = 3 + ( (student.id + lesson.id) % 2 ); // 3 hoặc 4
+          } else if (lesson.id <= 8) {
+            baseDone = 2 + ( (student.id + lesson.id) % 3 ); // 2, 3, hoặc 4
+          } else {
+            baseDone = (student.id % 5 === 0) ? 1 : (2 + ((student.id + lesson.id) % 3)); // 1 đến 4
+          }
+          baseDone = Math.min(4, Math.max(0, baseDone));
+
+          // Nhiệm vụ nâng cao hoàn thành (0 đến 2)
+          const advDone = (student.id % 3 === 0) ? 2 : (student.id % 2 === 0 ? 1 : 0);
+
+          // Tính mức máy gợi ý theo BRD mục 6.2
+          // C = 4 cơ bản. X = baseDone
+          // X = 4 -> HTT; X >= 2 & X < 4 -> HT; X < 2 -> CHT
+          let suggested = "CHT";
+          if (baseDone === 4) suggested = "HTT";
+          else if (baseDone >= 2) suggested = "HT";
+          else suggested = "CHT";
+
+          // Khoảng 40% ô đã được chấm (chủ yếu ở các bài 1 đến bài 6)
+          let isGraded = false;
+          let teacherGrade = null;
+          let teacherComment = "";
+          let hasRecentProgress = false;
+
+          // Tạo tỉ lệ đã chấm ~40%
+          if (lesson.id <= 4 || (lesson.id <= 7 && student.id % 2 === 0)) {
+            isGraded = true;
+            teacherGrade = suggested;
+            if (student.hasConsent) {
+              teacherComment = `Em ${student.name} thao tác tốt, hoàn thành đúng yêu cầu bài học.`;
+            } else {
+              teacherComment = ""; // BR-DY-02: chưa có đồng ý thì không có nhận xét
+            }
+          }
+
+          // Cờ "có tiến bộ mới" (chấm cam) theo máy trạng thái mục 3:
+          // Đã chấm nhưng em vừa xong thêm nhiệm vụ ở nhà/trên lớp
+          if (isGraded && (student.id + lesson.id) % 7 === 0) {
+            hasRecentProgress = true;
+          }
+
+          cellDataStore[key] = {
+            studentId: student.id,
+            lessonId: lesson.id,
+            baseDone: baseDone,
+            totalBase: 4,
+            advDone: advDone,
+            totalAdv: 2,
+            suggested: suggested,
+            isGraded: isGraded,
+            teacherGrade: teacherGrade,
+            teacherComment: teacherComment,
+            hasRecentProgress: hasRecentProgress,
+            selected: false
+          };
+        });
+      });
+    }
+
+    /* ========== RENDER BẢNG MA TRẬN 28 × 10 ========== */
+    function renderMatrixTable() {
+      const tbody = document.getElementById("matrix-tbody");
+      tbody.innerHTML = "";
+
+      const onlyUngraded = document.getElementById("filter-ungraded").checked;
+      const searchQuery = (document.getElementById("search-student").value || "").trim().toLowerCase();
+
+      STUDENTS_S07.forEach(student => {
+        // Lọc tìm kiếm theo tên
+        if (searchQuery && !student.name.toLowerCase().includes(searchQuery)) {
+          return;
+        }
+
+        const tr = document.createElement("tr");
+        tr.id = `row-student-${student.id}`;
+
+        // Cột 1 cố định: Tên học sinh + ảnh con vật + badge consent nếu chưa đồng ý
+        const tdStudent = document.createElement("td");
+        tdStudent.className = "col-student-fixed";
+
+        let consentBadge = "";
+        if (!student.hasConsent) {
+          consentBadge = `
+            <span class="badge-no-consent" title="GD-14 & BR-DY-02: Chưa có phụ huynh đồng ý lưu dữ liệu. Chỉ lưu mức, không lưu nhận xét.">
+              🛡️ Chờ PH
+            </span>
+          `;
+        }
+
+        tdStudent.innerHTML = `
+          <div class="student-cell-content">
+            <span class="student-cell-avatar">${student.animal}</span>
+            <span class="student-cell-name" title="${student.name}">${student.name}</span>
+            ${consentBadge}
+          </div>
+        `;
+        tr.appendChild(tdStudent);
+
+        // 10 Cột bài làm
+        LESSONS.forEach(lesson => {
+          const key = `${student.id}_${lesson.id}`;
+          const cell = cellDataStore[key];
+
+          const td = document.createElement("td");
+          td.className = "lesson-cell" + (cell.selected ? " selected" : "");
+          td.id = `cell-${key}`;
+
+          // Nếu bật lọc "chỉ hiện ô chưa chấm", làm mờ các ô đã chấm
+          if (onlyUngraded && cell.isGraded) {
+            td.style.opacity = "0.25";
+          }
+
+          // Badge hiển thị mức nếu đã chấm, hoặc "Chưa chấm"
+          let gradeChip = "";
+          if (cell.isGraded && cell.teacherGrade) {
+            if (cell.teacherGrade === "HTT") {
+              gradeChip = `<span class="chip chip-htt">HTT</span>`;
+            } else if (cell.teacherGrade === "HT") {
+              gradeChip = `<span class="chip chip-ht">HT</span>`;
+            } else {
+              gradeChip = `<span class="chip chip-cht">CHT</span>`;
+            }
+          } else {
+            gradeChip = `<span class="chip chip-empty">—</span>`;
+          }
+
+          // Cờ chấm nhỏ cam nếu có tiến bộ mới
+          let recentDot = "";
+          if (cell.hasRecentProgress) {
+            recentDot = `<span class="dot-recent-progress" title="Có tiến bộ mới sau khi chấm"></span>`;
+          }
+
+          const pct = Math.round((cell.baseDone / cell.totalBase) * 100);
+
+          td.innerHTML = `
+            <div class="cell-box">
+              <div class="cell-top-row">
+                <input type="checkbox" class="cell-checkbox" ${cell.selected ? "checked" : ""}
+                  onclick="event.stopPropagation(); onToggleCellCheckbox('${key}', this.checked)"
+                  title="Chọn ô để chấm nhanh">
+                <span class="cell-progress-text">${cell.baseDone}/4</span>
+                ${recentDot}
+              </div>
+              <div class="mini-progress-track">
+                <div class="mini-progress-fill" style="width: ${pct}%;"></div>
+              </div>
+              <div style="margin-top:2px; display:flex; justify-content:center">
+                ${gradeChip}
+              </div>
+            </div>
+          `;
+
+          // Bấm ô -> Mở ngăn kéo bên phải
+          td.onclick = () => openDrawer(student, lesson);
+
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    /* ========== LOGIC NGĂN KÉO CHẤM BÀI (RIGHT DRAWER) ========== */
+    let currentEditingKey = null;
+    let selectedGradeTemp = null;
+
+    function openDrawer(student, lesson) {
+      const key = `${student.id}_${lesson.id}`;
+      currentEditingKey = key;
+      const cell = cellDataStore[key];
+
+      // Đánh dấu ô đang active
+      document.querySelectorAll(".lesson-cell.active-drawer").forEach(el => el.classList.remove("active-drawer"));
+      const activeCellEl = document.getElementById(`cell-${key}`);
+      if (activeCellEl) activeCellEl.classList.add("active-drawer");
+
+      // Cập nhật thông tin học sinh & bài
+      document.getElementById("dw-avatar").textContent = student.animal;
+      document.getElementById("dw-student-name").textContent = student.name;
+      document.getElementById("dw-lesson-name").textContent = `${lesson.title} (Tuần ${lesson.week})`;
+
+      // Render 4 nhiệm vụ cơ bản
+      const basicContainer = document.getElementById("dw-basic-missions");
+      basicContainer.innerHTML = "";
+      lesson.basicMissions.forEach((mText, idx) => {
+        const isDone = (idx < cell.baseDone);
+        const item = document.createElement("div");
+        item.className = "mission-item";
+        item.innerHTML = `
+          <span class="mission-status-icon ${isDone ? 'done' : 'undone'}">${isDone ? '✓' : '–'}</span>
+          <span style="${isDone ? 'font-weight:600' : 'color:var(--muted)'}">M${idx + 1}: ${mText}</span>
+        `;
+        basicContainer.appendChild(item);
+      });
+
+      // Render 2 nhiệm vụ nâng cao (GD-06)
+      const advContainer = document.getElementById("dw-adv-missions");
+      advContainer.innerHTML = "";
+      ADV_MISSIONS_COMMON.forEach((advText, idx) => {
+        const isDone = (idx < cell.advDone);
+        const item = document.createElement("div");
+        item.className = "mission-item";
+        item.innerHTML = `
+          <span class="mission-status-icon ${isDone ? 'done' : 'undone'}">${isDone ? '✓' : '–'}</span>
+          <span style="${isDone ? 'font-weight:600' : 'color:var(--muted)'}">${advText}</span>
+        `;
+        advContainer.appendChild(item);
+      });
+
+      // Mức gợi ý theo công thức 6.2
+      const suggestChip = document.getElementById("dw-suggest-chip");
+      suggestChip.className = `chip chip-${cell.suggested.toLowerCase()}`;
+      suggestChip.textContent = `GỢI Ý: ${cell.suggested}`;
+      document.getElementById("dw-suggest-title").textContent = `Máy gợi ý: ${cell.suggested} (${getGradeFullName(cell.suggested)})`;
+      document.getElementById("dw-suggest-formula").textContent =
+        `C = ${cell.totalBase} cơ bản, Em đã xong X = ${cell.baseDone}. (Công thức BRD 6.2)`;
+
+      // Khởi tạo mức đang chọn
+      selectedGradeTemp = cell.teacherGrade || cell.suggested;
+      updateGradeButtonsUI();
+
+      // Xử lý ô nhận xét & Luật BR-DY-02 (Học sinh chưa có đồng ý)
+      const commentText = document.getElementById("dw-comment-text");
+      const consentNotice = document.getElementById("consent-lock-notice");
+
+      if (!student.hasConsent) {
+        // BR-DY-02: Khoá ô nhận xét
+        commentText.disabled = true;
+        commentText.value = "";
+        commentText.placeholder = "Chờ phụ huynh đồng ý (BR-DY-02)";
+        consentNotice.hidden = false;
+      } else {
+        commentText.disabled = false;
+        commentText.placeholder = "Nhập nhận xét khích lệ em...";
+        commentText.value = cell.teacherComment || "";
+        consentNotice.hidden = true;
+      }
+      updateCharCounter();
+
+      // Mở drawer
+      document.getElementById("drawer-overlay").hidden = false;
+      document.getElementById("grading-drawer").hidden = false;
+    }
+
+    function closeDrawer() {
+      document.getElementById("drawer-overlay").hidden = true;
+      document.getElementById("grading-drawer").hidden = true;
+      document.querySelectorAll(".lesson-cell.active-drawer").forEach(el => el.classList.remove("active-drawer"));
+      currentEditingKey = null;
+    }
+
+    function selectGrade(grade) {
+      selectedGradeTemp = grade;
+      updateGradeButtonsUI();
+    }
+
+    function updateGradeButtonsUI() {
+      const cell = cellDataStore[currentEditingKey];
+      document.querySelectorAll(".grade-pick-btn").forEach(btn => {
+        if (btn.getAttribute("data-grade") === selectedGradeTemp) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+
+      // Cảnh báo vàng BR-DG-01 nếu chọn khác mức gợi ý
+      const warnBox = document.getElementById("warn-diff-grade");
+      if (cell && selectedGradeTemp && selectedGradeTemp !== cell.suggested) {
+        warnBox.hidden = false;
+        document.getElementById("diff-grade-name").textContent = cell.suggested;
+      } else {
+        warnBox.hidden = true;
+      }
+    }
+
+    function updateCharCounter() {
+      const txt = document.getElementById("dw-comment-text");
+      document.getElementById("dw-char-counter").textContent = `${txt.value.length} / 500 ký tự`;
+    }
+
+    function saveGrading() {
+      if (!currentEditingKey) return;
+      const cell = cellDataStore[currentEditingKey];
+      const student = STUDENTS_S07.find(s => s.id === cell.studentId);
+
+      cell.isGraded = true;
+      cell.teacherGrade = selectedGradeTemp;
+      cell.hasRecentProgress = false; // Đã chấm lại -> xoá cờ tiến bộ mới
+
+      if (student.hasConsent) {
+        cell.teacherComment = document.getElementById("dw-comment-text").value.trim();
+      } else {
+        cell.teacherComment = ""; // BR-DY-02
+      }
+
+      showToast(`Đã lưu đánh giá [${selectedGradeTemp}] cho ${student.name}`);
+      closeDrawer();
+      renderMatrixTable();
+    }
+
+    function getGradeFullName(g) {
+      if (g === "HTT") return "Hoàn thành tốt";
+      if (g === "HT") return "Hoàn thành";
+      return "Chưa hoàn thành";
+    }
+
+    /* ========== LOGIC CHẤM NHANH (BATCH SELECTION) ========== */
+    function onToggleCellCheckbox(key, isChecked) {
+      cellDataStore[key].selected = isChecked;
+      const td = document.getElementById(`cell-${key}`);
+      if (td) {
+        if (isChecked) td.classList.add("selected");
+        else td.classList.remove("selected");
+      }
+      updateBatchBar();
+    }
+
+    function updateBatchBar() {
+      const selectedKeys = Object.keys(cellDataStore).filter(k => cellDataStore[k].selected);
+      const batchBar = document.getElementById("batch-bar");
+      const countSpan = document.getElementById("batch-selected-count");
+      const btnCount = document.getElementById("batch-btn-count");
+
+      if (selectedKeys.length > 0) {
+        batchBar.hidden = false;
+        countSpan.textContent = selectedKeys.length;
+        btnCount.textContent = selectedKeys.length;
+      } else {
+        batchBar.hidden = true;
+      }
+    }
+
+    function selectAllUngradedCells() {
+      Object.keys(cellDataStore).forEach(k => {
+        if (!cellDataStore[k].isGraded) {
+          cellDataStore[k].selected = true;
+        }
+      });
+      renderMatrixTable();
+      updateBatchBar();
+    }
+
+    function clearCellSelection() {
+      Object.keys(cellDataStore).forEach(k => {
+        cellDataStore[k].selected = false;
+      });
+      renderMatrixTable();
+      updateBatchBar();
+    }
+
+    function batchAcceptSuggested() {
+      const selectedKeys = Object.keys(cellDataStore).filter(k => cellDataStore[k].selected);
+      if (selectedKeys.length === 0) return;
+
+      selectedKeys.forEach(k => {
+        const cell = cellDataStore[k];
+        cell.isGraded = true;
+        cell.teacherGrade = cell.suggested;
+        cell.hasRecentProgress = false;
+        cell.selected = false;
+
+        const student = STUDENTS_S07.find(s => s.id === cell.studentId);
+        if (student && student.hasConsent) {
+          cell.teacherComment = "Đạt mức theo tiến độ nhiệm vụ hoàn thành.";
+        } else {
+          cell.teacherComment = ""; // BR-DY-02
+        }
+      });
+
+      showToast(`Đã chấm nhanh ${selectedKeys.length} ô theo mức máy gợi ý thành công!`);
+      renderMatrixTable();
+      updateBatchBar();
+    }
+
+    /* ========== TÌM KIẾM VÀ LỌC ========== */
+    function filterStudentRows(query) {
+      renderMatrixTable();
+    }
+
+    function toggleFilterUngraded(checked) {
+      renderMatrixTable();
+    }
+
+    /* ========== XUẤT BẢNG TÍNH (F-07) ========== */
+    function exportSpreadsheet() {
+      alert("Xuất bảng tính (F-07): Tạo tệp Excel gồm:\n- Sheet 1: Bảng ma trận Mức đánh giá (HTT, HT, CHT) cho 28 em × 10 bài\n- Sheet 2: Danh sách nhận xét của giáo viên (tự động loại trừ 5 em chưa có phụ huynh đồng ý theo GD-14)");
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast-notice");
+      document.getElementById("toast-msg").textContent = msg;
+      toast.hidden = false;
+      setTimeout(() => {
+        toast.hidden = true;
+      }, 2500);
+    }
+
+    // Khởi tạo
+    initMockCellData();
+    renderMatrixTable();
+  </script>
+</body>
+</html>

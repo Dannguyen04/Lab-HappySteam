@@ -373,7 +373,7 @@ const gl = canvas ? canvas.getContext('webgl', { antialias: true, alpha: true, p
     let spin = null;
     const driveOf = new Map();
     if (DATA.drive)
-      for (const key of ['output', 'motor']) if (DATA.drive[key]) for (const i of DATA.drive[key].parts) driveOf.set(DATA.instances[i], key);
+      for (const key of Object.keys(DATA.drive)) for (const i of DATA.drive[key].parts || []) driveOf.set(DATA.instances[i], key);
     // Ma trận quay (lưu theo cột) quanh trục đơn vị k góc a – công thức Rodrigues
     function axisRot(k, a) {
       const c = Math.cos(a),
@@ -389,12 +389,18 @@ const gl = canvas ? canvas.getContext('webgl', { antialias: true, alpha: true, p
         off = spin && spin.offset;
       if (off) at = [at[0] + off[0], at[1] + off[1], at[2] + off[2]];
       if (!key) return { R: p.rotation, pos: at };
-      const d = DATA.drive[key],
-        Rk = axisRot(d.axis || [0, 1, 0], spin[key] || 0),
-        pt = off ? [d.point[0] + off[0], d.point[1] + off[1], d.point[2] + off[2]] : d.point;
-      const R = [0, 1, 2].flatMap(col => mul(Rk, [p.rotation[col * 3], p.rotation[col * 3 + 1], p.rotation[col * 3 + 2]]));
-      const rel = mul(Rk, [at[0] - pt[0], at[1] - pt[1], at[2] - pt[2]]);
-      return { R, pos: [rel[0] + pt[0], rel[1] + pt[1], rel[2] + pt[2]] };
+      // Bộ truyền lồng nhau (d.parent): quay theo bộ của mình trước, rồi theo bộ mẹ (vd. Lớp 3 Bài 8: cần quay trên tháp nghiêng)
+      let R = p.rotation;
+      for (let k = key, guard = 0; k && DATA.drive[k] && guard < 4; k = DATA.drive[k].parent, guard++) {
+        const d = DATA.drive[k],
+          Rk = axisRot(d.axis || [0, 1, 0], spin[k] || 0),
+          pt = off ? [d.point[0] + off[0], d.point[1] + off[1], d.point[2] + off[2]] : d.point;
+        const R0 = R;
+        R = [0, 1, 2].flatMap(col => mul(Rk, [R0[col * 3], R0[col * 3 + 1], R0[col * 3 + 2]]));
+        const rel = mul(Rk, [at[0] - pt[0], at[1] - pt[1], at[2] - pt[2]]);
+        at = [rel[0] + pt[0], rel[1] + pt[1], rel[2] + pt[2]];
+      }
+      return { R, pos: at };
     }
     function startAnim() {
       anim = animate && !capturing && moves(step).size ? { step, start: performance.now() } : null;

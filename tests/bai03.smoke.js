@@ -3,22 +3,23 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const { chromium } = require('playwright');
+const { pageUrl } = require('./helpers/page-url');
 
 (async () => {
   const executablePath = [process.env.ZM_CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe']
     .filter(Boolean).find(p => fs.existsSync(p));
   const browser = await chromium.launch({ headless: true, ...(executablePath ? { executablePath } : {}) });
   try {
-    const root = path.resolve(__dirname, '..').split(path.sep).join('/');
     const page = await browser.newPage({ viewport: { width: 1366, height: 860 }, reducedMotion: 'reduce' });
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
     // js/bai03/art.js (hình vẽ cảnh) có thể chưa có – trang tự dùng hình đơn giản
     page.on('requestfailed', r => !/bai03\/art\.js$/.test(r.url()) && errors.push('Không tải được ' + r.url()));
-    await page.goto(`file:///${root}/lop1-bai03.html`);
+    await page.goto(pageUrl('bai.html?id=lop1-bai03'));
     await page.evaluate(() => localStorage.clear());
     await page.reload();
     await page.waitForFunction(() => window.robotViewer, null, { timeout: 20000 });
+    await page.locator('#lesson-loading').waitFor({ state: 'detached', timeout: 20000 });
     assert.match(await page.title(), /Bài 3/);
     assert.equal(await page.evaluate(() => window.robotViewer.stats().instances), 40);
     assert.equal(await page.locator('#mission-summary-badge').innerText(), '0/4 nhiệm vụ');
@@ -84,7 +85,7 @@ const { chromium } = require('playwright');
 
     // Điện thoại 375 px không tràn ngang
     const mobile = await browser.newPage({ viewport: { width: 375, height: 760 }, isMobile: true });
-    await mobile.goto(`file:///${root}/lop1-bai03.html`);
+    await mobile.goto(pageUrl('bai.html?id=lop1-bai03'));
     await mobile.waitForFunction(() => window.robotViewer, null, { timeout: 20000 });
     for (const tab of ['#tab-btn-asm', '#tab-btn-creative', '#tab-btn-sim']) {
       await mobile.click(tab);

@@ -42,6 +42,9 @@
     wait: { type: 'wait', name: 'Wait', duration: 3, color: 'wait', label: 'Chờ' },
     display: { type: 'display', name: 'Display', icon: 'smile', color: 'display', label: 'Màn hình' },
     obstacle: { type: 'sensor_obstacle', name: 'Chờ vật cản', color: 'sensor', label: 'Chờ vật cản' },
+    // Khối động cơ có cổng (Lớp 3 Bài 8 – hai động cơ M1, M2): chạm đổi chậm → nhanh → chậm ngược → nhanh ngược
+    m1Motor: { type: 'motor', name: 'Low Speed', speed: 'low', dir: 'cw', port: 'M1', color: 'motor', label: 'Động cơ M1' },
+    m2Motor: { type: 'motor', name: 'Low Speed', speed: 'low', dir: 'cw', port: 'M2', color: 'motor', label: 'Động cơ M2' },
     touch: { type: 'sensor_touch', name: 'Waiting for Pressed', color: 'sensor', label: 'Chờ nhấn nút' },
     // Nâng cao (cấp 2–3)
     waitClear: { type: 'wait_clear', name: 'Đợi đường trống', color: 'sensor', label: 'Đợi đường trống' },
@@ -114,7 +117,7 @@
         else if (tpl.type === 'repeatStart') iconHtml = SVG_ICONS.repeatStart;
         else if (tpl.type === 'repeatEnd') iconHtml = SVG_ICONS.repeatEnd;
         else if (tpl.type === 'melody') iconHtml = SVG_ICONS.melody(tpl.tune);
-        else if (tpl.type === 'motor') iconHtml = motorIcon(tpl.speed);
+        else if (tpl.type === 'motor') iconHtml = portTag(tpl) + motorIcon(tpl.speed, tpl.dir);
         else if (tpl.type === 'motor_power') iconHtml = SVG_ICONS.motorPower(tpl.power);
         else if (tpl.type === 'motor_reverse') iconHtml = SVG_ICONS.motorReverse;
         else if (tpl.type === 'stop') iconHtml = SVG_ICONS.motorStop;
@@ -202,6 +205,11 @@
       } else if (b.type === 'motor_power') {
         // Giáo án: đổi mức mặc định 8 xuống 2 – mỗi lần chạm giảm 1 mức, sau 1 quay về 8
         b.power = b.power > 1 ? b.power - 1 : 8;
+      } else if (b.type === 'motor' && b.port) {
+        const order = ['low:cw', 'high:cw', 'low:ccw', 'high:ccw'];
+        [b.speed, b.dir] = order[(order.indexOf(b.speed + ':' + (b.dir || 'cw')) + 1) % order.length].split(':');
+        b.name = SPEEDS[b.speed].name;
+        b.label = SPEEDS[b.speed].label + (b.dir === 'ccw' ? ' ngược' : '');
       } else if (b.type === 'motor') {
         const order = (this.opts.toolbox || []).includes('mediumSpeed') ? ['low', 'medium', 'high'] : ['low', 'high'];
         b.speed = order[(order.indexOf(b.speed) + 1) % order.length];
@@ -263,8 +271,8 @@
           iconContent = SVG_ICONS.melody(b.tune);
           paramLabel = `Melody ${b.tune} (chạm để đổi)`;
         } else if (b.type === 'motor') {
-          iconContent = motorIcon(b.speed);
-          paramLabel = SPEEDS[b.speed].name + ' (chạm đổi)';
+          iconContent = portTag(b) + motorIcon(b.speed, b.dir);
+          paramLabel = (b.port ? b.port + ' ' : '') + SPEEDS[b.speed].name + (b.port && b.dir === 'ccw' ? ' ngược chiều' : '') + ' (chạm đổi)';
         } else if (b.type === 'motor_power') {
           iconContent = SVG_ICONS.motorPower(b.power);
           paramLabel = `Tốc độ mức ${b.power} (chạm để đổi)`;
@@ -359,6 +367,7 @@
     renderGhost() {
       if (!this.ghost) return;
       const sig = b => !b ? '' : b.type === 'melody' ? 'm' + b.tune : b.type === 'wait' ? 'w' + b.duration
+        : b.type === 'motor' && b.port ? ['motor', b.port, b.speed, b.dir || 'cw'].join(':')
         : b.type === 'motor' || b.type === 'motor_power' ? 'motor' : b.type;
       const sample = this.sampleProgram();
       let right = 0;
@@ -383,7 +392,7 @@
     if (b.type === 'repeatStart') return SVG_ICONS.repeatStart;
     if (b.type === 'repeatEnd') return SVG_ICONS.repeatEnd;
     if (b.type === 'melody') return SVG_ICONS.melody(b.tune);
-    if (b.type === 'motor') return motorIcon(b.speed);
+    if (b.type === 'motor') return portTag(b) + motorIcon(b.speed, b.dir);
     if (b.type === 'sensor_touch') return SVG_ICONS.touch;
     if (b.type === 'sensor_obstacle') return SVG_ICONS.obstacle;
     if (b.type === 'wait') return `<span class="zb-big-time">${b.duration}s</span>`;
@@ -398,9 +407,12 @@
     medium: { name: 'Medium Speed', label: 'Quay vừa' },
     high: { name: 'High Speed', label: 'Quay nhanh' }
   };
-  function motorIcon(speed) {
-    return speed === 'high' ? SVG_ICONS.motorHighCW : speed === 'medium' ? SVG_ICONS.motorMedium : SVG_ICONS.motorLow;
+  // dir 'ccw' (chỉ khối có cổng M1/M2): lật ngang hình mũi tên
+  function motorIcon(speed, dir) {
+    const svg = speed === 'high' ? SVG_ICONS.motorHighCW : speed === 'medium' ? SVG_ICONS.motorMedium : SVG_ICONS.motorLow;
+    return dir === 'ccw' ? svg.replace(/<svg ([^>]*)>/, '<svg $1><g transform="matrix(-1 0 0 1 40 0)">').replace(/<\/svg>$/, '</g></svg>') : svg;
   }
+  const portTag = b => (b.port ? `<span class="zb-port">${b.port}</span>` : '');
   function matchIfEnd(blocks, i) {
     let depth = 0;
     for (let j = i + 1; j < blocks.length; j++) {

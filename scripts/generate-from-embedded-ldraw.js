@@ -9,7 +9,6 @@ const table = require('./bai9-parts');
 
 const ROOT = path.join(__dirname, '..');
 const source = path.join(ROOT, 'references', 'original_models', 'model2.ldr');
-const target = path.join(ROOT, 'js', 'data-bai-09.js');
 
 const sections = cad.readSections(source);
 const rootParts = cad.flattenRoot(sections, 'bài 9 -thông tin liên lạc vũ trụ', 61);
@@ -67,7 +66,7 @@ for (const [key, d] of Object.entries(DRIVE)) {
 for (const i of DRIVE.output.parts)
   if (Math.abs(instances[i].pos[0] - DRIVE.output.point[0]) > 0.2) throw Error('Bộ truyền: linh kiện lạ ' + i);
 
-cad.writeData(target, {
+cad.writeData({
   source: 'Bài 9 -Thông tin liên lạc vũ trụ.io (hình CAD gốc, 61 linh kiện); 28 bước theo sách hướng dẫn chính thức',
   meshes, textures: [], instances,
   steps: plan.finalStep, stepDescriptions: plan.stepDescriptions, stepInfo: plan.stepInfo,
@@ -75,4 +74,4 @@ cad.writeData(target, {
   labels: cad.labelsOf(table),
   creative: creativeMeshes,
   drive: DRIVE,
-}, `CAD gốc: ${sections.size} section, ${rootParts.length} chi tiết, ${meshes.length} mesh, ${stats.triangles} tam giác;`);
+}, `CAD gốc: ${sections.size} section, ${rootParts.length} chi tiết, ${meshes.length} mesh, ${stats.triangles} tam giác;`, 'lop1/bai09');

@@ -6,13 +6,14 @@ const vm = require('node:vm');
 const plan = require('../scripts/bai10-plan');
 
 const root = path.join(__dirname, '..');
+(async () => {
 const context = {
   window: { addEventListener() {} },
   document: { getElementById() { return null; } },
   performance: { now: () => 0 },
   Math
 };
-vm.runInNewContext(fs.readFileSync(path.join(root, 'js/data-bai-10.js'), 'utf8'), context);
+await require('./helpers/lesson-3d')(context, 'lop1/bai10');
 const model = context.window.LESSON_3D_DATA;
 assert.equal(model.instances.length, 41, 'Cối xoay gió có 41 linh kiện');
 assert.equal(model.steps, 15, 'Sách hướng dẫn có 15 bước');
@@ -85,3 +86,5 @@ w.advance(0.5);
 assert.equal(w.running, false);
 
 console.log('PASS: Bài 10 – 41 linh kiện/15 bước theo sách, cánh quạt quay trục ngang; nút bấm chậm/vừa/nhanh/dừng, sạc pin, gói sáng tạo, bão gãy cánh, NV2–NV5.');
+
+})().catch(err => { console.error(err); process.exit(1); });

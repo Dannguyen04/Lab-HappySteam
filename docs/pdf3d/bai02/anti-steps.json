@@ -1,0 +1,315 @@
+{
+  "source": "references/drive_bai02/bai02.pdf",
+  "steps": [
+    {
+      "step": 1,
+      "page": 1,
+      "view_only": false,
+      "new_parts": [
+        {
+          "code": "BE-3581",
+          "color": null,
+          "qty": 1,
+          "name_vi": "động cơ điện",
+          "confidence": "cao",
+          "attached_to": "đặt nằm ngang làm chi tiết cơ sở, đĩa xoay tròn màu xanh ngọc quay sang bên phải",
+          "note": "Động cơ thông minh BE-3581 vỏ trắng, mặt bên phải có đĩa xoay tròn màu xanh ngọc (hàng 1, cột 4 trong kit_set2321A.txt)"
+        },
+        {
+          "code": "BP-7523A",
+          "color": "(12)",
+          "qty": 1,
+          "name_vi": "thanh thẳng 3 lỗ (vàng)",
+          "confidence": "cao",
+          "attached_to": "gắn vào 2 lỗ bên hông động cơ (phía đối diện đĩa xoay) qua 2 chốt đen ở lỗ 1 và lỗ 3; lỗ 2 ở giữa để hở",
+          "note": "Thanh 3 lỗ (3L) màu vàng (hàng 8, cột 6 trong kit_set2321A.txt). Lỗ giữa là lỗ tròn để đón trục 4L ở bước 4"
+        },
+        {
+          "code": "BP-7012",
+          "color": "(02)",
+          "qty": 2,
+          "name_vi": "chốt ma sát 2L (đen)",
+          "confidence": "cao",
+          "attached_to": "cắm vào 2 lỗ bên hông động cơ để giữ chặt thanh vàng 3 lỗ ở lỗ 1 và lỗ 3",
+          "note": "Chốt đen 2L tiêu chuẩn (hàng 3, cột 6 trong kit_set2321A.txt: BP-7012 (02) ×40)"
+        }
+      ],
+      "view": "nhìn từ trước-trái, hơi trên cao",
+      "description_vi": "Lấy động cơ màu trắng, dùng 2 chốt đen gắn thanh vàng 3 lỗ vào cạnh bên của động cơ."
+    },
+    {
+      "step": 2,
+      "page": 2,
+      "view_only": false,
+      "new_parts": [
+        {
+          "code": "BP-8818",
+          "color": "(16)",
+          "qty": 1,
+          "name_vi": "khung đế 7×11 (xanh ngọc)",
+          "confidence": "cao",
+          "attached_to": "đặt lồng xung quanh cụm động cơ từ trên xuống; động cơ nằm gọn trong khoang rỗng 5×9 ở nửa phía trước của khung, đĩa xoay áp sát thành bên phải",
+          "note": "Khung dày kích thước ngoài 7×11 lỗ, khoang trong 5×9 lỗ màu xanh ngọc (hàng 11, cột 2 trong kit_set2321A.txt: BP-8818 (16) ×2)"
+        }
+      ],
+      "view": "nhìn từ trước-trái, hơi trên cao",
+      "description_vi": "Đặt khung lớn màu xanh ngọc lồng xung quanh động cơ."
+    },
+    {
+      "step": 3,
+      "page": 3,
+      "view_only": false,
+      "new_parts": [
+        {
+          "code": "BP-3991",
+          "color": "(01)",
+          "qty": 1,
+          "name_vi": "trục 3L (xám)",
+          "confidence": "cao",
+          "attached_to": "luồn từ ngoài vào qua lỗ thứ 4 trên cạnh dài bên phải của khung 7×11 (tính từ góc trước-phải), cắm vào lỗ chữ thập ở tâm đĩa xoay động cơ",
+          "note": "Trục 3L màu xám có đánh số 3 trong ô linh kiện (hàng 2, cột 2 trong kit_set2321A.txt: BP-3991 (01) ×6). Đầu trục nhô ra ngoài khung để lắp bánh xe ở bước 5"
+        }
+      ],
+      "view": "nhìn từ trước-phải, hơi trên cao",
+      "description_vi": "Luồn trục xám số 3 qua lỗ bên hông khung vào giữa đĩa quay của động cơ."
+    },
+    {
+      "step": 4,
+      "page": 4,
+      "view_only": false,
+      "new_parts": [
+        {
+          "code": "BP-7628",
+          "color": "(02)",
+          "qty": 1,
+          "name_vi": "trục 4L (đen)",
+          "confidence": "cao",
+          "attached_to": "luồn từ ngoài qua lỗ thứ 4 trên cạnh dài bên trái của khung 7×11 (tính từ góc trước-trái), cắm xuyên vào lỗ tròn ở giữa của thanh vàng 3 lỗ",
+          "note": "Trục 4L màu đen có đánh số 4 trong ô linh kiện (hàng 10, cột 3 trong kit_set2321A.txt: BP-7628 (02) ×2). Khóa hông trái động cơ vào khung và làm trục đỡ bánh xe bên trái"
+        }
+      ],
+      "view": "nhìn từ sau-trái, hơi trên cao (xoay mô hình sang cạnh đối diện)",
+      "description_vi": "Xoay sang phía bên kia, luồn trục đen số 4 qua hông khung vào lỗ giữa của thanh vàng."
+    },
+    {
+      "step": 5,
+      "page": 5,
+      "view_only": false,
+      "new_parts": [
+        {
+          "code": "?",
+          "color": "(06)",
+          "qty": 2,
+          "name_vi": "vành bánh xe lớn (trắng)",
+          "confidence": "vừa",
+          "attached_to": "lắp 1 vành vào đầu trục 3L xám bên phải (trục động cơ) và 1 vành vào đầu trục 4L đen bên trái",
+          "note": "Vành bánh xe lớn màu trắng (dự đoán mã BP-8841 / Lego 4185 theo bộ Alpha 330 bài 3). Không có mã trong bảng kit_set2321A.txt nên ghi code '?' theo quy định."
+        },
+        {
+          "code": "?",
+          "color": "(16)",
+          "qty": 2,
+          "name_vi": "lốp bánh xe lớn (xanh ngọc)",
+          "confidence": "vừa",
+          "attached_to": "bọc ngoài 2 vành bánh xe lớn màu trắng",
+          "note": "Lốp mềm màu xanh ngọc bọc ngoài vành bánh lớn (dự đoán mã BP-8850 theo bài 3). Không có mã trong bảng kit_set2321A.txt nên ghi code '?' theo quy định."
+        }
+      ],
+      "view": "nhìn từ trước-phải, hơi trên cao",
+      "description_vi": "Bọc lốp xanh vào 2 vành bánh xe màu trắng rồi gắn vào 2 đầu trục ở hai bên hông xe."
+    },
+    {
+      "step": 6,
+      "page": 6,
+      "view_only": false,
+      "new_parts": [
+        {
+          "code": "BP-7012",
+          "color": "(02)",
+          "qty": 2,
+          "name_vi": "chốt ma sát 2L (đen)",
+          "confidence": "cao",
+          "attached_to": "cắm thẳng đứng vào 2 lỗ phía trước trên mặt động cơ BE-3581, đầu chốt hướng lên trên",
+          "note": "Chốt đen 2L (hàng 3, cột 6 trong kit_set2321A.txt)"
+        },
+        {
+          "code": "BP-7549",
+          "color": "B",
+          "qty": 2,
+          "name_vi": "khớp nối chốt có lỗ ngang (đen)",
+          "confidence": "cao",
+          "attached_to": "cắm chân chốt xuống lỗ thứ 2 (tính từ trước) trên 2 cạnh dài của khung 7×11, đầu chốt còn lại hướng thẳng lên trên",
+          "note": "Khớp nối chốt đôi vuông góc có lỗ ngang (hàng 9, cột 6 trong kit_set2321A.txt: BP-7549 B ×4). Hai chốt này cùng 2 chốt BP-7012 tạo thành hàng 4 chốt đứng thẳng hàng để đón thanh 7 lỗ"
+        }
+      ],
+      "view": "nhìn từ trước-trái, hơi trên cao",
+      "description_vi": "Cắm 2 chốt đen vào mặt trước động cơ và 2 chốt khớp màu đen vào hai bên khung xe."
+    },
+    {
+      "step": 7,
+      "page": 7,
+      "view_only": false,
+      "new_parts": [
+        {
+          "code": "BP-7525A",
+          "color": "(06)",
+          "qty": 1,
+          "name_vi": "thanh thẳng 7 lỗ (trắng)",
+          "confidence": "cao",
+          "attached_to": "lắp nằm ngang lên 4 đầu chốt đứng từ bước 6 (lỗ 1 vào khớp bên trái, lỗ 3 và 5 vào 2 chốt đen động cơ, lỗ 7 vào khớp bên phải)",
+          "note": "Thanh thẳng 7 lỗ (7L) màu trắng (hàng 8, cột 8 trong kit_set2321A.txt: BP-7525A (06) ×4). Nẹp cứng mặt trước động cơ với khung xe"
+        }
+      ],
+      "view": "nhìn từ trước-trái, hơi trên cao",
+      "description_vi": "Lắp thanh màu trắng 7 lỗ nằm ngang lên 4 chốt đen vừa cắm."
+    },
+    {
+      "step": 8,
+      "page": 8,
+      "view_only": false,
+      "new_parts": [
+        {
+          "code": "BP-7006",
+          "color": "(01)",
+          "qty": 2,
+          "name_vi": "khối nối 4 chốt (xám)",
+          "confidence": "cao",
+          "attached_to": "cắm 2 chốt dưới của mỗi khối vào 2 lỗ trên lưng động cơ BE-3581 (đối xứng hai bên trái và phải), 2 chốt trên hướng thẳng lên trên",
+          "note": "Khối nối vuông góc 4 chốt BP-7006 (01) màu xám (hàng 3, cột 3 trong kit_set2321A.txt: BP-7006 (01) ×3). Tạo điểm tựa và chốt cắm để gắn bộ não ở bước 9"
+        }
+      ],
+      "view": "nhìn từ trước-trái, hơi trên cao",
+      "description_vi": "Cắm 2 khối nối màu xám có 4 chốt lên lưng động cơ, hướng chốt lên trên."
+    },
+    {
+      "step": 9,
+      "page": 9,
+      "view_only": false,
+      "new_parts": [
+        {
+          "code": "BE-5158",
+          "color": null,
+          "qty": 1,
+          "name_vi": "bộ não điều khiển M5-RCU",
+          "confidence": "cao",
+          "attached_to": "gắn đè lên 4 chốt đứng của 2 khối nối xám BP-7006; 5 cổng cắm M1, M2, P1, P2, P3 quay về phía trước xe (ngay sau thanh trắng 7 lỗ), mặt 3 nút bấm ở trên",
+          "note": "Khối điều khiển trung tâm M5-RCU vỏ trắng đáy xanh ngọc (hàng 1, cột 5 trong kit_set2321A.txt: BE-5158 ×1)"
+        }
+      ],
+      "view": "nhìn từ trước-trái, hơi trên cao",
+      "description_vi": "Gắn bộ não điều khiển lên trên lưng xe sao cho 3 nút bấm ở mặt trên và các cổng cắm quay về phía trước."
+    },
+    {
+      "step": 10,
+      "page": 10,
+      "view_only": false,
+      "new_parts": [
+        {
+          "code": "BP-7553",
+          "color": "B",
+          "qty": 2,
+          "name_vi": "khớp nối chốt vuông góc 2 lỗ (đen)",
+          "confidence": "cao",
+          "attached_to": "cắm đầu chốt vào lỗ thứ 2 và lỗ thứ 6 trên cạnh ngắn phía sau của khung 7×11 (cạnh 7 lỗ); phần thân 2 lỗ nhô ra phía sau, 2 lỗ hướng lên trên",
+          "note": "Khớp nối chốt vuông góc có 2 lỗ song song BP-7553 B màu đen (hàng 9, cột 7 trong kit_set2321A.txt: BP-7553 B ×4). Làm bệ đỡ kéo dài đuôi xe để gắn 2 thanh đòn dài"
+        }
+      ],
+      "view": "nhìn từ trước-trái, hơi trên cao",
+      "description_vi": "Cắm 2 khớp nối màu đen vào cạnh sau của khung xe, hướng hai lỗ tròn ra phía sau."
+    },
+    {
+      "step": 11,
+      "page": 11,
+      "view_only": false,
+      "new_parts": [
+        {
+          "code": "BP-7012",
+          "color": "(02)",
+          "qty": 4,
+          "name_vi": "chốt ma sát 2L (đen)",
+          "confidence": "cao",
+          "attached_to": "cắm ngang vào 4 lỗ của 2 khớp nối BP-7553 ở bước 10 (mỗi khớp 2 chốt, hướng vào phía trong lòng xe)",
+          "note": "Chốt đen 2L (hàng 3, cột 6 trong kit_set2321A.txt). Dùng 4 chốt để gắn 2 thanh đòn 15L ở bước 12"
+        }
+      ],
+      "view": "nhìn từ trước-trái, hơi trên cao",
+      "description_vi": "Cắm 4 chốt đen vào 4 lỗ của 2 khớp nối vừa gắn ở đuôi xe."
+    },
+    {
+      "step": 12,
+      "page": 12,
+      "view_only": false,
+      "new_parts": [
+        {
+          "code": "BP-7021",
+          "color": "(16)",
+          "qty": 2,
+          "name_vi": "thanh thẳng 15 lỗ (xanh ngọc)",
+          "confidence": "cao",
+          "attached_to": "gắn 2 lỗ đầu (lỗ 14 và 15) của mỗi thanh vào 2 chốt đen của khớp nối BP-7553 ở đuôi xe; hai thanh kéo dài song song về phía sau làm đuôi xe",
+          "note": "Thanh thẳng mỏng 15 lỗ (15L) màu xanh ngọc (hàng 4, cột 5 trong kit_set2321A.txt: BP-7021 (16) ×4). Đếm chính xác 15 lỗ"
+        }
+      ],
+      "view": "nhìn từ trước-trái, hơi trên cao",
+      "description_vi": "Lắp 2 thanh dài màu xanh ngọc vào 4 chốt đen ở đuôi xe để tạo thành hai thanh đòn dài kéo về phía sau."
+    },
+    {
+      "step": 13,
+      "page": 13,
+      "view_only": false,
+      "new_parts": [
+        {
+          "code": "BP-3991",
+          "color": "(01)",
+          "qty": 1,
+          "name_vi": "trục 3L (xám)",
+          "confidence": "cao",
+          "attached_to": "xuyên qua lỗ cuối cùng (lỗ 1) của thanh xanh bên phải, qua 2 bánh xe nhỏ BP-7095 rồi qua lỗ cuối của thanh xanh bên trái",
+          "note": "Trục 3L màu xám có đánh số 3 trong ô linh kiện (hàng 2, cột 2 trong kit_set2321A.txt: BP-3991 (01) ×6). Liên kết 2 đầu thanh đuôi và làm trục quay bánh sau"
+        },
+        {
+          "code": "BP-7095",
+          "color": null,
+          "qty": 2,
+          "name_vi": "bánh xe ròng rọc nhỏ (đen/xám)",
+          "confidence": "cao",
+          "attached_to": "kẹp giữa 2 đầu thanh xanh 15L, lồng trên trục 3L xám",
+          "note": "Bánh xe nhỏ / ròng rọc có 6 lỗ xung quanh tâm trục chữ thập (hàng 8, cột 3 trong kit_set2321A.txt ghi 'BP-7095 ×4'). Hai bánh ghép sát nhau làm bánh tì dẫn hướng phía sau"
+        }
+      ],
+      "view": "nhìn từ trước-trái, hơi trên cao",
+      "description_vi": "Dùng trục xám số 3 xâu qua 2 bánh xe nhỏ màu đen và gắn vào đầu hai thanh dài phía sau."
+    },
+    {
+      "step": 14,
+      "page": 14,
+      "view_only": true,
+      "new_parts": [],
+      "view": "nhìn từ trước-trái, hơi trên cao (toàn cảnh mô hình hoàn chỉnh)",
+      "description_vi": "Quan sát chiếc xe hoàn chỉnh từ góc nhìn toàn cảnh, kiểm tra các bộ phận trước khi kết nối điều khiển."
+    }
+  ],
+  "totals": {
+    "BE-3581": 1,
+    "BE-5158": 1,
+    "BP-3991": 2,
+    "BP-7006": 2,
+    "BP-7012": 8,
+    "BP-7021": 2,
+    "BP-7095": 2,
+    "BP-7523A": 1,
+    "BP-7525A": 1,
+    "BP-7549": 2,
+    "BP-7553": 2,
+    "BP-7628": 1,
+    "BP-8818": 1,
+    "?": 4
+  },
+  "mirror_or_symmetry": "1. Khóa hông động cơ (bước 3 và 4): Bước 3 luồn trục 3L xám ở bên phải (qua đĩa động cơ), bước 4 luồn trục 4L đen ở bên trái (qua thanh vàng 3 lỗ) vào cùng vị trí lỗ thứ 4 của khung 7×11.\n2. Bánh xe chính (bước 5): Hai bánh xe lớn bọc lốp xanh gắn đối xứng ở hai bên hông xe trên 2 đầu trục nhô ra.\n3. Khớp chốt đứng (bước 6): Hai khớp nối BP-7549 gắn đối xứng hai bên thành khung (lỗ thứ 2 từ trước), 2 chốt đen BP-7012 cắm đối xứng ở mặt trước động cơ.\n4. Điểm tựa bộ não (bước 8): Hai khối nối 4 chốt BP-7006 cắm đối xứng hai bên lưng động cơ.\n5. Bệ đỡ đuôi xe (bước 10): Hai khớp nối BP-7553 gắn đối xứng vào lỗ thứ 2 và thứ 6 trên cạnh sau của khung 7×11.\n6. Chốt đuôi xe (bước 11): 4 chốt đen BP-7012 cắm đối xứng vào 2 khớp nối BP-7553 (mỗi bên 2 chốt).\n7. Cánh đuôi xe (bước 12): Hai thanh dài 15L BP-7021 gắn đối xứng song song hai bên kéo dài về phía sau.",
+  "questions": [
+    "Vành bánh xe lớn màu trắng (bước 5, suy đoán mã BP-8841 / Lego 4185) và lốp bánh xe màu xanh ngọc (bước 5, suy đoán mã BP-8850): Xuất hiện rõ trong sách lắp ráp PDF (trang p-05.png) nhưng hoàn toàn vắng mặt trong danh mục 82 chi tiết kit_set2321A.txt và kit_set2321A.png. Cần người kiểm hộp kit thật xem mã chính thức và số lượng thực tế trong hộp.",
+    "Bước 13 (cụm bánh sau): Hai bánh xe ròng rọc nhỏ BP-7095 kẹp giữa 2 đầu thanh 15L bằng trục 3L xám BP-3991. Vì trục BP-3991 là trục chữ thập và lỗ tâm bánh BP-7095 cũng là lỗ chữ thập, còn lỗ thanh 15L là lỗ tròn, nên trục và bánh cùng quay trong lỗ thanh. Cần kiểm tra trên mô hình thật xem 2 thanh 15L có ép quá chặt làm kẹt bánh hay bánh có thể lăn trơn tru làm bánh dẫn hướng.",
+    "Bước 4 (cơ chế vi sai 1 bánh dẫn động): Động cơ BE-3581 chỉ có 1 cổng ra truyền động ở bên phải (đĩa quay xanh ngọc nhận trục 3L). Ở bên trái xe, trục 4L đen BP-7628 cắm xuyên qua lỗ giữa thanh vàng BP-7523A (lỗ tròn). Do đó, chỉ có bánh bên phải là bánh chủ động (được động cơ kéo), còn bánh bên trái là bánh quay tự do (idle wheel). Cần kiểm tra khi chạy thật xe có bị lệch hướng/quay vòng tròn hay không khi không có vi sai cơ học.",
+    "Mã màu của BP-7095 trong bảng kit: Dòng 'hàng 8, cột 3: BP-7095 ×4' trong kit_set2321A.txt để trống mã màu (không có mã màu trong ngoặc đơn như các chi tiết khác), trên thực tế chi tiết này màu đen hoặc xám đậm."
+  ]
+}
