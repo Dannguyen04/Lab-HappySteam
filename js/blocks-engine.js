@@ -44,6 +44,8 @@
       this.blocks = [];
       this.activeBlockIndex = -1;
       this.onChangeCallback = null;
+      this.onStartTap = null; // chạm khối Start → chạy chương trình
+      this.selected = -1; // khối đang chọn: hiện nút xóa/dịch
     }
 
     init() {
@@ -65,22 +67,14 @@
     // Chương trình mẫu trong sách (ảnh "Lập trình.png" của Bài 9): phát âm A, quay nhanh 3 giây,
     // phát âm B, quay tiếp 3 giây, lặp lại liên tục
     loadDefaultProgram() {
-      this.blocks = [
-        { ...BLOCK_TEMPLATES.start },
-        { ...BLOCK_TEMPLATES.repeatStart },
-        { ...BLOCK_TEMPLATES.melodyA },
-        { ...BLOCK_TEMPLATES.highSpeed },
-        { ...BLOCK_TEMPLATES.wait, duration: 3 },
-        { ...BLOCK_TEMPLATES.melodyB },
-        { ...BLOCK_TEMPLATES.highSpeed },
-        { ...BLOCK_TEMPLATES.wait, duration: 3 },
-        { ...BLOCK_TEMPLATES.repeatEnd }
-      ];
+      this.blocks = sampleProgram();
+      this.selected = -1;
       this.render();
       this.notifyChange();
     }
 
     clearProgram() {
+      this.selected = -1;
       this.blocks = [
         { ...BLOCK_TEMPLATES.start },
         { ...BLOCK_TEMPLATES.repeatStart },
@@ -254,44 +248,56 @@
           paramLabel = 'Chờ vật cản';
         }
 
-        // Inner HTML
+        // Nút xóa/dịch chỉ hiện ở khối vừa chạm (to, khó bấm nhầm bằng ngón tay)
+        if (i === this.selected) el.classList.add('is-selected');
         el.innerHTML = `
           <div class="zb-badge-idx">${i + 1}</div>
           <div class="zb-inner-icon">${iconContent}</div>
           <span class="zb-text-tag">${b.name}</span>
           ${b.type !== 'start' && b.type !== 'repeatStart' && b.type !== 'repeatEnd' ? `
-            <button type="button" class="zb-del-btn" title="Xóa khối này" aria-label="Xóa khối">×</button>
+            <button type="button" class="zb-del-btn" title="Xóa khối này" aria-label="Xóa khối ${b.name}">×</button>
           ` : ''}
           ${i > 1 && i < this.blocks.length - 1 ? `
             <div class="zb-move-btns">
-              <button type="button" class="zb-mv-btn zb-mv-l" title="Dịch sang trái">◀</button>
-              <button type="button" class="zb-mv-btn zb-mv-r" title="Dịch sang phải">▶</button>
+              <button type="button" class="zb-mv-btn zb-mv-l" title="Dịch sang trái" aria-label="Dịch sang trái">◀</button>
+              <button type="button" class="zb-mv-btn zb-mv-r" title="Dịch sang phải" aria-label="Dịch sang phải">▶</button>
             </div>
           ` : ''}
         `;
+        if (b.type === 'start') {
+          el.title = 'Chạm khối Start để chạy chương trình';
+          el.setAttribute('role', 'button');
+          el.setAttribute('aria-label', 'Start – chạm để chạy chương trình');
+        }
 
-        // Click on block to cycle parameters if interactive
         el.addEventListener('click', (e) => {
           if (e.target.closest('.zb-del-btn') || e.target.closest('.zb-mv-btn')) return;
+          // Như phần mềm ZMrobo: chạm khối Start màu vàng để chạy (giáo án Bài 9)
+          if (b.type === 'start') {
+            if (this.onStartTap) this.onStartTap();
+            return;
+          }
+          this.selected = i;
           if (b.type === 'wait' || b.type === 'melody' || b.type === 'motor' || b.type === 'motor_power') {
             this.cycleParam(i);
+          } else {
+            this.render();
           }
         });
 
-        // Delete button listener
         const delBtn = el.querySelector('.zb-del-btn');
         if (delBtn) {
           delBtn.addEventListener('click', (e) => {
             e.stopPropagation();
+            this.selected = -1;
             this.removeBlock(i);
           });
         }
-
-        // Move buttons listeners
         const mvL = el.querySelector('.zb-mv-l');
         if (mvL) {
           mvL.addEventListener('click', (e) => {
             e.stopPropagation();
+            if (i - 1 >= 1) this.selected = i - 1;
             this.moveBlock(i, i - 1);
           });
         }
@@ -299,13 +305,65 @@
         if (mvR) {
           mvR.addEventListener('click', (e) => {
             e.stopPropagation();
+            if (i + 1 < this.blocks.length) this.selected = i + 1;
             this.moveBlock(i, i + 1);
           });
         }
 
         this.container.appendChild(el);
       });
+      this.renderGhost();
     }
+
+    // Dải "mẫu mờ": chương trình mẫu trong sách, khối nào học sinh đã đặt đúng chỗ thì hiện rõ
+    setGhost(el) {
+      this.ghost = el;
+      this.renderGhost();
+    }
+    renderGhost() {
+      if (!this.ghost) return;
+      const sig = b => !b ? '' : b.type === 'melody' ? 'm' + b.tune : b.type === 'wait' ? 'w' + b.duration
+        : b.type === 'motor' || b.type === 'motor_power' ? 'motor' : b.type;
+      const sample = sampleProgram();
+      let right = 0;
+      this.ghost.innerHTML = '';
+      sample.forEach((b, i) => {
+        const ok = sig(this.blocks[i]) === sig(b);
+        if (ok) right++;
+        const el = document.createElement('div');
+        el.className = `zb-block zb-ghost zb-${b.color}` + (b.type === 'start' ? ' zb-block-start' : '') +
+          (b.type === 'repeatEnd' ? ' zb-block-end' : '') + (ok ? ' is-match' : '');
+        el.setAttribute('aria-label', `${i + 1}. ${b.name}${ok ? ' – đã đúng' : ''}`);
+        el.innerHTML = `<div class="zb-inner-icon">${iconOf(b)}</div><span class="zb-text-tag">${b.name}</span>`;
+        this.ghost.appendChild(el);
+      });
+      this.ghost.dataset.right = right;
+      this.ghost.dataset.total = sample.length;
+    }
+  }
+
+  function iconOf(b) {
+    if (b.type === 'start') return SVG_ICONS.start;
+    if (b.type === 'repeatStart') return SVG_ICONS.repeatStart;
+    if (b.type === 'repeatEnd') return SVG_ICONS.repeatEnd;
+    if (b.type === 'melody') return SVG_ICONS.melody(b.tune);
+    if (b.type === 'motor') return b.speed === 'high' ? SVG_ICONS.motorHighCW : SVG_ICONS.motorLow;
+    if (b.type === 'wait') return `<span class="zb-big-time">${b.duration}s</span>`;
+    return '';
+  }
+  // Chương trình mẫu trong sách (ảnh "Lập trình.png" của Bài 9)
+  function sampleProgram() {
+    return [
+      { ...BLOCK_TEMPLATES.start },
+      { ...BLOCK_TEMPLATES.repeatStart },
+      { ...BLOCK_TEMPLATES.melodyA },
+      { ...BLOCK_TEMPLATES.highSpeed },
+      { ...BLOCK_TEMPLATES.wait, duration: 3 },
+      { ...BLOCK_TEMPLATES.melodyB },
+      { ...BLOCK_TEMPLATES.highSpeed },
+      { ...BLOCK_TEMPLATES.wait, duration: 3 },
+      { ...BLOCK_TEMPLATES.repeatEnd }
+    ];
   }
 
   window.BlockEngine = BlockEngine;

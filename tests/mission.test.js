@@ -74,11 +74,14 @@ function run(program, seconds, upgrade = null) {
   sim.onMissionUpdate = state => states.push(state);
   sim.setProgram(program);
   sim.activeUpgrade = upgrade;
+  const events = [];
+  sim.onEvent = (type, data) => events.push(data ? type + ':' + data : type);
+  sim.start(); // chạy như khi học sinh chạm khối Start
   sim.checkMissions();
   // Chia ra các frame nhỏ để mô phỏng quét và phát hiện vùng nguy hiểm.
   for (let t = 0; t < seconds; t += 0.02) sim.advance(Math.min(0.02, seconds - t));
   sim.checkMissions();
-  return { sim, state: states.at(-1) };
+  return { sim, state: states.at(-1), events };
 }
 
 assert.equal(run([B.start, B.melody, B.reverse], 0.1).state.m3, false,
@@ -154,10 +157,19 @@ up.onMissionUpdate = st => upStates.push(st);
 up.setUpgrades(['solar', 'radar']);
 up.setProgram([B.start, B.high, { type: 'wait', duration: 1 }]);
 up.checkMissions();
+up.advance(0.1);
+assert.equal(up.running, false, 'Sửa chương trình không tự chạy – phải chạm Start hoặc ▶');
+assert.equal(upStates.at(-1).m4, false);
+up.start();
 assert.equal(upStates.at(-1).m4, false, 'Chưa chạy động cơ thì chưa đạt NV4');
 up.advance(0.1);
 assert.equal(upStates.at(-1).m4, true, 'Gói nâng cấp + động cơ chạy phải đạt NV4');
 assert.equal(Array.from(upStates.at(-1).upgrades).join(), 'solar,radar');
+
+// Sự kiện cho cảnh câu chuyện: tránh được → avoid; đâm vào đá → crash; phát nhạc → melody
+assert.ok(reversed.events.includes('melody:B') && reversed.events.includes('near') && reversed.events.includes('avoid:reverse'),
+  'Tránh bằng đổi chiều phải báo near + avoid: ' + reversed.events);
+assert.ok(run([B.start, B.high, B.wait, B.melody, B.stop], 2.5).events.includes('crash'), 'Đi qua đám đá phải báo crash');
 
 reversed.sim.setProgram([B.start, B.melody, B.reverse]);
 reversed.sim.checkMissions();

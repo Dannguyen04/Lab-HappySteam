@@ -10,12 +10,12 @@ const gl = canvas ? canvas.getContext('webgl', { antialias: true, alpha: true, p
     // aOff = (vị trí, linh kiện mới 0/1). uMark: 0 không đánh dấu, 1 tô cam linh kiện mới, 2 làm nhạt phần đã lắp
     // (tô vàng nhạt như sách hướng dẫn ZMROBO, linh kiện mới giữ màu thật)
     const VS = `precision highp float;attribute vec3 aPos;attribute vec3 aNormal;attribute vec2 aUV;attribute vec3 aR0;attribute vec3 aR1;attribute vec3 aR2;attribute vec4 aOff;uniform mat3 uView;uniform vec3 uCenter;uniform vec2 uScale;uniform vec2 uPan;uniform float uDepth;varying vec3 vNormal;varying vec2 vUV;varying float vDepth;varying float vHi;void main(){mat3 m=mat3(aR0,aR1,aR2);vec3 p=m*aPos+aOff.xyz-uCenter;vec3 n=m*aNormal;vHi=aOff.w;p.x=-p.x;n.x=-n.x;p=uView*p;n=uView*n;vDepth=p.z;gl_Position=vec4(p.xy*uScale+uPan,-p.z/uDepth,1.0);vNormal=n;vUV=aUV;}`;
-    const FS = `precision highp float;varying vec3 vNormal;varying vec2 vUV;uniform vec3 uColor;uniform sampler2D uTex;uniform bool uTextured;uniform bool uWire;uniform float uCut;uniform float uMark;varying float vDepth;varying float vHi;void main(){if(vDepth>uCut)discard;if(uWire){gl_FragColor=vec4(.13,.22,.27,1.0);return;}vec3 n=normalize(vNormal);if(!gl_FrontFacing)n=-n;vec3 base=pow(uColor,vec3(2.2));if(uTextured)base*=pow(texture2D(uTex,vUV).rgb,vec3(2.2));if(uMark>1.5&&vHi<.5)base=mix(base,vec3(1.0,1.0,.3),.84);float key=max(0.0,dot(n,normalize(vec3(-.4,.75,1.0))));float fill=max(0.0,dot(n,normalize(vec3(.8,.3,-.2))));float spec=pow(max(0.0,dot(n,normalize(vec3(-.2,.5,1.5)))),48.0)*.12;vec3 c=base*(.56+.37*key+.17*fill)+vec3(spec);if(uMark>.5&&uMark<1.5)c=mix(c,vec3(.98,.52,.08),vHi*.62);gl_FragColor=vec4(pow(max(c,vec3(0.0)),vec3(1.0/2.2)),1.0);}`;
+    const FS = `precision highp float;varying vec3 vNormal;varying vec2 vUV;uniform vec3 uColor;uniform sampler2D uTex;uniform bool uTextured;uniform bool uWire;uniform float uCut;uniform float uMark;varying float vDepth;varying float vHi;void main(){if(vDepth>uCut)discard;if(uWire){gl_FragColor=vec4(.13,.22,.27,1.0);return;}vec3 n=normalize(vNormal);if(!gl_FrontFacing)n=-n;vec3 base=pow(uColor,vec3(2.2));if(uTextured)base*=pow(texture2D(uTex,vUV).rgb,vec3(2.2));if(uMark>1.5&&uMark<2.5&&vHi<.5)base=mix(base,vec3(1.0,1.0,.3),.84);float key=max(0.0,dot(n,normalize(vec3(-.4,.75,1.0))));float fill=max(0.0,dot(n,normalize(vec3(.8,.3,-.2))));float spec=pow(max(0.0,dot(n,normalize(vec3(-.2,.5,1.5)))),48.0)*.12;vec3 c=base*(.56+.37*key+.17*fill)+vec3(spec);if(uMark>.5&&uMark<1.5)c=mix(c,vec3(.98,.52,.08),vHi*.62);gl_FragColor=vec4(pow(max(c,vec3(0.0)),vec3(1.0/2.2)),1.0);}`;
     // Viền nét kiểu sách hướng dẫn: mỗi cạnh là một dải rộng cố định theo điểm ảnh. Cạnh gấp (hai mặt lệch nhiều) và
     // cạnh biên luôn vẽ; cạnh giữa hai mặt gần phẳng (mặt cong) chỉ vẽ khi nằm trên đường bao, tức hai mặt kề nhau
     // một mặt quay về phía người xem, một mặt quay đi (aN1, aN2 khác 0). aA.w: đầu 0/1 của cạnh, aB.w: phía −1/+1
-    const LVS = `precision highp float;attribute vec4 aA;attribute vec4 aB;attribute vec3 aN1;attribute vec3 aN2;attribute vec3 aR0;attribute vec3 aR1;attribute vec3 aR2;attribute vec4 aOff;uniform mat3 uView;uniform vec3 uCenter;uniform vec2 uScale;uniform vec2 uPan;uniform float uDepth;uniform vec2 uVP;uniform float uLW;uniform float uMark;uniform float uDark;varying float vDepth;varying float vSoft;vec4 proj(vec3 q,mat3 m){vec3 p=m*q+aOff.xyz-uCenter;p.x=-p.x;p=uView*p;return vec4(p.xy*uScale+uPan,-p.z/uDepth,p.z);}float facing(vec3 n,mat3 m){n=m*n;n.x=-n.x;return (uView*n).z;}void main(){mat3 m=mat3(aR0,aR1,aR2);if(dot(aN1,aN1)>0.0&&facing(aN1,m)*facing(aN2,m)>0.0){gl_Position=vec4(2.0,2.0,2.0,1.0);vDepth=0.0;vSoft=0.0;return;}vec4 a=proj(aA.xyz,m),b=proj(aB.xyz,m);vec2 d=(b.xy-a.xy)*uVP;float len=length(d);vec2 dir=len>1e-6?d/len:vec2(1.0,0.0);vec4 e=aA.w<.5?a:b;vec2 off=(vec2(-dir.y,dir.x)*aB.w+dir*(aA.w*2.0-1.0))*uLW;gl_Position=vec4(e.xy+off/uVP,e.z,1.0);vDepth=e.w;float hi=aOff.w;vSoft=uDark*((uMark<.5||(uMark>1.5&&hi>.5)||(uMark>.5&&uMark<1.5&&hi<.5))?1.0:0.0);}`;
-    const LFS = `precision highp float;uniform float uCut;varying float vDepth;varying float vSoft;void main(){if(vDepth>uCut)discard;gl_FragColor=vec4(mix(vec3(.1,.12,.14),vec3(.55,.58,.6),vSoft),1.0);}`;
+    const LVS = `precision highp float;attribute vec4 aA;attribute vec4 aB;attribute vec3 aN1;attribute vec3 aN2;attribute vec3 aR0;attribute vec3 aR1;attribute vec3 aR2;attribute vec4 aOff;uniform mat3 uView;uniform vec3 uCenter;uniform vec2 uScale;uniform vec2 uPan;uniform float uDepth;uniform vec2 uVP;uniform float uLW;uniform float uMark;uniform float uDark;varying float vDepth;varying float vSoft;varying float vRed;vec4 proj(vec3 q,mat3 m){vec3 p=m*q+aOff.xyz-uCenter;p.x=-p.x;p=uView*p;return vec4(p.xy*uScale+uPan,-p.z/uDepth,p.z);}float facing(vec3 n,mat3 m){n=m*n;n.x=-n.x;return (uView*n).z;}void main(){mat3 m=mat3(aR0,aR1,aR2);if(dot(aN1,aN1)>0.0&&facing(aN1,m)*facing(aN2,m)>0.0){gl_Position=vec4(2.0,2.0,2.0,1.0);vDepth=0.0;vSoft=0.0;vRed=0.0;return;}vec4 a=proj(aA.xyz,m),b=proj(aB.xyz,m);vec2 d=(b.xy-a.xy)*uVP;float len=length(d);vec2 dir=len>1e-6?d/len:vec2(1.0,0.0);vec4 e=aA.w<.5?a:b;vec2 off=(vec2(-dir.y,dir.x)*aB.w+dir*(aA.w*2.0-1.0))*uLW;gl_Position=vec4(e.xy+off/uVP,e.z,1.0);vDepth=e.w;float hi=aOff.w;vRed=(uMark>2.5&&hi>.5)?1.0:0.0;vSoft=uDark*((uMark<.5||(uMark>1.5&&hi>.5)||(uMark>.5&&uMark<1.5&&hi<.5))?1.0:0.0);}`;
+    const LFS = `precision highp float;uniform float uCut;varying float vDepth;varying float vSoft;varying float vRed;void main(){if(vDepth>uCut)discard;gl_FragColor=vec4(mix(mix(vec3(.1,.12,.14),vec3(.55,.58,.6),vSoft),vec3(.86,.1,.1),vRed),1.0);}`;
     function shader(t, s) {
       const x = gl.createShader(t);
       gl.shaderSource(x, s);
@@ -176,7 +176,7 @@ const gl = canvas ? canvas.getContext('webgl', { antialias: true, alpha: true, p
       )
     );
     const identity = [1, 0, 0, 0, 1, 0, 0, 0, 1];
-    let step = DATA.steps,
+    let step = 1,
       yaw = -0.7,
       pitch = 0.48,
       zoom = 1,
@@ -184,7 +184,7 @@ const gl = canvas ? canvas.getContext('webgl', { antialias: true, alpha: true, p
       autoSpin = false,
       timer = null,
       highlight = true,
-      markStyle = 'fade',
+      markStyle = 'book',
       outline = true,
       onlyNew = false,
       edges = false,
@@ -211,10 +211,10 @@ const gl = canvas ? canvas.getContext('webgl', { antialias: true, alpha: true, p
     // Kiểu hiển thị chọn lần trước (chung mọi dự án trên máy này): cách đánh dấu linh kiện mới, viền nét, ô linh kiện
     const STYLE_KEY = 'rbb.style';
     let pliOpen = true,
-      markPref = 'fade'; // lựa chọn trong ô "Đánh dấu linh kiện mới" (nút mắt chỉ đổi tạm, không lưu)
+      markPref = 'book'; // lựa chọn trong ô "Đánh dấu linh kiện mới" (nút mắt chỉ đổi tạm, không lưu)
     try {
       const s = JSON.parse(localStorage.getItem(STYLE_KEY) || '{}');
-      if (['fade', 'orange', 'none'].includes(s.mark)) markPref = s.mark;
+      if (['book', 'fade', 'orange', 'none'].includes(s.mark)) markPref = s.mark;
       if (markPref !== 'none') markStyle = markPref;
       highlight = markPref !== 'none';
       if (typeof s.outline === 'boolean') outline = s.outline;
@@ -654,7 +654,7 @@ const gl = canvas ? canvas.getContext('webgl', { antialias: true, alpha: true, p
         pan: fw || creative ? pan : [pan[0], pan[1] + 0.07], // xưởng/sa bàn không có nút chuyển bước ở đáy
         depth: Math.max(R * 10, 1),
         cut: cut > 0 ? R * (1 - 2 * cut) : 1e9,
-        mark: highlight && !(creative && creative.plain) ? (markStyle === 'fade' ? 2 : 1) : 0
+        mark: highlight && !(creative && creative.plain) ? (markStyle === 'book' ? 3 : markStyle === 'fade' ? 2 : 1) : 0
       };
       setCamera(U);
       gl.uniform1i(U.Wire, false);
@@ -773,10 +773,10 @@ const gl = canvas ? canvas.getContext('webgl', { antialias: true, alpha: true, p
       img.alt = '';
       img.src = groupThumb(g);
       t.append(
-        el('b', null, 'Vị trí ghép ' + g.name),
-        el('small', null, `${g.parts.length} linh kiện đã lắp ở các bước trước`)
+        el('b', null, 'Ghép ' + g.name + ' vừa lắp'),
+        el('small', null, `gồm ${g.parts.length} linh kiện đã lắp ở các bước trước`)
       );
-      d.append(img, t, el('span', 'qty', 'Cụm đã có'));
+      d.append(img, t, el('span', 'qty', '× 1'));
       return d;
     }
     function groupParts(list) {
@@ -1417,6 +1417,27 @@ const gl = canvas ? canvas.getContext('webgl', { antialias: true, alpha: true, p
       $('menuBtn').classList.toggle('warn', !!notes.length);
       $('stray').textContent = notes.join('\n');
       draw();
+      // Giao diện bên ngoài (dòng trạng thái, đồng hồ đo, hình sách) nghe sự kiện này
+      if (!capturing && !creative)
+        window.dispatchEvent(
+          new CustomEvent('zm:step', {
+            detail: {
+              step,
+              total: DATA.steps,
+              visible: active.length,
+              added: added.length,
+              parts: DATA.instances.length,
+              done: doneCount,
+              isDone: isDone(step),
+              group: info.subCount ? groupName(info.group) : '',
+              sub: info.sub,
+              subCount: info.subCount,
+              joins: joined.length,
+              page: info.page || step,
+              text: stepText(step)
+            }
+          })
+        );
     }
     // Chuyển bước theo thao tác người xem: có hoạt ảnh lắp
     function go(s) {

@@ -111,9 +111,14 @@
       this.dpr = dpr;
     }
 
+    // Sửa chương trình thì dừng lại và về đầu; chỉ chạy khi học sinh chạm khối Start hoặc nút ▶
     setProgram(blocks) {
       this.prog = blocks || [];
-      this.restart();
+      this.restart(false);
+    }
+    // Báo sự kiện cho cảnh câu chuyện (js/space-scene.js): melody, near, crash, avoid, loop, start, stop
+    emit(type, data) {
+      if (this.onEvent) this.onEvent(type, data);
     }
 
     // NV1: báo từ trình xem 3D khi đã đánh dấu lắp xong cả 28 bước
@@ -146,11 +151,11 @@
         radar: 'Chảo ra-đa',
         sensor: 'Cảm biến né thiên thạch'
       };
-      const labels = { solar: '⚡ Pin kép', radar: '📡 Chảo ra-đa', sensor: '🛡️ Cảm biến' };
+      const labels = { solar: 'Pin kép', radar: 'Chảo ra-đa', sensor: 'Cảm biến' };
       const list2 = [...this.upgrades];
       this.log('ok', list2.length ? `Đã gắn: ${list2.map(t => names[t]).join(', ')}` : 'Vệ tinh cơ bản (chưa gắn thêm)');
       const badge = document.getElementById('sim-active-upgrade-badge');
-      if (badge) badge.textContent = list2.length ? list2.map(t => labels[t]).join(' · ') : '📦 Vệ tinh cơ bản';
+      if (badge) badge.textContent = list2.length ? list2.map(t => labels[t]).join(' · ') : 'Vệ tinh cơ bản';
     }
 
     ratio() {
@@ -172,9 +177,9 @@
     }
 
     start() {
-      this.running = true;
+      this.restart(true);
       this.log('info', 'Bắt đầu chạy chương trình ZMrobo.');
-      if (window.SFX) window.SFX.init();
+      this.emit('start');
     }
 
     stop() {
@@ -184,10 +189,12 @@
       this.segStart = null;
       if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
       this.log('info', 'Đã dừng chương trình. Motor ngắt điện.');
+      this.emit('stop');
     }
 
-    restart() {
+    restart(run = false) {
       this.pc = 0;
+      this.nearWarned = false;
       this.entered = false;
       this.blkT = 0;
       this.motorOn = false;
@@ -205,15 +212,17 @@
       this.melodyAlertRev = null;
       this.hazardDetected = false;
       this.hazardEncountered = false;
-      this.running = true;
+      this.running = run;
+      if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
       if (window.SFX) window.SFX.init();
-      this.log('info', 'Chạy lại chương trình từ khối Bắt đầu.');
     }
 
     log(kind, text) {
       const m = Math.floor(this.t / 60);
       const s = (this.t - m * 60).toFixed(1);
       const timeStr = `${String(m).padStart(2, '0')}:${s.padStart(4, '0')}`;
+      // Giao diện gọn như Bài 7: bỏ biểu tượng cảm xúc ở đầu câu, màu chấm của dòng nhật ký đã cho biết loại tin
+      text = String(text).replace(/^[\p{Extended_Pictographic}️‍\s]+/u, '');
       this.logs.unshift({ time: timeStr, kind, text });
       if (this.logs.length > 8) this.logs.length = 8;
       this.renderLogs();
@@ -245,6 +254,7 @@
       if (this.asteroidAvoided) return;
       this.asteroidAvoided = true;
       this.avoidanceMethod = method;
+      this.emit('avoid', method);
       this.log('ok', `🛡️ Đã tránh vành đai thiên thạch bằng ${method === 'reverse' ? 'đảo chiều motor' : 'Melody B và dừng motor'} trước 110°.`);
       this.checkMissions();
     }
@@ -275,6 +285,7 @@
 
         if (b.type === 'repeatEnd') {
           this.loopsDone++;
+          this.emit('loop', this.loopsDone);
           if (this.loopsDone === 1) this.checkMissions();
           // Quay lại sau khối repeatStart
           const rIdx = this.prog.findIndex(x => x.type === 'repeatStart');
@@ -346,6 +357,7 @@
             if (window.SFX) window.SFX.melody(b.tune);
             this.log('info', `Melody ${b.tune}: Vệ tinh phát tín hiệu vi ba về trạm mặt đất trong 1s.`);
             if (b.tune === 'B') this.melodyBPlayed = true;
+            this.emit('melody', b.tune);
           } else if (b.type === 'wait') {
             this.segStart = this.rev;
           }
@@ -405,12 +417,18 @@
         const rps = (this.motorRpm() / 60) * this.ratio();
         this.rev += rps * dt * this.motorDir;
         this.motorRev += (this.motorRpm() / 60) * dt * this.motorDir;
+        // Báo một lần khi vệ tinh bắt đầu tiến vào vùng nguy hiểm (60°–110°)
+        if (!this.nearWarned && this.isApproachingHazard()) {
+          this.nearWarned = true;
+          this.emit('near');
+        }
         // Count a hazard crossing even if a long frame skips the entire arc.
         const crossedHazard = this.motorDir > 0 &&
           Math.floor(this.rev - 110 / 360) > Math.floor(previousRev - 110 / 360);
         if (this.motorDir > 0 && !this.asteroidAvoided && !this.hazardEncountered &&
             crossedHazard) {
           this.hazardEncountered = true;
+          this.emit('crash');
           this.log('warn', '⚠️ Vệ tinh đã đi vào vành đai thiên thạch. Chạy lại để thử tránh sớm hơn!');
         }
         const block = this.prog[this.pc];
@@ -950,18 +968,18 @@
       const pill = document.getElementById('sim-status-pill');
       if (pill) {
         if (!this.running) {
-          pill.textContent = 'ĐÃ DỪNG';
-          pill.className = 'status-pill is-stopped';
+          pill.textContent = 'Đã dừng';
+          pill.dataset.k = 'muted';
         } else {
-          pill.textContent = 'ĐANG CHẠY';
-          pill.className = 'status-pill is-ok';
+          pill.textContent = 'Đang chạy';
+          pill.dataset.k = 'ok';
         }
       }
 
       // Status description
       const stEl = document.getElementById('sim-status-desc');
       if (stEl) {
-        let text = 'Chương trình đang dừng. Bấm "▶ Chạy chương trình" để bắt đầu.';
+        let text = 'Chương trình đang dừng. Bấm “Chạy chương trình” để bắt đầu.';
         if (inBlock) {
           if (curBlock.type === 'melody') {
             text = `Khối Melody ${curBlock.tune}: Vệ tinh phát tín hiệu vi ba về trạm mặt đất trong 1.0 giây.`;
@@ -1037,16 +1055,16 @@
       const cv = document.getElementById('calc-verdict');
       if (cv) {
         if (whole) {
-          cv.textContent = `🎯 Tròn vòng (${revs.toFixed(0)} vòng): Hết mỗi khối Wait, vệ tinh về đúng trạm mặt đất.`;
+          cv.textContent = `Tròn vòng (${revs.toFixed(0)} vòng): Hết mỗi khối Wait, vệ tinh về đúng trạm mặt đất.`;
           cv.className = 'calc-verdict is-ok';
         } else if (half) {
-          cv.textContent = `⚠️ Dư nửa vòng (${revs.toFixed(1)} vòng): Hết đoạn Wait, vệ tinh nằm ở phía đối diện Trái Đất.`;
+          cv.textContent = `Dư nửa vòng (${revs.toFixed(1)} vòng): Hết đoạn Wait, vệ tinh nằm ở phía đối diện Trái Đất.`;
           cv.className = 'calc-verdict is-warn';
         } else if (revs < 1) {
-          cv.textContent = `⚠️ Chưa đủ 1 vòng (${revs.toFixed(2)} vòng): Vệ tinh dừng lưng chừng quỹ đạo.`;
+          cv.textContent = `Chưa đủ 1 vòng (${revs.toFixed(2)} vòng): Vệ tinh dừng lưng chừng quỹ đạo.`;
           cv.className = 'calc-verdict is-warn';
         } else {
-          cv.textContent = `⚠️ Không tròn vòng (${revs.toFixed(2)} vòng): Vệ tinh lệch khỏi trạm mặt đất.`;
+          cv.textContent = `Không tròn vòng (${revs.toFixed(2)} vòng): Vệ tinh lệch khỏi trạm mặt đất.`;
           cv.className = 'calc-verdict is-warn';
         }
       }

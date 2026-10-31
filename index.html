@@ -1,606 +1,413 @@
 <!doctype html>
-<html lang="vi">
+<html lang="vi" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Phòng Lab ZMrobo Ảo · Bài 9: Thông tin liên lạc vũ trụ</title>
-  
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/assembly.css">
-  <link rel="stylesheet" href="css/main.css">
+  <title>Vệ tinh ZMrobo · Bài 9</title>
+  <link rel="stylesheet" href="css/lab.css">
 </head>
 <body>
-  <div class="app-container">
-    <!-- Top Navigation Header -->
-    <header class="top-nav">
-      <div class="brand-section">
-        <div class="brand-logo">ZM</div>
-        <div class="brand-text">
-          <h1 class="brand-title">ZMrobo Lab</h1>
-          <div class="brand-subtitle">Bài 9 · Vệ tinh vũ trụ</div>
-        </div>
-      </div>
+<div class="wrap">
 
-      <!-- Mode Switcher Tabs -->
-      <nav class="nav-tabs" aria-label="Chế độ học tập">
-        <button type="button" class="nav-tab-btn is-active" data-tab="tab-simulation" id="tab-btn-sim">
-          <span class="tab-icon">💻</span>
-          <span class="tab-text tab-text-full">Lập trình & Mô phỏng</span>
-          <span class="tab-text tab-text-short">Mô phỏng</span>
-        </button>
-        <button type="button" class="nav-tab-btn" data-tab="tab-assembly" id="tab-btn-asm">
-          <span class="tab-icon">🏗️</span>
-          <span class="tab-text tab-text-full">Hướng dẫn lắp ráp</span>
-          <span class="tab-text tab-text-short">Lắp ráp</span>
-        </button>
-      </nav>
-
-      <!-- User Info & Action Badges -->
-      <div class="header-actions">
-        <button type="button" class="student-badge-btn" id="btn-student-profile" title="Cập nhật thông tin học sinh">
-          <span id="header-student-label">👤 Học sinh</span>
-        </button>
-        <span class="mission-badge" id="mission-summary-badge">0/4 NV</span>
-        <button type="button" class="icon-btn" id="btn-toggle-sound" aria-pressed="true" title="Bật/Tắt âm thanh">
-          <span class="sound-icon">🔊</span>
-          <span class="sound-label">Bật</span>
-        </button>
-        <button type="button" class="icon-btn" id="btn-toggle-theme" title="Đổi giao diện Sáng / Tối">
-          <span class="theme-icon">🌙</span>
-          <span class="theme-label">Tối</span>
-        </button>
-        <button type="button" class="icon-btn" id="btn-teacher-settings" title="Cài đặt giáo viên">
-          <span>⚙️</span>
-          <span class="teacher-label">GV</span>
-        </button>
-      </div>
-    </header>
-
-    <!-- Main Viewport Content -->
-    <main class="main-content">
-      <!-- TAB 1: OFFICIAL ASSEMBLY GUIDE / CAD REFERENCE / STEM -->
-      <section class="tab-pane" id="tab-assembly" aria-label="Hướng dẫn lắp ráp theo bài giảng">
-        <!-- Tab 1 Sub-Navigation Bar -->
-        <div class="assembly-subbar">
-          <div class="assembly-subtabs">
-            <button type="button" class="subtab-btn active" id="btn-subtab-official" data-subtab="official" aria-pressed="true">
-              <span class="subtab-label-long">📖 Lắp ráp theo bài giảng gốc</span><span class="subtab-label-short">📖 Bài giảng</span>
-            </button>
-            <button type="button" class="subtab-btn" id="btn-subtab-base" data-subtab="base" aria-pressed="false">
-              <span class="subtab-label-long">🏗️ Lắp ráp 3D (28 bước)</span><span class="subtab-label-short">🏗️ Lắp 3D</span>
-            </button>
-            <button type="button" class="subtab-btn" id="btn-subtab-creative" data-subtab="creative" aria-pressed="false">
-              <span class="subtab-label-long">🌟 Sáng tạo mô hình 3D</span><span class="subtab-label-short">🌟 Sáng tạo</span>
-              <span class="badge-stem">STEM</span>
-            </button>
-          </div>
-          <div class="assembly-quick-meta">
-            <span class="model-badge">🛰️ Vệ tinh Bài 9 · Thông tin liên lạc vũ trụ</span>
-            <span class="parts-badge">61 linh kiện · 28 bước theo sách</span>
-          </div>
-        </div>
-
-        <!-- Official textbook illustrations, reproduced without inventing steps -->
-        <div class="subview-pane active" id="subview-official" aria-label="27 hình lắp ráp từ PDF Bài 9">
-          <div class="official-guide">
-            <div class="official-intro">
-              <div>
-                <span class="official-eyebrow">TÀI LIỆU LẮP RÁP BÀI 9 · ZMROBO</span>
-                <h2>Lắp vệ tinh theo hình minh họa gốc</h2>
-                <p>27 bước được đánh số trong PDF chính thức · trang 2–15/16. Chọn một bước để xem linh kiện, số lượng và vị trí qua hình gốc.</p>
-              </div>
-              <div class="official-source-links">
-                <a href="references/official/Bai9_Thong_tin_lien_lac_vu_tru.pdf" target="_blank" rel="noopener">📄 PDF lưu trong máy</a>
-                <a href="https://drive.google.com/file/d/1sUwVpDMoxr1JVwgGrGdXnb4GnCjphQJS/view" target="_blank" rel="noopener noreferrer">↗ PDF trên Drive</a>
-              </div>
-            </div>
-            <p class="official-source-warning" role="note"><strong>Lưu ý:</strong> Bước <b>20</b> chỉ xoay mô hình sang góc nhìn khác, không thêm linh kiện, nên bản PDF này lược bỏ. Bấm <b>🏗️ Xem trong 3D</b> để xoay mô hình của bước đang xem.</p>
-            <div class="official-layout">
-              <aside class="official-index" aria-label="Chọn số bước trong bài giảng">
-                <div class="official-index-heading"><strong>Chọn bước</strong><small>1–19 · 21–28</small></div>
-                <div id="official-step-list" class="official-steps"></div>
-              </aside>
-              <div class="official-workspace">
-                <div class="official-toolbar">
-                  <div class="official-title-group">
-                    <span id="official-step-location" class="official-step-location">Trang 2 / 16 · Hình bên trái</span>
-                    <h3 id="official-step-title">Bước 1</h3>
-                    <p id="official-step-caption">Đối chiếu linh kiện trong ô nền xanh và vị trí đánh dấu trên hình.</p>
-                  </div>
-                  <div class="official-controls" aria-label="Điều khiển hướng dẫn">
-                    <button type="button" id="official-prev" aria-label="Bước trước">← Trước</button>
-                    <button type="button" id="official-next" aria-label="Bước tiếp">Tiếp →</button>
-                    <button type="button" id="official-zoom-out" aria-label="Thu nhỏ hình">−</button>
-                    <span id="official-zoom-value" aria-live="polite">100%</span>
-                    <button type="button" id="official-zoom-in" aria-label="Phóng to hình">+</button>
-                    <button type="button" id="official-zoom-reset" aria-label="Đặt lại kích thước hình">Đặt lại</button>
-                    <button type="button" id="official-open-3d" class="official-open-3d">🏗️ Xem trong 3D</button>
-                  </div>
-                </div>
-                <div class="official-image-scroller" id="official-image-scroller" tabindex="0" aria-label="Hình lắp ráp chính thức, cuộn để xem chi tiết khi phóng to">
-                  <img id="official-step-image" src="assets/official-assembly/step-01.jpg" alt="Bước 1: hình lắp ráp từ PDF chính thức" draggable="false">
-                  <p id="official-image-error" hidden role="alert">Không tải được hình. Hãy kiểm tra thư mục assets/official-assembly.</p>
-                </div>
-                <div class="official-footnote">
-                  <span id="official-progress" role="status" aria-live="polite">Bước 1 / 27</span>
-                  <span>Xem ô nền xanh để xác định <b>loại và số lượng linh kiện</b>; phần viền đỏ thể hiện vị trí/chi tiết thay đổi. Đối chiếu lỗ và hướng trước khi ấn chốt.</span>
-                  <a id="official-pdf-page" href="references/official/Bai9_Thong_tin_lien_lac_vu_tru.pdf#page=2" target="_blank" rel="noopener">Mở trang gốc ↗</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 3D: hình CAD gốc của file .io, 28 bước theo sách hướng dẫn chính thức -->
-        <div class="subview-pane" id="subview-base">
-          <div class="app" id="app">
-      <section class="stage">
-        <canvas id="view" aria-label="Mô hình robot 3D, kéo để xoay và cuộn để phóng to"></canvas>
-        <div class="loading" id="loading">
-          <strong>Đang tải linh kiện gốc</strong>
-          <p>Chuẩn bị hình học và các mặt linh kiện…</p>
-        </div>
-        <div class="lefttop">
-          <div class="counter" aria-live="polite">
-            <div class="count"><b id="countNow">1</b><span id="countTotal"> / 1</span></div>
-            <small id="bannerStep"></small>
-            <p id="bannerText"></p>
-          </div>
-          <button type="button" id="assemblyCheck" class="assembly-check" title="Mở hình in của bước này trong sách hướng dẫn">📖 Sách hướng dẫn</button>
-          <div class="pli" id="pli" hidden>
-            <div id="pliItems"></div>
-            <button
-              id="pliToggle"
-              aria-expanded="true"
-              aria-controls="pliItems"
-              title="Thu gọn / mở ô linh kiện của bước"
-              aria-label="Thu gọn ô linh kiện của bước"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6" /></svg>
-            </button>
-          </div>
-          <div id="quizBox"></div>
-        </div>
-        <div class="corner">
-          <button
-            id="eye"
-            class="icon"
-            title="Xem màu thật của mọi linh kiện (bỏ đánh dấu linh kiện mới)"
-            aria-label="Xem màu thật"
-            aria-pressed="false"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z" />
-              <circle cx="12" cy="12" r="3.2" />
-            </svg>
-          </button>
-          <button id="bomBtn" class="icon" title="Danh sách linh kiện" aria-label="Danh sách linh kiện">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <rect x="3.5" y="3.5" width="7" height="7" rx="1" />
-              <rect x="13.5" y="3.5" width="7" height="7" rx="1" />
-              <rect x="3.5" y="13.5" width="7" height="7" rx="1" />
-              <rect x="13.5" y="13.5" width="7" height="7" rx="1" />
-            </svg>
-          </button>
-          <button id="full" class="icon" title="Toàn màn hình (F)" aria-label="Toàn màn hình">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" />
-            </svg>
-          </button>
-          <button
-            id="menuBtn"
-            class="icon"
-            title="Mở ngăn chức năng: tiến độ, đố vui, góc nhìn, in, xuất file"
-            aria-label="Mở ngăn chức năng"
-            aria-expanded="false"
-            aria-controls="drawer"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
-          </button>
-        </div>
-        <p class="resume" id="resume" hidden><span></span> <button>Về bước 1</button></p>
-        <div class="bottomnav">
-          <button id="prev" class="round" title="Bước trước (←)" aria-label="Bước trước">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
-          </button>
-          <input id="slider" type="range" min="1" max="1" value="1" aria-label="Chọn bước lắp" />
-          <button id="next" class="round" title="Bước tiếp (→)" aria-label="Bước tiếp">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
-          </button>
-        </div>
-        <div class="bom" id="bom" role="dialog" aria-modal="true" aria-labelledby="bomTitle" hidden>
-          <div class="bomhead">
-            <div>
-              <h2 id="bomTitle">Danh sách linh kiện</h2>
-              <small id="bomMeta"></small>
-            </div>
-            <button id="bomClose" class="icon" aria-label="Đóng danh sách linh kiện" title="Đóng (Esc)">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
-            </button>
-          </div>
-          <div class="bomgrid" id="bomGrid"></div>
-        </div>
-        <div class="preview" id="preview" role="dialog" aria-modal="true" aria-labelledby="pvName" hidden>
-          <div class="pvcard">
-            <div class="pvview">
-              <canvas id="pvCanvas" aria-label="Linh kiện 3D, kéo để xoay"></canvas>
-              <button id="pvClose" class="icon" aria-label="Đóng" title="Đóng (Esc)">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
-              </button>
-              <small class="pvhint">Kéo để xoay</small>
-            </div>
-            <div class="pvinfo">
-              <b id="pvName"></b>
-              <span id="pvCode"></span>
-              <span id="pvUse"></span>
-            </div>
-          </div>
-        </div>
-      </section>
-      <aside class="drawer" id="drawer" aria-label="Chức năng" inert>
-        <div class="dhead">
-          <div>
-            <h1>Bai9</h1>
-            <div class="sub"><span id="projectInfo"></span></div>
-          </div>
-          <button id="menuClose" class="icon" aria-label="Đóng ngăn chức năng" title="Đóng (Esc)">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
-          </button>
-        </div>
-        <h2 id="stepTitle"></h2>
-        <p class="summary" id="summary"></p>
-        <section id="drawerCheck" class="drawer-check" aria-live="polite"></section>
-        <div class="nav">
-          <button id="play" title="Tự chuyển sang bước tiếp theo sau mỗi 2 giây">▶ Tự chạy</button>
-          <button id="replay" title="Chạy lại hoạt ảnh lắp của bước (R)">↻ Xem cách lắp</button>
-          <button id="speak" title="Đọc to mô tả và linh kiện của bước (giọng tiếng Việt nếu máy có)">
-            🔊 Đọc to
-          </button>
-        </div>
-        <div class="steps" id="steps"></div>
-        <div class="progress">
-          <span id="progressText"></span><button id="resetProgress" hidden>Làm lại từ đầu</button>
-        </div>
-        <div class="parthead">
-          <h3>Linh kiện thêm ở bước này</h3>
-          <label class="quizto" title="Đoán linh kiện cần lắp ở từng bước"
-            ><input type="checkbox" id="quiz" />Đố vui</label
-          >
-        </div>
-        <p class="qscore" id="quizScore"></p>
-        <div id="partList"></div>
-        <button id="doneBtn" class="primary done-btn">✓ Đã lắp xong bước này</button>
-        <p class="stray" id="stray" hidden></p>
-        <h3>Góc nhìn</h3>
-        <div class="tools">
-          <button id="focus" title="Phóng gần các linh kiện của bước đang xem">🔍 Nhìn bước này</button>
-          <button id="fit">Vừa khung</button>
-          <button id="all">Toàn bộ linh kiện</button>
-          <button id="spin">Tự xoay</button>
-          <button id="iso">Góc 3D</button>
-          <button id="front">Mặt trước</button>
-          <button id="top">Mặt trên</button>
-        </div>
-        <p class="help" id="hud">
-          Kéo để xoay · Cuộn hoặc chụm hai ngón để phóng to · Shift + kéo hoặc chuột phải để dịch chuyển · ← →
-          chuyển bước · Space tự chạy · R xem lại cách lắp · F toàn màn hình
-        </p>
-        <h3>Quan sát chi tiết</h3>
-        <div class="settings">
-          <label class="sel"
-            >Đánh dấu linh kiện mới<select id="markStyle">
-              <option value="fade">Làm nhạt phần đã lắp</option>
-              <option value="orange">Tô màu cam linh kiện mới</option>
-              <option value="none">Không đánh dấu</option>
-            </select></label
-          >
-          <label><input type="checkbox" id="outline" checked />Viền nét như sách hướng dẫn</label>
-          <label><input type="checkbox" id="onlyNew" />Chỉ xem linh kiện mới</label>
-          <label><input type="checkbox" id="edges" />Xem lưới hình học</label>
-          <label><input type="checkbox" id="dark" />Nền tối</label>
-          <div class="quality" title="Đẩy các linh kiện ra xa nhau để thấy chúng ghép với nhau thế nào">
-            <span>Tách rời</span
-            ><input
-              id="explode"
-              type="range"
-              min="0"
-              max="1"
-              step=".01"
-              value="0"
-              aria-label="Tách rời các linh kiện"
-            /><output id="explodeValue">0%</output>
-          </div>
-          <div
-            class="quality"
-            title="Cắt bỏ phần phía trước (theo hướng đang nhìn) để thấy linh kiện bên trong"
-          >
-            <span>Cắt lát</span
-            ><input
-              id="cut"
-              type="range"
-              min="0"
-              max=".95"
-              step=".01"
-              value="0"
-              aria-label="Cắt bỏ phần phía trước để nhìn bên trong"
-            /><output id="cutValue">0%</output>
-          </div>
-          <div class="quality">
-            <span>Độ nét</span
-            ><input
-              id="quality"
-              type="range"
-              min="1"
-              max="3"
-              step=".5"
-              value="2"
-              aria-label="Độ phân giải hiển thị"
-            /><output id="qualityValue">2×</output>
-          </div>
-        </div>
-        <h3>Dành cho giáo viên</h3>
-        <div class="teacher">
-          <button id="printBtn">🖨 In hướng dẫn / lưu PDF</button>
-          <div class="tpanel" id="printPanel" hidden>
-            <label
-              >Địa chỉ trang này trên mạng (để in mã QR)<input
-                id="qrUrl"
-                type="url"
-                placeholder="https://…/robot_3D.html"
-                autocomplete="off" /></label
-            ><small
-              >Để trống nếu chỉ in giấy. Mã QR chỉ mở được khi trang đã được đặt lên mạng, ví dụ trang web của
-              trường.</small
-            ><label class="chk"
-              ><input type="checkbox" id="printBom" checked />Kèm trang chuẩn bị linh kiện</label
-            ><button id="printGo" class="primary">Tạo bản in</button
-            ><small
-              >Ảnh các bước dùng góc nhìn đang xem; xoay mô hình trước nếu muốn đổi góc. Trong hộp thoại in,
-              chọn "Lưu dưới dạng PDF" để có file PDF.</small
-            >
-          </div>
-          <button id="videoBtn">🎬 Quay video các bước</button>
-          <button id="pngBtn" title="Mỗi bước một ảnh PNG 1600×1000, góc nhìn đang xem">
-            🖼 Tải ảnh các bước (.zip)
-          </button>
-          <button id="csvBtn" title="Mở bằng Excel để kiểm kho bộ linh kiện">
-            📋 Tải bảng linh kiện (.csv)
-          </button>
-          <button id="glbBtn" title="Mở bằng Blender, PowerPoint, 3D Viewer…">📦 Tải mô hình 3D (.glb)</button
-          ><small id="teacherNote" class="tnote"></small>
-        </div>
-        <p class="caption">
-          Mô hình 3D dựng từ file thiết kế gốc của bài (61 linh kiện), thứ tự 28 bước theo sách hướng dẫn chính thức.
-          Bước 19–20 chỉ đổi góc nhìn; bước 21–27 lắp riêng đầu vệ tinh; bước 28 ghép lên cột anten.
-          Mã linh kiện theo kit ZM Alpha 330: bộ điều khiển M5-RCU BE-5158, động cơ BE-3581.
-        </p>
-      </aside>
+  <!-- ===== Đầu trang: tên bài, nhiệm vụ, công cụ ===== -->
+  <header class="top">
+    <div>
+      <div class="eyebrow">Bài 9 · Thông tin liên lạc vũ trụ</div>
+      <h1>Vệ tinh ZMrobo</h1>
+      <p class="lede pro-only">Lắp vệ tinh theo 28 bước của sách, gắn thêm chi tiết sáng tạo, rồi lập trình cho cột anten quay bắt sóng trạm mặt đất mà không đâm vào vành đai thiên thạch.</p>
     </div>
-    <div id="printout"></div>
-  </div><!-- /subview-base -->
-
-  <!-- Subview 2: Mục 4: Sáng tạo mô hình 3D -->
-  <div class="subview-pane" id="subview-creative">
-    <div class="creative-workshop">
-      <!-- Trình xem 3D (#app) được chuyển vào đây khi mở xưởng (js/creative-lab.js) -->
-      <div class="creative-stage" id="creative-stage" aria-label="Mô hình vệ tinh 3D đang sáng tạo"></div>
-      <aside class="creative-side" aria-label="Xưởng sáng tạo">
-        <header class="creative-head">
-          <span class="creative-pill">🌟 XƯỞNG SÁNG TẠO · BÀI 9</span>
-          <h2>Nâng cấp vệ tinh của em</h2>
-          <p>Max và Mia cần một vệ tinh <b>khỏe hơn</b> và <b>thông minh hơn</b> để tránh thiên thạch. Gắn thêm chi tiết lên mô hình em vừa lắp, rồi mang ra sa bàn thử!</p>
-        </header>
-        <section class="creative-block">
-          <h3>1. Chọn gói gợi ý</h3>
-          <div id="creative-presets" class="creative-presets"></div>
-        </section>
-        <section class="creative-block">
-          <h3>2. Hoặc tự gắn từng chi tiết</h3>
-          <div id="creative-slots" class="creative-slots"></div>
-        </section>
-        <section class="creative-block">
-          <h3>Linh kiện cần lấy thêm · <span id="creative-count">0</span></h3>
-          <table id="creative-bom" class="creative-bom"></table>
-          <p id="creative-short" class="creative-short" role="status" hidden></p>
-          <h3>Vệ tinh của em sẽ có</h3>
-          <ul id="creative-features" class="creative-features"></ul>
-          <p class="creative-note">Hình 3D là ý tưởng minh họa; các chốt nối nhỏ không vẽ. Hãy thử lắp thật xem chi tiết có chắc chắn không nhé!</p>
-        </section>
-        <footer class="creative-actions">
-          <button type="button" id="creative-reset" class="creative-btn">↺ Bỏ hết</button>
-          <button type="button" id="creative-deploy" class="creative-btn primary">🚀 Thử trong sa bàn →</button>
-        </footer>
-      </aside>
+    <div class="tools-top">
+      <button type="button" class="iconbtn" id="btn-student-profile" title="Nhập tên và lớp"><span id="header-student-label">Nhập tên học sinh</span></button>
+      <button type="button" class="iconbtn" id="btn-mode" title="Chế độ Bé: ít chữ, không số đo. Nâng cao: thêm số đo, tính toán, nhật ký">Chế độ: Bé</button>
+      <button type="button" class="iconbtn" id="btn-toggle-sound" aria-pressed="true">Âm thanh: bật</button>
+      <button type="button" class="iconbtn" id="btn-toggle-theme">Giao diện tối</button>
+      <button type="button" class="iconbtn" id="btn-teacher-settings" title="Cài đặt dành cho giáo viên">Giáo viên</button>
     </div>
-  </div><!-- /subview-creative -->
-</section>
+  </header>
 
-      <!-- TAB 2: CODING & SIMULATION -->
-      <section class="tab-pane is-active" id="tab-simulation" aria-label="Lập trình và Mô phỏng">
-        <div class="sim-coding-layout">
-          <!-- Left: Simulation Digital Twin & Orbit Stage -->
-          <div class="sim-col">
-            <div class="sim-header">
-              <span class="status-pill is-ok" id="sim-status-pill">ĐANG CHẠY</span>
-              <span id="sim-status-desc" style="font-size:13px; font-weight:500; color:var(--muted); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">
-                Đang chạy sa bàn không gian RoboSim...
-              </span>
-              <span class="model-badge" id="sim-active-upgrade-badge" style="margin-left:auto; font-size:11.5px; border-color:var(--border);">
-                📦 Vệ tinh cơ bản
-              </span>
-            </div>
-
-            <!-- Sa bàn: mô hình 3D quay theo chương trình (js/sandbox-3d.js) + bản đồ quỹ đạo 2D nhỏ ở góc -->
-            <div class="sim-stage-wrap">
-              <div class="sim-stage" id="sim-stage" aria-label="Sa bàn 3D: vệ tinh quay theo chương trình">
-                <div class="sim-floor" aria-hidden="true"></div>
-              </div>
-              <canvas id="sim-canvas-2d" aria-label="Bản đồ quỹ đạo 2D: trạm liên lạc và vành đai thiên thạch"></canvas>
-              <button type="button" id="sim-swap-view" class="sim-swap" aria-pressed="false" title="Đổi khung lớn giữa mô hình 3D và bản đồ quỹ đạo">⇄ Đổi khung</button>
-            </div>
-
-            <!-- Meters Grid -->
-            <div class="meters-grid">
-              <div class="meter-box">
-                <div class="meter-title">Motor</div>
-                <div class="meter-val" id="m-motor">150 <small>vòng/phút</small></div>
-                <div class="meter-note" id="m-motor-note">Mức 8/8</div>
-              </div>
-              <div class="meter-box">
-                <div class="meter-title">Trục vệ tinh</div>
-                <div class="meter-val" id="m-out">30.0 <small>vòng/phút</small></div>
-                <div class="meter-note">0.50 vòng/giây</div>
-              </div>
-              <div class="meter-box">
-                <div class="meter-title">Đoạn Wait này</div>
-                <div class="meter-val" id="m-seg">0.00 <small>vòng</small></div>
-                <div class="meter-note" id="m-seg-note">Dự kiến 1.5 vòng</div>
-              </div>
-              <div class="meter-box">
-                <div class="meter-title">Khối đang chạy</div>
-                <div class="meter-val" id="m-step">3.0 <small>s</small></div>
-                <div class="meter-note" id="m-step-note">Wait 3s</div>
-              </div>
-            </div>
-
-            <!-- Missions Progress Bar -->
-            <div class="missions-bar">
-              <span style="font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; font-family:var(--font-mono); margin-right:4px;">Nhiệm vụ:</span>
-              <span class="mission-chip" id="chip-m1" title="Bấm '✓ Đã lắp xong bước này' ở cả 28 bước của tab Hướng dẫn lắp ráp"><i>1</i> Lắp xong 28 bước</span>
-              <span class="mission-chip" id="chip-m2" title="Start · Repeat · Melody A · High Speed · Wait 3s · Melody B · High Speed · Wait 3s · Repeat End"><i>2</i> Lập trình theo mẫu</span>
-              <span class="mission-chip" id="chip-m3" title="Khi vệ tinh tiến đến 60°–110°, đổi chiều quay; hoặc phát Melody B rồi dừng trước vành đai 110°–160°."><i>3</i> Tránh thiên thạch</span>
-              <span class="mission-chip" id="chip-m4" title="Gắn gói nâng cấp ở Xưởng sáng tạo, đưa vào sa bàn và cho động cơ chạy"><i>4</i> Thử nâng cấp sáng tạo</span>
-            </div>
-
-            <p class="mission-help">📝 <strong>NV2</strong>: ghép đúng chương trình trong sách (bấm <strong>Mẫu trong sách</strong> để xem) và chạy hết một vòng lặp. 🛡️ <strong>NV3</strong>: khi vệ tinh tiến gần thiên thạch (60°–110°), dùng <strong>Motor This Way</strong> để đổi chiều, hoặc phát <strong>Melody B</strong> rồi <strong>Dừng motor</strong> trước 110°. Khối <strong>Chờ vật cản</strong> cần gói Cảm biến ở Xưởng sáng tạo.</p>
-
-            <!-- Calculation Card -->
-            <div class="calc-card">
-              <div style="font-weight:700; font-size:12px; color:var(--muted); text-transform:uppercase; font-family:var(--font-mono);">Tính toán chuyển động</div>
-              <div class="calc-eq" id="calc-eq1">150 v/phút × (8/40) = 30.0 v/phút (0.50 vòng/giây)</div>
-              <div class="calc-eq" id="calc-eq2">Mỗi khối Wait 3s: 0.50 × 3s = 1.50 vòng</div>
-              <div class="calc-verdict is-warn" id="calc-verdict">⚠️ Dư nửa vòng: Vệ tinh dừng ở phía đối diện trạm mặt đất.</div>
-            </div>
-
-            <!-- Event Logs -->
-            <div class="sim-logs-wrap">
-              <div class="log-title">Nhật ký hoạt động</div>
-              <ul id="sim-log-list"></ul>
-            </div>
-          </div>
-
-          <!-- Right: Visual Block Programming Workspace -->
-          <div class="coding-col">
-            <!-- Coding Action Toolbar -->
-            <div class="coding-toolbar">
-              <div class="action-btns">
-                <button type="button" class="btn-run" id="btn-run-program">▶ Chạy chương trình</button>
-                <button type="button" class="btn-stop" id="btn-stop-program">⏹ Dừng</button>
-              </div>
-              <div class="action-btns">
-                <button type="button" class="btn-secondary" id="btn-load-sample" title="Nạp lại chương trình gốc trong tài liệu">↺ Mẫu trong sách</button>
-                <button type="button" class="btn-secondary" id="btn-clear-code" title="Xóa hết để tự lắp ráp khối">🗑 Làm mới</button>
-              </div>
-            </div>
-
-            <!-- Block Toolbox (Horizontal list of blocks to add) -->
-            <div class="block-toolbox-section">
-              <div class="toolbox-title">Khay khối lệnh ZMrobo (Chạm hoặc bấm vào để thêm)</div>
-              <div class="toolbox-scroll" id="block-toolbox"></div>
-            </div>
-
-            <!-- Program Sequence (Puzzle Interlocking Blocks) -->
-            <div class="program-area-section">
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px;">
-                <span style="font-family:var(--font-mono); font-size:12px; font-weight:700; text-transform:uppercase; color:var(--muted);">
-                  Chương trình điều khiển vệ tinh:
-                </span>
-                <small style="color:var(--muted);">Bấm vào khối để chỉnh số giây hoặc đổi nốt nhạc</small>
-              </div>
-              <div class="program-canvas-chain" id="program-canvas-chain"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Modal 1: Student Profile -->
-    <div class="modal-overlay" id="profile-modal">
-      <div class="modal-dialog">
-        <h2 class="modal-title" style="color:var(--ink);">Thông tin học sinh</h2>
-        <p style="font-size:13.5px; color:var(--muted); margin-top:0;">Nhập thông tin để giáo viên ghi nhận kết quả bài tập của em.</p>
-        
-        <div style="display:grid; gap:12px; margin:16px 0;">
-          <div>
-            <label style="display:block; font-size:12.5px; font-weight:600; margin-bottom:4px;">Họ và Tên:</label>
-            <input type="text" id="student-name-input" placeholder="Ví dụ: Nguyễn Văn An" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:var(--radius-sm);">
-          </div>
-          <div>
-            <label style="display:block; font-size:12.5px; font-weight:600; margin-bottom:4px;">Lớp:</label>
-            <input type="text" id="student-class-input" placeholder="Ví dụ: 4A1" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:var(--radius-sm);">
-          </div>
-        </div>
-
-        <button type="button" class="btn-run" id="btn-close-profile" style="width:100%; justify-content:center;">Lưu thông tin</button>
-      </div>
-    </div>
-
-    <!-- Modal 2: Victory Celebration & Submission -->
-    <div class="modal-overlay" id="victory-modal">
-      <div class="modal-dialog" style="text-align:center;">
-        <div style="font-size:42px; margin-bottom:8px;">🏆</div>
-        <h2 class="modal-title">XUẤT SẮC! HOÀN THÀNH CẢ 4 NHIỆM VỤ</h2>
-        <p style="font-size:14px; margin:6px 0 14px; color:var(--muted);">
-          Em đã lắp xong vệ tinh, lập trình đúng theo sách, điều khiển vệ tinh tránh thiên thạch và thử nâng cấp sáng tạo của mình!
-        </p>
-
-        <div style="text-align:left; font-size:12.5px; font-weight:600; color:var(--muted); margin-bottom:4px;">Mã tham chiếu kết quả trên máy (giáo viên cần đối chiếu):</div>
-        <div class="code-box" id="verify-code-output">ZM9-SUCCESS-2026</div>
-
-        <div style="display:grid; gap:8px; margin-top:16px;">
-          <button type="button" class="btn-run" id="btn-submit-sheets" style="justify-content:center; padding:11px;">
-            📤 Nộp bài cho Thầy/Cô (Google Sheets)
-          </button>
-          <button type="button" class="btn-secondary" id="btn-close-victory" style="padding:9px;">
-            Tiếp tục thử nghiệm
-          </button>
-        </div>
-        <div id="submit-status-msg" style="margin-top:10px; font-size:12.5px;"></div>
-      </div>
-    </div>
-
-    <!-- Modal 3: Teacher Settings -->
-    <div class="modal-overlay" id="teacher-modal">
-      <div class="modal-dialog">
-        <h2 class="modal-title" style="color:var(--ink);">Cài đặt dành cho Giáo viên</h2>
-        <p style="font-size:13.5px; color:var(--muted); margin-top:0;">Kết nối trực tiếp kết quả làm bài của học sinh về Google Sheets của Thầy/Cô.</p>
-        
-        <div style="margin:16px 0;">
-          <label style="display:block; font-size:12.5px; font-weight:600; margin-bottom:4px;">Google Apps Script Webhook URL:</label>
-          <input type="url" id="teacher-webhook-input" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:12px;">
-          <small style="display:block; color:var(--muted); margin-top:6px; font-size:11.5px; line-height:1.4;">
-            💡 Thầy/Cô chỉ cần tạo 1 file Google Apps Script trong Google Drive với hàm <code>doPost(e)</code> ghi vào Sheet rồi triển khai dạng Web App (Anyone can access). Dán URL Web App vào đây.
-          </small>
-        </div>
-
-        <div style="display:flex; justify-content:flex-end; gap:8px;">
-          <button type="button" class="btn-secondary" id="btn-close-teacher">Đóng</button>
-          <button type="button" class="btn-run" id="btn-save-webhook">Lưu cấu hình</button>
-        </div>
-      </div>
-    </div>
+  <div class="missions" aria-label="Nhiệm vụ">
+    <span class="chip" id="chip-m1" title="Bấm “Đã lắp xong bước này” ở cả 28 bước"><i>1</i>Lắp xong 28 bước</span>
+    <span class="chip" id="chip-m2" title="Start · Repeat · Melody A · High Speed · Wait 3s · Melody B · High Speed · Wait 3s · Repeat End"><i>2</i>Lập trình theo mẫu</span>
+    <span class="chip" id="chip-m3" title="Khi vệ tinh tiến đến 60°–110°: đổi chiều quay, hoặc phát Melody B rồi dừng trước 110°"><i>3</i>Tránh thiên thạch</span>
+    <span class="chip" id="chip-m4" title="Gắn gói nâng cấp ở chặng Sáng tạo, đưa vào sa bàn và cho động cơ chạy"><i>4</i>Thử nâng cấp sáng tạo</span>
+    <span class="mission-badge" id="mission-summary-badge">0/4 nhiệm vụ</span>
   </div>
 
-  <!-- Scripts -->
-  <script src="js/data-bai-09.js"></script>
-  <script src="js/audio-sfx.js"></script>
-  <script src="js/assembly-viewer.js"></script>
-  <script src="js/creative-lab.js"></script>
-  <script src="js/sandbox-3d.js"></script>
-  <script src="js/blocks-engine.js"></script>
-  <script src="js/simulation-engine.js"></script>
-  <script src="js/mission-tracker.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/official-assembly.js"></script>
+  <!-- Hoàn thành cả 4 nhiệm vụ: hiện ngay dưới danh sách nhiệm vụ -->
+  <section class="panel victory" id="victory-modal" aria-live="polite">
+    <div>
+      <h2>Hoàn thành cả bốn nhiệm vụ</h2>
+      <p>Em đã lắp xong vệ tinh, lập trình đúng theo sách, tránh được thiên thạch và thử nâng cấp sáng tạo của mình.</p>
+      <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM9</code></p>
+      <p class="hint" id="submit-status-msg"></p>
+    </div>
+    <div class="victory-actions">
+      <button type="button" class="btn btn-primary" id="btn-submit-sheets">Nộp bài cho thầy cô</button>
+      <button type="button" class="btn" id="btn-close-victory">Đóng</button>
+    </div>
+  </section>
+
+  <!-- ===== Ba chặng theo tiết học ===== -->
+  <nav class="stages" role="tablist" aria-label="Các chặng của bài học">
+    <button type="button" role="tab" class="stage-tab" id="tab-btn-asm" data-stage="assembly" aria-selected="true" aria-controls="stage-assembly">
+      <i>1</i><span><b>Lắp ráp</b><small>28 bước theo sách</small></span>
+    </button>
+    <button type="button" role="tab" class="stage-tab" id="tab-btn-creative" data-stage="creative" aria-selected="false" aria-controls="stage-creative">
+      <i>2</i><span><b>Sáng tạo</b><small>Gắn thêm chi tiết</small></span>
+    </button>
+    <button type="button" role="tab" class="stage-tab" id="tab-btn-sim" data-stage="sim" aria-selected="false" aria-controls="stage-sim">
+      <i>3</i><span><b>Lập trình &amp; thử</b><small>Sa bàn vũ trụ</small></span>
+    </button>
+  </nav>
+
+  <!-- ===== Chặng 1: Lắp ráp ===== -->
+  <section class="stage-pane grid is-active" id="stage-assembly" role="tabpanel" aria-labelledby="tab-btn-asm">
+    <div class="col">
+      <article class="panel">
+        <div class="status">
+          <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 28</span></span>
+          <div class="status-body">
+            <small id="bannerStep" class="status-tag"></small>
+            <p id="bannerText" class="status-text">Đang tải mô hình…</p>
+          </div>
+        </div>
+        <div class="canvas-box stage-3d" id="subview-base">
+          <div class="app" id="app">
+            <section class="stage">
+              <canvas id="view" aria-label="Mô hình vệ tinh 3D: kéo để xoay, cuộn để phóng to"></canvas>
+              <div class="loading" id="loading"><strong>Đang tải linh kiện</strong><p>Chuẩn bị hình 3D…</p></div>
+              <div class="lefttop">
+                <button type="button" id="assemblyCheck" hidden></button>
+                <div class="pli" id="pli" hidden>
+                  <div id="pliItems"></div>
+                  <button id="pliToggle" aria-expanded="true" aria-controls="pliItems" aria-label="Thu gọn ô linh kiện"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button>
+                </div>
+                <div id="quizBox"></div>
+              </div>
+              <div class="corner">
+                <button id="eye" class="icon" title="Xem màu thật của mọi linh kiện" aria-label="Xem màu thật" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3.2"/></svg></button>
+                <button id="bomBtn" class="icon" title="Danh sách linh kiện cả mô hình" aria-label="Danh sách linh kiện"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></svg></button>
+                <button id="full" class="icon" title="Toàn màn hình (F)" aria-label="Toàn màn hình"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg></button>
+                <button id="menuBtn" class="icon" hidden aria-expanded="false" aria-label="Ngăn chức năng"></button>
+              </div>
+              <p class="resume" id="resume" hidden><span></span> <button>Về bước 1</button></p>
+              <div class="bottomnav">
+                <button id="prev" class="round" title="Bước trước (←)" aria-label="Bước trước"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+                <input id="slider" type="range" min="1" max="28" value="1" aria-label="Chọn bước lắp">
+                <button id="next" class="round" title="Bước tiếp (→)" aria-label="Bước tiếp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+              </div>
+              <div class="bom" id="bom" role="dialog" aria-modal="true" aria-labelledby="bomTitle" hidden>
+                <div class="bomhead">
+                  <div><h2 id="bomTitle">Danh sách linh kiện</h2><small id="bomMeta"></small></div>
+                  <button id="bomClose" class="icon" aria-label="Đóng danh sách linh kiện" title="Đóng (Esc)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+                </div>
+                <div class="bomgrid" id="bomGrid"></div>
+              </div>
+              <div class="preview" id="preview" role="dialog" aria-modal="true" aria-labelledby="pvName" hidden>
+                <div class="pvcard">
+                  <div class="pvview">
+                    <canvas id="pvCanvas" aria-label="Linh kiện 3D, kéo để xoay"></canvas>
+                    <button id="pvClose" class="icon" aria-label="Đóng" title="Đóng (Esc)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+                    <small class="pvhint">Kéo để xoay</small>
+                  </div>
+                  <div class="pvinfo"><b id="pvName"></b><span id="pvCode"></span><span id="pvUse"></span></div>
+                </div>
+              </div>
+            </section>
+            <aside class="drawer" id="drawer" hidden></aside>
+          </div>
+        </div>
+        <dl class="meters am-meters">
+          <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 28</small></div><div class="s" id="am-step-s">Thân vệ tinh</div></dd></div>
+          <div class="meter pro-only"><dt>Linh kiện mới</dt><dd><div class="v" id="am-added">0</div><div class="s">ở bước này</div></dd></div>
+          <div class="meter pro-only"><dt>Đang hiện</dt><dd><div class="v" id="am-visible">0<small>/ 61</small></div><div class="s">linh kiện trên mô hình</div></dd></div>
+          <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 28</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+        </dl>
+      </article>
+      <p class="foot-note pro-only">Kéo để xoay · cuộn hoặc chụm hai ngón để phóng to · ← → chuyển bước · R xem lại cách lắp · F toàn màn hình. Mô hình dựng từ file thiết kế gốc của bài; mã linh kiện theo kit ZM Alpha 330.</p>
+    </div>
+
+    <div class="col">
+      <article class="panel">
+        <div class="panel-h">
+          <h2>Linh kiện bước này</h2>
+          <label class="switch small" title="Ẩn linh kiện mới và đoán xem bước này cần linh kiện nào"><input type="checkbox" id="quiz">Đố vui</label>
+        </div>
+        <p class="panel-note pro-only" id="summary"></p>
+        <p class="qscore" id="quizScore"></p>
+        <div id="partList" class="partlist"></div>
+        <div class="pad">
+          <button id="doneBtn" class="btn btn-primary btn-block">Đã lắp xong bước này</button>
+          <p class="stray" id="stray" hidden></p>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-h"><h2>Sách hướng dẫn</h2><small id="book-loc">Bước 1</small></div>
+        <figure class="book">
+          <img id="book-img" src="assets/official-assembly/step-01.jpg" alt="Hình bước 1 trong sách hướng dẫn lắp ráp">
+          <figcaption id="book-cap">Ô nền xanh là linh kiện cần lấy, viền đỏ là chỗ lắp.</figcaption>
+        </figure>
+        <div class="pad row">
+          <a id="book-pdf" class="link" href="references/official/Bai9_Thong_tin_lien_lac_vu_tru.pdf#page=2" target="_blank" rel="noopener">Mở trang này trong PDF ↗</a>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="ctrl">
+          <div class="group">
+            <h3>Xem cách lắp</h3>
+            <div class="actions">
+              <button id="replay" class="btn btn-primary" title="Chạy lại hoạt ảnh lắp của bước (R)">Xem cách lắp</button>
+              <button id="play" class="btn" title="Tự chuyển sang bước tiếp theo sau mỗi 2 giây">Tự chạy</button>
+              <button id="speak" class="btn btn-wide" title="Đọc to mô tả và linh kiện của bước">Đọc to từng bước</button>
+            </div>
+          </div>
+          <div class="group">
+            <h3>Góc nhìn</h3>
+            <div class="tools">
+              <button id="focus" class="tool" title="Phóng gần các linh kiện của bước đang xem">Nhìn bước này</button>
+              <button id="fit" class="tool">Vừa khung</button>
+              <button id="all" class="tool">Toàn bộ</button>
+              <button id="spin" class="tool">Tự xoay</button>
+              <button id="iso" class="tool">Góc 3D</button>
+              <button id="front" class="tool">Mặt trước</button>
+              <button id="top" class="tool">Mặt trên</button>
+            </div>
+          </div>
+          <div class="group pro-only">
+            <h3>Quan sát chi tiết</h3>
+            <label class="switch"><input type="checkbox" id="onlyNew">Chỉ xem linh kiện mới</label>
+            <label class="switch"><input type="checkbox" id="outline" checked>Viền nét như sách</label>
+            <div class="range">
+              <div class="row"><span>Tách rời</span><output id="explodeValue">0%</output></div>
+              <input id="explode" type="range" min="0" max="1" step=".01" value="0" aria-label="Tách rời các linh kiện">
+            </div>
+            <div class="range">
+              <div class="row"><span>Cắt lát nhìn bên trong</span><output id="cutValue">0%</output></div>
+              <input id="cut" type="range" min="0" max=".95" step=".01" value="0" aria-label="Cắt bỏ phần phía trước">
+            </div>
+          </div>
+          <div class="group">
+            <h3>Tiến độ · <span id="progressText"></span></h3>
+            <div class="steps" id="steps"></div>
+            <button id="resetProgress" class="link-btn" hidden>Làm lại từ đầu</button>
+          </div>
+        </div>
+      </article>
+
+      <details class="panel more pro-only">
+        <summary>Dành cho giáo viên</summary>
+        <div class="ctrl">
+          <div class="group">
+            <h3>Hiển thị</h3>
+            <label class="sel">Đánh dấu linh kiện mới
+              <select id="markStyle">
+                <option value="book">Màu thật, viền đỏ linh kiện mới (như sách)</option>
+                <option value="fade">Làm nhạt phần đã lắp</option>
+                <option value="orange">Tô cam linh kiện mới</option>
+                <option value="none">Không đánh dấu</option>
+              </select>
+            </label>
+            <label class="switch"><input type="checkbox" id="edges">Xem lưới hình học</label>
+            <label class="switch"><input type="checkbox" id="dark">Nền 3D tối</label>
+            <div class="range">
+              <div class="row"><span>Độ nét</span><output id="qualityValue">2×</output></div>
+              <input id="quality" type="range" min="1" max="3" step=".5" value="2" aria-label="Độ phân giải hiển thị">
+            </div>
+          </div>
+          <div class="group teacher">
+            <h3>Tài liệu</h3>
+            <button id="printBtn" class="btn">In hướng dẫn / lưu PDF</button>
+            <div class="tpanel" id="printPanel" hidden>
+              <label>Địa chỉ trang trên mạng (để in mã QR)<input id="qrUrl" type="url" placeholder="https://dannguyen04.github.io/Lab-HappySteam/" autocomplete="off"></label>
+              <label class="switch"><input type="checkbox" id="printBom" checked>Kèm trang chuẩn bị linh kiện</label>
+              <button id="printGo" class="btn btn-primary">Tạo bản in</button>
+              <small>Ảnh các bước dùng góc nhìn đang xem. Trong hộp thoại in, chọn “Lưu dưới dạng PDF”.</small>
+            </div>
+            <button id="videoBtn" class="btn">Quay video các bước</button>
+            <button id="pngBtn" class="btn">Tải ảnh các bước (.zip)</button>
+            <button id="csvBtn" class="btn">Tải bảng linh kiện (.csv)</button>
+            <button id="glbBtn" class="btn">Tải mô hình 3D (.glb)</button>
+            <small id="teacherNote" class="hint"></small>
+          </div>
+          <p class="hint"><span id="projectInfo"></span></p>
+          <div hidden><h2 id="stepTitle"></h2><section id="drawerCheck"></section><p id="hud"></p><button id="menuClose"></button></div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ===== Chặng 2: Sáng tạo ===== -->
+  <section class="stage-pane grid" id="stage-creative" role="tabpanel" aria-labelledby="tab-btn-creative" hidden>
+    <div class="col">
+      <article class="panel">
+        <div class="status">
+          <span class="pill" data-k="warn">Xưởng</span>
+          <p class="status-text">Max và Mia cần một vệ tinh <b>khỏe hơn</b> và <b>thông minh hơn</b>. Chọn gói gợi ý hoặc tự gắn chi tiết, chi tiết mới sẽ rơi vào mô hình.</p>
+        </div>
+        <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình vệ tinh 3D đang sáng tạo"></div>
+        <dl class="meters three">
+          <div class="meter"><dt>Chi tiết thêm</dt><dd><div class="v" id="creative-count">0</div><div class="s">linh kiện cần lấy</div></dd></div>
+          <div class="meter"><dt>Tính năng</dt><dd><div class="v" id="creative-feat-count">0</div><div class="s">mang ra sa bàn</div></dd></div>
+          <div class="meter"><dt>Hộp kit</dt><dd><div class="v" id="creative-kit">Đủ</div><div class="s" id="creative-kit-s">không thiếu chi tiết</div></dd></div>
+        </dl>
+      </article>
+      <p class="foot-note">Hình 3D là ý tưởng minh họa; các chốt nối nhỏ không vẽ. Hãy thử lắp thật xem chi tiết có chắc chắn không nhé!</p>
+    </div>
+    <div class="col">
+      <article class="panel">
+        <div class="panel-h"><h2>Gói gợi ý</h2><small>Bấm lần nữa để bỏ</small></div>
+        <div id="creative-presets" class="presets"></div>
+      </article>
+      <article class="panel">
+        <div class="panel-h"><h2>Tự gắn chi tiết</h2><small>4 vị trí trên vệ tinh</small></div>
+        <div id="creative-slots" class="slots"></div>
+      </article>
+      <article class="panel">
+        <div class="panel-h"><h2>Linh kiện cần lấy thêm</h2></div>
+        <div class="pad">
+          <table id="creative-bom" class="bomtable"></table>
+          <p id="creative-short" class="callout warn" role="status" hidden></p>
+        </div>
+        <div class="panel-h"><h2>Vệ tinh của em sẽ có</h2></div>
+        <ul id="creative-features" class="features"></ul>
+        <div class="pad actions">
+          <button type="button" id="creative-deploy" class="btn btn-primary">Thử trong sa bàn →</button>
+          <button type="button" id="creative-reset" class="btn">Bỏ hết</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== Chặng 3: Lập trình & thử ===== -->
+  <section class="stage-pane grid" id="stage-sim" role="tabpanel" aria-labelledby="tab-btn-sim" hidden>
+    <div class="col">
+      <article class="panel">
+        <!-- Nhiệm vụ đang làm: một câu ngắn, có nút đi tới chặng cần thiết -->
+        <div class="mission-card" id="mission-card" aria-live="polite">
+          <span class="mc-num" id="mc-num">2</span>
+          <div class="mc-body">
+            <b id="mc-title">Ghép khối giống hàng mẫu</b>
+            <p id="mc-text">Đặt các khối giống hàng mẫu mờ, rồi chạm khối Start màu vàng.</p>
+          </div>
+          <button type="button" class="btn" id="mc-action" hidden></button>
+        </div>
+        <div class="ghost-wrap" id="ghost-wrap">
+          <div class="ghost-h"><span>Hàng mẫu trong sách</span><b id="ghost-score"></b></div>
+          <div class="chain ghost" id="program-ghost" aria-label="Chương trình mẫu trong sách"></div>
+        </div>
+        <div class="status pro-only">
+          <span class="pill" id="sim-status-pill" data-k="muted">Đã dừng</span>
+          <div class="status-body">
+            <p id="sim-status-desc" class="status-text">Ghép khối lệnh rồi chạm Start để chạy.</p>
+            <small id="sim-active-upgrade-badge" class="status-tag">Vệ tinh cơ bản</small>
+          </div>
+        </div>
+        <div class="canvas-box scene-wrap" id="scene-wrap" data-mode="story">
+          <canvas id="space-scene" aria-label="Cảnh vũ trụ: vệ tinh bay quanh Trái Đất theo chương trình"></canvas>
+          <div class="sim-stage" id="sim-stage" aria-label="Robot vệ tinh 3D quay theo chương trình"></div>
+          <p class="scene-idle" id="scene-idle">Chạm khối <b>Start</b> màu vàng hoặc nút <b>▶</b> để vệ tinh bay</p>
+          <div class="scene-toast" id="scene-toast" role="status" hidden>
+            <b id="scene-toast-title"></b>
+            <p id="scene-toast-text"></p>
+            <div class="scene-toast-actions">
+              <button type="button" class="btn btn-primary" id="scene-toast-btn" hidden></button>
+              <button type="button" class="btn" id="scene-toast-close">Đóng</button>
+            </div>
+          </div>
+          <button type="button" class="swap" id="scene-toggle" aria-pressed="false">Xem robot thật</button>
+        </div>
+        <dl class="meters pro-only">
+          <div class="meter"><dt>Động cơ</dt><dd><div class="v" id="m-motor">0<small>vòng/phút</small></div><div class="s" id="m-motor-note">Mức 8/8</div></dd></div>
+          <div class="meter"><dt>Cột anten</dt><dd><div class="v" id="m-out">0<small>vòng/phút</small></div><div class="s">bánh răng 8 dẫn 40</div></dd></div>
+          <div class="meter"><dt>Đoạn Wait</dt><dd><div class="v" id="m-seg">—<small>vòng</small></div><div class="s" id="m-seg-note">Chưa qua khối Wait</div></dd></div>
+          <div class="meter"><dt>Khối đang chạy</dt><dd><div class="v" id="m-step">—</div><div class="s" id="m-step-note">Dừng</div></dd></div>
+        </dl>
+      </article>
+      <article class="panel pro-only">
+        <div class="panel-h"><h2>Tính toán</h2><small>Vì sao vệ tinh dừng ở đó?</small></div>
+        <div class="pad calc">
+          <p class="calc-eq" id="calc-eq1"></p>
+          <p class="calc-eq" id="calc-eq2"></p>
+          <p class="calc-verdict" id="calc-verdict"></p>
+        </div>
+      </article>
+      <article class="panel pro-only">
+        <div class="panel-h"><h2>Nhật ký</h2><small>Mới nhất ở trên</small></div>
+        <ul id="sim-log-list" class="log"></ul>
+      </article>
+    </div>
+    <div class="col">
+      <article class="panel">
+        <div class="panel-h program-h">
+          <h2>Chương trình</h2>
+          <div class="runbar">
+            <button type="button" class="run" id="btn-run-program" aria-label="Chạy chương trình" title="Chạy chương trình (hoặc chạm khối Start)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
+            <button type="button" class="run stop" id="btn-stop-program" aria-label="Dừng" title="Dừng"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></button>
+          </div>
+        </div>
+        <div class="program-canvas-chain chain" id="program-canvas-chain"></div>
+        <div class="pad row prog-tools">
+          <span class="hint">Chạm khối để đổi số giây, nốt nhạc, mức tốc độ.</span>
+          <span class="prog-btns">
+            <button type="button" class="tool" id="btn-load-sample" title="Nạp chương trình mẫu trong sách">Mẫu trong sách</button>
+            <button type="button" class="tool" id="btn-clear-code" title="Xóa hết để tự ghép khối">Làm mới</button>
+          </span>
+        </div>
+      </article>
+      <article class="panel">
+        <div class="panel-h"><h2>Khay khối lệnh</h2><small>Chạm để thêm</small></div>
+        <div class="toolbox" id="block-toolbox"></div>
+      </article>
+      <article class="panel pro-only">
+        <div class="ctrl">
+          <div class="group">
+            <h3>Gợi ý nhiệm vụ</h3>
+            <p class="hint"><b>NV2</b> ghép đúng chương trình trong sách và chạy hết một vòng lặp. <b>NV3</b> khi vệ tinh tiến gần thiên thạch (60°–110°), dùng <b>Motor This Way</b> để đổi chiều, hoặc phát <b>Melody B</b> rồi <b>Dừng</b> trước 110°. Khối <b>Chờ vật cản</b> cần gói Cảm biến ở chặng Sáng tạo.</p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <p class="foot-note center">Số liệu vòng quay là mô phỏng để minh họa, không phải thông số đo của động cơ thật.</p>
+</div>
+
+<!-- ===== Hộp thoại ===== -->
+<div class="modal" id="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-title">
+  <div class="panel modal-card">
+    <h2 id="profile-title">Thông tin học sinh</h2>
+    <p class="hint">Để thầy cô ghi nhận kết quả bài của em.</p>
+    <label class="field">Họ và tên<input type="text" id="student-name-input" placeholder="Ví dụ: Nguyễn Văn An" autocomplete="name"></label>
+    <label class="field">Lớp<input type="text" id="student-class-input" placeholder="Ví dụ: 4A1"></label>
+    <button type="button" class="btn btn-primary btn-block" id="btn-close-profile">Lưu</button>
+  </div>
+</div>
+
+<div class="modal" id="teacher-modal" role="dialog" aria-modal="true" aria-labelledby="teacher-title">
+  <div class="panel modal-card">
+    <h2 id="teacher-title">Nhận kết quả qua Google Sheets</h2>
+    <p class="hint">Dán địa chỉ Web App (Apps Script, hàm <code>doPost</code>) để học sinh nộp kết quả về Sheet của thầy cô. Mã Apps Script có trong README.</p>
+    <label class="field">Địa chỉ Web App<input type="url" id="teacher-webhook-input" placeholder="https://script.google.com/macros/s/…/exec"></label>
+    <div class="actions">
+      <button type="button" class="btn btn-primary" id="btn-save-webhook">Lưu</button>
+      <button type="button" class="btn" id="btn-close-teacher">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<div id="printout"></div>
+
+<script src="js/data-bai-09.js"></script>
+<script src="js/audio-sfx.js"></script>
+<script src="js/assembly-viewer.js"></script>
+<script src="js/creative-lab.js"></script>
+<script src="js/sandbox-3d.js"></script>
+<script src="js/space-scene.js"></script>
+<script src="js/blocks-engine.js"></script>
+<script src="js/simulation-engine.js"></script>
+<script src="js/mission-tracker.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>

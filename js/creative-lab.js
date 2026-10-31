@@ -49,6 +49,12 @@
       options: [{ id: 'sensor', label: 'Cảm biến', parts: { sensor: 1, 'BP-7012': 2 }, feature: 'sensor' }]
     }
   ];
+  // Hình minh họa nhỏ cho từng gói (học sinh nhỏ nhận ra gói mà không cần đọc chữ)
+  const PICS = {
+    solar: '<svg viewBox="0 0 64 48" aria-hidden="true"><g fill="#3dc1dc" stroke="#0e6f8a" stroke-width="1.5"><rect x="2" y="17" width="13" height="14"/><rect x="15" y="17" width="13" height="14"/><rect x="36" y="17" width="13" height="14"/><rect x="49" y="17" width="13" height="14"/></g><rect x="27" y="15" width="10" height="18" rx="2" fill="#fff" stroke="#1e2a34" stroke-width="1.5"/><path d="M8 17v-6M21 17v-6M42 17v-6M55 17v-6" stroke="#f2be00" stroke-width="2" stroke-linecap="round"/></svg>',
+    radar: '<svg viewBox="0 0 64 48" aria-hidden="true"><path d="M14 30a18 18 0 0 0 36 0z" fill="#dfe6ec" stroke="#1e2a34" stroke-width="1.8"/><path d="M32 30V12" stroke="#1e2a34" stroke-width="2"/><circle cx="32" cy="11" r="3" fill="#e8892b"/><path d="M40 8a10 10 0 0 1 8 8M43 3a16 16 0 0 1 11 11" stroke="#2a9bd8" stroke-width="2.2" fill="none" stroke-linecap="round"/><rect x="26" y="38" width="12" height="7" rx="1.5" fill="#fff" stroke="#1e2a34" stroke-width="1.5"/></svg>',
+    sensor: '<svg viewBox="0 0 64 48" aria-hidden="true"><rect x="6" y="12" width="24" height="24" rx="4" fill="#fff" stroke="#1e2a34" stroke-width="1.8"/><circle cx="24" cy="24" r="5" fill="#1e2a34"/><path d="M36 16a12 12 0 0 1 0 16M42 11a19 19 0 0 1 0 26M48 6a26 26 0 0 1 0 36" stroke="#ea6ea9" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>'
+  };
   const PRESETS = [
     {
       id: 'solar',
@@ -272,7 +278,9 @@
         b.type = 'button';
         b.dataset.preset = p.id;
         b.setAttribute('aria-pressed', on);
-        b.append(el('span', 'cp-icon', p.icon), el('b', null, p.title), el('small', null, p.text));
+        const pic = el('span', 'cp-pic');
+        pic.innerHTML = PICS[p.id];
+        b.append(el('span', 'cp-mark', on ? '✓' : ''), pic, el('b', null, p.title), el('small', null, p.text));
         b.onclick = () => {
           for (const [s, o] of Object.entries(p.pick)) choice[s] = on ? undefined : o;
           for (const k of Object.keys(choice)) if (!choice[k]) delete choice[k];
@@ -306,7 +314,7 @@
     table.replaceChildren();
     if (!rows.length) {
       const tr = el('tr');
-      const td = el('td', 'cb-empty', 'Chưa gắn chi tiết nào. Chọn một gói gợi ý hoặc bấm "+" ở vị trí muốn gắn.');
+      const td = el('td', 'cb-empty', 'Chưa gắn chi tiết nào. Chọn một gói gợi ý hoặc bấm “+” ở vị trí muốn gắn.');
       td.colSpan = 3;
       tr.append(td);
       table.append(tr);
@@ -326,17 +334,25 @@
     const short = rows.filter(r => r.short);
     $('creative-short').hidden = !short.length;
     $('creative-short').textContent = short.length
-      ? '⚠ Hộp kit của nhóm không đủ: ' +
+      ? 'Hộp kit của nhóm không đủ: ' +
         short.map(r => `${NAMES[r.code] || r.code} thiếu ${r.short}`).join(', ') +
         '. Hãy hỏi mượn nhóm khác hoặc thay bằng chi tiết tương tự.'
       : '';
     const fs = features();
     feats.replaceChildren(
       ...(fs.length
-        ? fs.map(f => el('li', null, FEATURES[f].icon + ' ' + FEATURES[f].text))
+        ? fs.map(f => el('li', 'feat-' + f, FEATURES[f].text))
         : [el('li', 'muted', 'Vệ tinh cơ bản – chưa có tính năng mới.')])
     );
     $('creative-count').textContent = rows.reduce((s, r) => s + r.n, 0);
+    // Đồng hồ đo của xưởng
+    if ($('creative-feat-count')) {
+      $('creative-feat-count').textContent = fs.length;
+      const missing = short.reduce((n, r) => n + r.short, 0);
+      $('creative-kit').textContent = missing ? 'Thiếu ' + missing : 'Đủ';
+      $('creative-kit').dataset.k = missing ? 'warn' : 'ok';
+      $('creative-kit-s').textContent = missing ? 'mượn thêm nhóm khác' : 'không thiếu chi tiết';
+    }
   }
 
   // Mở/đóng xưởng: chuyển trình xem 3D vào khung của xưởng và bật chế độ sáng tạo
@@ -378,7 +394,7 @@
       deployed = extras();
       if (window.simEngine) window.simEngine.setUpgrades(features());
       if (window.SFX) window.SFX.ding();
-      document.querySelector('.nav-tab-btn[data-tab="tab-simulation"]')?.click();
+      window.ZMStages?.go('sim');
     };
   });
 

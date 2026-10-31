@@ -5,10 +5,11 @@
 ## 1. Mở và sử dụng
 
 1. Giữ nguyên cấu trúc thư mục, mở `index.html` bằng **Chrome** hoặc **Edge**. Địa chỉ trên thanh trình duyệt có dạng `file:///.../Lab-HappySteam/index.html`.
-2. Tab **Hướng dẫn lắp ráp** có hai cách xem nối với nhau: **Lắp ráp theo bài giảng gốc** (hình in từng bước của sách) và **Lắp ráp 3D (28 bước)** (kéo để xoay, phóng to, linh kiện mới rơi từ trên xuống vào vị trí, đố vui đoán linh kiện). Nút **📖 Sách hướng dẫn · bước N** trong 3D mở đúng hình in; nút **🏗️ Xem trong 3D** ở trang sách mở đúng bước trong 3D.
-3. **Sáng tạo mô hình 3D** (xưởng sáng tạo): mô hình vệ tinh hoàn chỉnh hiện trong 3D; chọn gói gợi ý (cánh pin kép, chảo ra-đa, cảm biến né thiên thạch) hoặc tự gắn chi tiết vào 4 vị trí (hai đầu cánh pin, mặt ngoài đầu vệ tinh, phía trước thân). Chi tiết mới rơi vào mô hình, bảng bên cạnh tính linh kiện cần lấy thêm và báo khi hộp kit không đủ. Bấm **🚀 Thử trong sa bàn** để mang tất cả tính năng sang Tab 2 (gắn được nhiều gói cùng lúc).
-4. Mở **Lập trình & Mô phỏng**, chạm khối trong khay để thêm khối. Chạm khối đã đặt để điều chỉnh tham số. Nhấn **Chạy chương trình**, xem vệ tinh quay, bánh răng chuyển động và kết quả nhiệm vụ.
-5. Bấm nút giao diện trên thanh đầu trang để chuyển **Sáng/Tối**. Tiến độ các bước đã lắp, tên học sinh, lớp và giao diện được lưu cục bộ trong trình duyệt khi khả dụng.
+2. Trang chia **ba chặng** theo tiết học (thanh dưới tiêu đề): **① Lắp ráp** – mô hình 3D 28 bước (kéo để xoay, linh kiện mới rơi vào vị trí, đố vui), bên phải là linh kiện của bước, **hình in của bước đó trong sách** và các công cụ xem; **② Sáng tạo**; **③ Lập trình & thử**. Ứng dụng nhớ chặng đang học.
+3. **② Sáng tạo** (xưởng sáng tạo): mô hình vệ tinh hoàn chỉnh hiện trong 3D; chọn gói gợi ý (cánh pin kép, chảo ra-đa, cảm biến né thiên thạch) hoặc tự gắn chi tiết vào 4 vị trí (hai đầu cánh pin, mặt ngoài đầu vệ tinh, phía trước thân). Chi tiết mới rơi vào mô hình, bảng bên cạnh tính linh kiện cần lấy thêm và báo khi hộp kit không đủ. Bấm **Thử trong sa bàn** để mang tất cả tính năng sang chặng ③ (gắn được nhiều gói cùng lúc).
+4. Ở **③ Lập trình & thử**, thẻ nhiệm vụ cho biết việc cần làm, hàng mẫu mờ cho thấy chương trình trong sách. Chạm khối trong khay để thêm, chạm khối đã đặt để đổi số giây/nốt nhạc/mức tốc độ (nút ×, ◀ ▶ chỉ hiện ở khối đang chọn). Chương trình **chỉ chạy khi chạm khối Start màu vàng** (như phần mềm ZMrobo) **hoặc nút ▶**.
+5. Nút **Chế độ: Bé / Nâng cao** ở đầu trang: Bé (mặc định, lớp 1–2) ẩn số đo, tính toán, nhật ký và các công cụ chi tiết; Nâng cao (lớp 3–5, giáo viên) hiện đủ.
+6. Bấm nút giao diện trên thanh đầu trang để chuyển **Sáng/Tối**. Tiến độ các bước đã lắp, tên học sinh, lớp và giao diện được lưu cục bộ trong trình duyệt khi khả dụng.
 
 **Chạy offline:** Ứng dụng chính sử dụng HTML/CSS/JS và mô hình 3D đóng gói cùng thư mục, không tải thư viện hay font từ mạng. WebGL cần trình duyệt có hỗ trợ tăng tốc đồ họa; đọc hướng dẫn bằng giọng nói và hiệu ứng âm thanh tùy thuộc trình duyệt/thiết bị và thường chỉ khởi động sau tương tác người dùng. Tính năng gửi điểm về Google Sheets **cần Internet**.
 
@@ -18,7 +19,7 @@
 - **Mã linh kiện:** file .io dùng mã LEGO/LDraw và **mã màu BrickLink**. Mã ZMROBO tương ứng (`scripts/bai9-parts.js`) lấy từ công cụ `RBB_Studio/io2rbb` (so hình học với 268 linh kiện RoboBuilder, ưu tiên mã có trong kit set2321A). Động cơ là **BE-3581** (file CAD gọi BE-3578). Khớp góc đen ở bước 16–17 trên kit thật bẻ ~22° nhưng RoboBuilder không có mã tương ứng; bảng ghi tạm BP-7029.
 - **Kiểm thử:** `node tests/mission.test.js` (dữ liệu 3D: số linh kiện từng bước khớp sách, mã/màu; chấm điểm mô phỏng) và `node tests/ui.smoke.js` (Playwright: hai cách xem liên kết, hoạt ảnh, desktop/mobile 375px).
 - **Dựng lại dữ liệu 3D:** chạy `node scripts/generate-from-embedded-ldraw.js` để tạo `js/data-bai-09.js` từ `references/original_models/model2.ldr`. Bản trước khi nâng cấp (25 mốc suy luận) lưu trong `.backup/2026-10-30-truoc-nang-cap/`.
-- **Sa bàn (Tab 2):** chính mô hình vệ tinh 3D học sinh vừa lắp (kèm gói nâng cấp đã đưa từ xưởng sáng tạo) đứng trên thảm sa bàn và **quay theo chương trình**: bánh răng 8 trên động cơ dẫn bánh răng 40, cột anten và đầu vệ tinh quay chậm hơn 5 lần, ngược chiều bánh răng nhỏ. Góc dưới là bản đồ quỹ đạo 2D (trạm Alpha/ISS/Beta, vành đai thiên thạch 110°–160°); nút **⇄ Đổi khung** phóng to bản đồ. Đây là mô phỏng minh họa, không điều khiển robot thật.
+- **Cảnh câu chuyện (chặng ③):** một khung lớn: Trái Đất có trạm mặt đất, vệ tinh (giống mô hình em lắp, có cánh pin kép/chảo/nón cảm biến nếu đã gắn) bay quanh quỹ đạo theo chương trình, đám đá thiên thạch ở 110°–160°. Phát nhạc → sóng tín hiệu bay về trạm; sắp tới đá → đá viền đỏ, biển báo nhấp nháy; đụng đá → rung màn hình, thông báo "Ối!" và nút Thử lại; tránh được → sao bay và "Giỏi quá!" rồi chương trình dừng. Nút **Xem robot thật** đổi sang mô hình 3D trên thảm, cột anten quay theo bánh răng 8 dẫn 40 (không hiện hai khung cùng lúc). Đây là mô phỏng minh họa, không điều khiển robot thật.
 - **Khối lệnh** (puzzle ngang như phần mềm ZMrobo): Start, Repeat, Melody A/B, High Speed, **Motor Power** (mức 1–8), **Motor This Way** (đổi chiều), Wait, Stop và Chờ vật cản. Trang mở với chương trình trống; nút **Mẫu trong sách** nạp chương trình mẫu của bài.
 - **Quy tắc tính tốc độ:** động cơ mức 8 = 150 vòng/phút (mức n = 150 × n/8); bánh răng 8 dẫn 40 ⇒ cột anten 150 × 8/40 = **30 vòng/phút** ở mức 8, tức 0,5 vòng/giây.
 
@@ -81,14 +82,13 @@ Lab-HappySteam/
 ├── index.html
 ├── README.md
 ├── css/
-│   ├── main.css
-│   └── assembly.css
+│   └── lab.css                   # Giao diện "bệ thử" (cùng phong cách Bài 7)
 ├── js/
 │   ├── app.js
 │   ├── assembly-viewer.js
 │   ├── creative-lab.js           # Xưởng sáng tạo 3D
-│   ├── sandbox-3d.js             # Sa bàn 3D ở Tab 2
-│   ├── official-assembly.js      # Hình in từng bước của sách
+│   ├── sandbox-3d.js             # Robot 3D quay theo chương trình (chặng ③)
+│   ├── space-scene.js            # Cảnh câu chuyện vũ trụ (chặng ③)
 │   ├── data-bai-09.js
 │   ├── simulation-engine.js
 │   ├── blocks-engine.js

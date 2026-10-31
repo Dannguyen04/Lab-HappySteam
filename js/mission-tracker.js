@@ -74,7 +74,7 @@
         total = keys.length;
       const summary = document.getElementById('mission-summary-badge');
       if (summary) {
-        summary.textContent = count === total ? `🎉 ${total}/${total} NV Đạt` : `${count}/${total} NV`;
+        summary.textContent = count === total ? `Đạt ${total}/${total} nhiệm vụ` : `${count}/${total} nhiệm vụ`;
         summary.className = count === total ? 'mission-badge badge-all-done' : 'mission-badge';
       }
     }
