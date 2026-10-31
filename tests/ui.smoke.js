@@ -136,12 +136,14 @@ async function main() {
     const badgeHas = text => page.waitForFunction(
       t => document.getElementById('mission-summary-badge')?.textContent?.includes(t), text, { timeout: 15000 });
     await page.click('#tab-btn-asm');
-    await page.evaluate(() => {
-      for (let s = 1; s <= 28; s++) {
-        window.robotViewer.setStep(s);
+    // Từng bước một, chờ trang cập nhật giữa các bước (máy CI Linux chậm hơn: 28 lần bấm liền trong một lệnh bị lỡ)
+    for (let s = 1; s <= 28; s++) {
+      await page.evaluate(n => {
+        window.robotViewer.setStep(n);
         if (!/bỏ/.test(document.getElementById('doneBtn').textContent)) document.getElementById('doneBtn').click();
-      }
-    });
+      }, s);
+      await page.waitForFunction(n => parseInt(document.getElementById('am-done').textContent, 10) >= n, s, { timeout: 5000 });
+    }
     await badgeHas('1/4');
     assert.equal(await page.locator('#am-done').innerText(), '28/ 28');
     await page.click('#tab-btn-creative');
