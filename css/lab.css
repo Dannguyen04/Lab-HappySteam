@@ -589,3 +589,46 @@ html[data-mode="kid"] .bomtable td code { display: none; }
 /* Bài 10: nút đỏ (cảm biến chạm) */
 .press-btn span { display: block; width: 34px; height: 34px; margin: auto; border-radius: 50%; background: #e53935; box-shadow: inset 0 -5px 0 rgba(0, 0, 0, .25); }
 .press-btn:active span { transform: translateY(2px); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .25); }
+
+/* ---------- Sổ dự án (lop1-du-an.html) ---------- */
+.stages.stages-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.pick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.pick-grid.pick-small { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+.pick-card { display: grid; gap: 4px; justify-items: center; text-align: center; padding: 12px 10px; border: 2px solid var(--line); border-radius: 12px; background: var(--surface); cursor: pointer; }
+.pick-card:hover { border-color: var(--muted); }
+.pick-card.on { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+.pick-card .pick-icon { font-size: 40px; line-height: 1.1; }
+.pick-card img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; }
+.pick-card b { font: 700 15px/1.2 var(--f-display); }
+.pick-card small { font-size: 12px; color: var(--muted); }
+.project-page textarea, .project-page .field input { width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); font: inherit; resize: vertical; }
+.chips-suggest { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.sketch-tools { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.sk-btn { min-width: 40px; height: 36px; padding: 0 10px; border: 2px solid var(--line); border-radius: 999px; background: var(--sw, var(--surface)); font-weight: 600; font-size: 13px; cursor: pointer; }
+.sk-btn.on { border-color: var(--ink); box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent); }
+.sketch { display: block; width: 100%; aspect-ratio: 900 / 560; border: 1px solid var(--line); border-radius: 10px; background: #fff; touch-action: none; cursor: crosshair; margin-bottom: 8px; }
+.file-tool { display: inline-block; }
+.checklist { list-style: none; margin: 0; display: grid; gap: 8px; }
+.check { display: flex; align-items: center; gap: 10px; font-size: 15px; cursor: pointer; }
+.check input { width: 22px; height: 22px; accent-color: var(--ok); }
+.photo-box { display: grid; place-items: center; min-height: 140px; border: 1px dashed var(--line); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+.photo-box img { width: 100%; max-height: 260px; object-fit: contain; }
+.test-btns { justify-content: flex-start; }
+.test-log { margin: 10px 0 0; padding-left: 22px; font-size: 14px; display: grid; gap: 4px; }
+.test-log .ok { color: var(--ok); }
+.test-log .fix { color: var(--warn); }
+.poster { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 6px 20px rgba(0, 0, 0, .12); }
+.stars-list { display: grid; gap: 12px; }
+.star-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; font-size: 15px; }
+.star-btns { display: flex; gap: 2px; }
+.star { width: 40px; height: 40px; border: 0; background: none; font-size: 30px; line-height: 1; color: var(--line); cursor: pointer; }
+.star.on { color: #f2b705; }
+.print-only { display: none; }
+@media print {
+  .print-only { display: block !important; width: 100%; height: auto; }
+}
+@media (max-width: 760px) {
+  .stages.stages-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stages.stages-4 .stage-tab:nth-child(2) { border-right: 0; }
+  .stages.stages-4 .stage-tab:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
+}

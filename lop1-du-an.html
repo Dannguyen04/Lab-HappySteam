@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Dự án Hành trình dòng nước · Lớp 1 · Happy STEAM</title>
+  <link rel="stylesheet" href="css/lab.css">
+</head>
+<body class="project-page">
+<div class="wrap">
+
+  <!-- ===== Đầu trang ===== -->
+  <header class="top">
+    <div>
+      <a class="back-link" href="index.html">← Tất cả bài học</a>
+      <div class="eyebrow" id="proj-eyebrow">Lớp 1 · Dự án học kì I · Tuần 14–17</div>
+      <h1>Hành trình dòng nước</h1>
+      <p class="lede">Sổ dự án của nhóm: chọn vấn đề về nước, phác thảo ý tưởng, chế tạo và lập trình mô hình, làm poster rồi chia sẻ với cả lớp. Bài làm tự lưu trên máy này – tuần sau mở lại làm tiếp.</p>
+    </div>
+    <div class="tools-top">
+      <button type="button" class="iconbtn" id="btn-group" title="Tên nhóm và các bạn trong nhóm"><span id="group-label">Nhóm: chưa đặt tên</span></button>
+      <button type="button" class="iconbtn" id="btn-toggle-theme">Giao diện tối</button>
+    </div>
+  </header>
+
+  <div class="missions" aria-label="Nhiệm vụ dự án">
+    <span class="chip" id="chip-m1" title="Chọn vấn đề, mô hình gốc, viết ý tưởng và vẽ phác thảo"><i>1</i>Ý tưởng</span>
+    <span class="chip" id="chip-m2" title="Đánh dấu ít nhất 4 việc chế tạo và ghép chương trình có ít nhất 3 khối"><i>2</i>Chế tạo &amp; lập trình</span>
+    <span class="chip" id="chip-m3" title="Đặt tên dự án, poster có vấn đề, ý tưởng và hình"><i>3</i>Poster</span>
+    <span class="chip" id="chip-m4" title="Tự đánh giá đủ 4 mục và ghi điều nhóm học được"><i>4</i>Chia sẻ</span>
+    <span class="mission-badge" id="mission-summary-badge">0/4 nhiệm vụ</span>
+  </div>
+
+  <nav class="stages stages-4" role="tablist" aria-label="Các chặng dự án">
+    <button type="button" role="tab" class="stage-tab" id="tab-idea" data-stage="1" aria-controls="stage-1">
+      <i>1</i><span><b>Ý tưởng</b><small>Tuần 14 · chọn vấn đề, phác thảo</small></span>
+    </button>
+    <button type="button" role="tab" class="stage-tab" id="tab-build" data-stage="2" aria-controls="stage-2">
+      <i>2</i><span><b>Chế tạo</b><small>Tuần 15 · lắp, lập trình, chạy thử</small></span>
+    </button>
+    <button type="button" role="tab" class="stage-tab" id="tab-poster" data-stage="3" aria-controls="stage-3">
+      <i>3</i><span><b>Poster</b><small>Tuần 16 · nâng cấp, làm poster</small></span>
+    </button>
+    <button type="button" role="tab" class="stage-tab" id="tab-share" data-stage="4" aria-controls="stage-4">
+      <i>4</i><span><b>Chia sẻ</b><small>Tuần 17 · trình bày, tự đánh giá</small></span>
+    </button>
+  </nav>
+
+  <!-- ===== Chặng 1: Ý tưởng ===== -->
+  <section class="stage-pane grid" id="stage-1" role="tabpanel" aria-labelledby="tab-idea" hidden>
+    <div class="col">
+      <article class="panel">
+        <div class="panel-h"><h2>Nhóm em giải quyết vấn đề gì?</h2><small>Chạm một thẻ</small></div>
+        <div class="pad pick-grid" id="problem-cards"></div>
+      </article>
+      <article class="panel">
+        <div class="panel-h"><h2>Bản vẽ phác thảo</h2><small>Vẽ mô hình nhóm muốn làm</small></div>
+        <div class="pad">
+          <div class="sketch-tools" id="sketch-tools"></div>
+          <canvas id="sketch" class="sketch" width="900" height="560" aria-label="Bảng vẽ phác thảo: kéo ngón tay hoặc chuột để vẽ"></canvas>
+          <p class="hint">Vẽ trên giấy? Chụp ảnh bản vẽ: <label class="tool file-tool">Chụp / chọn ảnh<input type="file" accept="image/*" capture="environment" id="sketch-photo" hidden></label></p>
+        </div>
+      </article>
+    </div>
+    <div class="col">
+      <article class="panel">
+        <div class="panel-h"><h2>Bắt đầu từ mô hình nào?</h2><small>Mô hình đã học</small></div>
+        <div class="pad pick-grid pick-small" id="base-cards"></div>
+      </article>
+      <article class="panel">
+        <div class="panel-h"><h2>Ý tưởng của nhóm</h2></div>
+        <div class="pad">
+          <label class="field">Mô hình của nhóm em giúp…
+            <textarea id="idea" rows="3" maxlength="240" placeholder="Ví dụ: bơm nước tưới cây khi đất khô"></textarea>
+          </label>
+          <div class="chips-suggest" id="idea-suggest"></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== Chặng 2: Chế tạo & lập trình ===== -->
+  <section class="stage-pane grid" id="stage-2" role="tabpanel" aria-labelledby="tab-build" hidden>
+    <div class="col">
+      <article class="panel">
+        <div class="panel-h program-h"><h2>Chương trình của nhóm</h2><small>Tự ghép khối, không có mẫu</small></div>
+        <div class="program-canvas-chain chain" id="program-canvas-chain"></div>
+        <div class="pad row prog-tools">
+          <span class="hint">Chạm khối trong khay để thêm, chạm khối đã đặt để đổi số giây, tốc độ.</span>
+          <span class="prog-btns"><button type="button" class="tool" id="btn-clear-code">Làm mới</button></span>
+        </div>
+      </article>
+      <article class="panel">
+        <div class="panel-h"><h2>Khay khối lệnh</h2><small>Chạm để thêm</small></div>
+        <div class="toolbox" id="block-toolbox"></div>
+      </article>
+    </div>
+    <div class="col">
+      <article class="panel">
+        <div class="panel-h"><h2>Việc chế tạo</h2><small>Đánh dấu khi làm xong</small></div>
+        <ul class="pad checklist" id="build-checklist"></ul>
+      </article>
+      <article class="panel">
+        <div class="panel-h"><h2>Ảnh mô hình</h2></div>
+        <div class="pad">
+          <div class="photo-box" id="model-photo-box"><span class="hint">Chưa có ảnh</span></div>
+          <label class="tool file-tool">Chụp / chọn ảnh mô hình<input type="file" accept="image/*" capture="environment" id="model-photo" hidden></label>
+        </div>
+      </article>
+      <article class="panel">
+        <div class="panel-h"><h2>Chạy thử</h2><small>Ghi lại mỗi lần thử</small></div>
+        <div class="pad">
+          <div class="row test-btns">
+            <button type="button" class="btn" id="test-ok">⭐ Chạy tốt</button>
+            <button type="button" class="btn" id="test-fix">🔧 Cần sửa</button>
+          </div>
+          <ol class="test-log" id="test-log"></ol>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== Chặng 3: Poster ===== -->
+  <section class="stage-pane grid" id="stage-3" role="tabpanel" aria-labelledby="tab-poster" hidden>
+    <div class="col">
+      <article class="panel">
+        <div class="panel-h"><h2>Poster dự án</h2><small>Tự ghép từ bài làm của nhóm</small></div>
+        <div class="pad"><canvas id="poster" class="poster" width="1240" height="1754" aria-label="Poster dự án khổ A4"></canvas></div>
+      </article>
+    </div>
+    <div class="col">
+      <article class="panel">
+        <div class="panel-h"><h2>Thông tin poster</h2></div>
+        <div class="pad">
+          <label class="field">Tên dự án<input id="title" maxlength="60" placeholder="Ví dụ: Cối xoay gió bơm nước"></label>
+          <label class="field">Nâng cấp nhóm đã làm thêm<textarea id="upgrade" rows="2" maxlength="160" placeholder="Ví dụ: thêm cánh quạt cho bơm mạnh hơn"></textarea></label>
+          <p class="hint" id="poster-missing"></p>
+          <div class="row">
+            <button type="button" class="btn btn-primary" id="poster-png">Tải ảnh poster</button>
+            <button type="button" class="btn" id="poster-print">In poster</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== Chặng 4: Chia sẻ ===== -->
+  <section class="stage-pane grid" id="stage-4" role="tabpanel" aria-labelledby="tab-share" hidden>
+    <div class="col">
+      <article class="panel">
+        <div class="panel-h"><h2>Nhóm tự đánh giá</h2><small>Chạm số sao</small></div>
+        <div class="pad stars-list" id="stars"></div>
+      </article>
+      <article class="panel">
+        <div class="panel-h"><h2>Điều nhóm em học được</h2></div>
+        <div class="pad">
+          <textarea id="learned" rows="3" maxlength="240" placeholder="Ví dụ: cách nối động cơ với cánh quạt, chia việc trong nhóm"></textarea>
+          <div class="chips-suggest" id="learned-suggest"></div>
+        </div>
+      </article>
+    </div>
+    <div class="col">
+      <article class="panel">
+        <div class="panel-h"><h2>Nộp dự án</h2></div>
+        <div class="pad">
+          <p class="hint">Gửi kết quả về Google Sheets của thầy/cô (địa chỉ nhận bài cài ở nút <b>Giáo viên</b> trong trang bài học).</p>
+          <button type="button" class="btn btn-primary" id="btn-submit">Nộp dự án</button>
+          <p class="hint" id="submit-status"></p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== Hộp thoại nhóm ===== -->
+  <div class="modal" id="group-modal" role="dialog" aria-modal="true" aria-labelledby="group-title">
+    <div class="panel modal-card">
+      <h2 id="group-title">Nhóm của em</h2>
+      <label class="field">Tên nhóm<input id="group-name" maxlength="40" placeholder="Ví dụ: Nhóm Giọt Nước"></label>
+      <label class="field">Lớp<input id="group-class" maxlength="20" placeholder="Ví dụ: 1A"></label>
+      <div id="members"></div>
+      <div class="row"><button type="button" class="btn btn-primary" id="btn-close-group">Xong</button></div>
+    </div>
+  </div>
+</div>
+<img id="poster-print-img" class="print-only" alt="Poster dự án">
+
+<script src="js/catalog.js"></script>
+<script src="js/audio-sfx.js"></script>
+<script src="js/blocks-engine.js"></script>
+<script src="js/project/project.js"></script>
+</body>
+</html>
