@@ -13,6 +13,28 @@
       : b.type === 'wait' ? 'wait:' + b.duration
         : b.type === 'motor_power' ? 'motor' : b.type;
 
+  // Chế độ Nâng cao (cấp 2–3): thiên thạch bay ngang quỹ đạo theo chu kỳ, vật lạ quanh quỹ đạo, chụp ảnh gửi về trạm.
+  // Hình học dùng chung với cảnh câu chuyện (js/space-scene.js): khung 900×560, tâm Trái Đất (450, 285), quỹ đạo R = 200.
+  const GEO = { CX: 450, CY: 285, R: 200 };
+  const ROCK = {
+    lane: 135, // chỗ đường bay cắt quỹ đạo (độ, chiều kim đồng hồ từ trạm mặt đất)
+    period: 8, // cứ 8 giây thiên thạch bay qua một lần
+    block: 2.5, // chặn đường trong 2,5 giây đầu của mỗi chu kỳ
+    speed: 56, // px/giây trên cảnh
+    dir: [-0.997, 0.087], // bay từ phải sang trái
+    hit: 15 // vệ tinh trong khoảng ±15° quanh chỗ cắt thì đụng
+  };
+  const ODDITIES = [
+    { kind: 'comet', name: 'sao chổi', deg: 230, dr: 62 },
+    { kind: 'debris', name: 'mảnh vỡ vệ tinh cũ', deg: 305, dr: -58 },
+    { kind: 'ufo', name: 'vật thể lạ', deg: 40, dr: 58 }
+  ];
+  const VIEW = 130; // tầm nhìn của cảm biến/camera (px trên cảnh)
+  const geoPos = (deg, r = GEO.R) => {
+    const a = (deg * Math.PI) / 180;
+    return [GEO.CX + r * Math.sin(a), GEO.CY - r * Math.cos(a)];
+  };
+
   const THEME = {
     bg: '#0A1224',
     panel: '#0F1A30',
@@ -74,6 +96,15 @@
       this.hazardDetected = false;
       this.hazardEncountered = false;
 
+      // Nâng cao
+      this.advanced = false;
+      this.runT = 0; // thời gian chạy từ lúc bấm Start (đồng hồ của thiên thạch)
+      this.waitedT = 0; // thời gian vệ tinh đứng đợi trước đường bay khi thiên thạch đang chặn
+      this.laneCrash = false; // đã đụng thiên thạch ở lượt đi qua này
+      this.rockPassed = false; // NV5
+      this.gallery = new Map(); // NV6: ảnh vật lạ trạm đã nhận (giữ qua các lần chạy)
+      this.sensorHinted = false;
+
       // RoboSim Procedural Asteroids in the hazard zone (115° to 160°)
       this.asteroids = [
         { ang: 120, dist: 145, size: 14, rot: 0.2, spin: 0.5, pts: [[-1, -0.8], [0.3, -1.1], [1, -0.4], [0.8, 0.9], [-0.5, 1.2], [-1.1, 0.3]] },
@@ -119,6 +150,104 @@
     // Báo sự kiện cho cảnh câu chuyện (js/space-scene.js): melody, near, crash, avoid, loop, start, stop
     emit(type, data) {
       if (this.onEvent) this.onEvent(type, data);
+    }
+
+    // Bật/tắt thử thách Nâng cao (theo nút Chế độ)
+    setAdvanced(on) {
+      on = !!on;
+      if (this.advanced === on) return;
+      this.advanced = on;
+      if (this.running) this.stop();
+      this.restart(false);
+      this.checkMissions();
+    }
+
+    // ---------- Nâng cao: thiên thạch bay qua, vật lạ, chụp ảnh ----------
+    // Khoảng cách dọc đường bay từ thiên thạch tới chỗ cắt quỹ đạo (âm: đang bay tới)
+    rockS(t = this.runT) {
+      const u = (((t + 3.75) % ROCK.period) + ROCK.period) % ROCK.period;
+      return (u - 5) * ROCK.speed;
+    }
+    rockXY(t = this.runT) {
+      const [lx, ly] = geoPos(ROCK.lane);
+      const s = this.rockS(t);
+      return [lx + s * ROCK.dir[0], ly + s * ROCK.dir[1]];
+    }
+    rockAlpha(t = this.runT) {
+      const s = this.rockS(t);
+      return Math.max(0, Math.min(1, (s + 280) / 50, (170 - s) / 50));
+    }
+    laneBlocked(t = this.runT) {
+      return ((t % ROCK.period) + ROCK.period) % ROCK.period < ROCK.block;
+    }
+    // Giây còn lại tới lúc đổi trạng thái: đang chặn → bao lâu nữa trống; đang trống → bao lâu nữa quay lại
+    rockCountdown(t = this.runT) {
+      const u = ((t % ROCK.period) + ROCK.period) % ROCK.period;
+      return u < ROCK.block ? ROCK.block - u : ROCK.period - u;
+    }
+    satXY() {
+      return geoPos(this.headingDegrees());
+    }
+    // Các vật lạ đang có trên cảnh (Nâng cao); chế độ Bé chỉ có đám đá đứng yên
+    oddities() {
+      if (!this.advanced) return [{ kind: 'rock', name: 'thiên thạch', xy: geoPos(135, GEO.R + 10) }];
+      const list = ODDITIES.map(o => ({ kind: o.kind, name: o.name, xy: geoPos(o.deg, GEO.R + o.dr) }));
+      if (this.rockAlpha() > 0.4) list.push({ kind: 'rock', name: 'thiên thạch', xy: this.rockXY() });
+      return list;
+    }
+    // Vật lạ gần nhất trong tầm nhìn của vệ tinh
+    seen() {
+      const [x, y] = this.satXY();
+      let best = null,
+        bd = VIEW;
+      for (const o of this.oddities()) {
+        const d = Math.hypot(o.xy[0] - x, o.xy[1] - y);
+        if (d < bd) {
+          bd = d;
+          best = o;
+        }
+      }
+      return best;
+    }
+    // Đường phía trước bị thiên thạch chặn (hoặc sắp chặn trong 0,5 s) khi vệ tinh đang ở trước đường bay
+    pathBlocked() {
+      const h = this.headingDegrees();
+      if (!this.advanced) return this.motorDir > 0 && h >= 60 && h < 160 && !this.asteroidAvoided;
+      const ahead = h >= ROCK.lane - 95 && h < ROCK.lane + ROCK.hit;
+      return ahead && (this.laneBlocked() || this.laneBlocked(this.runT + 0.5));
+    }
+    needSensor() {
+      if (this.has('sensor')) return false;
+      if (!this.sensorHinted) {
+        this.sensorHinted = true;
+        this.log('warn', 'Khối này cần mắt cảm biến: hãy gắn gói Cảm biến ở chặng Sáng tạo.');
+        this.emit('needSensor');
+      }
+      return true;
+    }
+    matchIfEnd(i) {
+      let depth = 0;
+      for (let j = i + 1; j < this.prog.length; j++) {
+        if (this.prog[j].type === 'if_see') depth++;
+        else if (this.prog[j].type === 'if_end') {
+          if (!depth) return j;
+          depth--;
+        }
+      }
+      return -1;
+    }
+    takePhoto() {
+      const o = this.seen();
+      if (!o) {
+        this.log('info', 'Chụp ảnh: không có vật lạ trước camera, ảnh trống.');
+        this.emit('photo', { kind: null, from: this.satXY() });
+        return;
+      }
+      const first = !this.gallery.has(o.kind);
+      this.gallery.set(o.kind, o.name);
+      this.log('ok', `Chụp ảnh ${o.name} và gửi về trạm mặt đất.`);
+      this.emit('photo', { kind: o.kind, name: o.name, first, from: this.satXY() });
+      if (first) this.checkMissions();
     }
 
     // NV1: báo từ trình xem 3D khi đã đánh dấu lắp xong cả 28 bước
@@ -212,6 +341,11 @@
       this.melodyAlertRev = null;
       this.hazardDetected = false;
       this.hazardEncountered = false;
+      this.runT = 0;
+      this.waitedT = 0;
+      this.laneCrash = false;
+      this.sensorHinted = false;
+      this.lastSeenKind = null;
       this.running = run;
       if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
       if (window.SFX) window.SFX.init();
@@ -324,19 +458,59 @@
           continue;
         }
 
+        if (b.type === 'if_end') {
+          this.pc++;
+          continue;
+        }
+
+        // Nếu thấy vật lạ … Hết Nếu: cảm biến thấy vật thì làm các khối bên trong, không thì nhảy qua
+        if (b.type === 'if_see') {
+          const o = this.needSensor() ? null : this.seen();
+          if (o && o.kind !== this.lastSeenKind) this.log('warn', `Cảm biến thấy ${o.name}!`);
+          this.lastSeenKind = o ? o.kind : null;
+          if (o) this.pc++;
+          else {
+            const end = this.matchIfEnd(this.pc);
+            this.pc = end === -1 ? this.pc + 1 : end + 1;
+          }
+          continue;
+        }
+
+        // Đợi đường trống: đứng ở khối này cho tới khi phía trước không còn thiên thạch
+        if (b.type === 'wait_clear') {
+          if (!this.entered) {
+            this.entered = true;
+            this.blkT = 0;
+            if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
+            if (!this.needSensor() && this.pathBlocked()) this.log('warn', 'Thiên thạch đang chặn đường – đợi nó bay qua.');
+          }
+          if (this.has('sensor') && this.pathBlocked()) {
+            this.blkT += budget;
+            this.integrate(budget);
+            budget = 0;
+            break;
+          }
+          if (this.blkT > 0.2) this.log('ok', 'Đường đã trống, đi tiếp!');
+          this.entered = false;
+          this.pc++;
+          continue;
+        }
+
         if (b.type === 'sensor_obstacle') {
           if (!this.entered) {
             this.entered = true;
             this.blkT = 0;
             if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
             this.log('warn', this.has('sensor')
-              ? '🛡️ Đang quét: chờ vệ tinh đến gần vành đai thiên thạch (60°–110°).'
+              ? (this.advanced ? 'Đang quét: chờ vệ tinh đến gần đường bay thiên thạch.' : '🛡️ Đang quét: chờ vệ tinh đến gần vành đai thiên thạch (60°–110°).')
               : '🛡️ Cần gắn gói Cảm biến vật cản ở phần Sáng tạo 3D để nhận tín hiệu.');
             if (window.SFX) window.SFX.tone(660, 0.15);
           }
           if (this.has('sensor') && this.isApproachingHazard()) {
             this.hazardDetected = true;
-            this.log('warn', '🛡️ Phát hiện thiên thạch phía trước! Hãy đảo chiều hoặc phát Melody B rồi dừng.');
+            this.log('warn', this.advanced
+              ? 'Phát hiện đường bay thiên thạch phía trước! Dừng lại và đợi nó bay qua.'
+              : '🛡️ Phát hiện thiên thạch phía trước! Hãy đảo chiều hoặc phát Melody B rồi dừng.');
             this.entered = false;
             this.pc++;
             continue;
@@ -358,12 +532,15 @@
             this.log('info', `Melody ${b.tune}: Vệ tinh phát tín hiệu vi ba về trạm mặt đất trong 1s.`);
             if (b.tune === 'B') this.melodyBPlayed = true;
             this.emit('melody', b.tune);
+          } else if (b.type === 'photo') {
+            if (window.SFX) window.SFX.tone(1320, 0.08);
+            this.takePhoto();
           } else if (b.type === 'wait') {
             this.segStart = this.rev;
           }
         }
 
-        const dur = b.type === 'melody' ? 1.0 : (b.duration || 3.0);
+        const dur = b.type === 'melody' || b.type === 'photo' ? 1.0 : (b.duration || 3.0);
         const need = dur - this.blkT;
 
         if (budget < need) {
@@ -412,8 +589,9 @@
     }
 
     integrate(dt) {
+      if (this.running) this.runT += dt;
+      const previousRev = this.rev;
       if (this.motorOn) {
-        const previousRev = this.rev;
         const rps = (this.motorRpm() / 60) * this.ratio();
         this.rev += rps * dt * this.motorDir;
         this.motorRev += (this.motorRpm() / 60) * dt * this.motorDir;
@@ -425,7 +603,7 @@
         // Count a hazard crossing even if a long frame skips the entire arc.
         const crossedHazard = this.motorDir > 0 &&
           Math.floor(this.rev - 110 / 360) > Math.floor(previousRev - 110 / 360);
-        if (this.motorDir > 0 && !this.asteroidAvoided && !this.hazardEncountered &&
+        if (!this.advanced && this.motorDir > 0 && !this.asteroidAvoided && !this.hazardEncountered &&
             crossedHazard) {
           this.hazardEncountered = true;
           this.emit('crash');
@@ -437,11 +615,39 @@
           this.melodyAlertRev = this.rev;
         }
       }
+      if (this.advanced && this.running) this.rockStep(dt, previousRev);
       // Update asteroid tumbling
       if (this.asteroids) {
         for (const a of this.asteroids) {
           a.rot += a.spin * dt;
         }
+      }
+    }
+
+    // Nâng cao: đụng thiên thạch khi nó đang chặn đường; đợi nó qua rồi đi tiếp → NV5
+    rockStep(dt, previousRev) {
+      const h = this.headingDegrees();
+      const blocked = this.laneBlocked();
+      if (blocked && !this.motorOn && h >= ROCK.lane - 95 && h < ROCK.lane - ROCK.hit) this.waitedT += dt;
+      if (blocked && Math.abs(h - ROCK.lane) <= ROCK.hit && !this.laneCrash) {
+        this.laneCrash = true;
+        this.hazardEncountered = true;
+        this.emit('crash', 'rock');
+        this.log('warn', 'Vệ tinh đụng thiên thạch! Hãy dừng trước đường bay và đợi nó bay qua.');
+      }
+      const edge = (ROCK.lane + ROCK.hit) / 360;
+      if (this.motorDir > 0 && Math.floor(this.rev - edge) > Math.floor(previousRev - edge)) {
+        if (!this.laneCrash && this.waitedT >= 0.5) {
+          this.log('ok', 'Đã đợi thiên thạch bay qua rồi đi tiếp an toàn!');
+          this.emit('pass');
+          if (!this.rockPassed) {
+            this.rockPassed = true;
+            this.checkMissions();
+          }
+        }
+        this.laneCrash = false;
+        this.hazardEncountered = false;
+        this.waitedT = 0;
       }
     }
 
@@ -454,9 +660,13 @@
       const m3 = this.asteroidAvoided;
       // NV4: gắn gói nâng cấp ở xưởng sáng tạo và cho động cơ chạy trên sa bàn
       const m4 = this.upgrades.size > 0 && this.upgradeRun;
+      // Nâng cao – NV5: dừng trước đường bay, đợi thiên thạch qua rồi đi tiếp; NV6: trạm nhận được ảnh vật lạ
+      const m5 = this.rockPassed;
+      const m6 = this.gallery.size > 0;
 
       if (this.onMissionUpdate) {
-        this.onMissionUpdate({ m1, m2, m3, m4, allDone: m1 && m2 && m3 && m4,
+        this.onMissionUpdate({ m1, m2, m3, m4, m5, m6, allDone: m1 && m2 && m3 && m4,
+          photos: [...this.gallery.values()],
           avoidanceMethod: this.avoidanceMethod, wholeRevolutions: this.m3Achieved,
           upgrades: [...this.upgrades] });
       }
@@ -983,6 +1193,10 @@
         if (inBlock) {
           if (curBlock.type === 'melody') {
             text = `Khối Melody ${curBlock.tune}: Vệ tinh phát tín hiệu vi ba về trạm mặt đất trong 1.0 giây.`;
+          } else if (curBlock.type === 'photo') {
+            text = 'Khối Chụp ảnh: Vệ tinh chụp vật lạ phía trước và gửi ảnh về trạm mặt đất.';
+          } else if (curBlock.type === 'wait_clear') {
+            text = `Khối Đợi đường trống: thiên thạch còn chặn ${this.rockCountdown().toFixed(1)} giây nữa.`;
           } else if (curBlock.type === 'wait') {
             const curRevs = this.segStart !== null ? (this.rev - this.segStart).toFixed(2) : '0';
             text = `Khối Wait ${curBlock.duration}s: Vệ tinh đang quay trên quỹ đạo (đã đi ${curRevs} vòng).`;
@@ -1027,7 +1241,8 @@
       const mStepNote = document.getElementById('m-step-note');
       if (mStep) {
         if (inBlock) {
-          const dur = curBlock.type === 'melody' ? 1.0 : (curBlock.duration || 3.0);
+          const dur = curBlock.type === 'melody' || curBlock.type === 'photo' ? 1.0
+            : curBlock.type === 'wait_clear' ? this.blkT : (curBlock.duration || 3.0);
           const remain = Math.max(0, dur - this.blkT).toFixed(1);
           mStep.innerHTML = `${remain} <small>s</small>`;
           if (mStepNote) mStepNote.textContent = curBlock.name;
@@ -1109,5 +1324,9 @@
     }
   }
 
+  SimulationEngine.GEO = GEO;
+  SimulationEngine.ROCK = ROCK;
+  SimulationEngine.ODDITIES = ODDITIES;
+  SimulationEngine.VIEW = VIEW;
   window.SimulationEngine = SimulationEngine;
 })();

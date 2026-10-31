@@ -17,6 +17,11 @@
     obstacle: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><rect x="8" y="15" width="24" height="14" rx="3"/><circle cx="15" cy="22" r="2.8" fill="#fff"/><circle cx="25" cy="22" r="2.8" fill="#fff"/><path d="M14 10a8 8 0 0 1 12 0"/></svg>`,
     // Motor Power: đồng hồ tốc độ, số mức 1–8 ở giữa
     motorPower: p => `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M7 27a14 14 0 1 1 26 0"/><path d="M20 27l${(-7 + p * 1.75).toFixed(1)} -9" stroke-width="3.5"/><text x="20" y="38" text-anchor="middle" fill="#fff" stroke="none" font-family="Chakra Petch, sans-serif" font-weight="800" font-size="11">${p}</text></svg>`,
+    // Nâng cao: đợi đường trống (đồng hồ cát + mắt cảm biến), Nếu thấy vật lạ (hình thoi ?), Hết Nếu, chụp ảnh gửi về
+    waitClear: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h12M6 34h12M8 6v4c0 3 4 6 4 10s-4 7-4 10v4M16 6v4c0 3-4 6-4 10s4 7 4 10v4"/><rect x="21" y="14" width="15" height="12" rx="3"/><circle cx="25.5" cy="20" r="1.8" fill="#fff"/><circle cx="31.5" cy="20" r="1.8" fill="#fff"/></svg>`,
+    ifSee: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"><path d="M20 4l16 16-16 16L4 20z"/><text x="20" y="26.5" text-anchor="middle" fill="#fff" stroke="none" font-family="Chakra Petch, sans-serif" font-weight="800" font-size="17">?</text></svg>`,
+    ifEnd: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6l-6 14 6 14"/><path d="M18 20h16"/><path d="M28 14l6 6-6 6"/></svg>`,
+    photo: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"><path d="M5 13h7l3-5h10l3 5h7v19H5z"/><circle cx="20" cy="22" r="6"/><path d="M31 4l4-3M33 8h5" stroke-linecap="round" stroke-width="2.4"/></svg>`,
     touch: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><rect x="9" y="24" width="22" height="7" rx="2" fill="#fff"/><path d="M20 7v13M14 15l6 6 6-6"/></svg>`
   };
 
@@ -34,8 +39,14 @@
     wait: { type: 'wait', name: 'Wait', duration: 3, color: 'wait', label: 'Chờ' },
     display: { type: 'display', name: 'Display', icon: 'smile', color: 'display', label: 'Màn hình' },
     obstacle: { type: 'sensor_obstacle', name: 'Chờ vật cản', color: 'sensor', label: 'Chờ vật cản' },
-    touch: { type: 'sensor_touch', name: 'Wait Pressed', color: 'sensor', label: 'Chờ nút bấm' }
+    touch: { type: 'sensor_touch', name: 'Wait Pressed', color: 'sensor', label: 'Chờ nút bấm' },
+    // Nâng cao (cấp 2–3)
+    waitClear: { type: 'wait_clear', name: 'Đợi đường trống', color: 'sensor', label: 'Đợi đường trống' },
+    ifSee: { type: 'if_see', name: 'Nếu thấy vật lạ', color: 'control', label: 'Nếu thấy vật lạ' },
+    ifEnd: { type: 'if_end', name: 'Hết Nếu', color: 'control', label: 'Hết Nếu' },
+    photo: { type: 'photo', name: 'Chụp ảnh gửi về', color: 'display', label: 'Chụp ảnh & gửi' }
   };
+  const PRO_BLOCKS = ['waitClear', 'ifSee', 'photo'];
 
   class BlockEngine {
     constructor(containerId, toolboxId) {
@@ -89,14 +100,15 @@
       this.toolbox.innerHTML = '';
 
       const available = [
-        'melodyA', 'melodyB', 'highSpeed', 'motorPower', 'motorReverse', 'wait', 'motorStop', 'obstacle'
+        'melodyA', 'melodyB', 'highSpeed', 'motorPower', 'motorReverse', 'wait', 'motorStop', 'obstacle', ...PRO_BLOCKS
       ];
 
       available.forEach(key => {
         const tpl = BLOCK_TEMPLATES[key];
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = `zb-item zb-${tpl.color}`;
+        btn.className = `zb-item zb-${tpl.color}` + (PRO_BLOCKS.includes(key) ? ' pro-only' : '');
+        btn.dataset.key = key;
         btn.title = `Thêm khối ${tpl.name}`;
         
         let iconHtml = '';
@@ -110,6 +122,7 @@
         else if (tpl.type === 'stop') iconHtml = SVG_ICONS.motorStop;
         else if (tpl.type === 'wait') iconHtml = `<span class="zb-param-val">${tpl.duration || 3}s</span>`;
         else if (tpl.type === 'sensor_obstacle') iconHtml = SVG_ICONS.obstacle;
+        else iconHtml = iconOf(tpl);
 
         btn.innerHTML = `
           <div class="zb-icon-wrap">${iconHtml}</div>
@@ -119,6 +132,15 @@
 
         btn.addEventListener('click', () => {
           if (window.SFX) window.SFX.click();
+          if (tpl.type === 'if_see') {
+            // Khối Nếu luôn đi kèm khối Hết Nếu; chọn sẵn khối Nếu để các khối thêm sau nằm bên trong
+            const at = this.insertAt();
+            this.blocks.splice(at, 0, { ...tpl }, { ...BLOCK_TEMPLATES.ifEnd });
+            this.selected = at;
+            this.render();
+            this.notifyChange();
+            return;
+          }
           this.insertBlock({ ...tpl });
         });
 
@@ -126,18 +148,19 @@
       });
     }
 
-    insertBlock(blockData, index = -1) {
-      // Chèn trước khối Repeat End nếu có
-      if (index === -1) {
-        const endIdx = this.blocks.findIndex(b => b.type === 'repeatEnd');
-        if (endIdx !== -1) {
-          this.blocks.splice(endIdx, 0, blockData);
-        } else {
-          this.blocks.push(blockData);
-        }
-      } else {
-        this.blocks.splice(index, 0, blockData);
+    // Chỗ chèn khối mới: đang chọn khối "Nếu" thì vào trong (trước "Hết Nếu"), không thì trước Repeat End
+    insertAt() {
+      const sel = this.blocks[this.selected];
+      if (sel && sel.type === 'if_see') {
+        const end = matchIfEnd(this.blocks, this.selected);
+        if (end !== -1) return end;
       }
+      const endIdx = this.blocks.findIndex(b => b.type === 'repeatEnd');
+      return endIdx !== -1 ? endIdx : this.blocks.length;
+    }
+
+    insertBlock(blockData, index = -1) {
+      this.blocks.splice(index === -1 ? this.insertAt() : index, 0, blockData);
       this.render();
       this.notifyChange();
     }
@@ -146,7 +169,10 @@
       if (index >= 0 && index < this.blocks.length) {
         const b = this.blocks[index];
         // Không xóa Start hoặc Repeat End bắt buộc
-        if (b.type === 'start') return;
+        if (b.type === 'start' || b.type === 'if_end') return;
+        // Xóa khối Nếu thì xóa luôn khối Hết Nếu đi kèm (các khối bên trong giữ lại)
+        const end = b.type === 'if_see' ? matchIfEnd(this.blocks, index) : -1;
+        if (end !== -1) this.blocks.splice(end, 1);
         this.blocks.splice(index, 1);
         if (window.SFX) window.SFX.click();
         this.render();
@@ -205,10 +231,19 @@
     render() {
       if (!this.container) return;
       this.container.innerHTML = '';
+      // Khối nằm giữa "Nếu" và "Hết Nếu" được gạch chân màu cam
+      let depth = 0;
+      const inIf = this.blocks.map(b => {
+        if (b.type === 'if_end') depth = Math.max(0, depth - 1);
+        const inside = depth > 0;
+        if (b.type === 'if_see') depth++;
+        return inside;
+      });
 
       this.blocks.forEach((b, i) => {
         const el = document.createElement('div');
-        el.className = `zb-block zb-${b.color}` + (b.type === 'start' ? ' zb-block-start' : '') + (b.type === 'repeatEnd' ? ' zb-block-end' : '');
+        el.className = `zb-block zb-${b.color}` + (b.type === 'start' ? ' zb-block-start' : '') + (b.type === 'repeatEnd' ? ' zb-block-end' : '') +
+          (inIf[i] ? ' zb-in-if' : '');
         el.id = `code-block-${i}`;
         el.title = b.name;
         if (b.type === 'motor_power') el.dataset.power = b.power;
@@ -246,6 +281,8 @@
         } else if (b.type === 'sensor_obstacle') {
           iconContent = SVG_ICONS.obstacle;
           paramLabel = 'Chờ vật cản';
+        } else {
+          iconContent = iconOf(b);
         }
 
         // Nút xóa/dịch chỉ hiện ở khối vừa chạm (to, khó bấm nhầm bằng ngón tay)
@@ -254,7 +291,7 @@
           <div class="zb-badge-idx">${i + 1}</div>
           <div class="zb-inner-icon">${iconContent}</div>
           <span class="zb-text-tag">${b.name}</span>
-          ${b.type !== 'start' && b.type !== 'repeatStart' && b.type !== 'repeatEnd' ? `
+          ${b.type !== 'start' && b.type !== 'repeatStart' && b.type !== 'repeatEnd' && b.type !== 'if_end' ? `
             <button type="button" class="zb-del-btn" title="Xóa khối này" aria-label="Xóa khối ${b.name}">×</button>
           ` : ''}
           ${i > 1 && i < this.blocks.length - 1 ? `
@@ -349,7 +386,22 @@
     if (b.type === 'melody') return SVG_ICONS.melody(b.tune);
     if (b.type === 'motor') return b.speed === 'high' ? SVG_ICONS.motorHighCW : SVG_ICONS.motorLow;
     if (b.type === 'wait') return `<span class="zb-big-time">${b.duration}s</span>`;
+    if (b.type === 'wait_clear') return SVG_ICONS.waitClear;
+    if (b.type === 'if_see') return SVG_ICONS.ifSee;
+    if (b.type === 'if_end') return SVG_ICONS.ifEnd;
+    if (b.type === 'photo') return SVG_ICONS.photo;
     return '';
+  }
+  function matchIfEnd(blocks, i) {
+    let depth = 0;
+    for (let j = i + 1; j < blocks.length; j++) {
+      if (blocks[j].type === 'if_see') depth++;
+      else if (blocks[j].type === 'if_end') {
+        if (!depth) return j;
+        depth--;
+      }
+    }
+    return -1;
   }
   // Chương trình mẫu trong sách (ảnh "Lập trình.png" của Bài 9)
   function sampleProgram() {

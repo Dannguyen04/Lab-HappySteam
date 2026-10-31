@@ -46,12 +46,16 @@
       m2: { n: 2, title: 'Ghép khối giống hàng mẫu', text: 'Đặt các khối giống hàng mẫu mờ, rồi chạm khối Start màu vàng.' },
       m3: { n: 3, title: 'Tránh đám đá thiên thạch', text: 'Trước khi vệ tinh tới đám đá, hãy cho vệ tinh quay ngược lại hoặc dừng lại. Gợi ý: Motor Power mức 4 → Melody B → Stop.' },
       m4: { n: 4, title: 'Thử vệ tinh sáng tạo', text: 'Gắn thêm chi tiết ở chặng Sáng tạo, rồi quay lại chạy chương trình.', go: ['creative', 'Đến xưởng sáng tạo'] },
+      m5: { n: 5, title: 'Đợi thiên thạch bay qua', text: 'Thiên thạch bay ngang quỹ đạo 8 giây một lần và chặn đường 2,5 giây đầu. Cho vệ tinh dừng trước đường bay, đợi nó qua rồi chạy tiếp. Gợi ý: Motor Power → Chờ vật cản → Stop → Đợi đường trống → Motor Power. Hoặc tự tính số giây cho khối Wait.' },
+      m6: { n: 6, title: 'Chụp ảnh vật lạ gửi về trạm', text: 'Quanh quỹ đạo có vật lạ (dấu ?). Ghép: Motor Power → Nếu thấy vật lạ [Chụp ảnh & gửi] Hết Nếu, đặt trong vòng lặp. Ảnh sẽ hiện trên màn hình trạm.' },
       m1: { n: 1, title: 'Lắp xong vệ tinh', text: 'Bấm “Đã lắp xong bước này” ở cả 28 bước của chặng Lắp ráp.', go: ['assembly', 'Đến chặng lắp ráp'] }
     };
     function updateMissionCard() {
       const m = missionTracker.missions;
-      const key = ['m2', 'm3', 'm4', 'm1'].find(k => !m[k]);
-      const card = key ? CARDS[key] : { n: '✓', title: 'Xong cả 4 nhiệm vụ!', text: 'Em có thể tự sáng tạo chương trình mới cho vệ tinh.' };
+      const pro = document.documentElement.dataset.mode === 'pro';
+      const order = pro ? ['m2', 'm3', 'm4', 'm5', 'm6', 'm1'] : ['m2', 'm3', 'm4', 'm1'];
+      const key = order.find(k => !m[k]);
+      const card = key ? CARDS[key] : { n: '✓', title: `Xong cả ${order.length} nhiệm vụ!`, text: 'Em có thể tự sáng tạo chương trình mới cho vệ tinh.' };
       $('mc-num').textContent = card.n;
       $('mc-title').textContent = (key ? 'Nhiệm vụ ' + card.n + ': ' : '') + card.title;
       $('mc-text').textContent = card.text;
@@ -161,6 +165,10 @@
     function applyMode(mode) {
       document.documentElement.dataset.mode = mode;
       btnMode.textContent = mode === 'kid' ? 'Chế độ: Bé' : 'Chế độ: Nâng cao';
+      // Nâng cao (cấp 2–3): thiên thạch bay qua theo chu kỳ, vật lạ, chụp ảnh gửi về trạm (NV5, NV6)
+      simEngine.setAdvanced(mode === 'pro');
+      missionTracker.updateChips();
+      updateMissionCard();
       try {
         localStorage.setItem('zm9_mode', mode);
       } catch (e) {}

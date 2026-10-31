@@ -175,4 +175,40 @@ reversed.sim.setProgram([B.start, B.melody, B.reverse]);
 reversed.sim.checkMissions();
 assert.equal(reversed.sim.asteroidAvoided, false, 'Sửa chương trình phải xóa chứng nhận lần chạy cũ');
 
-console.log('PASS: hình học CAD gốc 61 linh kiện/32 mesh, 28 bước theo sách, mã/màu ZMROBO, 4 nhiệm vụ + Motor Power, 18 tình huống mô phỏng/chấm điểm.');
+// ---------- Nâng cao (cấp 2–3): thiên thạch bay qua theo chu kỳ, vật lạ, chụp ảnh ----------
+function runAdv(program, seconds, upgrades = []) {
+  const sim = new Sim('none');
+  const states = [];
+  sim.onMissionUpdate = state => states.push(state);
+  sim.setAdvanced(true);
+  sim.setUpgrades(upgrades);
+  sim.setProgram(program);
+  const events = [];
+  sim.onEvent = (type, data) => events.push(data && data.kind !== undefined ? type + ':' + data.kind : data ? type + ':' + data : type);
+  sim.start();
+  for (let t = 0; t < seconds; t += 0.02) sim.advance(Math.min(0.02, seconds - t));
+  sim.checkMissions();
+  return { sim, state: states.at(-1), events };
+}
+const P8 = { type: 'motor_power', power: 8 };
+assert.equal(new Sim('none').advanced, false, 'Mặc định là chế độ Bé (đám đá đứng yên)');
+const rush = runAdv([B.start, P8], 3);
+assert.ok(rush.events.includes('crash:rock') && !rush.state.m5, 'Không đợi thì đụng thiên thạch đang chặn đường: ' + rush.events);
+const waitSensor = runAdv([B.start, P8, B.sensor, B.stop, { type: 'wait_clear' }, P8], 4, ['sensor']);
+assert.ok(!waitSensor.events.includes('crash:rock') && waitSensor.events.includes('pass') && waitSensor.state.m5,
+  'Chờ vật cản → Stop → Đợi đường trống → chạy tiếp phải đạt NV5: ' + waitSensor.events);
+const waitTimed = runAdv([B.start, P8, { type: 'wait', duration: 0.5 }, B.stop, { type: 'wait', duration: 2 }, P8], 4);
+assert.ok(waitTimed.state.m5 && !waitTimed.events.includes('crash:rock'), 'Tự tính thời gian bằng Stop + Wait cũng đạt NV5: ' + waitTimed.events);
+const noSensor = runAdv([B.start, P8, { type: 'wait_clear' }], 0.5);
+assert.ok(noSensor.events.includes('needSensor'), 'Đợi đường trống khi chưa gắn cảm biến phải nhắc gắn gói Cảm biến');
+const emptyShot = runAdv([B.start, { type: 'photo' }], 1.1);
+assert.ok(emptyShot.events.includes('photo:null') && !emptyShot.state.m6, 'Chụp khi không có vật lạ: ảnh trống, chưa đạt NV6');
+const patrol = runAdv([B.start, { type: 'motor_power', power: 4 }, { type: 'repeatStart' }, { type: 'if_see' }, { type: 'photo' },
+  { type: 'if_end' }, { type: 'repeatEnd' }], 10, ['sensor']);
+assert.ok(patrol.state.m6 && patrol.sim.gallery.has('ufo') && patrol.sim.gallery.has('comet'),
+  'Nếu thấy vật lạ → Chụp ảnh trong vòng lặp phải gửi được ảnh về trạm: ' + [...patrol.sim.gallery.keys()]);
+assert.ok(patrol.state.photos.includes('vật thể lạ'), 'Danh sách ảnh gửi kèm kết quả');
+const skip = runAdv([B.start, { type: 'if_see' }, { type: 'photo' }, { type: 'if_end' }], 1.1, ['sensor']);
+assert.ok(!skip.events.some(e => e.startsWith('photo')), 'Không thấy vật lạ thì bỏ qua các khối trong Nếu');
+
+console.log('PASS: hình học CAD gốc 61 linh kiện/32 mesh, 28 bước theo sách, mã/màu ZMROBO, 4 nhiệm vụ + Motor Power, 18 tình huống mô phỏng/chấm điểm, 8 tình huống Nâng cao.');

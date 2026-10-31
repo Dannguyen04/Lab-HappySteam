@@ -517,3 +517,8 @@ html[data-mode="kid"] .bomtable td code { display: none; }
 .creative-preset { grid-template-columns: 24px 64px 1fr; }
 .creative-preset .cp-mark { grid-row: span 2; }
 .creative-preset .cp-pic { grid-row: span 2; width: 64px; height: 48px; }
+
+/* ---------- Nâng cao (cấp 2–3): khối nằm trong "Nếu thấy vật lạ … Hết Nếu", chip NV5–6 ---------- */
+.zb-block.zb-in-if { box-shadow: inset 0 -6px 0 var(--zb-control); }
+.zb-block.zb-in-if.is-selected { box-shadow: inset 0 -6px 0 var(--zb-control), 0 0 0 3px var(--surface), 0 0 0 5px var(--accent); }
+#chip-m5, #chip-m6 { border-style: dashed; }

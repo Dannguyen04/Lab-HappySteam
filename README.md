@@ -9,7 +9,8 @@
 3. **② Sáng tạo** (xưởng sáng tạo): mô hình vệ tinh hoàn chỉnh hiện trong 3D; chọn gói gợi ý (cánh pin kép, chảo ra-đa, cảm biến né thiên thạch) hoặc tự gắn chi tiết vào 4 vị trí (hai đầu cánh pin, mặt ngoài đầu vệ tinh, phía trước thân). Chi tiết mới rơi vào mô hình, bảng bên cạnh tính linh kiện cần lấy thêm và báo khi hộp kit không đủ. Bấm **Thử trong sa bàn** để mang tất cả tính năng sang chặng ③ (gắn được nhiều gói cùng lúc).
 4. Ở **③ Lập trình & thử**, thẻ nhiệm vụ cho biết việc cần làm, hàng mẫu mờ cho thấy chương trình trong sách. Chạm khối trong khay để thêm, chạm khối đã đặt để đổi số giây/nốt nhạc/mức tốc độ (nút ×, ◀ ▶ chỉ hiện ở khối đang chọn). Chương trình **chỉ chạy khi chạm khối Start màu vàng** (như phần mềm ZMrobo) **hoặc nút ▶**.
 5. Nút **Chế độ: Bé / Nâng cao** ở đầu trang: Bé (mặc định, lớp 1–2) ẩn số đo, tính toán, nhật ký và các công cụ chi tiết; Nâng cao (lớp 3–5, giáo viên) hiện đủ.
-6. Bấm nút giao diện trên thanh đầu trang để chuyển **Sáng/Tối**. Tiến độ các bước đã lắp, tên học sinh, lớp và giao diện được lưu cục bộ trong trình duyệt khi khả dụng.
+6. **Thử thách Nâng cao (cấp 2–3)**, chỉ hiện ở chế độ Nâng cao: thiên thạch không đứng yên mà bay ngang quỹ đạo 8 giây một lần (chặn đường 2,5 giây đầu, có đồng hồ đếm ngược); quanh quỹ đạo có vật lạ (sao chổi, mảnh vỡ, vật thể lạ). Thêm khối **Đợi đường trống**, **Nếu thấy vật lạ … Hết Nếu**, **Chụp ảnh & gửi**; ảnh hiện trên **Màn hình trạm**. Hai nhiệm vụ thêm: **NV5** dừng trước đường bay, đợi thiên thạch qua rồi đi tiếp (dùng cảm biến hoặc tự tính số giây Wait); **NV6** gửi ảnh vật lạ về trạm. NV5–6 không bắt buộc để nộp bài.
+7. Bấm nút giao diện trên thanh đầu trang để chuyển **Sáng/Tối**. Tiến độ các bước đã lắp, tên học sinh, lớp và giao diện được lưu cục bộ trong trình duyệt khi khả dụng.
 
 **Chạy offline:** Ứng dụng chính sử dụng HTML/CSS/JS và mô hình 3D đóng gói cùng thư mục, không tải thư viện hay font từ mạng. WebGL cần trình duyệt có hỗ trợ tăng tốc đồ họa; đọc hướng dẫn bằng giọng nói và hiệu ứng âm thanh tùy thuộc trình duyệt/thiết bị và thường chỉ khởi động sau tương tác người dùng. Tính năng gửi điểm về Google Sheets **cần Internet**.
 
@@ -58,6 +59,8 @@ function doPost(e) {
       data.asteroidAvoided ? 'Có' : 'Không',
       data.avoidanceMethod || '',
       data.upgrades || '',
+      data.rockWaited ? 'Có' : 'Không',
+      data.photos || '',
       data.verificationCode || ''
     ]);
     return ContentService.createTextOutput('OK');
@@ -67,7 +70,7 @@ function doPost(e) {
 }
 ```
 
-Hàng 1 của Sheet có thể đặt 11 tiêu đề tương ứng: **Thời gian | Họ tên | Lớp | Bài học | Điểm | Lắp 28 bước | Chương trình mẫu | Né thiên thạch | Cách né | Gói nâng cấp | Mã tham chiếu**.
+Hàng 1 của Sheet có thể đặt 13 tiêu đề tương ứng: **Thời gian | Họ tên | Lớp | Bài học | Điểm | Lắp 28 bước | Chương trình mẫu | Né thiên thạch | Cách né | Gói nâng cấp | NC: Đợi thiên thạch | NC: Ảnh gửi về | Mã tham chiếu**. Hai cột "NC" là thử thách Nâng cao (cấp 2–3), không tính vào điểm 4 nhiệm vụ.
 
 > **Đã dùng bản cũ (3 nhiệm vụ)?** Cột thay đổi từ 31/10/2026: hãy dán lại mã trên vào Apps Script và **triển khai phiên bản mới**, nếu không các cột Bánh răng/Melody B sẽ để trống.
 

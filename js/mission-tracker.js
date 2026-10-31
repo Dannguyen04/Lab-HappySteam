@@ -9,8 +9,13 @@
         m1: false, // Lắp xong 28 bước (tab Hướng dẫn lắp ráp)
         m2: false, // Lập trình đúng chương trình mẫu và chạy hết một vòng lặp
         m3: false, // Né thiên thạch thành công khi chạy mô phỏng
-        m4: false // Gắn gói nâng cấp sáng tạo và chạy trên sa bàn
+        m4: false, // Gắn gói nâng cấp sáng tạo và chạy trên sa bàn
+        // Nâng cao (cấp 2–3) – chỉ hiện ở chế độ Nâng cao, không bắt buộc để nộp bài
+        m5: false, // Dừng trước đường bay, đợi thiên thạch qua rồi đi tiếp
+        m6: false // Trạm mặt đất nhận được ảnh vật lạ
       };
+      this.core = ['m1', 'm2', 'm3', 'm4'];
+      this.photos = [];
       this.upgrades = [];
       this.allCompleted = false;
       this.avoidanceMethod = null;
@@ -53,12 +58,13 @@
       if (state.m3) this.avoidanceMethod = state.avoidanceMethod || this.avoidanceMethod;
       this.wholeRevolutions = !!state.wholeRevolutions;
       if (state.upgrades && state.upgrades.length) this.upgrades = state.upgrades;
+      if (state.photos && state.photos.length) this.photos = state.photos;
 
       if (newlyDone && window.SFX) window.SFX.ding();
 
       this.updateChips();
 
-      const done = keys.every(k => this.missions[k]);
+      const done = this.core.every(k => this.missions[k]);
       if (done && !this.allCompleted) {
         this.allCompleted = true;
         this.showVictory();
@@ -70,8 +76,10 @@
     updateChips() {
       const keys = Object.keys(this.missions);
       for (const k of keys) document.getElementById('chip-' + k)?.classList.toggle('is-done', this.missions[k]);
-      const count = keys.filter(k => this.missions[k]).length,
-        total = keys.length;
+      // Chế độ Bé đếm 4 nhiệm vụ chính; Nâng cao đếm thêm NV5, NV6
+      const shown = document.documentElement.dataset.mode === 'pro' ? keys : this.core;
+      const count = shown.filter(k => this.missions[k]).length,
+        total = shown.length;
       const summary = document.getElementById('mission-summary-badge');
       if (summary) {
         summary.textContent = count === total ? `Đạt ${total}/${total} nhiệm vụ` : `${count}/${total} nhiệm vụ`;
@@ -103,7 +111,7 @@
       const btn = document.getElementById('btn-submit-sheets');
       const statusText = document.getElementById('submit-status-msg');
 
-      if (!this.allCompleted || !Object.values(this.missions).every(Boolean)) {
+      if (!this.allCompleted || !this.core.every(k => this.missions[k])) {
         if (statusText) statusText.textContent = 'Em cần hoàn thành đủ 4 nhiệm vụ trước khi nộp bài.';
         return;
       }
@@ -119,12 +127,14 @@
         name: this.studentName,
         className: this.studentClass || 'Chưa điền',
         lesson: 'Bài 9: Thông tin liên lạc vũ trụ',
-        score: `${Object.values(this.missions).filter(Boolean).length}/4`,
+        score: `${this.core.filter(k => this.missions[k]).length}/4`,
         assemblyDone: this.missions.m1,
         sampleProgram: this.missions.m2,
         asteroidAvoided: this.missions.m3,
         avoidanceMethod: this.avoidanceMethod,
         upgrades: this.upgrades.join(', '),
+        rockWaited: this.missions.m5,
+        photos: this.photos.join(', '),
         verificationCode: document.getElementById('verify-code-output')?.textContent || ''
       };
 

@@ -165,6 +165,43 @@ async function main() {
     assert.match(await page.locator('#scene-toast-title').innerText(), /Giỏi quá/);
     assert.ok(await page.locator('#victory-modal').isVisible(), 'Đạt 4 nhiệm vụ phải hiện bảng hoàn thành');
     assert.match(await page.locator('#verify-code-output').innerText(), /^ZM9-/);
+
+    // ---- Nâng cao (cấp 2–3): NV5 đợi thiên thạch bay qua, NV6 chụp ảnh vật lạ gửi về trạm ----
+    await page.click('#btn-close-victory');
+    assert.ok(await page.locator('#chip-m5').isHidden(), 'Chế độ Bé không hiện NV5');
+    assert.ok(await page.locator('#block-toolbox button[title="Thêm khối Chụp ảnh gửi về"]').isHidden(), 'Chế độ Bé không có khối Nâng cao');
+    await page.click('#btn-mode');
+    await badgeHas('4/6');
+    assert.equal(await page.evaluate(() => window.simEngine.advanced), true, 'Nâng cao bật thiên thạch bay qua');
+    assert.match(await page.locator('#mc-title').innerText(), /Nhiệm vụ 5/);
+    await page.click('#tab-btn-creative');
+    await page.click('[data-preset="sensor"]');
+    await page.click('#creative-deploy');
+    const add = title => page.locator(`#block-toolbox button[title="Thêm khối ${title}"]`).click();
+    page.once('dialog', dialog => dialog.accept());
+    await page.click('#btn-clear-code');
+    for (const title of ['Motor Power', 'Chờ vật cản', 'Stop', 'Đợi đường trống', 'Motor Power']) await add(title);
+    await page.click('#btn-run-program');
+    await badgeHas('5/6');
+    assert.match(await page.locator('#mc-title').innerText(), /Nhiệm vụ 6/);
+    page.once('dialog', dialog => dialog.accept());
+    await page.click('#btn-clear-code');
+    await add('Motor Power');
+    for (let i = 0; i < 4; i++) await page.locator('#program-canvas-chain .zb-block[data-power]').click();
+    await add('Nếu thấy vật lạ');
+    await add('Chụp ảnh gửi về');
+    const chain = await page.locator('#program-canvas-chain .zb-block .zb-text-tag').allTextContents();
+    assert.deepEqual(chain, ['Start', 'Repeat Start', 'Motor Power', 'Nếu thấy vật lạ', 'Chụp ảnh gửi về', 'Hết Nếu', 'Repeat End'],
+      'Khối thêm sau khối Nếu phải nằm bên trong: ' + chain);
+    assert.equal(await page.locator('#program-canvas-chain .zb-in-if').count(), 1);
+    await page.click('#btn-run-program');
+    await badgeHas('6/6');
+    await page.waitForTimeout(1400);
+    await page.locator('#scene-wrap').screenshot({ path: path.join(shots, 'scene-advanced.png') });
+    await page.click('#btn-stop-program');
+    await page.click('#btn-mode');
+    await badgeHas('4/4');
+    assert.equal(await page.evaluate(() => window.simEngine.advanced), false);
     assert.deepEqual(errors, [], 'Không được có lỗi JavaScript trên desktop');
 
     // ---- Điện thoại 375 px ----
