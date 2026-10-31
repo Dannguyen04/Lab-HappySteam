@@ -19,7 +19,7 @@ async function main() {
   ].filter(Boolean).find(p => fs.existsSync(p));
   const browser = await chromium.launch({ headless: true, ...(executablePath ? { executablePath } : {}) });
   try {
-    const url = 'file:///' + path.join(path.resolve(__dirname, '..'), 'index.html').replace(/\\/g, '/');
+    const url = 'file:///' + path.join(path.resolve(__dirname, '..'), 'lop1-bai09.html').replace(/\\/g, '/');
     const shots = path.join(__dirname, 'screenshots');
     fs.mkdirSync(shots, { recursive: true });
     const stats = page => page.evaluate(() => window.robotViewer.stats());

@@ -16,7 +16,7 @@ const path = require('path');
     }
   });
 
-  const indexPath = path.resolve(__dirname, '../index.html');
+  const indexPath = path.resolve(__dirname, '../lop1-bai09.html');
   await page.goto('file:///' + indexPath.replace(/\\/g, '/'));
   await page.waitForTimeout(1000);
 

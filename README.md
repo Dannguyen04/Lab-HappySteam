@@ -1,10 +1,14 @@
-# PHÒNG LAB ZMROBO ẢO — BÀI 9: THÔNG TIN LIÊN LẠC VŨ TRỤ
+# PHÒNG LAB ZMROBO ẢO · HAPPY STEAM
 
-Ứng dụng học tập cho học sinh tiểu học: lắp mô hình vệ tinh 3D theo 28 bước của sách hướng dẫn chính thức, lập trình bằng khối và mô phỏng chuyển động. Giao diện tiếng Việt, chạy **trực tiếp từ tệp `index.html`**, không cần máy chủ, npm hay tài khoản.
+Ứng dụng học tập cho học sinh tiểu học (bộ ZMrobo Alpha 330): lắp mô hình 3D theo sách hướng dẫn, sáng tạo, lập trình bằng khối và mô phỏng. Giao diện tiếng Việt, chạy **trực tiếp từ tệp `index.html`**, không cần máy chủ, npm hay tài khoản.
+
+**Trang chọn bài (`index.html`):** chọn **Lớp 1–5 → Học kì I/II → bài học**. Danh mục bài nằm ở `js/catalog.js` (Lớp 1 đủ 35 tuần theo khung chương trình; Lớp 2–5 theo thư mục tài liệu hiện có). Bài đã làm xong mở được, các bài khác hiện mờ "Sắp có". Có thể gửi thẳng link một lớp/học kì: `index.html?lop=1&hk=2`. Hiện đã có **Lớp 1 · Bài 9 – Thông tin liên lạc vũ trụ** (`lop1-bai09.html`), phần dưới đây mô tả bài này.
+
+**Thêm một bài đã làm xong:** tạo trang `lopX-baiYY.html` (dựa trên `lop1-bai09.html`), rồi trong `js/catalog.js` điền `href` (và `cover`: ảnh 16:9 trong `assets/covers/`) cho bài đó. Kiểu bài trong danh mục: `model` (mô hình), `project` (dự án/trưng bày), `theory` (không có mô hình), `test` (kiểm tra).
 
 ## 1. Mở và sử dụng
 
-1. Giữ nguyên cấu trúc thư mục, mở `index.html` bằng **Chrome** hoặc **Edge**. Địa chỉ trên thanh trình duyệt có dạng `file:///.../Lab-HappySteam/index.html`.
+1. Giữ nguyên cấu trúc thư mục, mở `index.html` bằng **Chrome** hoặc **Edge**, chọn Lớp 1 → Học kì I → **Bài 9** (hoặc mở thẳng `lop1-bai09.html`). Nút "← Tất cả bài học" ở đầu trang bài để quay lại.
 2. Trang chia **ba chặng** theo tiết học (thanh dưới tiêu đề): **① Lắp ráp** – mô hình 3D 28 bước (kéo để xoay, linh kiện mới rơi vào vị trí, đố vui), bên phải là linh kiện của bước, **hình in của bước đó trong sách** và các công cụ xem; **② Sáng tạo**; **③ Lập trình & thử**. Ứng dụng nhớ chặng đang học.
 3. **② Sáng tạo** (xưởng sáng tạo): mô hình vệ tinh hoàn chỉnh hiện trong 3D; chọn gói gợi ý (cánh pin kép, chảo ra-đa, cảm biến né thiên thạch) hoặc tự gắn chi tiết vào 4 vị trí (hai đầu cánh pin, mặt ngoài đầu vệ tinh, phía trước thân). Chi tiết mới rơi vào mô hình, bảng bên cạnh tính linh kiện cần lấy thêm và báo khi hộp kit không đủ. Bấm **Thử trong sa bàn** để mang tất cả tính năng sang chặng ③ (gắn được nhiều gói cùng lúc).
 4. Ở **③ Lập trình & thử**, thẻ nhiệm vụ cho biết việc cần làm, hàng mẫu mờ cho thấy chương trình trong sách. Chạm khối trong khay để thêm, chạm khối đã đặt để đổi số giây/nốt nhạc/mức tốc độ (nút ×, ◀ ▶ chỉ hiện ở khối đang chọn). Chương trình **chỉ chạy khi chạm khối Start màu vàng** (như phần mềm ZMrobo) **hoặc nút ▶**.
@@ -82,11 +86,14 @@ Tiếp theo giáo viên chọn **Triển khai → Tùy chọn triển khai mới
 
 ```text
 Lab-HappySteam/
-├── index.html
+├── index.html                    # Trang chọn bài: Lớp → Học kì → Bài
+├── lop1-bai09.html               # Lớp 1 · Bài 9 – Thông tin liên lạc vũ trụ
 ├── README.md
 ├── css/
 │   └── lab.css                   # Giao diện "bệ thử" (cùng phong cách Bài 7)
 ├── js/
+│   ├── catalog.js                # Danh mục bài học Khối 1–5
+│   ├── home.js                   # Trang chọn bài
 │   ├── app.js
 │   ├── assembly-viewer.js
 │   ├── creative-lab.js           # Xưởng sáng tạo 3D
@@ -97,7 +104,8 @@ Lab-HappySteam/
 │   ├── blocks-engine.js
 │   ├── mission-tracker.js
 │   └── audio-sfx.js
-├── assets/official-assembly/      # Hình in từng bước của sách lắp
+├── assets/official-assembly/      # Hình in từng bước của sách lắp (Bài 9)
+├── assets/covers/                 # Ảnh thẻ bài trên trang chọn bài
 ├── references/
 │   ├── official/                  # PDF sách lắp (bản trên GitHub chỉ có file này)
 │   ├── original_models/           # File .io/.ldr gốc – chỉ ở máy
@@ -105,6 +113,7 @@ Lab-HappySteam/
 └── tests/
     ├── mission.test.js
     ├── ui.smoke.js
+    ├── home.smoke.js              # Trang chọn bài
     ├── legacy-browser-test.js
     └── screenshots/
 ```
@@ -121,8 +130,9 @@ node tests/mission.test.js
 # Nếu Playwright được cài ở thư mục node_modules bên ngoài:
 $env:NODE_PATH = "C:\duong-dan\node_modules"
 node tests/ui.smoke.js
+node tests/home.smoke.js
 ```
 
-Kiểm thử giao diện mở chính tệp `file:///index.html` trên desktop **1280×800** và mobile **375×667**, kiểm tra mô hình 3D, giao diện Sáng/Tối, nâng cấp, chương trình hoàn thành **4/4 nhiệm vụ** và ảnh chụp trong `tests/screenshots/`. Kết quả cuối cùng cần dựa trên lần chạy kiểm thử thực tế; nội dung này không khẳng định đã kiểm thử toàn bộ điện thoại, phiên bản trình duyệt hay thiết bị robot thật.
+Kiểm thử giao diện mở chính tệp `file:///lop1-bai09.html` (và trang chọn bài `index.html`) trên desktop **1280×800** và mobile **375×667**, kiểm tra mô hình 3D, giao diện Sáng/Tối, nâng cấp, chương trình hoàn thành **4/4 nhiệm vụ** và ảnh chụp trong `tests/screenshots/`. Kết quả cuối cùng cần dựa trên lần chạy kiểm thử thực tế; nội dung này không khẳng định đã kiểm thử toàn bộ điện thoại, phiên bản trình duyệt hay thiết bị robot thật.
 
 **Bản online (GitHub Pages):** https://dannguyen04.github.io/Lab-HappySteam/ – chạy giống hệt khi mở `index.html` trên máy. Repo chỉ chứa file cần để chạy app; tài liệu gốc từ Drive (giáo án, slide, PDF gốc), file mô hình `.io/.ldr` và bản sao lưu được giữ ở máy (xem `.gitignore`), nên muốn dựng lại `js/data-bai-09.js` cần có `references/original_models/model2.ldr` trên máy. Liên kết Google Sheets thực tế cần giáo viên cấu hình, kiểm tra riêng.

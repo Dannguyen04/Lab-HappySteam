@@ -522,3 +522,59 @@ html[data-mode="kid"] .bomtable td code { display: none; }
 .zb-block.zb-in-if { box-shadow: inset 0 -6px 0 var(--zb-control); }
 .zb-block.zb-in-if.is-selected { box-shadow: inset 0 -6px 0 var(--zb-control), 0 0 0 3px var(--surface), 0 0 0 5px var(--accent); }
 #chip-m5, #chip-m6 { border-style: dashed; }
+
+/* ---------- Trang chọn bài (index.html) và nút quay lại ở trang bài ---------- */
+.back-link { display: inline-block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: var(--accent); text-decoration: none; }
+.back-link:hover { text-decoration: underline; }
+.home-pick { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; }
+.grade-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.grade-tabs button { display: grid; gap: 2px; min-width: 104px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); text-align: left; cursor: pointer; }
+.grade-tabs button b { font: 700 20px/1.1 var(--f-display); }
+.grade-tabs button small { font: 600 11px/1.2 var(--f-mono); letter-spacing: .04em; color: var(--muted); }
+.grade-tabs button[aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.grade-tabs button[aria-selected="true"] small { color: inherit; opacity: .75; }
+.term-tabs { display: inline-flex; padding: 4px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); }
+.term-tabs button { border: 0; background: none; padding: 8px 18px; border-radius: 999px; font-weight: 600; cursor: pointer; color: var(--muted); }
+.term-tabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
+.home-count { margin: 0 0 10px; font: 600 12px/1.4 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.lesson-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+.lesson-card { display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: inherit; text-decoration: none; }
+.lesson-card.is-ready { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); box-shadow: 0 2px 0 color-mix(in srgb, var(--accent) 30%, transparent); }
+.lesson-card.is-ready:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0, 0, 0, .12); }
+.lesson-card.is-soon { opacity: .62; }
+.lc-cover { position: relative; aspect-ratio: 16 / 9; display: grid; place-items: center; background: var(--stage); border-bottom: 1px solid var(--line); }
+.lc-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.lc-cover[data-type="model"] { background: color-mix(in srgb, var(--zb-motor) 14%, var(--stage)); }
+.lc-cover[data-type="project"] { background: color-mix(in srgb, var(--zb-control) 16%, var(--stage)); }
+.lc-cover[data-type="theory"] { background: color-mix(in srgb, var(--zb-wait) 18%, var(--stage)); }
+.lc-cover[data-type="test"] { background: color-mix(in srgb, var(--zb-melody) 16%, var(--stage)); }
+.lc-num { font: 700 48px/1 var(--f-display); color: var(--muted); opacity: .55; }
+.lc-body { display: grid; gap: 6px; padding: 12px 14px 14px; flex: 1; align-content: start; }
+.lc-eyebrow { font: 600 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.lc-title { font: 700 17px/1.25 var(--f-display); }
+.lc-about { margin: 0; font-size: 13px; color: var(--muted); }
+.lc-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; padding-top: 6px; }
+.lc-type { font: 600 11px/1 var(--f-mono); padding: 5px 8px; border-radius: 999px; background: var(--sunk); color: var(--muted); }
+.lc-type[data-type="model"] { color: var(--zb-motor); }
+.lc-type[data-type="project"] { color: var(--zb-control); }
+.lc-type[data-type="theory"] { color: var(--ok); }
+.lc-type[data-type="test"] { color: var(--zb-melody); }
+.lc-go { font-size: 13px; font-weight: 700; color: var(--muted); }
+.is-ready .lc-go { color: var(--accent); }
+.home-foot { font-size: 12px; color: var(--muted); text-align: center; padding-top: 8px; }
+@media (max-width: 600px) {
+  .grade-tabs { display: grid; grid-template-columns: repeat(5, 1fr); width: 100%; }
+  .grade-tabs button { min-width: 0; padding: 8px 6px; text-align: center; }
+  .grade-tabs button b { font-size: 16px; }
+  .grade-tabs button small { display: none; }
+  .term-tabs { width: 100%; }
+  .term-tabs button { flex: 1; }
+  .lesson-grid { grid-template-columns: 1fr; gap: 8px; }
+  .lesson-card { flex-direction: row; }
+  .lc-cover { aspect-ratio: auto; width: 84px; flex: none; border-bottom: 0; border-right: 1px solid var(--line); }
+  .lc-num { font-size: 30px; }
+  .lc-body { gap: 3px; padding: 9px 12px; }
+  .lc-title { font-size: 15px; }
+  .lc-about { display: none; }
+  .is-ready .lc-about { display: block; }
+}
