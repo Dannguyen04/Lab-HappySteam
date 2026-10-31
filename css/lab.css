@@ -578,3 +578,11 @@ html[data-mode="kid"] .bomtable td code { display: none; }
   .lc-about { display: none; }
   .is-ready .lc-about { display: block; }
 }
+
+/* ---------- Bài 3: nút đưa tay trước cảm biến (cảnh sao Hỏa) ---------- */
+.hand-btn { position: absolute; left: 14px; bottom: 14px; z-index: 5; width: 64px; height: 64px; border-radius: 50%; border: 3px solid var(--ink); background: #fff; font-size: 32px; line-height: 1; cursor: pointer; box-shadow: 0 4px 0 rgba(0, 0, 0, .25); }
+.hand-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0, 0, 0, .25); }
+.hand-btn.is-waiting { border-color: var(--zb-sensor); animation: hand-pulse 1s ease-in-out infinite; }
+@keyframes hand-pulse { 50% { transform: scale(1.12); box-shadow: 0 0 0 10px color-mix(in srgb, var(--zb-sensor) 30%, transparent); } }
+@media (prefers-reduced-motion: reduce) { .hand-btn.is-waiting { animation: none; } }
+.scene-wrap[data-mode="robot"] .hand-btn { left: auto; right: 14px; bottom: 60px; }

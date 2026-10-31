@@ -2,9 +2,14 @@
 
 Ứng dụng học tập cho học sinh tiểu học (bộ ZMrobo Alpha 330): lắp mô hình 3D theo sách hướng dẫn, sáng tạo, lập trình bằng khối và mô phỏng. Giao diện tiếng Việt, chạy **trực tiếp từ tệp `index.html`**, không cần máy chủ, npm hay tài khoản.
 
-**Trang chọn bài (`index.html`):** chọn **Lớp 1–5 → Học kì I/II → bài học**. Danh mục bài nằm ở `js/catalog.js` (Lớp 1 đủ 35 tuần theo khung chương trình; Lớp 2–5 theo thư mục tài liệu hiện có). Bài đã làm xong mở được, các bài khác hiện mờ "Sắp có". Có thể gửi thẳng link một lớp/học kì: `index.html?lop=1&hk=2`. Hiện đã có **Lớp 1 · Bài 9 – Thông tin liên lạc vũ trụ** (`lop1-bai09.html`), phần dưới đây mô tả bài này.
+**Trang chọn bài (`index.html`):** chọn **Lớp 1–5 → Học kì I/II → bài học**. Danh mục bài nằm ở `js/catalog.js` (Lớp 1 đủ 35 tuần theo khung chương trình; Lớp 2–5 theo thư mục tài liệu hiện có). Bài đã làm xong mở được, các bài khác hiện mờ "Sắp có". Có thể gửi thẳng link một lớp/học kì: `index.html?lop=1&hk=2`. Hiện đã có **Lớp 1 · Bài 3 – Robot thám hiểm Milo** (`lop1-bai03.html`) và **Lớp 1 · Bài 9 – Thông tin liên lạc vũ trụ** (`lop1-bai09.html`); phần dưới đây mô tả Bài 9, Bài 3 tóm tắt ở mục "Bài 3".
 
-**Thêm một bài đã làm xong:** tạo trang `lopX-baiYY.html` (dựa trên `lop1-bai09.html`), rồi trong `js/catalog.js` điền `href` (và `cover`: ảnh 16:9 trong `assets/covers/`) cho bài đó. Kiểu bài trong danh mục: `model` (mô hình), `project` (dự án/trưng bày), `theory` (không có mô hình), `test` (kiểm tra).
+**Thêm một bài mới (khung dùng chung):**
+1. Giải nén `model2.ldr` từ file `.io` của bài, viết `scripts/baiXX-plan.js` (linh kiện từng bước theo sách), `scripts/baiXX-parts.js` (mã ZMROBO – dò bằng `RBB_Studio/io2rbb match`) và `scripts/generate-baiXX.js` (gọi `scripts/lib/cad-lesson.js`) → `js/data-bai-XX.js`.
+2. Viết `js/baiXX/lesson.js` (`window.LESSON`: nhiệm vụ, thẻ nhiệm vụ, khối lệnh và chương trình mẫu, hình sách, gói sáng tạo) và bộ mô phỏng + cảnh của bài (`js/baiXX/*`) có cùng giao diện với `SimulationEngine`/`ZMScene`.
+3. Tạo `lopX-baiYY.html` từ trang bài có sẵn, ảnh sách vào `assets/baiXX/`, rồi điền `href`/`cover` trong `js/catalog.js`. Kiểu bài trong danh mục: `model`, `project`, `theory`, `test`.
+
+**Bài 3 – Robot thám hiểm Milo:** 40 linh kiện CAD gốc, 22 bước theo sách (`assets/bai03/`). Một động cơ quay thẳng hai bánh: mức 8 ≈ 39,3 cm/giây. Chặng ③ là cảnh sao Hỏa: chạm Start, bấm ✋ để đưa tay trước cảm biến siêu âm (khối "Chờ vật cản"), robot chở mẫu cây từ Trạm A tới điểm B (80 cm). Nhiệm vụ: NV1 lắp 22 bước, NV2 chương trình mẫu (Start → Chờ vật cản → Quay nhanh → Chờ 3s → Dừng), NV3 dừng đúng B mà mẫu không rơi (từ mức 6, không có thùng chở thì mẫu rơi), NV4 gói sáng tạo (thùng chở, ăng-ten–đèn, pin mặt trời, tay gắp); Nâng cao NV5: điểm B đổi chỗ, chở đúng 3 vị trí. Hình cảnh đẹp do `js/bai03/art.js` (phiếu giao việc `docs/giao-viec/01-bai03-ve-canh-sao-hoa.md`); khi chưa có file này trang dùng hình đơn giản.
 
 ## 1. Mở và sử dụng
 
@@ -52,19 +57,15 @@ function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    const yes = v => (v === true ? 'Có' : v === false ? 'Không' : '');
     sheet.appendRow([
       data.timestamp || new Date().toISOString(),
       data.name || '',
       data.className || '',
       data.lesson || '',
       data.score || '',
-      data.assemblyDone ? 'Có' : 'Không',
-      data.sampleProgram ? 'Có' : 'Không',
-      data.asteroidAvoided ? 'Có' : 'Không',
-      data.avoidanceMethod || '',
-      data.upgrades || '',
-      data.rockWaited ? 'Có' : 'Không',
-      data.photos || '',
+      yes(data.m1), yes(data.m2), yes(data.m3), yes(data.m4), yes(data.m5), yes(data.m6),
+      data.details || '',
       data.verificationCode || ''
     ]);
     return ContentService.createTextOutput('OK');
@@ -74,9 +75,9 @@ function doPost(e) {
 }
 ```
 
-Hàng 1 của Sheet có thể đặt 13 tiêu đề tương ứng: **Thời gian | Họ tên | Lớp | Bài học | Điểm | Lắp 28 bước | Chương trình mẫu | Né thiên thạch | Cách né | Gói nâng cấp | NC: Đợi thiên thạch | NC: Ảnh gửi về | Mã tham chiếu**. Hai cột "NC" là thử thách Nâng cao (cấp 2–3), không tính vào điểm 4 nhiệm vụ.
+Hàng 1 của Sheet có thể đặt 13 tiêu đề tương ứng: **Thời gian | Họ tên | Lớp | Bài học | Điểm | NV1 | NV2 | NV3 | NV4 | NV5 | NV6 | Chi tiết | Mã tham chiếu**. Dùng chung cho mọi bài: cột "Bài học" cho biết bài nào, NV1–NV4 là nhiệm vụ chính của bài đó (xem thẻ nhiệm vụ trong trang bài), NV5–NV6 là thử thách Nâng cao (để trống nếu bài không có). "Chi tiết" ghi thêm cách làm, gói sáng tạo… của từng bài.
 
-> **Đã dùng bản cũ (3 nhiệm vụ)?** Cột thay đổi từ 31/10/2026: hãy dán lại mã trên vào Apps Script và **triển khai phiên bản mới**, nếu không các cột Bánh răng/Melody B sẽ để trống.
+> **Đã dán mã Apps Script bản trước?** Cột thay đổi từ 31/10/2026 (dùng chung cho nhiều bài): hãy dán lại mã trên vào Apps Script và **triển khai phiên bản mới**.
 
 Tiếp theo giáo viên chọn **Triển khai → Tùy chọn triển khai mới → Ứng dụng web**; chọn tài khoản thực thi và phạm vi người truy cập phù hợp, cấp quyền khi được hỏi. Sao chép URL **/exec** của ứng dụng web. Tại trang Lab, mở **⚙️ GV**, dán URL và bấm **Lưu cấu hình**. Thử nộp một bài mẫu rồi trực tiếp kiểm tra Sheet đã có hàng dữ liệu mới.
 
@@ -87,6 +88,7 @@ Tiếp theo giáo viên chọn **Triển khai → Tùy chọn triển khai mới
 ```text
 Lab-HappySteam/
 ├── index.html                    # Trang chọn bài: Lớp → Học kì → Bài
+├── lop1-bai03.html               # Lớp 1 · Bài 3 – Robot thám hiểm Milo
 ├── lop1-bai09.html               # Lớp 1 · Bài 9 – Thông tin liên lạc vũ trụ
 ├── README.md
 ├── css/
@@ -94,6 +96,9 @@ Lab-HappySteam/
 ├── js/
 │   ├── catalog.js                # Danh mục bài học Khối 1–5
 │   ├── home.js                   # Trang chọn bài
+│   ├── bai03/                    # Bài 3: lesson.js (cấu hình), rover-engine.js, mars-scene.js, art.js
+│   ├── bai09/lesson.js           # Bài 9: cấu hình (nhiệm vụ, khối lệnh, gói sáng tạo…)
+│   ├── data-bai-03.js
 │   ├── app.js
 │   ├── assembly-viewer.js
 │   ├── creative-lab.js           # Xưởng sáng tạo 3D
@@ -105,7 +110,10 @@ Lab-HappySteam/
 │   ├── mission-tracker.js
 │   └── audio-sfx.js
 ├── assets/official-assembly/      # Hình in từng bước của sách lắp (Bài 9)
+├── assets/bai03/                  # Hình từng bước sách lắp Bài 3
 ├── assets/covers/                 # Ảnh thẻ bài trên trang chọn bài
+├── scripts/                       # Dựng dữ liệu 3D: lib/cad-lesson.js (dùng chung), generate-*.js, *-plan.js, *-parts.js
+├── docs/giao-viec/                # Phiếu giao việc nhẹ cho công cụ AI khác
 ├── references/
 │   ├── official/                  # PDF sách lắp (bản trên GitHub chỉ có file này)
 │   ├── original_models/           # File .io/.ldr gốc – chỉ ở máy
@@ -114,6 +122,8 @@ Lab-HappySteam/
     ├── mission.test.js
     ├── ui.smoke.js
     ├── home.smoke.js              # Trang chọn bài
+    ├── bai03.test.js              # Bài 3: dữ liệu 3D + bộ mô phỏng
+    ├── bai03.smoke.js             # Bài 3: giao diện
     ├── legacy-browser-test.js
     └── screenshots/
 ```
@@ -131,6 +141,8 @@ node tests/mission.test.js
 $env:NODE_PATH = "C:\duong-dan\node_modules"
 node tests/ui.smoke.js
 node tests/home.smoke.js
+node tests/bai03.test.js
+node tests/bai03.smoke.js
 ```
 
 Kiểm thử giao diện mở chính tệp `file:///lop1-bai09.html` (và trang chọn bài `index.html`) trên desktop **1280×800** và mobile **375×667**, kiểm tra mô hình 3D, giao diện Sáng/Tối, nâng cấp, chương trình hoàn thành **4/4 nhiệm vụ** và ảnh chụp trong `tests/screenshots/`. Kết quả cuối cùng cần dựa trên lần chạy kiểm thử thực tế; nội dung này không khẳng định đã kiểm thử toàn bộ điện thoại, phiên bản trình duyệt hay thiết bị robot thật.

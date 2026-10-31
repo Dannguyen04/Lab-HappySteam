@@ -1,83 +1,15 @@
-// Xưởng sáng tạo Bài 9 (góp ý của thầy: "sáng tạo thêm từ mô hình 3D đã có hôm đó").
-// Học sinh chọn gói gợi ý hoặc tự gắn chi tiết vào các vị trí trên mô hình vệ tinh hoàn chỉnh; chi tiết mới hiện
-// ngay trong trình xem 3D (window.robotViewer.setCreative) và các tính năng được đưa sang sa bàn ở Tab 2.
-// Vị trí gắn tính từ chính dữ liệu 3D (khung cánh pin, tâm đầu vệ tinh, hướng cột anten, khung chữ H) –
-// là hình minh họa ý tưởng; các chốt nối nhỏ không vẽ.
+// Xưởng sáng tạo dùng chung (góp ý của thầy: "sáng tạo thêm từ mô hình 3D đã có hôm đó").
+// Học sinh chọn gói gợi ý hoặc tự gắn chi tiết vào các vị trí trên mô hình hoàn chỉnh; chi tiết mới hiện ngay
+// trong trình xem 3D (window.robotViewer.setCreative) và các tính năng được đưa sang sa bàn ở chặng ③.
+// Vị trí gắn tính từ chính dữ liệu 3D trong cấu hình của bài – là hình minh họa ý tưởng; chốt nối nhỏ không vẽ.
 (function () {
   'use strict';
 
-  const STORE = 'zm9.creative';
-  // Số lượng trong hộp kit ZM Alpha 330 (set2321A, theo thư viện RoboBuilder)
-  const KIT = { 'BP-3976': 2, 'BP-7011': 15, 'BP-7045': 2, 'BP-3992': 2, 'BP-7023': 6, 'BP-7012': 40, sensor: 1 };
-  const NAMES = {
-    'BP-3976': 'Khung 5×7 (cánh pin)',
-    'BP-7011': 'Chốt dài xanh dương',
-    'BP-7045': 'Bánh răng 40 răng (làm chảo)',
-    'BP-3992': 'Trục 5',
-    'BP-7023': 'Bạc chặn trục',
-    'BP-7012': 'Chốt đen',
-    sensor: 'Mô-đun cảm biến trong kit'
-  };
-  const FEATURES = {
-    solar: { icon: '⚡', text: 'Pin mặt trời kép: thêm năng lượng cho vệ tinh' },
-    radar: { icon: '📡', text: 'Chảo ra-đa: bắt sóng trạm mặt đất xa hơn' },
-    sensor: { icon: '🛡️', text: 'Cảm biến: phát hiện thiên thạch, dùng được khối "Chờ vật cản"' }
-  };
-  // Vị trí gắn và lựa chọn. parts: linh kiện thật cần lấy thêm; feature: tính năng mở ở sa bàn
-  const SLOTS = [
-    {
-      id: 'wingL',
-      name: 'Đầu cánh pin bên trái',
-      options: [{ id: 'frame', label: 'Khung 5×7', parts: { 'BP-3976': 1, 'BP-7011': 2 }, feature: 'solar' }]
-    },
-    {
-      id: 'wingR',
-      name: 'Đầu cánh pin bên phải',
-      options: [{ id: 'frame', label: 'Khung 5×7', parts: { 'BP-3976': 1, 'BP-7011': 2 }, feature: 'solar' }]
-    },
-    {
-      id: 'head',
-      name: 'Mặt ngoài đầu vệ tinh',
-      options: [
-        { id: 'dish', label: 'Chảo ra-đa', parts: { 'BP-7045': 1, 'BP-3992': 1, 'BP-7023': 1 }, feature: 'radar' },
-        { id: 'sensor', label: 'Cảm biến', parts: { sensor: 1, 'BP-7012': 2 }, feature: 'sensor' }
-      ]
-    },
-    {
-      id: 'front',
-      name: 'Phía trước thân',
-      options: [{ id: 'sensor', label: 'Cảm biến', parts: { sensor: 1, 'BP-7012': 2 }, feature: 'sensor' }]
-    }
-  ];
-  // Hình minh họa nhỏ cho từng gói (học sinh nhỏ nhận ra gói mà không cần đọc chữ)
-  const PICS = {
-    solar: '<svg viewBox="0 0 64 48" aria-hidden="true"><g fill="#3dc1dc" stroke="#0e6f8a" stroke-width="1.5"><rect x="2" y="17" width="13" height="14"/><rect x="15" y="17" width="13" height="14"/><rect x="36" y="17" width="13" height="14"/><rect x="49" y="17" width="13" height="14"/></g><rect x="27" y="15" width="10" height="18" rx="2" fill="#fff" stroke="#1e2a34" stroke-width="1.5"/><path d="M8 17v-6M21 17v-6M42 17v-6M55 17v-6" stroke="#f2be00" stroke-width="2" stroke-linecap="round"/></svg>',
-    radar: '<svg viewBox="0 0 64 48" aria-hidden="true"><path d="M14 30a18 18 0 0 0 36 0z" fill="#dfe6ec" stroke="#1e2a34" stroke-width="1.8"/><path d="M32 30V12" stroke="#1e2a34" stroke-width="2"/><circle cx="32" cy="11" r="3" fill="#e8892b"/><path d="M40 8a10 10 0 0 1 8 8M43 3a16 16 0 0 1 11 11" stroke="#2a9bd8" stroke-width="2.2" fill="none" stroke-linecap="round"/><rect x="26" y="38" width="12" height="7" rx="1.5" fill="#fff" stroke="#1e2a34" stroke-width="1.5"/></svg>',
-    sensor: '<svg viewBox="0 0 64 48" aria-hidden="true"><rect x="6" y="12" width="24" height="24" rx="4" fill="#fff" stroke="#1e2a34" stroke-width="1.8"/><circle cx="24" cy="24" r="5" fill="#1e2a34"/><path d="M36 16a12 12 0 0 1 0 16M42 11a19 19 0 0 1 0 26M48 6a26 26 0 0 1 0 36" stroke="#ea6ea9" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>'
-  };
-  const PRESETS = [
-    {
-      id: 'solar',
-      icon: '⚡',
-      title: 'Cánh pin kép',
-      text: 'Thêm 2 khung 5×7 nối dài hai cánh pin mặt trời.',
-      pick: { wingL: 'frame', wingR: 'frame' }
-    },
-    {
-      id: 'radar',
-      icon: '📡',
-      title: 'Chảo ra-đa',
-      text: 'Bánh răng 40 răng làm chảo thu sóng trên đầu vệ tinh.',
-      pick: { head: 'dish' }
-    },
-    {
-      id: 'sensor',
-      icon: '🛡️',
-      title: 'Cảm biến né thiên thạch',
-      text: 'Gắn mô-đun cảm biến phía trước để phát hiện vật cản.',
-      pick: { front: 'sensor' }
-    }
-  ];
+  // Cấu hình riêng của bài (js/baiXX/lesson.js): window.LESSON.creative = { store, kit, names, features, slots,
+  // presets, pics, placements(DATA, H) }. placements trả về { 'slot:option': [instance…] } tính từ dữ liệu 3D.
+  const CFG = (window.LESSON && window.LESSON.creative) || null;
+  if (!CFG) return;
+  const { store: STORE, kit: KIT, names: NAMES, features: FEATURES, slots: SLOTS, pics: PICS, presets: PRESETS } = CFG;
 
   // ---------- hình học (ma trận cột 3×3 như trình xem) ----------
   const add = (a, b) => a.map((v, k) => v + b[k]);
@@ -128,16 +60,10 @@
     return best;
   }
 
-  // Tính các mẫu linh kiện gắn thêm từ mô hình: { 'wingL:frame': [instance…], … }
+  // Công cụ hình học + tạo linh kiện gắn thêm, đưa cho hàm placements của từng bài
   function buildPlacements(DATA) {
-    const V = window.robotViewer,
-      all = DATA.instances,
-      by = name => all.filter(p => p.name === name),
-      head = all.filter(p => p.groupPath === 'Main/Head'),
-      base = all.filter(p => p.groupPath === 'Main'),
-      headC = V.box(head).center;
-    const make = (src, pos, rotation, meshes) => ({
-      name: src ? src.name : 'sensor',
+    const make = (src, pos, rotation, meshes, name) => ({
+      name: src ? src.name : name || 'extra',
       colorCode: src ? src.colorCode : null,
       meshes: meshes || src.meshes,
       rotation: rotation || src.rotation,
@@ -147,54 +73,10 @@
       joins: [],
       extra: true
     });
-    const out = {};
-    // Chi tiết gắn trên đầu vệ tinh quay cùng cột anten trong sa bàn (bộ truyền 'output' của trình xem)
-    const onHead = list => list.map(p => ({ ...p, drive: 'output' }));
-
-    // Cánh pin: khung mới nối tiếp ngay phía ngoài khung cũ
-    const frames = by('BP-3976')
-      .map(f => ({ f, c: V.box([f]).center }))
-      .sort((a, b) => a.c[0] - b.c[0]);
-    frames.forEach(({ f, c }, i) => {
-      const d = norm(sub(c, headC)),
-        width = reach(DATA, [f], d, c) + reach(DATA, [f], scale(d, -1), c);
-      out[(i === 0 ? 'wingL' : 'wingR') + ':frame'] = onHead([make(f, add(f.pos, scale(d, width)))]);
-    });
-
-    // Hướng cột anten đi vào đầu vệ tinh: trục 5 trên cùng (trục dài theo cột 0 của ma trận)
-    const mast = by('BP-3992')[0];
-    let n = norm(col(mast.rotation, 0));
-    if (dot(n, sub(headC, mast.pos)) < 0) n = scale(n, -1);
-    const face = add(headC, scale(n, reach(DATA, head, n, headC) + 0.002));
-    // Chảo ra-đa: trục 5 + bạc chặn + bánh răng 40 răng, cùng hướng n
-    const gear = by('BP-7045')[0],
-      bush = by('BP-7023')[0];
-    const gearAxis = [0, 1, 2].reduce((a, b) => (Math.abs(gear.rotation[b * 3 + 1]) > Math.abs(gear.rotation[a * 3 + 1]) ? b : a));
-    const up = col(gear.rotation, gearAxis)[1] > 0 ? [0, 1, 0] : [0, -1, 0];
-    const turn = rotateTo(up, n),
-      axleRot = rotateTo([1, 0, 0], n);
-    out['head:dish'] = onHead([
-      make(mast, add(face, scale(n, 0.025)), matMul(axleRot, [1, 0, 0, 0, 1, 0, 0, 0, 1])),
-      make(bush, add(face, scale(n, 0.008)), matMul(turn, bush.rotation)),
-      make(gear, add(face, scale(n, 0.03)), matMul(turn, gear.rotation))
-    ]);
-    // Cảm biến minh họa: khối 30 mm, mắt đọc theo +Z cục bộ
-    const sensorMeshes = DATA.creative && DATA.creative.sensor;
-    if (sensorMeshes) {
-      out['head:sensor'] = onHead([make(null, face, rotateTo([0, 1, 0], n), sensorMeshes)]);
-      const hframe = by('BP-7620')[0],
-        hb = V.box([hframe]).center,
-        bc = V.box(base).center;
-      let f = sub(hb, bc);
-      f[1] = 0;
-      f = norm(f);
-      const top = hb[1] + reach(DATA, [hframe], [0, 1, 0], hb);
-      const theta = Math.atan2(f[0], f[2]),
-        c = Math.cos(theta),
-        s = Math.sin(theta);
-      out['front:sensor'] = [make(null, [hb[0], top, hb[2]], [c, 0, -s, 0, 1, 0, s, 0, c], sensorMeshes)];
-    }
-    return out;
+    const H = { add, sub, scale, dot, cross, norm, col, fromCols, matMul, rotateTo, make,
+      reach: (list, d, c) => reach(DATA, list, d, c), box: list => window.robotViewer.box(list),
+      by: name => DATA.instances.filter(p => p.name === name) };
+    return CFG.placements(DATA, H);
   }
 
   // ---------- trạng thái & giao diện ----------
@@ -342,7 +224,7 @@
     feats.replaceChildren(
       ...(fs.length
         ? fs.map(f => el('li', 'feat-' + f, FEATURES[f].text))
-        : [el('li', 'muted', 'Vệ tinh cơ bản – chưa có tính năng mới.')])
+        : [el('li', 'muted', CFG.emptyText || 'Mô hình cơ bản – chưa có tính năng mới.')])
     );
     $('creative-count').textContent = rows.reduce((s, r) => s + r.n, 0);
     // Đồng hồ đo của xưởng
@@ -398,13 +280,13 @@
     };
   });
 
-  // Chi tiết đang chọn (không hoạt ảnh) để sa bàn hiện đúng vệ tinh của học sinh
+  // Chi tiết đang chọn (không hoạt ảnh) để sa bàn hiện đúng mô hình của học sinh
   function extras() {
     if (!placements && window.robotViewer && window.robotViewer.box) placements = buildPlacements(window.LESSON_3D_DATA);
     if (!placements) return [];
     return SLOTS.flatMap(slot => placements[slot.id + ':' + choice[slot.id]] || []);
   }
-  // Vệ tinh đã đưa vào sa bàn (chụp lúc bấm "Thử trong sa bàn")
+  // Mô hình đã đưa vào sa bàn (chụp lúc bấm "Thử trong sa bàn")
   let deployed = [];
   window.ZMCreative = { open, close, features, extras, deployed: () => deployed, choice: () => ({ ...choice }) };
 })();

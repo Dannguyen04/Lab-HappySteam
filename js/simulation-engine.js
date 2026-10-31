@@ -287,6 +287,11 @@
       if (badge) badge.textContent = list2.length ? list2.map(t => labels[t]).join(' · ') : 'Vệ tinh cơ bản';
     }
 
+    // Tư thế cho sa bàn 3D (js/sandbox-3d.js): cột anten (bánh răng 40) và bánh răng 8 quay ngược chiều nhau
+    pose3d() {
+      return { output: -this.rev * Math.PI * 2, motor: this.motorRev * Math.PI * 2 };
+    }
+
     ratio() {
       return GEAR[0] / GEAR[1];
     }

@@ -1,25 +1,19 @@
-// js/mission-tracker.js - Mission Auto-Grading & Google Sheets Reporting
+// js/mission-tracker.js – chấm nhiệm vụ tự động và gửi kết quả về Google Sheets.
+// Danh sách nhiệm vụ lấy từ window.LESSON.missions: core (bắt buộc để nộp bài) + pro (chỉ ở chế độ Nâng cao).
 (function() {
   'use strict';
 
   class MissionTracker {
     constructor() {
-      // 4 nhiệm vụ theo phiếu học tập Bài 9
-      this.missions = {
-        m1: false, // Lắp xong 28 bước (tab Hướng dẫn lắp ráp)
-        m2: false, // Lập trình đúng chương trình mẫu và chạy hết một vòng lặp
-        m3: false, // Né thiên thạch thành công khi chạy mô phỏng
-        m4: false, // Gắn gói nâng cấp sáng tạo và chạy trên sa bàn
-        // Nâng cao (cấp 2–3) – chỉ hiện ở chế độ Nâng cao, không bắt buộc để nộp bài
-        m5: false, // Dừng trước đường bay, đợi thiên thạch qua rồi đi tiếp
-        m6: false // Trạm mặt đất nhận được ảnh vật lạ
-      };
-      this.core = ['m1', 'm2', 'm3', 'm4'];
-      this.photos = [];
-      this.upgrades = [];
+      const L = window.LESSON || {};
+      const cfg = L.missions || { core: ['m1', 'm2', 'm3', 'm4'], pro: [] };
+      this.lesson = L;
+      this.core = cfg.core;
+      this.missions = {};
+      for (const k of [...cfg.core, ...(cfg.pro || [])]) this.missions[k] = false;
+      // Trạng thái mới nhất từ bộ mô phỏng (gói nâng cấp, cách làm…) – giữ giá trị khác rỗng gần nhất
+      this.state = {};
       this.allCompleted = false;
-      this.avoidanceMethod = null;
-      this.wholeRevolutions = false;
       this.studentName = localStorage.getItem('zm_student_name') || '';
       this.studentClass = localStorage.getItem('zm_student_class') || '';
       this.webhookUrl = localStorage.getItem('zm_teacher_webhook') || '';
@@ -52,13 +46,11 @@
     update(state) {
       const keys = Object.keys(this.missions);
       const newlyDone = keys.some(k => !this.missions[k] && state[k]);
-      // NV2–4 đã đạt thì giữ trong phiên làm bài (học sinh làm lần lượt, mỗi nhiệm vụ một chương trình);
+      // NV2 trở đi đã đạt thì giữ trong phiên làm bài (học sinh làm lần lượt, mỗi nhiệm vụ một chương trình);
       // NV1 theo tiến độ lắp hiện tại (bỏ đánh dấu bước thì mất)
       for (const k of keys) this.missions[k] = k === 'm1' ? !!state[k] : this.missions[k] || !!state[k];
-      if (state.m3) this.avoidanceMethod = state.avoidanceMethod || this.avoidanceMethod;
-      this.wholeRevolutions = !!state.wholeRevolutions;
-      if (state.upgrades && state.upgrades.length) this.upgrades = state.upgrades;
-      if (state.photos && state.photos.length) this.photos = state.photos;
+      for (const [k, v] of Object.entries(state))
+        if (!/^md$/.test(k) && v != null && v !== false && !(Array.isArray(v) && !v.length)) this.state[k] = v;
 
       if (newlyDone && window.SFX) window.SFX.ding();
 
@@ -102,7 +94,7 @@
         const student = codeSafe(this.studentName || 'HOCSINH').slice(0, 24);
         const cls = codeSafe(this.studentClass || 'LOP').slice(0, 12);
         const rand = Math.floor(1000 + Math.random() * 9000);
-        const code = `ZM9-${cls}-${student}-${rand}`;
+        const code = `${this.lesson.code || "ZM"}-${cls}-${student}-${rand}`;
         codeEl.textContent = code;
       }
     }
@@ -112,7 +104,7 @@
       const statusText = document.getElementById('submit-status-msg');
 
       if (!this.allCompleted || !this.core.every(k => this.missions[k])) {
-        if (statusText) statusText.textContent = 'Em cần hoàn thành đủ 4 nhiệm vụ trước khi nộp bài.';
+        if (statusText) statusText.textContent = `Em cần hoàn thành đủ ${this.core.length} nhiệm vụ trước khi nộp bài.`;
         return;
       }
 
@@ -126,15 +118,11 @@
         timestamp: new Date().toLocaleString('vi-VN'),
         name: this.studentName,
         className: this.studentClass || 'Chưa điền',
-        lesson: 'Bài 9: Thông tin liên lạc vũ trụ',
-        score: `${this.core.filter(k => this.missions[k]).length}/4`,
-        assemblyDone: this.missions.m1,
-        sampleProgram: this.missions.m2,
-        asteroidAvoided: this.missions.m3,
-        avoidanceMethod: this.avoidanceMethod,
-        upgrades: this.upgrades.join(', '),
-        rockWaited: this.missions.m5,
-        photos: this.photos.join(', '),
+        lesson: this.lesson.sheetName || document.title,
+        score: `${this.core.filter(k => this.missions[k]).length}/${this.core.length}`,
+        // Cột chung cho mọi bài: NV1…NV6 (true/false, null = bài không có nhiệm vụ này) + chi tiết riêng của bài
+        ...Object.fromEntries([1, 2, 3, 4, 5, 6].map(i => ['m' + i, 'm' + i in this.missions ? this.missions['m' + i] : null])),
+        details: this.lesson.details ? this.lesson.details(this) : '',
         verificationCode: document.getElementById('verify-code-output')?.textContent || ''
       };
 

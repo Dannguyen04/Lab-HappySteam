@@ -8,3 +8,5 @@ references/official/*
 !references/official/Bai9_Thong_tin_lien_lac_vu_tru.pdf
 tests/screenshots/
 node_modules/
+# Phiếu giao việc cho công cụ AI khác (chỉ dùng ở máy)
+docs/giao-viec/

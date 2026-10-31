@@ -46,10 +46,12 @@
     ifEnd: { type: 'if_end', name: 'Hết Nếu', color: 'control', label: 'Hết Nếu' },
     photo: { type: 'photo', name: 'Chụp ảnh gửi về', color: 'display', label: 'Chụp ảnh & gửi' }
   };
-  const PRO_BLOCKS = ['waitClear', 'ifSee', 'photo'];
 
   class BlockEngine {
-    constructor(containerId, toolboxId) {
+    // opts (từ window.LESSON.blocks): toolbox – khối trong khay; pro – khối chỉ hiện ở chế độ Nâng cao;
+    // sample – chương trình mẫu trong sách; empty – chương trình lúc mở trang. Mỗi khối: 'tên' hoặc ['tên', { thuộc tính }]
+    constructor(containerId, toolboxId, opts = {}) {
+      this.opts = opts;
       this.container = document.getElementById(containerId);
       this.toolbox = document.getElementById(toolboxId);
       this.blocks = [];
@@ -74,11 +76,9 @@
         this.onChangeCallback(this.blocks);
       }
     }
-
-    // Chương trình mẫu trong sách (ảnh "Lập trình.png" của Bài 9): phát âm A, quay nhanh 3 giây,
-    // phát âm B, quay tiếp 3 giây, lặp lại liên tục
+    // Chương trình mẫu trong sách của bài (window.LESSON.blocks.sample)
     loadDefaultProgram() {
-      this.blocks = sampleProgram();
+      this.blocks = this.sampleProgram();
       this.selected = -1;
       this.render();
       this.notifyChange();
@@ -86,11 +86,7 @@
 
     clearProgram() {
       this.selected = -1;
-      this.blocks = [
-        { ...BLOCK_TEMPLATES.start },
-        { ...BLOCK_TEMPLATES.repeatStart },
-        { ...BLOCK_TEMPLATES.repeatEnd }
-      ];
+      this.blocks = makeBlocks(this.opts.empty || ['start']);
       this.render();
       this.notifyChange();
     }
@@ -99,15 +95,14 @@
       if (!this.toolbox) return;
       this.toolbox.innerHTML = '';
 
-      const available = [
-        'melodyA', 'melodyB', 'highSpeed', 'motorPower', 'motorReverse', 'wait', 'motorStop', 'obstacle', ...PRO_BLOCKS
-      ];
+      const pro = this.opts.pro || [];
+      const available = [...(this.opts.toolbox || []), ...pro];
 
       available.forEach(key => {
         const tpl = BLOCK_TEMPLATES[key];
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = `zb-item zb-${tpl.color}` + (PRO_BLOCKS.includes(key) ? ' pro-only' : '');
+        btn.className = `zb-item zb-${tpl.color}` + (pro.includes(key) ? ' pro-only' : '');
         btn.dataset.key = key;
         btn.title = `Thêm khối ${tpl.name}`;
         
@@ -309,7 +304,7 @@
 
         el.addEventListener('click', (e) => {
           if (e.target.closest('.zb-del-btn') || e.target.closest('.zb-mv-btn')) return;
-          // Như phần mềm ZMrobo: chạm khối Start màu vàng để chạy (giáo án Bài 9)
+          // Như phần mềm ZMrobo: chạm khối Start màu vàng để chạy (giáo án)
           if (b.type === 'start') {
             if (this.onStartTap) this.onStartTap();
             return;
@@ -361,7 +356,7 @@
       if (!this.ghost) return;
       const sig = b => !b ? '' : b.type === 'melody' ? 'm' + b.tune : b.type === 'wait' ? 'w' + b.duration
         : b.type === 'motor' || b.type === 'motor_power' ? 'motor' : b.type;
-      const sample = sampleProgram();
+      const sample = this.sampleProgram();
       let right = 0;
       this.ghost.innerHTML = '';
       sample.forEach((b, i) => {
@@ -403,20 +398,14 @@
     }
     return -1;
   }
-  // Chương trình mẫu trong sách (ảnh "Lập trình.png" của Bài 9)
-  function sampleProgram() {
-    return [
-      { ...BLOCK_TEMPLATES.start },
-      { ...BLOCK_TEMPLATES.repeatStart },
-      { ...BLOCK_TEMPLATES.melodyA },
-      { ...BLOCK_TEMPLATES.highSpeed },
-      { ...BLOCK_TEMPLATES.wait, duration: 3 },
-      { ...BLOCK_TEMPLATES.melodyB },
-      { ...BLOCK_TEMPLATES.highSpeed },
-      { ...BLOCK_TEMPLATES.wait, duration: 3 },
-      { ...BLOCK_TEMPLATES.repeatEnd }
-    ];
+  // ['wait', { duration: 3 }] hoặc 'start' → khối mới từ mẫu
+  function makeBlocks(list) {
+    return list.map(k => (Array.isArray(k) ? { ...BLOCK_TEMPLATES[k[0]], ...k[1] } : { ...BLOCK_TEMPLATES[k] }));
   }
+  // Chương trình mẫu trong sách của bài (window.LESSON.blocks.sample)
+  BlockEngine.prototype.sampleProgram = function () {
+    return makeBlocks(this.opts.sample || ['start']);
+  };
 
   window.BlockEngine = BlockEngine;
   window.BLOCK_TEMPLATES = BLOCK_TEMPLATES;

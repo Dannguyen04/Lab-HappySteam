@@ -285,6 +285,8 @@ const gl = canvas ? canvas.getContext('webgl', { antialias: true, alpha: true, p
           }
         }
       return {
+        lo,
+        hi,
         center: lo.map((x, i) => (x + hi[i]) / 2),
         radius: Math.max(0.025, Math.hypot(...hi.map((x, i) => x - lo[i])) / 2)
       };
@@ -365,24 +367,34 @@ const gl = canvas ? canvas.getContext('webgl', { antialias: true, alpha: true, p
         e = 1 - Math.pow(1 - t, 3);
       return t >= 1 ? null : m.d.map((x, k) => p.pos[k] + x * (1 - e));
     }
-    // Sa bàn (Tab 2): quay bộ truyền theo chương trình. spin = { output: góc (rad) cột anten, motor: góc bánh răng 8 }
+    // Sa bàn (chặng ③): quay bộ truyền theo chương trình. spin = { output: góc (rad), motor: góc (rad), offset: [x, y, z] }
+    // Mỗi bộ truyền trong DATA.drive có point (điểm trên trục quay) và axis (hướng trục, vd. Bài 9 trục đứng
+    // của cột anten, Bài 3 trục ngang của bánh xe); offset dời cả mô hình (robot chạy trên sa bàn).
     let spin = null;
     const driveOf = new Map();
     if (DATA.drive)
-      for (const key of ['output', 'motor']) for (const i of DATA.drive[key].parts) driveOf.set(DATA.instances[i], key);
+      for (const key of ['output', 'motor']) if (DATA.drive[key]) for (const i of DATA.drive[key].parts) driveOf.set(DATA.instances[i], key);
+    // Ma trận quay (lưu theo cột) quanh trục đơn vị k góc a – công thức Rodrigues
+    function axisRot(k, a) {
+      const c = Math.cos(a),
+        sn = Math.sin(a),
+        t = 1 - c,
+        [x, y, z] = k;
+      return [t * x * x + c, t * x * y + sn * z, t * x * z - sn * y, t * x * y - sn * z, t * y * y + c, t * y * z + sn * x,
+        t * x * z + sn * y, t * y * z - sn * x, t * z * z + c];
+    }
     function poseOf(p) {
-      const at = placeOf(p),
-        key = spin && (p.drive || driveOf.get(p));
+      let at = placeOf(p);
+      const key = spin && (p.drive || driveOf.get(p)),
+        off = spin && spin.offset;
+      if (off) at = [at[0] + off[0], at[1] + off[1], at[2] + off[2]];
       if (!key) return { R: p.rotation, pos: at };
       const d = DATA.drive[key],
-        a = spin[key] || 0,
-        c = Math.cos(a),
-        sn = Math.sin(a);
-      // Quay quanh trục đứng (Y) qua tâm bánh răng: ma trận cột Ry
-      const Ry = [c, 0, -sn, 0, 1, 0, sn, 0, c];
-      const R = [0, 1, 2].flatMap(col => mul(Ry, [p.rotation[col * 3], p.rotation[col * 3 + 1], p.rotation[col * 3 + 2]]));
-      const rel = mul(Ry, [at[0] - d.point[0], at[1] - d.point[1], at[2] - d.point[2]]);
-      return { R, pos: [rel[0] + d.point[0], rel[1] + d.point[1], rel[2] + d.point[2]] };
+        Rk = axisRot(d.axis || [0, 1, 0], spin[key] || 0),
+        pt = off ? [d.point[0] + off[0], d.point[1] + off[1], d.point[2] + off[2]] : d.point;
+      const R = [0, 1, 2].flatMap(col => mul(Rk, [p.rotation[col * 3], p.rotation[col * 3 + 1], p.rotation[col * 3 + 2]]));
+      const rel = mul(Rk, [at[0] - pt[0], at[1] - pt[1], at[2] - pt[2]]);
+      return { R, pos: [rel[0] + pt[0], rel[1] + pt[1], rel[2] + pt[2]] };
     }
     function startAnim() {
       anim = animate && !capturing && moves(step).size ? { step, start: performance.now() } : null;
@@ -1128,7 +1140,7 @@ const gl = canvas ? canvas.getContext('webgl', { antialias: true, alpha: true, p
         ctx.fill();
         ctx.fillStyle = '#fff4e9';
         ctx.font = `600 20px ${font}`;
-        ctx.fillText('ZMROBO · Bài 9 · Theo sách hướng dẫn lắp ráp chính thức', 50, H - 43);
+        ctx.fillText('ZMROBO · ' + (DATA.label || 'Bài 9') + ' · Theo sách hướng dẫn lắp ráp chính thức', 50, H - 43);
       };
       try {
         rec.start(500);

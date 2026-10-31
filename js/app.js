@@ -1,12 +1,11 @@
-// js/app.js – ghép các phần của phòng lab Bài 9: ba chặng (lắp ráp, sáng tạo, lập trình & thử),
+// js/app.js – ghép các phần của một trang bài học: ba chặng (lắp ráp, sáng tạo, lập trình & thử),
 // giao diện sáng/tối, âm thanh, hộp thoại học sinh/giáo viên, hình sách và đồng hồ đo của chặng lắp ráp.
+// Phần riêng của bài lấy từ window.LESSON (js/baiXX/lesson.js): bộ mô phỏng, khối lệnh, nhiệm vụ, hình sách, khóa lưu.
 (function () {
   'use strict';
 
   const $ = id => document.getElementById(id);
-  // Hình in từng bước của sách (bản PDF này lược bước 20 – chỉ đổi góc nhìn, dùng hình bước 19)
-  const BOOK_PAGES = { 1: 2, 2: 2, 3: 3, 4: 3, 5: 4, 6: 4, 7: 5, 8: 5, 9: 6, 10: 7, 11: 7, 12: 8, 13: 8, 14: 9,
-    15: 9, 16: 10, 17: 10, 18: 11, 19: 11, 20: 11, 21: 12, 22: 12, 23: 13, 24: 13, 25: 14, 26: 14, 27: 15, 28: 15 };
+  const L = window.LESSON;
 
   document.addEventListener('DOMContentLoaded', () => {
     if (window.SFX) window.SFX.init();
@@ -14,11 +13,11 @@
     const missionTracker = new window.MissionTracker();
     missionTracker.init();
 
-    const simEngine = new window.SimulationEngine('sim-canvas-2d');
+    const simEngine = new window[L.Engine]('sim-canvas-2d');
     simEngine.init();
     window.simEngine = simEngine; // xưởng sáng tạo gửi gói nâng cấp sang sa bàn
 
-    const blockEngine = new window.BlockEngine('program-canvas-chain', 'block-toolbox');
+    const blockEngine = new window.BlockEngine('program-canvas-chain', 'block-toolbox', L.blocks);
     blockEngine.init();
     const ghostScore = () => {
       const g = $('program-ghost');
@@ -42,18 +41,11 @@
     };
 
     // Thẻ nhiệm vụ ở chặng ③: nhiệm vụ chưa xong đầu tiên, một câu ngắn
-    const CARDS = {
-      m2: { n: 2, title: 'Ghép khối giống hàng mẫu', text: 'Đặt các khối giống hàng mẫu mờ, rồi chạm khối Start màu vàng.' },
-      m3: { n: 3, title: 'Tránh đám đá thiên thạch', text: 'Trước khi vệ tinh tới đám đá, hãy cho vệ tinh quay ngược lại hoặc dừng lại. Gợi ý: Motor Power mức 4 → Melody B → Stop.' },
-      m4: { n: 4, title: 'Thử vệ tinh sáng tạo', text: 'Gắn thêm chi tiết ở chặng Sáng tạo, rồi quay lại chạy chương trình.', go: ['creative', 'Đến xưởng sáng tạo'] },
-      m5: { n: 5, title: 'Đợi thiên thạch bay qua', text: 'Thiên thạch bay ngang quỹ đạo 8 giây một lần và chặn đường 2,5 giây đầu. Cho vệ tinh dừng trước đường bay, đợi nó qua rồi chạy tiếp. Gợi ý: Motor Power → Chờ vật cản → Stop → Đợi đường trống → Motor Power. Hoặc tự tính số giây cho khối Wait.' },
-      m6: { n: 6, title: 'Chụp ảnh vật lạ gửi về trạm', text: 'Quanh quỹ đạo có vật lạ (dấu ?). Ghép: Motor Power → Nếu thấy vật lạ [Chụp ảnh & gửi] Hết Nếu, đặt trong vòng lặp. Ảnh sẽ hiện trên màn hình trạm.' },
-      m1: { n: 1, title: 'Lắp xong vệ tinh', text: 'Bấm “Đã lắp xong bước này” ở cả 28 bước của chặng Lắp ráp.', go: ['assembly', 'Đến chặng lắp ráp'] }
-    };
+    const CARDS = L.cards;
     function updateMissionCard() {
       const m = missionTracker.missions;
       const pro = document.documentElement.dataset.mode === 'pro';
-      const order = pro ? ['m2', 'm3', 'm4', 'm5', 'm6', 'm1'] : ['m2', 'm3', 'm4', 'm1'];
+      const order = L.cardOrder[pro ? 'pro' : 'kid'];
       const key = order.find(k => !m[k]);
       const card = key ? CARDS[key] : { n: '✓', title: `Xong cả ${order.length} nhiệm vụ!`, text: 'Em có thể tự sáng tạo chương trình mới cho vệ tinh.' };
       $('mc-num').textContent = card.n;
@@ -116,7 +108,7 @@
       }
       window.dispatchEvent(new Event('resize'));
       try {
-        localStorage.setItem('zm9_stage', stage);
+        localStorage.setItem(L.store + 'stage', stage);
       } catch (e) {}
     }
     window.ZMStages = { go, current: () => current };
@@ -136,7 +128,7 @@
     });
     let saved = 'assembly';
     try {
-      saved = localStorage.getItem('zm9_stage') || 'assembly';
+      saved = localStorage.getItem(L.store + 'stage') || 'assembly';
     } catch (e) {}
     go(STAGES[saved] ? saved : 'assembly');
 
@@ -144,20 +136,17 @@
     window.addEventListener('zm:step', e => {
       const d = e.detail;
       $('am-step').innerHTML = `${d.step}<small>/ ${d.total}</small>`;
-      $('am-step-s').textContent = d.group ? `${d.group[0].toUpperCase() + d.group.slice(1)} ${d.sub}/${d.subCount}` : d.joins ? 'Ghép cụm' : 'Thân vệ tinh';
+      $('am-step-s').textContent = d.group ? `${d.group[0].toUpperCase() + d.group.slice(1)} ${d.sub}/${d.subCount}` : d.joins ? 'Ghép cụm' : L.baseName;
       $('am-added').textContent = d.added;
       $('am-visible').innerHTML = `${d.visible}<small>/ ${d.parts}</small>`;
       $('am-done').innerHTML = `${d.done}<small>/ ${d.total}</small>`;
       $('am-done-bar').style.width = (100 * d.done) / d.total + '%';
-      const shown = d.page === 20 ? 19 : d.page;
-      $('book-img').src = `assets/official-assembly/step-${String(shown).padStart(2, '0')}.jpg`;
-      $('book-img').alt = `Hình bước ${shown} trong sách hướng dẫn lắp ráp`;
-      $('book-loc').textContent = `Bước ${d.page} · trang ${BOOK_PAGES[d.page]}`;
-      $('book-cap').textContent =
-        d.page === 20
-          ? 'Bước 20 chỉ xoay mô hình sang góc khác, không thêm linh kiện – sách in gộp với bước 19.'
-          : 'Ô nền xanh là linh kiện cần lấy, viền đỏ là chỗ lắp.';
-      $('book-pdf').href = `references/official/Bai9_Thong_tin_lien_lac_vu_tru.pdf#page=${BOOK_PAGES[d.page]}`;
+      const b = L.book(d);
+      $('book-img').src = b.src;
+      $('book-img').alt = b.alt;
+      $('book-loc').textContent = b.loc;
+      $('book-cap').textContent = b.cap;
+      $('book-pdf').href = b.pdf;
     });
 
     // ---------- Chế độ Bé / Nâng cao (mặc định Bé: ít chữ, không số đo) ----------
@@ -166,16 +155,16 @@
       document.documentElement.dataset.mode = mode;
       btnMode.textContent = mode === 'kid' ? 'Chế độ: Bé' : 'Chế độ: Nâng cao';
       // Nâng cao (cấp 2–3): thiên thạch bay qua theo chu kỳ, vật lạ, chụp ảnh gửi về trạm (NV5, NV6)
-      simEngine.setAdvanced(mode === 'pro');
+      if (simEngine.setAdvanced) simEngine.setAdvanced(mode === 'pro');
       missionTracker.updateChips();
       updateMissionCard();
       try {
-        localStorage.setItem('zm9_mode', mode);
+        localStorage.setItem(L.store + 'mode', mode);
       } catch (e) {}
     }
     let uiMode = 'kid';
     try {
-      uiMode = localStorage.getItem('zm9_mode') || 'kid';
+      uiMode = localStorage.getItem(L.store + 'mode') || 'kid';
     } catch (e) {}
     applyMode(uiMode);
     btnMode.addEventListener('click', () => {
