@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Trưng bày dự án · Lớp 1 · Happy STEAM</title>
+  <link rel="stylesheet" href="css/lab.css">
+</head>
+<body class="project-page">
+<div class="wrap">
+  <header class="top">
+    <div>
+      <a class="back-link" href="index.html">← Tất cả bài học</a>
+      <div class="eyebrow" id="show-eyebrow">Lớp 1 · Trưng bày tổng kết học kì I · Tuần 18</div>
+      <h1>Phòng trưng bày dự án</h1>
+      <p class="lede">Thầy/cô chọn các ảnh poster các nhóm đã tải về từ Sổ dự án. Chạm một poster để trình chiếu, cả lớp bình chọn bằng sao.</p>
+    </div>
+    <div class="tools-top">
+      <label class="iconbtn file-tool">Chọn ảnh poster<input type="file" accept="image/*" multiple id="show-files" hidden></label>
+      <button type="button" class="iconbtn" id="btn-toggle-theme">Giao diện tối</button>
+    </div>
+  </header>
+
+  <section class="panel">
+    <div class="panel-h"><h2>Poster các nhóm</h2><small id="show-count">Chưa có poster</small></div>
+    <div class="pad">
+      <div class="drop-zone" id="drop-zone">Kéo thả các file ảnh poster vào đây, hoặc bấm <b>Chọn ảnh poster</b>.</div>
+      <div class="show-grid" id="show-grid"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="rank-panel" hidden>
+    <div class="panel-h"><h2>Bình chọn</h2><small>Nhiều sao nhất ở trên</small></div>
+    <ol class="pad rank" id="rank"></ol>
+  </section>
+</div>
+
+<!-- Trình chiếu toàn màn hình -->
+<div class="slideshow" id="slideshow" role="dialog" aria-modal="true" aria-label="Trình chiếu poster" hidden>
+  <img id="slide-img" alt="">
+  <div class="slide-bar">
+    <button type="button" class="btn" id="slide-prev" aria-label="Poster trước">◀</button>
+    <span id="slide-name"></span>
+    <button type="button" class="btn btn-primary" id="slide-vote">⭐ Bình chọn <b id="slide-votes">0</b></button>
+    <button type="button" class="btn" id="slide-next" aria-label="Poster sau">▶</button>
+    <button type="button" class="btn" id="slide-close">Đóng</button>
+  </div>
+</div>
+
+<script src="js/audio-sfx.js"></script>
+<script src="js/project/showcase.js"></script>
+</body>
+</html>

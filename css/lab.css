@@ -632,3 +632,15 @@ html[data-mode="kid"] .bomtable td code { display: none; }
   .stages.stages-4 .stage-tab:nth-child(2) { border-right: 0; }
   .stages.stages-4 .stage-tab:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
 }
+/* Phòng trưng bày dự án (lop1-trung-bay.html) */
+.drop-zone { border: 2px dashed var(--line); border-radius: 12px; padding: 40px 16px; text-align: center; color: var(--muted); }
+.drop-zone.over { border-color: var(--accent); background: var(--accent-soft); }
+.show-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.show-card { display: grid; gap: 6px; padding: 8px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); cursor: pointer; text-align: center; font-weight: 600; }
+.show-card img { width: 100%; aspect-ratio: 1240 / 1754; object-fit: contain; background: var(--sunk); border-radius: 8px; }
+.show-card:hover { border-color: var(--accent); }
+.rank { margin: 0; padding-left: 36px; display: grid; gap: 6px; font-size: 16px; font-weight: 600; }
+.slideshow { position: fixed; inset: 0; z-index: 200; display: grid; grid-template-rows: 1fr auto; background: #0c1318; }
+.slideshow[hidden] { display: none; }
+.slideshow img { width: 100%; height: 100%; object-fit: contain; min-height: 0; }
+.slide-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; padding: 12px; color: #fff; font-weight: 600; }

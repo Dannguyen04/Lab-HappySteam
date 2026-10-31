@@ -46,7 +46,7 @@
     L(1, 1, 15, 'Chế tạo mô hình – Lập trình', 'project', { href: 'lop1-du-an.html?hk=1&chang=2', about: PROJECT_WATER + ': chế tạo, lập trình, kiểm tra và chỉnh sửa.' }),
     L(1, 1, 16, 'Nâng cấp ý tưởng, mô hình – Làm poster', 'project', { href: 'lop1-du-an.html?hk=1&chang=3', about: PROJECT_WATER + ': nâng cấp giải pháp, làm poster.' }),
     L(1, 1, 17, 'Chia sẻ giải pháp sáng tạo', 'project', { href: 'lop1-du-an.html?hk=1&chang=4', about: PROJECT_WATER + ': trình bày giải pháp.' }),
-    L(1, 1, 18, 'Trưng bày tổng kết học kì I', 'project', { about: 'Trưng bày các sản phẩm sáng tạo.' }),
+    L(1, 1, 18, 'Trưng bày tổng kết học kì I', 'project', { href: 'lop1-trung-bay.html?hk=1', about: 'Trưng bày các sản phẩm sáng tạo.' }),
     // ---------- Lớp 1 · Học kì II (tuần 19–35) ----------
     L(1, 2, 19, 'Ốc sên quý hiếm', 'model', { about: 'Lắp và lập trình chú ốc sên; mini game ốc sên siêu tốc.' }),
     L(1, 2, 20, 'Nhà tôi dưới biển – Dolphin', 'model', { about: 'Cá heo di chuyển và phát âm thanh.' }),
@@ -64,7 +64,7 @@
     L(1, 2, 32, 'Chế tạo mô hình – Lập trình', 'project', { href: 'lop1-du-an.html?hk=2&chang=2', about: PROJECT_WATER + ': chế tạo, lập trình, kiểm tra và chỉnh sửa.' }),
     L(1, 2, 33, 'Nâng cấp ý tưởng, mô hình – Làm poster', 'project', { href: 'lop1-du-an.html?hk=2&chang=3', about: PROJECT_WATER + ': nâng cấp giải pháp, làm poster.' }),
     L(1, 2, 34, 'Chia sẻ giải pháp sáng tạo', 'project', { href: 'lop1-du-an.html?hk=2&chang=4', about: PROJECT_WATER + ': trình bày giải pháp.' }),
-    L(1, 2, 35, 'Trưng bày tổng kết học kì II', 'project', { about: 'Trưng bày các sản phẩm sáng tạo.' }),
+    L(1, 2, 35, 'Trưng bày tổng kết học kì II', 'project', { href: 'lop1-trung-bay.html?hk=2', about: 'Trưng bày các sản phẩm sáng tạo.' }),
 
     // ---------- Lớp 2 ----------
     L(2, 1, 1, 'Truyền động bánh đai – dây đai', 'model', { about: 'Nhận biết bánh đai và dây đai; mô hình ròng rọc.' }),

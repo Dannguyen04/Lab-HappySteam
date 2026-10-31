@@ -13,7 +13,7 @@
 
 **Bài 10 – Cối xoay gió:** 41 linh kiện CAD gốc (file .io không chia cụm), 15 bước theo sách (`assets/bai10/`), cảm biến chạm BE-2257. Chặng ③ là cánh đồng gió: chạm Start, nhấn **nút đỏ** trên cảnh (hoặc phím cách) – mỗi lần nhấn cánh quạt đổi chậm → vừa → nhanh → dừng (56 / 94 / 150 vòng/phút); cánh quay sạc pin, pin có điện thì ngôi nhà sáng đèn. Nhiệm vụ: NV1 lắp 15 bước, NV2 chương trình mẫu (Start → Repeat → Chờ nhấn → Quay chậm → Chờ nhấn → Quay vừa → Chờ nhấn → Quay nhanh → Chờ nhấn → Dừng → Repeat End), NV3 sạc đầy pin, NV4 gói sáng tạo (cánh dài, thêm cánh, đèn, đuôi lái gió – cánh dài/thêm cánh sạc nhanh hơn); Nâng cao NV5: thời tiết đổi gió nhẹ → mạnh → bão → nhẹ, quay trong bão quá 1,5 giây thì gãy cánh, phải dừng rồi sạc đầy sau bão. Hình cảnh đẹp do `js/bai10/art.js` (phiếu giao việc `docs/giao-viec/02-bai10-ve-canh-canh-dong-gio.md`).
 
-**Bài dự án – Sổ dự án "Hành trình dòng nước"** (`lop1-du-an.html`, tuần 14–17 học kì I và 31–34 học kì II; thẻ tuần trên trang chọn bài mở đúng chặng bằng `?hk=1&chang=2`): làm theo nhóm (tên nhóm, lớp, 4 bạn với vai thợ lắp ráp / lập trình viên / họa sĩ / người trình bày). ① Ý tưởng – chọn vấn đề về nước bằng thẻ hình, chọn mô hình gốc từ các bài đã học, viết ý tưởng (có gợi ý), vẽ phác thảo hoặc chụp ảnh bản vẽ giấy; ② Chế tạo – đánh dấu việc chế tạo, chụp ảnh mô hình, ghép chương trình khối tự do, ghi các lần chạy thử; ③ Poster A4 tự ghép từ bài làm (tải ảnh PNG hoặc in); ④ Chia sẻ – tự đánh giá bằng sao, điều học được, nộp Google Sheets (cùng cột NV1–NV4 + Chi tiết). Bài làm tự lưu trên máy theo học kì, tuần sau mở lại làm tiếp.
+**Bài dự án – Sổ dự án "Hành trình dòng nước"** (`lop1-du-an.html`, tuần 14–17 học kì I và 31–34 học kì II; thẻ tuần trên trang chọn bài mở đúng chặng bằng `?hk=1&chang=2`): làm theo nhóm (tên nhóm, lớp, 4 bạn với vai thợ lắp ráp / lập trình viên / họa sĩ / người trình bày). ① Ý tưởng – chọn vấn đề về nước bằng thẻ hình, chọn mô hình gốc từ các bài đã học, viết ý tưởng (có gợi ý), vẽ phác thảo hoặc chụp ảnh bản vẽ giấy; ② Chế tạo – đánh dấu việc chế tạo, chụp ảnh mô hình, ghép chương trình khối tự do, ghi các lần chạy thử; ③ Poster A4 tự ghép từ bài làm (tải ảnh PNG hoặc in); ④ Chia sẻ – tự đánh giá bằng sao, điều học được, nộp Google Sheets (cùng cột NV1–NV4 + Chi tiết). Bài làm tự lưu trên máy theo học kì, tuần sau mở lại làm tiếp. **Phòng trưng bày** (`lop1-trung-bay.html?hk=1|2`, tuần 18 và 35): thầy/cô chọn hoặc kéo thả các ảnh poster nhóm đã tải về, xem lưới, trình chiếu toàn màn hình (mũi tên, vuốt), cả lớp bình chọn bằng sao; ảnh chỉ mở trong trình duyệt, không tải lên đâu.
 
 ## 1. Mở và sử dụng
 
@@ -96,6 +96,7 @@ Lab-HappySteam/
 ├── lop1-bai09.html               # Lớp 1 · Bài 9 – Thông tin liên lạc vũ trụ
 ├── lop1-bai10.html               # Lớp 1 · Bài 10 – Cối xoay gió
 ├── lop1-du-an.html               # Lớp 1 · Sổ dự án "Hành trình dòng nước" (?hk=1|2)
+├── lop1-trung-bay.html           # Lớp 1 · Phòng trưng bày poster (tuần 18, 35)
 ├── README.md
 ├── css/
 │   └── lab.css                   # Giao diện "bệ thử" (cùng phong cách Bài 7)
@@ -105,7 +106,7 @@ Lab-HappySteam/
 │   ├── bai03/                    # Bài 3: lesson.js (cấu hình), rover-engine.js, mars-scene.js, art.js
 │   ├── bai09/lesson.js           # Bài 9: cấu hình (nhiệm vụ, khối lệnh, gói sáng tạo…)
 │   ├── bai10/                    # Bài 10: lesson.js, wind-engine.js, wind-scene.js, art.js
-│   ├── project/project.js        # Sổ dự án
+│   ├── project/                  # project.js (Sổ dự án), showcase.js (Phòng trưng bày)
 │   ├── data-bai-10.js
 │   ├── data-bai-03.js
 │   ├── app.js

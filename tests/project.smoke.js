@@ -79,6 +79,21 @@ const { chromium } = require('playwright');
     assert.match(await page.locator('#proj-eyebrow').textContent(), /học kì II/);
     assert.equal(await page.locator('#mission-summary-badge').innerText(), '0/4 nhiệm vụ');
 
+    // Phòng trưng bày (tuần 18): nạp ảnh poster, trình chiếu, bình chọn
+    const poster = path.join(__dirname, 'screenshots', 'project-poster.png');
+    await page.goto(`file:///${root}/index.html?lop=1&hk=1`);
+    await page.click('a.lesson-card[href="lop1-trung-bay.html?hk=1"]');
+    await page.setInputFiles('#show-files', [poster, poster]);
+    assert.equal(await page.locator('.show-card').count(), 2);
+    await page.locator('.show-card').first().click();
+    assert.ok(await page.locator('#slideshow').isVisible());
+    await page.click('#slide-vote');
+    await page.click('#slide-vote');
+    await page.keyboard.press('ArrowRight');
+    assert.match(await page.locator('#slide-name').innerText(), /^2\/2/);
+    await page.keyboard.press('Escape');
+    assert.match(await page.locator('#rank').innerText(), /⭐ 2/);
+
     const mobile = await browser.newPage({ viewport: { width: 375, height: 760 }, isMobile: true });
     await mobile.goto(`file:///${root}/lop1-du-an.html?hk=1`);
     for (const tab of ['#tab-idea', '#tab-build', '#tab-poster', '#tab-share']) {
@@ -87,7 +102,7 @@ const { chromium } = require('playwright');
       assert.ok(d[0] <= d[1], `375px bị tràn ngang ở ${tab}: ${d}`);
     }
     assert.deepEqual(errors, [], 'Không có lỗi JavaScript / tệp thiếu');
-    console.log('PASS: Sổ dự án – mở đúng chặng từ trang chọn bài, nhóm, ý tưởng + bản vẽ, chế tạo + khối lệnh, poster, tự đánh giá, 4/4, lưu qua tuần, HK I/II riêng, không tràn 375px.');
+    console.log('PASS: Sổ dự án – mở đúng chặng từ trang chọn bài, nhóm, ý tưởng + bản vẽ, chế tạo + khối lệnh, poster, tự đánh giá, 4/4, lưu qua tuần, HK I/II riêng; phòng trưng bày trình chiếu + bình chọn; không tràn 375px.');
   } finally {
     await browser.close();
   }
