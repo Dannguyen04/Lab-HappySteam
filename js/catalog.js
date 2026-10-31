@@ -111,7 +111,11 @@
     L(3, 1, 5, 'Xe đổ rác', 'model', { about: 'Các loại xe chuyên dụng; mô hình xe thu gom rác công cộng.' }),
     L(3, 1, 6, 'Năng lượng sạch – Cối xoay gió', 'model', { about: 'Hình thành gió, năng lượng tái tạo; mô hình cối xoay gió.' }),
     L(3, 1, 7, 'Giao thông đường sắt', 'model', { about: 'Hệ thống giao thông đường sắt; mô hình xe tàu hỏa.' }),
-    L(3, 1, 8, 'Giải cứu máy bay', 'model', { about: 'Cấu tạo máy bay; mô hình máy bay và thử thách giải cứu.' }),
+    L(3, 1, 8, 'Giải cứu máy bay', 'model', {
+      href: 'bai.html?id=lop3-bai08',
+      cover: 'assets/covers/lop3-bai08.png',
+      about: 'Lắp giàn bay hai động cơ 30 bước; M1 bay vòng, M2 đổi độ cao, hạ thấp bay chậm để cứu 3 người gặp nạn.'
+    }),
     L(3, 1, 9, 'Vượt bão', 'model', { about: 'Thiên tai ảnh hưởng dân số; mô hình giúp Max và Mia vượt bão.' }),
     L(3, 1, 10, 'Robot thám hiểm sao Hỏa', 'model', { about: 'Robot tự hành khám phá sao Hỏa; mô hình robot thám hiểm sao Hỏa.' }),
     L(3, 1, 11, 'Sống trên sao Hỏa – Tìm kiếm nguồn nước', 'model', { about: 'Điều kiện sống trên sao Hỏa; mô hình máy bơm nước.' }),

@@ -13,7 +13,8 @@ const LESSONS = {
   'lop1/bai09': 'a1689c20d1f5279f763e298833cc58c850640ca253f28f76006437c7f1c57724',
   'lop1/bai10': '4aac0748bd58cd22461a93883dabc07208ba9045f0ac2fbeba4cb1ed235d1075',
   // Bài mới, chưa chốt mã băm (null): chỉ kiểm cách nạp + hình theo kit
-  'lop1/bai02': null
+  'lop1/bai02': null,
+  'lop3/bai08': null
 };
 
 const read = rel => fs.readFileSync(path.join(ROOT, rel), 'utf8');

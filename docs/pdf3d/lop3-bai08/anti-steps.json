@@ -1,0 +1,877 @@
+{
+  "source": "references/lop3/bai08/bai8.pdf",
+  "steps": [
+    {
+      "step": 1,
+      "page": 1,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "động cơ",
+          "size": "?",
+          "color": "trắng",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "đặt nằm ngang làm chi tiết cơ sở của cụm con 1, đĩa xoay tròn màu xanh ngọc úp xuống dưới, đầu có lỗ trục quay về phía trước",
+          "note": "Động cơ thông minh BE-3578 vỏ trắng, đĩa xoay xanh ngọc úp xuống dưới"
+        },
+        {
+          "kind": "chốt",
+          "size": "2",
+          "color": "đen",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "cắm vào 2 lỗ trên mặt lưng động cơ, ở vị trí gần cổ động cơ phía trước",
+          "note": "Chốt ma sát 2L màu đen (2780)"
+        }
+      ],
+      "assembly": "cụm con 1",
+      "view": "nhìn từ trước-phải, hơi trên cao",
+      "description_vi": "Lấy một động cơ màu trắng đặt nằm ngang, cắm hai chốt đen vào hai lỗ ở mặt trên gần đầu đĩa xoay."
+    },
+    {
+      "step": 2,
+      "page": 2,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "thanh",
+          "size": "5x7",
+          "color": "xanh ngọc",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "gắn dựng đứng lên 2 chốt đen ở bước 1; cạnh ngắn 5 lỗ cắm vào 2 chốt đen tại lỗ thứ 2 và thứ 4 của cạnh",
+          "note": "Khung chữ nhật 5×7 lỗ màu xanh ngọc (BP-3976(16)), khoang trong 3×5 lỗ dựng đứng chứa bộ truyền trục vít"
+        }
+      ],
+      "assembly": "cụm con 1",
+      "view": "nhìn từ trước-phải, hơi trên cao",
+      "description_vi": "Gắn khung chữ nhật màu xanh ngọc dựng đứng lên hai chốt đen trên lưng động cơ."
+    },
+    {
+      "step": 3,
+      "page": 3,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "trục",
+          "size": "8",
+          "color": "đen",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "xỏ thẳng đứng từ trên xuống qua lỗ giữa (lỗ 3) của cạnh trên khung 5×7, xâu qua các chi tiết bên trong khoang rồi cắm đầu dưới vào lỗ chữ thập của đĩa xoay động cơ",
+          "note": "Trục 8L màu đen (3707), có số 8 trong ô linh kiện"
+        },
+        {
+          "kind": "ống lót",
+          "size": "1",
+          "color": "xám",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "xâu vào trục 8L bên trong khoang khung: 1 cái sát đáy khung và 1 cái sát đỉnh khung",
+          "note": "Bạc/ống lót xám tiêu chuẩn 1L (3713)"
+        },
+        {
+          "kind": "ống lót",
+          "size": "1/2",
+          "color": "vàng",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "xâu vào trục 8L kẹp hai đầu trên và dưới của trục vít (ở giữa hai bạc xám)",
+          "note": "Bạc nửa (1/2 bush) màu vàng (32123a), định vị trục vít kẹp giữa hai bạc xám (trong phiếu giao việc gọi là giảm xóc vàng)"
+        },
+        {
+          "kind": "trục vít",
+          "size": "2",
+          "color": "xám",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "xâu vào giữa trục 8L bên trong khoang khung 5×7, nằm kẹp giữa hai bạc nửa màu vàng",
+          "note": "Trục vít bánh răng sâu màu xám (4716)"
+        }
+      ],
+      "assembly": "cụm con 1",
+      "view": "nhìn từ trước-phải, hơi trên cao",
+      "description_vi": "Luồn trục đen số 8 từ trên xuống qua khung, xâu lần lượt bạc xám, bạc vàng, trục vít, bạc vàng và bạc xám rồi cắm vào động cơ."
+    },
+    {
+      "step": 4,
+      "page": 4,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "chốt",
+          "size": "2",
+          "color": "xanh dương",
+          "qty": 4,
+          "confidence": "cao",
+          "attached_to": "cắm phần đầu chốt tròn vào 4 lỗ góc trong của khung 5×7 (2 lỗ ở cạnh trên và 2 lỗ ở cạnh dưới); đầu trục chữ thập nhô ngang ra hai bên sườn (trước và sau)",
+          "note": "Chốt chuyển trục 2L màu xanh dương có ma sát (43093)"
+        }
+      ],
+      "assembly": "cụm con 1",
+      "view": "nhìn từ trước-phải, hơi trên cao",
+      "description_vi": "Cắm 4 chốt trục màu xanh dương vào 4 góc bên trong của khung xanh ngọc để đầu trục chữ thập quay ra ngoài."
+    },
+    {
+      "step": 5,
+      "page": 5,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "thanh",
+          "size": "3x5",
+          "color": "xám",
+          "qty": 4,
+          "confidence": "cao",
+          "attached_to": "gắn vào 4 đầu trục chữ thập của các chốt trục xanh dương (2 thanh ốp mặt trước, 2 thanh ốp mặt sau khung); đỉnh tam giác nhọn chìa sang bên phải",
+          "note": "Thanh tam giác mỏng 3×5 màu xám (99773), làm giá đỡ trục quay cho bánh răng 24 răng"
+        }
+      ],
+      "assembly": "cụm con 1",
+      "view": "nhìn từ trước-phải, hơi trên cao",
+      "description_vi": "Gắn 4 thanh tam giác màu xám vào các đầu trục xanh dương ở mặt trước và mặt sau khung, đỉnh nhọn quay sang phải."
+    },
+    {
+      "step": 6,
+      "page": 6,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "trục",
+          "size": "9",
+          "color": "xám",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "luồn nằm ngang qua lỗ đỉnh của các thanh tam giác xám và lỗ bên cạnh khung 5×7",
+          "note": "Trục 9L màu xám (60485), có số 9 trong ô linh kiện"
+        },
+        {
+          "kind": "bánh răng",
+          "size": "24 răng",
+          "color": "xám đậm",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "xâu vào giữa trục 9L, đặt ăn khớp trực tiếp vào trục vít xám ở bên trong khung",
+          "note": "Bánh răng 24 răng màu xám đậm (3648b)"
+        },
+        {
+          "kind": "khớp nối",
+          "size": "2",
+          "color": "xám",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "xâu vào trục 9L kẹp hai bên bánh răng 24 răng (giữa bánh răng và thanh tam giác xám)",
+          "note": "Ống nối chốt tròn 2L màu xám (62462), giữ bánh răng 24 răng định vị đúng tâm ăn khớp với trục vít"
+        }
+      ],
+      "assembly": "cụm con 1",
+      "view": "nhìn từ trước-phải, hơi trên cao",
+      "description_vi": "Luồn trục xám số 9 qua các thanh tam giác, xâu ống nối xám, bánh răng 24 răng ăn khớp với trục vít và thêm ống nối xám."
+    },
+    {
+      "step": 7,
+      "page": 7,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "khớp nối",
+          "size": "2",
+          "color": "đen",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "lỗ chữ thập gắn vào 2 đầu thò ra của trục 9L ở mặt trước và mặt sau; lỗ tròn quay sang bên phải",
+          "note": "Khối nối 1×2 lỗ trục-chốt màu đen (60483), đóng vai trò tay đòn quay truyền lực"
+        },
+        {
+          "kind": "chốt",
+          "size": "2",
+          "color": "xám",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "cắm vào lỗ tròn của 2 khối nối 1×2 đen, đầu chốt hướng ra phía trước và phía sau",
+          "note": "Chốt xoay trơn không ma sát 2L màu xám (3673)"
+        }
+      ],
+      "assembly": "cụm con 1",
+      "view": "nhìn từ trước-phải, hơi trên cao",
+      "description_vi": "Gắn hai khối nối đen vào hai đầu trục 9 rồi cắm hai chốt xám trơn vào lỗ còn lại của khối nối."
+    },
+    {
+      "step": 8,
+      "page": 8,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "thanh",
+          "size": "9",
+          "color": "xanh ngọc",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "lỗ đầu tiên ở đáy gắn vào chốt xám không ma sát trên khối nối đen ở bước 7, thanh dựng đứng hướng lên trên",
+          "note": "Thanh thẳng 9 lỗ màu xanh ngọc (BP-7526A(16) / Beam 9M), làm 2 thanh nâng/cột đỡ di động"
+        }
+      ],
+      "assembly": "cụm con 1",
+      "view": "nhìn từ trước-phải, hơi trên cao",
+      "description_vi": "Gắn hai thanh xanh ngọc 9 lỗ dựng đứng vào hai chốt xám trên tay đòn."
+    },
+    {
+      "step": 9,
+      "page": 9,
+      "view_only": true,
+      "new_parts": [],
+      "assembly": "cụm con 1",
+      "view": "nhìn từ trước-phải, hơi trên cao",
+      "description_vi": "Xoay thử cơ cấu bánh răng và trục vít để quan sát chuyển động nâng hạ của hai thanh xanh ngọc."
+    },
+    {
+      "step": 10,
+      "page": 10,
+      "view_only": true,
+      "new_parts": [],
+      "assembly": "cụm con 1",
+      "view": "nhìn từ trước-phải, hơi trên cao (góc mở rộng)",
+      "description_vi": "Quan sát và kiểm tra độ trơn tru của toàn bộ cụm động cơ nâng hạ vừa hoàn thành."
+    },
+    {
+      "step": 11,
+      "page": 11,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "động cơ",
+          "size": "?",
+          "color": "trắng",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "đặt nằm ngang làm chi tiết cơ sở của cụm con 2, đĩa xoay màu xanh ngọc úp xuống dưới, đầu có lỗ trục quay về phía trước",
+          "note": "Động cơ thông minh thứ hai (BE-3578), dùng để quay cần treo máy bay"
+        },
+        {
+          "kind": "chốt",
+          "size": "2",
+          "color": "đen",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "cắm vào 2 lỗ tròn phía trước trên mặt lưng động cơ",
+          "note": "Chốt ma sát 2L đen (2780)"
+        },
+        {
+          "kind": "chốt",
+          "size": "2",
+          "color": "xám",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "cắm vào 2 lỗ bên hông phía sau của động cơ (mỗi bên 1 chốt)",
+          "note": "Chốt trơn 2L xám (3673), dùng để liên kết với hai thanh dài xanh ngọc ở bước 24"
+        },
+        {
+          "kind": "chốt",
+          "size": "3",
+          "color": "vàng cát",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "cắm ngang xuyên qua lỗ bên hông ở phần cổ phía trước của động cơ, thò đều sang hai bên",
+          "note": "Chốt dài 3L màu tan/vàng cát có gờ (32556)"
+        }
+      ],
+      "assembly": "cụm con 2",
+      "view": "nhìn từ trước-phải, hơi trên cao",
+      "description_vi": "Lấy động cơ thứ hai, cắm 2 chốt đen lên lưng, 2 chốt xám ở hông sau và 2 chốt dài màu vàng cát xuyên qua cổ động cơ."
+    },
+    {
+      "step": 12,
+      "page": 12,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "thanh",
+          "size": "3",
+          "color": "vàng",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "gắn đứng ở 2 bên cổ động cơ: lỗ trên gắn vào chốt đen bước 11, lỗ dưới xỏ vào chốt dài 3L màu tan bước 11",
+          "note": "Thanh thẳng 3 lỗ màu vàng (32523 / BP-7523A)"
+        },
+        {
+          "kind": "khớp nối",
+          "size": "2",
+          "color": "xám",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "gắn vào đầu thò ra của chốt dài 3L màu tan ở hai bên thanh vàng",
+          "note": "Ống nối chốt tròn 2L màu xám (62462)"
+        },
+        {
+          "kind": "chốt",
+          "size": "2",
+          "color": "xám",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "cắm vào đầu ngoài của hai ống nối tròn màu xám, hướng sang hai bên",
+          "note": "Chốt xoay không ma sát 2L màu xám (3673), dùng để đón đỉnh hai thanh 9L ở bước 23"
+        }
+      ],
+      "assembly": "cụm con 2",
+      "view": "nhìn từ trước-phải, hơi trên cao",
+      "description_vi": "Gắn hai thanh vàng 3 lỗ vào hai bên cổ động cơ, thêm hai ống nối xám và hai chốt xám nhô sang hai bên."
+    },
+    {
+      "step": 13,
+      "page": 13,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "chốt",
+          "size": "2",
+          "color": "đen",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "cắm vào 2 lỗ trên lưng động cơ, nằm ngay sau lỗ trục xanh ngọc của động cơ",
+          "note": "Chốt ma sát 2L màu đen (2780)"
+        }
+      ],
+      "assembly": "cụm con 2",
+      "view": "nhìn từ trước-phải, hơi trên cao",
+      "description_vi": "Cắm thêm hai chốt đen vào hai lỗ trên lưng động cơ ngay phía sau lỗ trục."
+    },
+    {
+      "step": 14,
+      "page": 14,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "thanh",
+          "size": "7",
+          "color": "trắng",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "gắn dọc trên lưng động cơ qua 2 chốt đen ở bước 13 (vào lỗ 2 và lỗ 4 tính từ đầu trước)",
+          "note": "Thanh thẳng 7 lỗ màu trắng (BP-7525A(16) / Beam 7M)"
+        },
+        {
+          "kind": "trục",
+          "size": "4",
+          "color": "đen",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "luồn từ dưới lên qua lỗ thứ 3 của thanh trắng 7 lỗ, gờ tròn chặn ở mặt dưới",
+          "note": "Trục 4L có gờ chặn màu đen (87083), làm trục quay cho bánh răng 24 răng ở bước 15"
+        },
+        {
+          "kind": "trục",
+          "size": "3",
+          "color": "xám",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "cắm thẳng đứng vào lỗ chữ thập của đĩa động cơ, xuyên qua lỗ thứ 1 (đầu trước) của thanh trắng 7 lỗ",
+          "note": "Trục 3L màu xám (4519), có số 3 trong ô linh kiện, nhận chuyển động quay trực tiếp từ động cơ"
+        }
+      ],
+      "assembly": "cụm con 2",
+      "view": "nhìn từ trước-phải, hơi trên cao",
+      "description_vi": "Gắn thanh trắng 7 lỗ lên lưng động cơ, luồn trục có gờ số 4 và cắm trục xám số 3 vào đĩa quay động cơ."
+    },
+    {
+      "step": 15,
+      "page": 15,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "bánh răng",
+          "size": "8 răng",
+          "color": "xám đậm",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "xỏ vào trục 3L xám (trục động cơ), nằm sát trên mặt thanh trắng 7 lỗ",
+          "note": "Bánh răng nhỏ 8 răng màu xám đậm (10928)"
+        },
+        {
+          "kind": "ống lót",
+          "size": "1",
+          "color": "xám",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "xỏ vào đầu trục 3L xám nằm ngay phía trên bánh răng 8 răng để khóa giữ bánh răng",
+          "note": "Bạc/ống lót xám tiêu chuẩn 1L (3713)"
+        },
+        {
+          "kind": "bánh răng",
+          "size": "24 răng",
+          "color": "xám đậm",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "xỏ vào trục 4L có gờ, nằm ăn khớp trực tiếp với bánh răng 8 răng bên cạnh",
+          "note": "Bánh răng 24 răng màu xám đậm (3648b), tạo bộ giảm tốc tỉ số 1:3 truyền lực lên trục đứng"
+        }
+      ],
+      "assembly": "cụm con 2",
+      "view": "nhìn từ trước-phải, hơi trên cao",
+      "description_vi": "Lắp bánh răng nhỏ 8 răng và bạc xám vào trục động cơ, lắp bánh răng 24 răng ăn khớp bên cạnh."
+    },
+    {
+      "step": 16,
+      "page": 16,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "khớp nối",
+          "size": "2",
+          "color": "đen",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "cắm vào đầu trên của trục 4L (phía trên bánh răng 24 răng ở bước 15)",
+          "note": "Ống nối trục thẳng 2L màu đen (59443)"
+        },
+        {
+          "kind": "trục",
+          "size": "10",
+          "color": "đen",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "cắm đầu dưới vào ống nối trục 2L đen, dựng thẳng đứng lên cao làm cột trục xoay chính",
+          "note": "Trục 10L màu đen (3737), có số 10 trong ô linh kiện"
+        },
+        {
+          "kind": "khớp nối",
+          "size": "số 2",
+          "color": "đen",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "gắn vào đầu trên của trục 10L đen, lỗ tròn quay sang bên",
+          "note": "Khớp nối trục góc số 2 màu đen (32034), có số 2 in trên chi tiết"
+        }
+      ],
+      "assembly": "cụm con 2",
+      "view": "nhìn nghiêng từ trước",
+      "description_vi": "Gắn ống nối đen, trục đen số 10 dựng đứng lên cao và gắn khớp nối góc số 2 ở đỉnh."
+    },
+    {
+      "step": 17,
+      "page": 17,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "khớp nối",
+          "size": "?",
+          "color": "xám",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "đặt ở giữa cụm đỉnh, 4 chốt tròn nhô sang 2 bên (2 chốt trước, 2 chốt sau)",
+          "note": "Khớp nối chữ thập 4 chốt vuông góc màu xám (48989)"
+        },
+        {
+          "kind": "khớp nối",
+          "size": "3",
+          "color": "xanh ngọc",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "2 cái ốp vào mặt trên và mặt dưới của khớp nối xám 48989",
+          "note": "Khớp nối trục chốt vuông góc 3L màu xanh ngọc (32184)"
+        },
+        {
+          "kind": "trục",
+          "size": "4",
+          "color": "đen",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "xỏ từ trên xuống qua một lỗ trục đứng của cụm khớp nối vào đầu trên của khớp nối số 2 (ở bước 16)",
+          "note": "Trục 4L có gờ chặn màu đen (87083)"
+        },
+        {
+          "kind": "trục",
+          "size": "3",
+          "color": "xám",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "xỏ thẳng đứng qua lỗ trục còn lại của cụm khớp nối để khóa cố định cụm",
+          "note": "Trục 3L màu xám (4519), có số 3 trong ô linh kiện"
+        }
+      ],
+      "assembly": "cụm con 2",
+      "view": "nhìn từ trước-phải, hơi trên cao",
+      "description_vi": "Lắp cụm khớp nối xám và hai khớp xanh ngọc ở đỉnh trục, xỏ cố định bằng trục số 4 có gờ và trục xám số 3."
+    },
+    {
+      "step": 18,
+      "page": 18,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "thanh",
+          "size": "15",
+          "color": "trắng",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "2 thanh đặt nằm ngang song song làm cần quay, đầu phải kẹp vào các chốt nhô ra từ khớp nối xám 48989 ở bước 17",
+          "note": "Thanh thẳng 15 lỗ màu trắng (32278)"
+        },
+        {
+          "kind": "khớp nối",
+          "size": "số 1",
+          "color": "đen",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "đặt kẹp ở giữa hai thanh trắng 15 lỗ tại lỗ đầu tiên ở đầu ngoài cùng bên trái, lỗ trục hướng xuống dưới",
+          "note": "Khớp nối trục góc số 1 màu đen (32013), có số 1 in trên chi tiết"
+        },
+        {
+          "kind": "chốt",
+          "size": "3",
+          "color": "vàng cát",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "xỏ xuyên qua lỗ đầu tiên của thanh trắng ngoài, qua lỗ tròn của khớp nối góc số 1 và qua lỗ đầu tiên của thanh trắng trong",
+          "note": "Chốt dài 3L màu tan có gờ (32556), cố định khớp nối góc số 1 vào đầu cần ngang"
+        }
+      ],
+      "assembly": "cụm con 2",
+      "view": "nhìn từ trước-trái, hơi trên cao",
+      "description_vi": "Gắn hai thanh trắng 15 lỗ làm cần ngang và dùng chốt dài màu vàng cát cố định khớp nối góc số 1 ở đầu cần."
+    },
+    {
+      "step": 19,
+      "page": 19,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "trục",
+          "size": "10",
+          "color": "đen",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "cắm thẳng đứng vào lỗ trục của khớp nối góc số 1 ở đầu cần ngang (bước 18), thả thõng xuống dưới làm thanh treo máy bay",
+          "note": "Trục 10L màu đen (3737), có số 10 trong ô linh kiện"
+        },
+        {
+          "kind": "khớp nối",
+          "size": "số 1",
+          "color": "đen",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "gắn vào đầu dưới cùng của trục 10L đen, lỗ tròn quay ngang",
+          "note": "Khớp nối trục góc số 1 màu đen (32013), có số 1 in trên chi tiết"
+        },
+        {
+          "kind": "chốt",
+          "size": "3",
+          "color": "vàng cát",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "xỏ ngang qua lỗ tròn của khớp nối góc số 1 ở đầu dưới trục 10L, nhô đều sang hai bên",
+          "note": "Chốt dài 3L màu tan có gờ (32556), làm điểm gắn máy bay"
+        }
+      ],
+      "assembly": "cụm con 2",
+      "view": "nhìn từ trước-trái, hơi trên cao",
+      "description_vi": "Cắm trục đen số 10 thả thẳng đứng xuống từ đầu cần ngang, gắn khớp nối góc số 1 và xỏ chốt dài màu vàng cát ở dưới."
+    },
+    {
+      "step": 20,
+      "page": 20,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "thanh",
+          "size": "3x5",
+          "color": "xanh ngọc",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "đặt làm thân máy bay, nhánh dài nằm ngang, nhánh ngắn hướng chéo lên trên làm đuôi đứng; lỗ ở giữa nhánh dài gắn vào chốt 3L tan ở đáy trục treo (bước 19)",
+          "note": "Thanh chữ L màu xanh ngọc (BP-7075(16) / Angular Beam 4x6M)"
+        },
+        {
+          "kind": "cánh",
+          "size": "3x11",
+          "color": "trắng",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "gắn vào bên trái của thanh chữ L xanh ngọc làm cánh trái máy bay",
+          "note": "Tấm cánh cong bên trái màu trắng (BP-7018M / bp-7018m.dat)"
+        },
+        {
+          "kind": "cánh",
+          "size": "3x11",
+          "color": "trắng",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "gắn vào bên phải của thanh chữ L xanh ngọc làm cánh phải máy bay",
+          "note": "Tấm cánh cong bên phải màu trắng (BP-7017M / bp-7017m.dat)"
+        },
+        {
+          "kind": "chốt",
+          "size": "3",
+          "color": "xanh dương",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "cắm xuyên qua lỗ cánh máy bay và thanh chữ L xanh ngọc để khóa chặt hai cánh vào thân",
+          "note": "Chốt ma sát dài 3L màu xanh dương (6558)"
+        }
+      ],
+      "assembly": "cụm con 2",
+      "view": "nhìn từ trước-trái, phóng to cụm máy bay",
+      "description_vi": "Lắp hai cánh máy bay màu trắng kẹp hai bên thanh chữ L màu xanh ngọc bằng hai chốt xanh dương dài."
+    },
+    {
+      "step": 21,
+      "page": 21,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "trục",
+          "size": "3",
+          "color": "xám",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "xỏ ngang qua lỗ trên cùng ở phần đuôi dựng đứng của thanh chữ L xanh ngọc",
+          "note": "Trục 3L màu xám (4519), có số 3 trong ô linh kiện"
+        },
+        {
+          "kind": "ống lót",
+          "size": "1",
+          "color": "xám",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "xỏ vào 2 đầu trục 3L nhô ra ở hai bên đuôi máy bay",
+          "note": "Ống lót/bạc xám tiêu chuẩn 1L (3713), tạo hình động cơ phản lực đuôi"
+        }
+      ],
+      "assembly": "cụm con 2",
+      "view": "nhìn từ trước-trái, cận cảnh máy bay",
+      "description_vi": "Xỏ trục xám số 3 qua đỉnh đuôi máy bay rồi gắn hai bạc xám ở hai đầu trục."
+    },
+    {
+      "step": 22,
+      "page": 22,
+      "view_only": true,
+      "new_parts": [],
+      "assembly": "cụm con 2",
+      "view": "nhìn từ trước-trái, cận cảnh máy bay hoàn chỉnh",
+      "description_vi": "Quan sát và kiểm tra chiếc máy bay đã gắn hoàn chỉnh trên cần treo."
+    },
+    {
+      "step": 23,
+      "page": 23,
+      "view_only": false,
+      "new_parts": [],
+      "assembly": "chính",
+      "view": "nhìn từ trước-phải, từ trên cao (toàn cảnh)",
+      "description_vi": "Gắn toàn bộ cụm động cơ trên và máy bay vào hai đầu trên của hai thanh xanh ngọc 9L."
+    },
+    {
+      "step": 24,
+      "page": 24,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "thanh",
+          "size": "13",
+          "color": "xanh ngọc",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "dựng chéo ở mặt sau tháp: lỗ trên gắn vào chốt xám ở hông sau động cơ trên (đã cắm ở bước 11); lỗ dưới gắn vào chốt xám mới ở hông sau động cơ dưới",
+          "note": "Thanh thẳng dài màu xanh ngọc (BP-7021(16) / Beam 13M), tạo thành 2 thanh giằng sau của tháp"
+        },
+        {
+          "kind": "chốt",
+          "size": "2",
+          "color": "xám",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "cắm vào 2 lỗ bên hông phía sau của động cơ dưới để đón đầu dưới của hai thanh dài xanh ngọc",
+          "note": "Chốt trơn 2L xám (3673)"
+        }
+      ],
+      "assembly": "chính",
+      "view": "nhìn từ sau-trái, cận cảnh thân tháp",
+      "description_vi": "Cắm hai chốt xám vào sau động cơ dưới, rồi gắn hai thanh dài xanh ngọc nối giữa hai động cơ để dựng tháp."
+    },
+    {
+      "step": 25,
+      "page": 25,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "khớp nối",
+          "size": "2",
+          "color": "đen",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "gắn vào 2 lỗ ở đuôi sau của động cơ dưới, chốt tròn nhô sang hai bên sườn",
+          "note": "Khớp nối vuông góc 2L màu đen (87082 / Pin Connector Perpendicular 2L)"
+        },
+        {
+          "kind": "khớp nối",
+          "size": "?",
+          "color": "xám",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "gắn vào các lỗ bên hông phía trước của động cơ dưới (mỗi bên 1 cái), các chốt nhô sang ngang",
+          "note": "Khớp nối chữ thập 4 chốt màu xám (48989)"
+        }
+      ],
+      "assembly": "chính",
+      "view": "nhìn từ sau-trái, cận cảnh chân đế động cơ dưới",
+      "description_vi": "Gắn hai khớp nối đen vào đuôi động cơ dưới và hai khớp nối xám 4 chốt vào hai bên hông phía trước."
+    },
+    {
+      "step": 26,
+      "page": 26,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "thanh",
+          "size": "7",
+          "color": "trắng",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "1 thanh gắn ngang vào 2 khớp nối đen ở đuôi động cơ dưới; 1 thanh gắn ngang vào 2 khớp nối xám ở đầu trước động cơ dưới",
+          "note": "Thanh thẳng 7 lỗ màu trắng (BP-7525A(16) / Beam 7M)"
+        },
+        {
+          "kind": "chốt",
+          "size": "2",
+          "color": "đen",
+          "qty": 6,
+          "confidence": "cao",
+          "attached_to": "4 chốt cắm vào thanh trắng phía trước (hướng ra ngoài hai bên), 2 chốt cắm vào thanh trắng phía sau",
+          "note": "Chốt ma sát 2L đen (2780), dùng để liên kết với hai thanh đế dài ở bước 27"
+        }
+      ],
+      "assembly": "chính",
+      "view": "nhìn từ sau-trái, cận cảnh chân đế động cơ dưới",
+      "description_vi": "Gắn hai thanh trắng 7 lỗ vào trước và sau động cơ dưới, rồi cắm 6 chốt đen vào các lỗ để chuẩn bị làm đế."
+    },
+    {
+      "step": 27,
+      "page": 27,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "thanh",
+          "size": "15",
+          "color": "trắng",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "2 thanh 15L đặt song song nằm ngang gắn vào các chốt đen ở bước 26 (mỗi bên sườn 1 thanh), kéo dài về phía trước làm bệ đỡ cho bộ não",
+          "note": "Thanh thẳng 15 lỗ màu trắng (32278)"
+        }
+      ],
+      "assembly": "chính",
+      "view": "nhìn từ sau-trái, góc nhìn bệ đế",
+      "description_vi": "Gắn hai thanh trắng 15 lỗ song song hai bên hông làm bệ đỡ kéo dài về phía trước."
+    },
+    {
+      "step": 28,
+      "page": 28,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "bộ não",
+          "size": "?",
+          "color": "trắng",
+          "qty": 1,
+          "confidence": "cao",
+          "attached_to": "đặt lọt vào giữa hai thanh trắng 15 lỗ ở phần đế phía trước, mặt 3 nút hướng lên trên",
+          "note": "Bộ não điều khiển WeDo BE-5158 (M5-RCU)"
+        },
+        {
+          "kind": "chốt",
+          "size": "2",
+          "color": "xám",
+          "qty": 4,
+          "confidence": "cao",
+          "attached_to": "cắm từ ngoài xuyên qua các lỗ của hai thanh trắng 15 lỗ vào 2 lỗ bên hông của bộ não (mỗi bên 2 chốt)",
+          "note": "Chốt trơn 2L xám (3673 / 32054 trong CAD), cố định bộ não vào khung đế"
+        }
+      ],
+      "assembly": "chính",
+      "view": "nhìn từ trước-phải, góc nhìn bệ đế",
+      "description_vi": "Đặt bộ não điều khiển vào giữa hai thanh đế phía trước rồi dùng 4 chốt xám gắn chặt hai bên."
+    },
+    {
+      "step": 29,
+      "page": 29,
+      "view_only": false,
+      "new_parts": [
+        {
+          "kind": "thanh",
+          "size": "2x4",
+          "color": "xanh ngọc",
+          "qty": 2,
+          "confidence": "cao",
+          "attached_to": "gắn vào đuôi hai thanh đế trắng 15L (mỗi bên 1 thanh chữ L), nhánh ngắn quay xuống dưới làm chân đế sau",
+          "note": "Thanh chữ L màu xanh ngọc (BP-7079(16) / Angular Beam 2x4M), làm chân đế chống lật phía sau"
+        },
+        {
+          "kind": "chốt",
+          "size": "2",
+          "color": "đen",
+          "qty": 4,
+          "confidence": "cao",
+          "attached_to": "cắm vào các lỗ ở đuôi hai thanh trắng 15 lỗ (mỗi bên 2 chốt) để giữ hai thanh chữ L xanh ngọc",
+          "note": "Chốt ma sát 2L màu đen (2780)"
+        }
+      ],
+      "assembly": "chính",
+      "view": "nhìn từ sau-phải, góc nhìn chân đế",
+      "description_vi": "Dùng 4 chốt đen gắn hai thanh chữ L màu xanh ngọc vào đuôi hai thanh đế để làm chân chống lật."
+    },
+    {
+      "step": 30,
+      "page": 30,
+      "view_only": true,
+      "new_parts": [],
+      "assembly": "chính",
+      "view": "nhìn từ trước-phải, trên cao (toàn cảnh mô hình hoàn chỉnh)",
+      "description_vi": "Chiêm ngưỡng mô hình giàn bay giải cứu hoàn chỉnh và sẵn sàng kết nối lập trình điều khiển!"
+    }
+  ],
+  "totals_by_kind": {
+    "động cơ (trắng, đĩa xanh ngọc)": 2,
+    "bộ não (trắng, mặt 3 nút xanh ngọc)": 1,
+    "chốt đen (ma sát 2L)": 16,
+    "chốt xám (không ma sát 2L)": 8,
+    "chốt xám (giữ bộ não)": 4,
+    "chốt trục xanh dương (2L)": 4,
+    "chốt dài 3L xanh dương (ma sát)": 2,
+    "chốt dài 3L vàng cát (có gờ)": 4,
+    "ống lót / bạc xám (1L)": 5,
+    "ống lót / bạc nửa vàng (1/2L)": 2,
+    "khớp nối chốt tròn xám (2L)": 4,
+    "khớp nối 4 chốt vuông góc xám": 3,
+    "khớp nối đôi 3L xanh ngọc": 2,
+    "khớp nối trục góc số 1 đen": 2,
+    "khớp nối trục góc số 2 đen": 1,
+    "khớp nối vuông góc 2L đen": 2,
+    "khối nối 1x2 đen (tay đòn)": 2,
+    "ống nối trục thẳng 2L đen": 1,
+    "bánh răng 24 răng xám đậm": 2,
+    "bánh răng 8 răng xám đậm": 1,
+    "trục vít xám": 1,
+    "trục đen 10L": 2,
+    "trục đen 8L": 1,
+    "trục xám 9L": 1,
+    "trục đen có gờ 4L": 2,
+    "trục xám 3L": 3,
+    "thanh trắng 15 lỗ": 4,
+    "thanh trắng 7 lỗ": 3,
+    "thanh xanh ngọc dài (13L/15L)": 2,
+    "thanh xanh ngọc 9 lỗ": 2,
+    "thanh chữ L xanh ngọc 4x6M (máy bay)": 1,
+    "thanh chữ L xanh ngọc 2x4M (chân đế)": 2,
+    "khung chữ nhật xanh ngọc 5x7": 1,
+    "thanh vàng 3 lỗ": 2,
+    "thanh tam giác xám 3x5": 4,
+    "cánh máy bay trắng (trái + phải)": 2
+  },
+  "subassemblies": "Trang 1 - 10: Dựng Cụm con 1 (Cơ cấu động cơ dưới: khung 5×7, trục vít, bánh răng 24 răng, tay đòn và 2 thanh đứng 9 lỗ; trang 9 - 10 là thao tác xoay thử chuyển động và kiểm tra cụm).\nTrang 11 - 22: Dựng Cụm con 2 (Cụm động cơ trên, tháp trục đứng 10L, cần quay 15L và máy bay cánh trắng; trang 22 là kiểm tra cụm hoàn thành).\nTrang 23: Ghép Cụm con 2 lên Cụm con 1 (cắm hai chốt hông động cơ trên vào đỉnh hai thanh đứng 9 lỗ của Cụm con 1).\nTrang 24 - 29: Lắp tiếp cụm chính (thanh giằng tháp 13L, khung đế, bộ não WeDo và chân đế chống lật).\nTrang 30: Hoàn thành toàn bộ mô hình giàn bay giải cứu.",
+  "questions": [
+    "Chức năng của động cơ dưới: Động cơ dưới (cụm con 1) kéo trục vít quay, làm quay bánh răng 24 răng trên trục ngang 9L. Trục ngang này dẫn động 2 tay đòn đen quay để nâng hoặc hạ 2 thanh đứng 9L xanh ngọc. Vì 2 thanh đứng 9L đỡ cổ động cơ trên, còn 2 thanh dài 13L phía sau giữ khớp xoay cố định với hông động cơ dưới, nên toàn bộ cơ cấu này tạo thành hệ liên kết 4 khâu (four-bar linkage) làm nghiêng tháp và nâng/hạ độ cao của toàn bộ cần quay treo máy bay (cơ cấu nâng hạ giải cứu có trục vít tự hãm giữ vị trí không bị rơi).",
+    "Chức năng của động cơ trên: Động cơ trên (cụm con 2) truyền động qua cặp bánh răng giảm tốc (8T -> 24T, tỉ số truyền 1:3), làm quay cột trục đứng 10L và thanh cần ngang 15L trên đỉnh, giúp máy bay quay tròn xung quanh giàn cứu hộ.",
+    "Chi tiết 'giảm xóc vàng' trong phiếu giao việc: Phiếu giao việc ghi 'khung có giảm xóc vàng', tuy nhiên khi đối chiếu trực tiếp ảnh trang p-03.png và file CAD (model.ldr), chi tiết màu vàng nằm trong khung 5×7 thực chất là 2 bạc nửa màu vàng (1/2 bush, mã Lego 32123a) dùng để định vị trục vít kẹp giữa hai bạc xám (3713), không phải lò xo hay giảm xóc.",
+    "Kích thước thanh xanh ngọc dài (bước 24) và thanh nâng (bước 8): Trong file CAD, 2 thanh giằng sau tháp mang mã bp-7021(16).dat ghi tên 'Beam 13M' (13 lỗ), trong khi 2 thanh nâng di động ở bước 8 mang mã bp-7526a(16).dat ghi tên 'Beam 9M' (9 lỗ). Cần người kiểm tra đối chiếu bộ kit thật để xác nhận đúng độ dài lỗ (13L hay 15L, 9L hay 11L).",
+    "Tổng số lượng linh kiện: File CAD model.ldr có 103 thực thể (entities), trong đó gồm 101 chi tiết linh kiện vật lý và 2 thực thể gọi cụm con (SubModel Group 1 và SubModel Group 2). Tổng số lượng linh kiện đếm được qua 30 bước sách lắp ráp là 101 linh kiện, khớp chính xác 100% với 101 linh kiện trong CAD."
+  ]
+}

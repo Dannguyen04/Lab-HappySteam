@@ -34,6 +34,12 @@
       scripts: ['js/bai10/lesson.js', 'js/bai10/wind-scene.js', 'js/bai10/wind-engine.js'],
       optional: ['js/bai10/art.js'],
       order: order('js/bai10/lesson.js', 'js/bai10/wind-scene.js', 'js/bai10/wind-engine.js', 'js/bai10/art.js')
+    },
+    'lop3-bai08': {
+      content: 'lop3/bai08',
+      scripts: ['js/lop3-bai08/lesson.js', 'js/lop3-bai08/rescue-scene.js', 'js/lop3-bai08/rescue-engine.js'],
+      optional: ['js/lop3-bai08/art.js'],
+      order: order('js/lop3-bai08/lesson.js', 'js/lop3-bai08/rescue-scene.js', 'js/lop3-bai08/rescue-engine.js', 'js/lop3-bai08/art.js')
     }
   };
 })();

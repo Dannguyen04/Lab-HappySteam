@@ -1,0 +1,98 @@
+<title>Giải cứu máy bay · Lớp 3 · Bài 8 · Happy STEAM</title>
+<template data-slot="header-copy">
+      <div class="eyebrow">Lớp 3 · Bài 8 · Giải cứu máy bay</div>
+      <h1>Máy bay cứu hộ</h1>
+      <p class="lede pro-only">Lắp giàn bay hai động cơ theo 30 bước của sách, gắn thêm chi tiết sáng tạo, rồi lập trình: động cơ M1 cho máy bay bay vòng tìm kiếm, động cơ M2 qua trục vít cho máy bay lên xuống – hạ thấp, bay chậm để thả thang cứu người gặp nạn.</p>
+</template>
+
+<template data-slot="mission-chips">
+    <span class="chip" id="chip-m1" title="Bấm “Đã lắp xong bước này” ở cả 30 bước"><i>1</i>Lắp xong 30 bước</span>
+    <span class="chip" id="chip-m2" title="Start · Repeat · M1, M2 Low · Wait 3s · M1, M2 High · Wait 3s · M1, M2 Low ngược · Wait 3s · M1, M2 High ngược · Wait 3s · Repeat End"><i>2</i>Lập trình theo mẫu</span>
+    <span class="chip" id="chip-m3" title="Bay thấp và chậm ngang qua người gặp nạn để thả thang; cứu đủ 3 người"><i>3</i>Cứu 3 người</span>
+    <span class="chip" id="chip-m4" title="Gắn gói nâng cấp ở chặng Sáng tạo, đưa vào sa bàn và cho động cơ chạy"><i>4</i>Thử nâng cấp sáng tạo</span>
+    <span class="chip pro-only" id="chip-m5" title="Nâng cao: bão kéo tới theo lượt, phải bay trên mây khi có bão rồi cứu đủ 3 người"><i>5</i>Cứu nạn trong bão</span>
+</template>
+
+<template data-slot="victory-copy">
+      <p>Em đã lắp xong giàn bay, lập trình đúng theo sách, cứu được cả 3 người gặp nạn và thử nâng cấp sáng tạo của mình.</p>
+      <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM3-08</code></p>
+</template>
+
+<template data-slot="assembly-tab">
+      <i>1</i><span><b>Lắp ráp</b><small>30 bước theo sách</small></span>
+</template>
+
+<template data-slot="assembly-count">
+          <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 30</span></span>
+</template>
+
+<template data-slot="assembly-canvas">
+              <canvas id="view" aria-label="Mô hình giàn bay máy bay cứu hộ 3D: kéo để xoay, cuộn để phóng to"></canvas>
+</template>
+
+<template data-slot="assembly-slider">
+                <input id="slider" type="range" min="1" max="30" value="1" aria-label="Chọn bước lắp">
+</template>
+
+<template data-slot="assembly-meter-step">
+          <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 30</small></div><div class="s" id="am-step-s">Máy bay cứu hộ</div></dd></div>
+</template>
+
+<template data-slot="assembly-meter-done">
+          <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 30</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+</template>
+
+<template data-slot="book-image">
+          <img id="book-img" src="assets/lop3-bai08/step-01.jpg" alt="Trang 1 trong sách hướng dẫn lắp ráp">
+</template>
+
+<template data-slot="book-link">
+          <a id="book-pdf" class="link" href="assets/lop3-bai08/step-01.jpg" target="_blank" rel="noopener">Mở hình lớn ↗</a>
+</template>
+
+<template data-slot="creative-intro">
+          <p class="status-text">Máy bay cứu hộ cần <b>tìm thấy</b> người gặp nạn thật nhanh và <b>bay vững</b> trong thời tiết xấu. Chọn gói gợi ý hoặc tự gắn chi tiết, chi tiết mới sẽ rơi vào mô hình.</p>
+</template>
+
+<template data-slot="creative-canvas">
+        <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình máy bay cứu hộ 3D đang sáng tạo"></div>
+</template>
+
+<template data-slot="creative-slot-label">
+        <div class="panel-h"><h2>Tự gắn chi tiết</h2><small>3 vị trí trên máy bay</small></div>
+</template>
+
+<template data-slot="creative-result-label">
+        <div class="panel-h"><h2>Máy bay của em sẽ có</h2></div>
+</template>
+
+<template data-slot="sim-upgrade-label">
+            <small id="sim-active-upgrade-badge" class="status-tag">Máy bay cơ bản</small>
+</template>
+
+<template data-slot="sim-scene">
+          <canvas id="space-scene" aria-label="Cảnh tìm kiếm cứu nạn: máy bay bay vòng quanh đài điều khiển, radar tìm người gặp nạn"></canvas>
+          <div class="sim-stage" id="sim-stage" aria-label="Giàn bay 3D chuyển động theo chương trình"></div>
+          <p class="scene-idle" id="scene-idle">Chạm khối <b>Start</b> màu vàng hoặc nút <b>▶</b> để máy bay cất cánh</p>
+</template>
+
+<template data-slot="sim-meters">
+        <dl class="meters pro-only">
+          <div class="meter"><dt>Máy bay</dt><dd><div class="v" id="m-speed">0<small>vòng/phút</small></div><div class="s" id="m-speed-note">M1 dừng</div></dd></div>
+          <div class="meter"><dt>Độ cao</dt><dd><div class="v" id="m-alt">100<small>%</small></div><div class="s" id="m-alt-note">Cao – trên mây</div></dd></div>
+          <div class="meter"><dt>Đã cứu</dt><dd><div class="v" id="m-saved">0<small>/ 3</small></div><div class="s">người gặp nạn</div></dd></div>
+          <div class="meter"><dt>Thời tiết</dt><dd><div class="v" id="m-weather">Trời quang</div><div class="s" id="m-weather-note">Ổn định</div></dd></div>
+        </dl>
+</template>
+
+<template data-slot="sim-calculation">
+        <div class="panel-h"><h2>Tính toán</h2><small>Trục vít giảm tốc 24 lần</small></div>
+        <div class="pad calc">
+          <p class="calc-eq" id="calc-eq1"></p>
+          <p class="calc-eq" id="calc-eq2"></p>
+        </div>
+</template>
+
+<template data-slot="sim-hint">
+            <p class="hint"><b>NV2</b> ghép đúng chương trình trong sách rồi chạy hết một vòng lặp. <b>NV3</b> dùng M2 hạ máy bay xuống vùng xanh của thước độ cao, chạm khối Stop để giữ độ cao, rồi cho M1 Low bay chậm ngang qua người gặp nạn. Khối Stop dừng cả hai động cơ; trục vít giữ máy bay ở nguyên độ cao.</p>
+</template>
