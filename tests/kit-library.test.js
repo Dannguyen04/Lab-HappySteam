@@ -14,7 +14,13 @@ const LESSONS = {
   'lop1/bai10': '4aac0748bd58cd22461a93883dabc07208ba9045f0ac2fbeba4cb1ed235d1075',
   // Bài mới, chưa chốt mã băm (null): chỉ kiểm cách nạp + hình theo kit
   'lop1/bai02': null,
-  'lop3/bai08': null
+  'lop3/bai08': null,
+  'lop1/bai11': null,
+  'lop1/bai12': null,
+  'lop1/bai13': null,
+  'lop3/bai09': null,
+  'lop3/bai10': null,
+  'lop3/bai11': null
 };
 
 const read = rel => fs.readFileSync(path.join(ROOT, rel), 'utf8');

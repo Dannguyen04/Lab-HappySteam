@@ -19,7 +19,7 @@ const { pageUrl } = require('./helpers/page-url');
     await page.reload();
     assert.match(await page.title(), /Happy STEAM/);
     assert.equal(await page.locator('.lesson-card').count(), 18, 'Lớp 1 HK I: 18 tuần (13 bài mô hình, 4 tuần dự án, trưng bày)');
-    assert.equal(await page.locator('.lesson-card.is-ready').count(), 8, 'Lớp 1 HK I: Bài 3, 9, 10 + 4 tuần dự án + trưng bày sẵn sàng');
+    assert.equal(await page.locator('.lesson-card.is-ready').count(), 11, 'Lớp 1 HK I: Bài 3, 9, 10, 11, 12, 13 + 4 tuần dự án + trưng bày sẵn sàng');
     assert.equal(await page.locator('.lesson-card.is-soon').first().getAttribute('aria-disabled'), 'true');
     await page.click('#term-tabs [data-term="2"]');
     assert.equal(await page.locator('.lesson-card').count(), 17, 'Lớp 1 HK II: tuần 19–35');

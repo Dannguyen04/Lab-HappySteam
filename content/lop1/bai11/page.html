@@ -1,0 +1,83 @@
+<title>Cối xoay nước · Lớp 1 · Bài 11 · Happy STEAM</title>
+<template data-slot="header-copy">
+  <div class="eyebrow">Lớp 1 · Bài 11 · Nước từ đâu đến?</div>
+  <h1>Cối xoay nước</h1>
+  <p class="lede pro-only">Tìm hiểu nước sông và cách đưa nước lên bể, lắp mô hình ZM Alpha 330 qua 31 bước, lập trình bánh gầu quay và khám phá sự bay hơi trong vòng tuần hoàn nước.</p>
+</template>
+
+<template data-slot="mission-chips">
+  <span class="chip" id="chip-m1" title="Đánh dấu đủ 31 bước lắp ráp"><i>1</i>Lắp xong 31 bước</span>
+  <span class="chip" id="chip-m2" title="Trái tim · Melody A · Quay nhanh 3 giây · Mặt cười · Melody B · Quay 3 giây · Lặp lại"><i>2</i>Ghép đúng chương trình</span>
+  <span class="chip" id="chip-m3" title="Cho bánh gầu quay để đưa nước sông lên bể"><i>3</i>Đưa nước đầy bể</span>
+  <span class="chip" id="chip-m4" title="Gắn một gói sáng tạo và cho cối xoay thật sự quay"><i>4</i>Thử sáng tạo</span>
+  <span class="chip pro-only" id="chip-m5" title="Nâng cao: Đưa nước đầy bể 3 lần liên tiếp trong cùng lượt chạy"><i>5</i>Đầy bể 3 lần</span>
+</template>
+
+<template data-slot="victory-copy">
+  <p>Em đã lắp cối xoay nước, lập trình tiếng nhạc và hình ảnh cho bộ điều khiển, đưa nước vào bể và thử ý tưởng sáng tạo của mình.</p>
+  <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM11</code></p>
+</template>
+
+<template data-slot="assembly-tab">
+  <i>1</i><span><b>Lắp ráp</b><small>31 bước theo sách</small></span>
+</template>
+<template data-slot="assembly-count">
+  <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 31</span></span>
+</template>
+<template data-slot="assembly-canvas">
+  <canvas id="view" aria-label="Mô hình cối xoay nước 3D; kéo để xoay, cuộn để phóng to"></canvas>
+</template>
+<template data-slot="assembly-slider">
+  <input id="slider" type="range" min="1" max="31" value="1" aria-label="Chọn bước lắp ráp">
+</template>
+<template data-slot="assembly-meter-step">
+  <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 31</small></div><div class="s" id="am-step-s">Cối xoay nước</div></dd></div>
+</template>
+<template data-slot="assembly-meter-done">
+  <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 31</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+</template>
+<template data-slot="book-image">
+  <img id="book-img" src="assets/lop1-bai11/step-01.jpg" alt="Hình lắp ráp gốc bước 1 của cối xoay nước">
+</template>
+<template data-slot="book-link">
+  <a id="book-pdf" class="link" href="references/lop1/bai11/bai11.pdf#page=1" target="_blank" rel="noopener">Mở sách hướng dẫn PDF ↗</a>
+</template>
+
+<template data-slot="creative-intro">
+  <p class="status-text">Nước từ sông được bánh gầu múc lên bể. Thử <b>gầu lớn</b> để múc nhiều hơn, <b>máng dẫn</b> cho nước chảy gọn, <b>mái che</b> giảm bay hơi hoặc thêm <b>bộ lọc</b>. Chọn một gói rồi bấm thử trong sa bàn.</p>
+</template>
+<template data-slot="creative-canvas">
+  <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình cối xoay nước 3D đang sáng tạo"></div>
+</template>
+<template data-slot="creative-slot-label">
+  <div class="panel-h"><h2>Tự gắn chi tiết</h2><small>4 vị trí quanh cối xoay nước</small></div>
+</template>
+<template data-slot="creative-result-label">
+  <div class="panel-h"><h2>Cối xoay nước của em sẽ có</h2></div>
+</template>
+
+<template data-slot="sim-upgrade-label">
+  <small id="sim-active-upgrade-badge" class="status-tag">Cối xoay nước cơ bản</small>
+</template>
+<template data-slot="sim-scene">
+  <canvas id="space-scene" aria-label="Cảnh sông, bánh gầu, bể nước và ngôi làng; khi chạy nước chảy vào bể"></canvas>
+  <div class="sim-stage" id="sim-stage" aria-label="Mô hình cối xoay nước 3D theo chương trình"></div>
+  <p class="scene-idle" id="scene-idle">Chọn <b>Mẫu trong sách</b>, rồi chạm <b>Start</b> hoặc <b>▶</b> để cối xoay nước hoạt động.</p>
+</template>
+<template data-slot="sim-meters">
+  <dl class="meters">
+    <div class="meter"><dt>Bánh gầu</dt><dd><div class="v" id="m-rpm">0<small>vòng/phút</small></div><div class="s" id="m-rpm-note">Động cơ đang dừng</div></dd></div>
+    <div class="meter"><dt>Trong bể</dt><dd><div class="v" id="m-water">0<small>lít</small></div><div class="s" id="m-water-note">Bể chứa 100 lít</div></dd></div>
+    <div class="meter"><dt>Lưu lượng</dt><dd><div class="v" id="m-flow">0<small>lít/giây</small></div><div class="s" id="m-flow-note">Nước múc mỗi vòng</div></dd></div>
+    <div class="meter"><dt>Màn hình</dt><dd><div class="v" id="m-face">Trống</div><div class="s">Bộ điều khiển M5</div></dd></div>
+  </dl>
+</template>
+<template data-slot="sim-calculation">
+  <div class="pro-only">
+    <div class="panel-h"><h2>Tính lượng nước</h2><small>Vòng quay · lượng nước · bay hơi</small></div>
+    <div class="pad calc"><p class="calc-eq" id="calc-eq1"></p><p class="calc-eq" id="calc-eq2"></p></div>
+  </div>
+</template>
+<template data-slot="sim-hint">
+  <p class="hint"><b>NV2:</b> Chọn mẫu để học cách ghép Trái tim → Nhạc A → Quay nhanh 3 giây → Mặt cười → Nhạc B → 3 giây → Lặp lại. <b>NV3:</b> Để gầu quay đúng chiều đến khi bể đầy. <b>NV4:</b> Gắn gói ở chặng Sáng tạo, đưa vào sa bàn rồi chạy. <span class="pro-only"><b>NV5:</b> Chế độ Nâng cao có bể 150 lít và nắng làm bay hơi; cho bể đầy 3 lần liên tiếp trong một lượt.</span></p>
+</template>

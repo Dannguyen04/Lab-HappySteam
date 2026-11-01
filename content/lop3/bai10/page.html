@@ -1,0 +1,95 @@
+<title>Robot thám hiểm sao Hỏa · Lớp 3 · Bài 10 · Happy STEAM</title>
+<template data-slot="header-copy">
+  <div class="eyebrow">Lớp 3 · Bài 10 · Khám phá Hành tinh Đỏ</div>
+  <h1>Robot thám hiểm sao Hỏa</h1>
+  <p class="lede pro-only">Lắp robot 15 bước với động cơ và cảm biến siêu âm. Ghép khối Start, Repeat, Motor Low, Chờ vật cản, Stop, Wait 3s để xe dừng trước đá và thu mẫu. Thử cải tiến robot để vượt bão bụi trong chế độ Nâng cao.</p>
+</template>
+
+<template data-slot="mission-chips">
+  <span class="chip" id="chip-m1" title="Đánh dấu hoàn thành cả 15 bước lắp ráp"><i>1</i>Lắp xong 15 bước</span>
+  <span class="chip" id="chip-m2" title="Start · Repeat · Motor Low · Chờ vật cản · Stop · Wait 3s · Repeat End"><i>2</i>Lập trình theo mẫu</span>
+  <span class="chip" id="chip-m3" title="Dừng cách mỗi tảng đá từ 3–15 cm và đứng yên 2 giây"><i>3</i>Thu 3 mẫu đá</span>
+  <span class="chip" id="chip-m4" title="Gắn nâng cấp ở chặng Sáng tạo, rồi chạy robot"><i>4</i>Chạy robot sáng tạo</span>
+  <span class="chip pro-only" id="chip-m5" title="Nâng cao: chờ bão bụi qua rồi thu đủ ba mẫu"><i>5</i>Vượt bão bụi</span>
+</template>
+
+<template data-slot="victory-copy">
+  <p>Em đã lắp ráp robot, lập trình cảm biến sóng âm, thu đủ ba mẫu đá và thử nâng cấp robot thám hiểm.</p>
+  <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM3-10</code></p>
+</template>
+
+<template data-slot="assembly-tab">
+  <i>1</i><span><b>Lắp ráp</b><small>15 bước theo sách</small></span>
+</template>
+
+<template data-slot="assembly-count">
+  <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 15</span></span>
+</template>
+
+<template data-slot="assembly-canvas">
+  <canvas id="view" aria-label="Mô hình robot thám hiểm sao Hỏa 3D: kéo để xoay, cuộn để phóng to"></canvas>
+</template>
+
+<template data-slot="assembly-slider">
+  <input id="slider" type="range" min="1" max="15" value="1" aria-label="Chọn bước lắp">
+</template>
+
+<template data-slot="assembly-meter-step">
+  <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 15</small></div><div class="s" id="am-step-s">Robot thám hiểm sao Hỏa</div></dd></div>
+</template>
+
+<template data-slot="assembly-meter-done">
+  <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 15</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+</template>
+
+<template data-slot="book-image">
+  <img id="book-img" src="js/lop3-bai10/book/page-01.jpg" alt="Trang 1 trong hướng dẫn lắp ráp robot thám hiểm sao Hỏa">
+</template>
+
+<template data-slot="book-link">
+  <a id="book-pdf" class="link" href="js/lop3-bai10/book/page-01.jpg" target="_blank" rel="noopener">Mở hình lớn ↗</a>
+</template>
+
+<template data-slot="creative-intro">
+  <p class="status-text">Sao Hỏa có nhiều đá và bão bụi. Em hãy nâng cấp robot bằng <b>ăng-ten dò xa</b>, <b>đèn pha</b> hoặc <b>bánh gai</b> để thám hiểm tốt hơn. Chọn gói gợi ý hoặc tự gắn chi tiết.</p>
+</template>
+
+<template data-slot="creative-canvas">
+  <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình robot thám hiểm 3D đang sáng tạo"></div>
+</template>
+
+<template data-slot="creative-slot-label">
+  <div class="panel-h"><h2>Tự gắn chi tiết</h2><small>3 vị trí trên robot</small></div>
+</template>
+
+<template data-slot="creative-result-label">
+  <div class="panel-h"><h2>Robot của em sẽ có</h2></div>
+</template>
+
+<template data-slot="sim-upgrade-label">
+  <small id="sim-active-upgrade-badge" class="status-tag">Robot cơ bản</small>
+</template>
+
+<template data-slot="sim-scene">
+  <canvas id="space-scene" aria-label="Sa bàn sao Hỏa: xe thám hiểm chạy tới ba tảng đá, cảm biến sóng âm phát hiện vật cản và thu mẫu"></canvas>
+  <div class="sim-stage" id="sim-stage" aria-label="Robot thám hiểm 3D chuyển động theo chương trình"></div>
+  <p class="scene-idle" id="scene-idle">Chạm khối <b>Start</b> màu vàng hoặc nút <b>▶</b> để robot bắt đầu thám hiểm</p>
+</template>
+
+<template data-slot="sim-meters">
+  <dl class="meters pro-only">
+    <div class="meter"><dt>Tốc độ xe</dt><dd><div class="v" id="m-speed">0<small>cm/giây</small></div><div class="s" id="m-speed-note">Động cơ dừng</div></dd></div>
+    <div class="meter"><dt>Cảm biến</dt><dd><div class="v" id="m-dist">--<small>cm</small></div><div class="s" id="m-dist-note">Đang dò đá</div></dd></div>
+    <div class="meter"><dt>Đã thu</dt><dd><div class="v" id="m-saved">0<small>/ 3</small></div><div class="s">mẫu đá sao Hỏa</div></dd></div>
+    <div class="meter"><dt>Thời tiết</dt><dd><div class="v" id="m-weather">Trời quang</div><div class="s" id="m-weather-note">Ổn định</div></dd></div>
+  </dl>
+</template>
+
+<template data-slot="sim-calculation">
+  <div class="panel-h"><h2>Tính toán</h2><small>Sóng âm đi và về</small></div>
+  <div class="pad calc"><p class="calc-eq" id="calc-eq1"></p><p class="calc-eq" id="calc-eq2"></p></div>
+</template>
+
+<template data-slot="sim-hint">
+  <p class="hint"><b>NV2:</b> Ghép đúng hàng mẫu và chạy một vòng lặp. <b>NV3:</b> cho xe chạy chậm tới đá, dùng <b>Chờ vật cản</b> rồi <b>Stop</b>, đợi ít nhất 2 giây để lấy mẫu. <b>Nâng cao:</b> bão bụi từ giây 10 đến 18; dùng khối <b>Wait</b> để chờ bão tan trước khi tiến tiếp.</p>
+</template>
