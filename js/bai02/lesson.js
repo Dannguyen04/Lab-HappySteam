@@ -87,9 +87,9 @@
     missions: { core: ['m1', 'm2', 'm3', 'm4'], pro: ['m5'] },
     cards: {
       m2: { n: 2, title: 'Ghép khối giống hàng mẫu', text: 'Đặt các khối giống hàng mẫu mờ: Start, Quay nhanh, Chờ 3 giây, Dừng. Rồi chạm Start cho xe chạy tới cuối.' },
-      m3: { n: 3, title: 'Đỗ xe vào ô đỗ', text: 'Cho xe qua vạch đích rồi dừng hẳn trong ô đỗ, không đâm vào tường lốp. Gợi ý: xe leo dốc chậm hơn, hãy thử đổi số giây chờ.' },
+      m3: { n: 3, title: 'Đỗ xe vào ô đỗ', text: 'Cho xe qua vạch đích rồi dừng trong ô đỗ. Gợi ý: xe leo dốc chậm, hãy đổi số giây chờ.' },
       m4: { n: 4, title: 'Thử xe đua sáng tạo', text: 'Gắn thêm chi tiết ở chặng Sáng tạo, rồi quay lại cho xe chạy.', go: ['creative', 'Đến xưởng sáng tạo'] },
-      m5: { n: 5, title: 'Vượt đường dốc lên dốc xuống', text: 'Đường Nâng cao có dốc lên rồi dốc xuống. Ghép chuỗi khối: chạy nhanh để lên dốc, đổi sang chạy chậm trước khi xuống dốc, rồi đỗ vào ô đỗ.' },
+      m5: { n: 5, title: 'Vượt đường dốc lên dốc xuống', text: 'Chạy nhanh để lên dốc, đổi sang chạy chậm trước khi xuống dốc, rồi đỗ vào ô đỗ.' },
       m1: { n: 1, title: 'Lắp xong xe đua', text: 'Bấm “Đã lắp xong bước này” ở cả 14 bước của chặng Lắp ráp.', go: ['assembly', 'Đến chặng lắp ráp'] }
     },
     cardOrder: { kid: ['m2', 'm3', 'm4', 'm1'], pro: ['m2', 'm3', 'm4', 'm5', 'm1'] },

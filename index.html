@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Phòng Lab ZMrobo ảo · Happy STEAM</title>
   <link rel="stylesheet" href="css/lab.css">
+  <link rel="stylesheet" href="css/home-student.css">
 </head>
 <body>
 <div class="wrap home">
@@ -17,9 +18,15 @@
       <p class="lede">Chọn lớp, học kì rồi chạm vào bài hôm nay để lắp mô hình 3D, sáng tạo và lập trình robot.</p>
     </div>
     <div class="tools-top">
+      <div id="home-student" class="home-student" hidden>
+        <span class="home-student-avatar" id="home-student-avatar" aria-hidden="true"></span>
+        <strong id="home-student-name"></strong>
+        <button type="button" class="iconbtn" id="home-switch-student">Không phải em?</button>
+      </div>
       <button type="button" class="iconbtn" id="btn-toggle-theme">Giao diện tối</button>
     </div>
   </header>
+  <p class="home-network-note" id="home-network-note" role="status" hidden></p>
 
   <!-- ===== Chọn lớp và học kì ===== -->
   <nav class="home-pick" aria-label="Chọn lớp và học kì">
@@ -36,10 +43,10 @@
     <div class="lesson-grid" id="lesson-grid"></div>
   </section>
 
-  <footer class="home-foot">Tài liệu theo khung chương trình AI Robotics tiểu học · Bộ ZMrobo Alpha 330</footer>
+  <footer class="home-foot">Tài liệu theo khung chương trình AI Robotics tiểu học · Bộ ZMrobo Alpha 330 · <a href="giao-vien.html">Giáo viên</a></footer>
 </div>
 
 <script src="js/catalog.js"></script>
-<script src="js/home.js"></script>
+<script type="module" src="js/home.js"></script>
 </body>
 </html>

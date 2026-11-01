@@ -15,7 +15,7 @@
   const FEATURES = {
     dish: { text: 'Ăng-ten: cảm biến dò xa gấp đôi, thấy tảng đá sớm hơn' },
     lamp: { text: 'Đèn pha: vẫn nhìn thấy đá khi có bão bụi (Nâng cao)' },
-    wheels: { text: 'Bánh gai: chạy trong bão bụi lâu gấp đôi mới bị lún cát (Nâng cao)' }
+    wheels: { text: 'Bánh gai: chịu được bão bụi lâu gấp đôi trước khi lún cát (Nâng cao)' }
   };
   const SLOTS = [
     { id: 'top', name: 'Trên thân xe', options: [{ id: 'dish', label: 'Ăng-ten', parts: { 'BP-8813': 1, 'BP-3990': 1 }, feature: 'dish' }] },
@@ -109,8 +109,8 @@
     missions: { core: ['m1', 'm2', 'm3', 'm4'], pro: ['m5'] },
     cards: {
       m1: { n: 1, title: 'Lắp xong robot', text: 'Bấm “Đã lắp xong bước này” ở cả 15 bước của chặng Lắp ráp.', go: ['assembly', 'Đến chặng lắp ráp'] },
-      m2: { n: 2, title: 'Ghép khối giống hàng mẫu', text: 'Ghép đúng chương trình mẫu: Start, Repeat, động cơ chậm, chờ vật cản (cảm biến sóng âm), dừng, chờ 3 giây, Repeat End. Chạy hết một vòng lặp.' },
-      m3: { n: 3, title: 'Thu 3 mẫu đá sao Hỏa', text: 'Cho xe tiến tới, dừng cách tảng đá 3–15 cm (không được đâm vào đá) và đứng yên 2 giây để lấy mẫu. Thu đủ 3 mẫu!' },
+      m2: { n: 2, title: 'Ghép khối giống hàng mẫu', text: 'Ghép đúng chương trình mẫu: Start, Repeat, động cơ chậm, chờ vật cản (cảm biến siêu âm), dừng, chờ 3 giây, Repeat End. Chạy hết một vòng lặp.' },
+      m3: { n: 3, title: 'Thu 3 mẫu đá sao Hỏa', text: 'Cho xe tiến tới, dừng cách tảng đá 3–15 cm (không đâm vào đá) và đứng yên 2 giây để lấy mẫu. Thu đủ 3 mẫu! Nâng cao có thêm bão bụi từ giây 10 đến 18: xe chạy trong bão sẽ lún cát. Hãy thêm khối Wait để chờ bão tan rồi mới chạy.' },
       m4: { n: 4, title: 'Thử robot sáng tạo', text: 'Gắn thêm chi tiết ở chặng Sáng tạo, rồi quay lại chạy chương trình.', go: ['creative', 'Đến xưởng sáng tạo'] },
       m5: { n: 5, title: 'Thám hiểm trong bão bụi', text: 'Bão bụi nổi lên theo giờ: cảm biến bị mù và xe chạy sẽ lún cát. Hãy cho xe đứng yên chờ bão tan rồi mới thu đủ 3 mẫu.' }
     },

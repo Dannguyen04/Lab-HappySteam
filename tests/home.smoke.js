@@ -2,8 +2,102 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const os = require('node:os');
 const { chromium } = require('playwright');
 const { pageUrl } = require('./helpers/page-url');
+
+// Kiểm giao diện có phiên bằng bản build Vite với Supabase giả, không truy cập DB thật.
+async function smokeStudentHome(browser) {
+  const oldUrl = process.env.VITE_SUPABASE_URL;
+  const oldKey = process.env.VITE_SUPABASE_ANON_KEY;
+  process.env.VITE_SUPABASE_URL = 'https://supabase.mock.invalid';
+  process.env.VITE_SUPABASE_ANON_KEY = 'home-smoke-key';
+  const { build, preview } = await import('vite');
+  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'happysteam-home-'));
+  let server;
+  try {
+    const configFile = path.resolve(__dirname, '../vite.config.js');
+    await build({ configFile, build: { outDir, emptyOutDir: true }, logLevel: 'error' });
+    server = await preview({ configFile, build: { outDir }, preview: { host: '127.0.0.1', port: 0 }, logLevel: 'error' });
+    const base = server.resolvedUrls.local[0];
+    const page = await browser.newPage({ viewport: { width: 375, height: 760 }, isMobile: true });
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    let offline = false;
+    let denied = false;
+    let leaveCalls = 0;
+    await page.route('https://supabase.mock.invalid/**', async route => {
+      const name = new URL(route.request().url()).pathname;
+      if (offline) { await route.abort('failed'); return; }
+      if (name.endsWith('/rpc/student_home_state')) {
+        if (denied) {
+          await route.fulfill({ status: 403, contentType: 'application/json',
+            headers: { 'access-control-allow-origin': '*' },
+            body: '{"code":"42501","message":"ZM_BLOCK_DEVICE_NOT_APPROVED"}' });
+          return;
+        }
+        assert.deepEqual(route.request().postDataJSON(), {
+          p_student_id: 'student-1', p_session_id: 'session-1'
+        });
+        await route.fulfill({ status: 200, contentType: 'application/json',
+          headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({
+            ok: true, grade: 1, class_name: 'Lớp 1A', class_id: 'class-1', current_week: 8,
+            lessons: { 'lop1-bai03': true, 'lop1-bai09': false, 'lop1-bai10': true }
+          }) });
+      } else if (name.endsWith('/rpc/leave_session')) {
+        leaveCalls++;
+        await route.fulfill({ status: 200, contentType: 'application/json',
+          headers: { 'access-control-allow-origin': '*' }, body: '{"ok":true}' });
+      } else throw new Error('Unexpected mock RPC: ' + name);
+    });
+    await page.goto(new URL('index.html', base).href);
+    assert.equal(await page.locator('#grade-tabs [data-grade]').count(), 5, 'Khách được xem tự do');
+    assert.equal(await page.locator('#home-student').isVisible(), false);
+    await page.evaluate(() => sessionStorage.setItem('happy-student-session', JSON.stringify({
+      student_id: 'student-1', session_id: 'session-1', expires_at: '2027-01-01T00:00:00Z',
+      nickname: 'An', avatar: '🐱'
+    })));
+    await page.reload();
+    await page.locator('.lesson-card.is-locked').first().waitFor();
+    assert.equal(await page.locator('#grade-tabs [data-grade]').count(), 1, 'Chỉ hiện khối lớp của học sinh');
+    assert.equal(await page.locator('#grade-tabs [data-grade="1"]').count(), 1);
+    assert.equal(await page.locator('.lesson-card.is-ready[href="bai.html?id=lop1-bai03"]').count(), 1);
+    assert.equal(await page.locator('.lesson-card.is-locked').count() > 0, true);
+    assert.equal(await page.locator('.lesson-card.is-soon').count() > 0, true);
+    assert.match(await page.locator('#home-student').innerText(), /An[\s\S]*Không phải em\?/);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    offline = true;
+    await page.reload();
+    await page.getByText(/Đang dùng trạng thái bài học đã lưu/).waitFor();
+    assert.equal(await page.locator('.lesson-card.is-ready[href="bai.html?id=lop1-bai03"]').count(), 1, 'Giữ trạng thái cache khi mất mạng');
+    await page.evaluate(() => sessionStorage.removeItem('happy-home-cache:student-1:session-1'));
+    await page.reload();
+    await page.getByText(/Chưa tải được lớp/).waitFor();
+    assert.equal(await page.locator('.lesson-card').count(), 0, 'Chưa có cache phải đóng danh mục');
+    offline = false;
+    await page.reload();
+    await page.locator('.lesson-card.is-ready').first().waitFor();
+    denied = true;
+    await page.reload();
+    await page.getByText(/Phiên máy không còn được duyệt/).waitFor();
+    assert.equal(await page.locator('.lesson-card').count(), 0, 'Từ chối quyền phải xoá cache');
+    assert.equal(await page.evaluate(() => sessionStorage.getItem('happy-home-cache:student-1:session-1')), null);
+    denied = false;
+    await page.getByRole('button', { name: 'Không phải em?' }).click();
+    await page.waitForURL(/\/vao-hoc\.html/);
+    assert.equal(await page.evaluate(() => sessionStorage.getItem('happy-student-session')), null);
+    assert.equal(leaveCalls, 1);
+    assert.deepEqual(errors, [], 'Giao diện có phiên không có lỗi JavaScript');
+    await page.close();
+  } finally {
+    if (server) await new Promise((resolve, reject) => server.httpServer.close(error => error ? reject(error) : resolve()));
+    fs.rmSync(outDir, { recursive: true, force: true });
+    if (oldUrl === undefined) delete process.env.VITE_SUPABASE_URL;
+    else process.env.VITE_SUPABASE_URL = oldUrl;
+    if (oldKey === undefined) delete process.env.VITE_SUPABASE_ANON_KEY;
+    else process.env.VITE_SUPABASE_ANON_KEY = oldKey;
+  }
+}
 
 (async () => {
   const executablePath = [process.env.ZM_CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe']
@@ -46,6 +140,7 @@ const { pageUrl } = require('./helpers/page-url');
     const d = await mobile.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
     assert.ok(d[0] <= d[1], 'Trang chọn bài không tràn ngang ở 375px: ' + d);
     assert.deepEqual(errors, [], 'Không có lỗi JavaScript / tệp thiếu');
+    await smokeStudentHome(browser);
     console.log('PASS: trang chọn bài Lớp → Học kì → Bài, Bài 9 mở được và quay lại được, nhớ lựa chọn, không tràn 375px.');
   } finally {
     await browser.close();

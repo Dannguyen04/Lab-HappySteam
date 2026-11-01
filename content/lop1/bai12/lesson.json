@@ -1,0 +1,77 @@
+{
+  "title": "Đê ngăn lũ",
+  "topic": "Thiên tai và lũ lụt",
+  "model": "đê ngăn lũ",
+  "sheetName": "Bài 12: Thiên tai, lũ lụt – Đê ngăn lũ",
+  "baseName": "Khung đê",
+  "steps": 24,
+  "assetFolder": "lop1-bai12",
+  "bookAlt": "Hình lắp ráp gốc bước 1 của đê ngăn lũ",
+  "firstStep": "Lắp khung đê",
+  "lede": "Tìm hiểu lũ lụt và cách bảo vệ làng, lắp mô hình đê ngăn lũ theo 24 bước, dùng cảm biến chạm điều khiển động cơ qua bánh răng để nâng và hạ cửa đê.",
+  "victory": "Em đã hoàn thành mô hình đê, điều khiển cửa đê bằng cảm biến chạm và bảo vệ ngôi làng qua hai lần thi đấu với chương trình cải tiến.",
+  "engine": { "class": "DamEngine", "file": "dam-engine.js" },
+  "scene": {
+    "file": "flood-scene.js",
+    "aria": "Sa bàn lũ lụt: đê nâng hạ theo chương trình, nước dâng về làng",
+    "stage": "Mô hình đê ngăn lũ 3D đang hoạt động",
+    "idle": "Chạm khối <b>Start</b> màu vàng hoặc nút <b>▶</b>, rồi bấm <b>✋</b> để nhấn cảm biến chạm.",
+    "hand": true
+  },
+  "missions": {
+    "m1": {
+      "tip": "Hoàn thành 24 bước lắp ráp",
+      "text": "Bấm “Đã lắp xong bước này” ở mọi bước của chặng Lắp ráp."
+    },
+    "m2": {
+      "chip": "Lập trình theo mẫu",
+      "tip": "Hai lần nhấn nút: nâng 0,5 giây rồi hạ 0,5 giây theo chương trình mẫu",
+      "title": "Ghép khối giống hàng mẫu",
+      "text": "Đặt khối giống hàng mẫu mờ, chạm Start. Bấm ✋ để nhấn cảm biến chạm: nhấn một lần để nâng lên, nhấn lần nữa để hạ xuống."
+    },
+    "m3": {
+      "chip": "Giữ làng an toàn",
+      "tip": "Dựng đê tối thiểu 40° trước giây thứ 5 và giữ tới khi nước rút",
+      "title": "Dựng đê trước khi lũ về",
+      "text": "Lũ tới ở giây thứ 5. Nâng đê lên ít nhất 40° và giữ tới khi nước rút. Gợi ý: nhấn một lần, đừng hạ đê sớm."
+    },
+    "m4": {
+      "chip": "Cải tiến lần hai",
+      "tip": "Thắng hai lượt bằng hai chương trình khác nhau",
+      "title": "Cải tiến và thi đấu lần 2",
+      "text": "Thắng lần 1, rồi đổi tốc độ hoặc số giây chờ để đê dựng nhanh hơn và thắng lần 2.",
+      "go": null
+    },
+    "m5": {
+      "pro": true,
+      "chip": "Chinh phục ba mức lũ",
+      "tip": "Nâng cao: chặn ba mức lũ khác nhau mà không nâng đê quá mức",
+      "title": "Tính góc nâng đê",
+      "text": "Mỗi lần lũ có mức khác nhau. Đê phải nâng từ mức lũ đến mức lũ + 20° (ô vàng) để thuyền cứu hộ qua. Tính: góc = 11,25 × mức × số giây. Chặn đúng 3 mức lũ."
+    }
+  },
+  "blocks": {
+    "toolbox": ["touch", "lowSpeed", "highSpeed", "motorPower", "motorReverse", "wait", "motorStop", "melodyA"],
+    "pro": [],
+    "sample": ["start", "repeatStart", "touch", "lowSpeed", ["wait", { "duration": 0.5 }], "motorStop", "touch", "motorReverse", "lowSpeed", ["wait", { "duration": 0.5 }], "motorStop", "repeatEnd"],
+    "empty": ["start", "repeatStart", "repeatEnd"]
+  },
+  "creative": {
+    "intro": "Bài học này tập trung lắp đê và cải tiến chương trình thi đấu.",
+    "slots": 0,
+    "canvasAria": "Mô hình đê ngăn lũ 3D",
+    "slotTitle": "Cải tiến mô hình",
+    "slotHint": null,
+    "resultTitle": "Tiến độ lắp ráp",
+    "badge": "Đê ngăn lũ cơ bản"
+  },
+  "meters": [
+    { "label": "Tốc độ nâng", "id": "m-speed", "value": 0, "unit": "độ/giây", "note": "Động cơ dừng", "noteId": "m-speed-note" },
+    { "label": "Góc cửa đê", "id": "m-dist", "value": 0, "unit": "độ", "note": "0° nằm ngang · 90° dựng đứng" },
+    { "label": "Góc cần giữ", "id": "m-target", "value": "≥ 40", "unit": "độ", "note": "Giữ đê khi lũ qua", "noteId": "m-target-note" },
+    { "label": "Ngôi làng", "id": "m-sample", "value": "An toàn", "note": "Lũ về ở giây thứ 5" }
+  ],
+  "calcTitle": "Thử tính góc nâng",
+  "calc": "11,25 × mức động cơ × số giây",
+  "hint": "<b>NV2:</b> Theo mẫu trong sách, nhấn cảm biến hai lần: quay chậm 0,5 giây nâng cửa đê, nhấn lần nữa hạ cửa đê. <b>NV3:</b> Để chống lũ, hãy điều chỉnh thời gian nâng đủ ít nhất 40° trước giây thứ 5 và giữ tới giây thứ 9. <b>NV4:</b> Thi đấu lần hai bằng chương trình đã cải tiến. <b>Nâng cao:</b> góc nâng cần nằm trong khoảng mức lũ đến mức lũ + 20° để thuyền cứu hộ đi qua."
+}

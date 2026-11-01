@@ -1,0 +1,73 @@
+{
+  "title": "Robot tìm nguồn nước trên sao Hỏa",
+  "pageTitle": "Robot tìm nguồn nước",
+  "topic": "Sống trên sao Hỏa – Tìm kiếm nguồn nước",
+  "model": "robot tìm nguồn nước",
+  "sheetName": "Lớp 3 · Bài 11: Sống trên sao Hỏa – Tìm kiếm nguồn nước",
+  "baseName": "Thân robot",
+  "steps": 15,
+  "assetFolder": "lop3-bai11",
+  "bookAlt": "Bước 1: hình hướng dẫn lắp ráp robot tìm nguồn nước",
+  "firstStep": "Robot tìm nguồn nước",
+  "lede": "Nước cần thiết cho sự sống. Lắp robot 15 bước với động cơ và cảm biến siêu âm, lập trình chạy đến mỏm băng, dừng và bơm nước 3 giây. Nâng cấp bồn chứa hoặc máy bơm để thu đủ nước nhanh hơn.",
+  "victory": "Em đã lắp robot 15 bước, dùng cảm biến để tìm ba mỏm băng, thu đủ nước và thử cải tiến robot. Em hãy giải thích vì sao nước quan trọng đối với sự sống.",
+  "engine": { "class": "WaterEngine", "file": "water-engine.js" },
+  "scene": {
+    "file": "water-scene.js",
+    "aria": "Sa bàn sao Hỏa: robot chạy qua ba mỏm băng, cảm biến phát hiện và máy bơm thu nước",
+    "stage": "Robot tìm nước 3D di chuyển theo chương trình",
+    "idle": "Chạm khối <b>Start</b> màu vàng hoặc nút <b>▶</b> để robot đi tìm nước"
+  },
+  "missions": {
+    "m1": {
+      "tip": "Đánh dấu hoàn thành cả 15 bước lắp ráp",
+      "title": "Lắp xong robot tìm nước"
+    },
+    "m2": {
+      "chip": "Lập trình theo mẫu",
+      "tip": "Start · Repeat · Low Speed · Chờ vật cản · Stop · Wait 3s · Repeat End",
+      "title": "Ghép khối giống hàng mẫu",
+      "text": "Ghép đúng chương trình trong sách: Start, lặp lại { động cơ chạy, chờ cảm biến thấy vật cản, Stop, chờ 3 giây }. Chạy hết một vòng lặp."
+    },
+    "m3": {
+      "chip": "Lấy 3 mẫu nước",
+      "tip": "Đến từng mỏm băng, dừng trong tầm 15 cm rồi bơm liên tục 3 giây",
+      "title": "Lấy đủ nước ở 3 mỏm băng",
+      "text": "Robot chạy dọc đường trên sao Hỏa, cảm biến thấy mỏm băng thì dừng lại và bơm nước 3 giây. Lấy đủ mẫu nước ở cả 3 mỏm băng!"
+    },
+    "m4": {
+      "chip": "Chạy robot sáng tạo",
+      "tip": "Chọn gói nâng cấp sáng tạo rồi chạy chương trình",
+      "title": "Thử robot sáng tạo"
+    },
+    "m5": {
+      "pro": true,
+      "chip": "Thi tìm nước nhanh",
+      "tip": "Nâng cao: lấy đủ 3 mẫu trên đường dài trước 17 giây",
+      "title": "Thi đấu tìm nước nhanh nhất",
+      "text": "Đường dài hơn, mỏm băng ở chỗ mới. Lấy đủ nước ở 3 mỏm trong 17 giây: chọn tốc độ phù hợp (chạy chậm quá sẽ không kịp) và thử gắn máy bơm mạnh."
+    }
+  },
+  "blocks": {
+    "toolbox": ["obstacle", "lowSpeed", "highSpeed", "motorStop", "wait", "melodyA"],
+    "pro": ["motorPower", "motorReverse"],
+    "sample": ["start", "repeatStart", "lowSpeed", "obstacle", "motorStop", ["wait", { "duration": 3 }], "repeatEnd"],
+    "empty": ["start", "repeatStart", "repeatEnd"]
+  },
+  "creative": {
+    "intro": "Để tìm nước trên sao Hỏa, robot phải <b>phát hiện mỏm băng</b> và <b>dừng đủ lâu để bơm</b>. Thử nâng cấp <b>bồn chứa</b> (thêm 1 lít/mẫu), <b>máy bơm mạnh</b> (bơm nhanh gấp đôi), hoặc <b>pin mặt trời</b> (thiết kế sáng tạo). Chọn gói hoặc tự gắn chi tiết lên mô hình 3D.",
+    "slots": 3,
+    "canvasAria": "Mô hình robot tìm nguồn nước 3D đang được nâng cấp",
+    "slotHint": "3 vị trí trên robot",
+    "resultTitle": "Robot của em sẽ có",
+    "badge": "Robot cơ bản"
+  },
+  "meters": [
+    { "label": "Tốc độ", "id": "m-speed", "value": 0, "unit": "cm/giây", "note": "Động cơ dừng", "noteId": "m-speed-note" },
+    { "label": "Quãng đường", "id": "m-dist", "value": 0, "unit": "cm", "note": "Mỏm băng kế tiếp", "noteId": "m-dist-note" },
+    { "label": "Đã lấy", "id": "m-water", "value": 0, "unit": "/ 3 mẫu", "note": "0 lít nước", "noteId": "m-water-note" },
+    { "label": "Thời gian", "id": "m-time", "value": 0, "unit": "giây", "note": "Thi đấu tối đa 17 giây", "noteId": "m-time-note" }
+  ],
+  "calc": "Tốc độ · quãng đường · thời gian bơm",
+  "hint": "<b>NV2:</b> Ghép chương trình mẫu rồi chạy hết một vòng lặp. <b>NV3:</b> dùng <b>Chờ vật cản</b> để cảm biến phát hiện mỏm băng, <b>Stop</b> để dừng xe, và <b>Wait 3s</b> để bơm nước. <b>Nâng cao:</b> đường dài hơn và có giới hạn 17 giây; thử <b>Motor High</b> hoặc máy bơm mạnh để hoàn thành kịp thời gian."
+}

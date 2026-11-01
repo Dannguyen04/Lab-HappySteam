@@ -4,9 +4,6 @@
   'use strict';
 
   const W = 900, H = 560, GROUND = 430, START = 130, END = 812;
-  const $ = id => document.getElementById(id);
-  let canvas, ctx, raf = 0, last = 0, active = false, mode = 'story', toastTimer = 0, resizeObserver;
-  const sparks = [];
   const hinted = new Set();
   const getArt = () => window.WaterArt || window.MarsWaterArt || window.Bai11Art || {};
 
@@ -64,7 +61,7 @@
     }
   };
 
-  function draw(name, ...args) {
+  function draw(ctx, name, ...args) {
     const art = getArt();
     const fn = typeof art[name] === 'function' ? art[name] : fallback[name];
     fn(ctx, ...args);
@@ -75,40 +72,24 @@
   function at(sim, cm) {
     return START + cm * scaleOf(sim);
   }
-  function resize() {
-    if (!canvas) return;
-    const w = canvas.clientWidth || W;
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-    canvas.width = Math.round(w * dpr);
-    canvas.height = Math.round(w * H / W * dpr);
-  }
-  function label(caption, x, y, color = '#fff', size = 14) {
-    ctx.textAlign = 'center'; ctx.font = `700 ${size}px "Be Vietnam Pro",sans-serif`;
-    ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(35,20,25,.75)'; ctx.strokeText(caption, x, y);
-    ctx.fillStyle = color; ctx.fillText(caption, x, y);
-  }
-  function frame(ts) {
-    raf = 0;
-    const sim = window.simEngine;
-    if (!active || mode !== 'story' || !ctx || !sim) return;
-    raf = requestAnimationFrame(frame);
-    const now = ts / 1000;
-    if (now - last < 1 / 40) return;
-    last = now;
-    ctx.setTransform(canvas.width / W, 0, 0, canvas.height / H, 0, 0);
-    draw('drawBackground', now);
+  window.ZMSceneKit.create({
+    W,
+    H,
+    idleHidden: sim => sim.running || sim.got() > 0,
+    draw(ctx, now, sim, kit) {
+    draw(ctx, 'drawBackground', now);
     // Thước đường đi cố định theo chế độ, mỏm băng lấy từ chính trạng thái bộ mô phỏng.
     ctx.fillStyle = 'rgba(70,30,19,.42)'; ctx.fillRect(0, GROUND - 2, W, 64);
     ctx.strokeStyle = '#f3c29e'; ctx.lineWidth = 3; ctx.setLineDash([12, 12]);
     ctx.beginPath(); ctx.moveTo(START, GROUND + 21); ctx.lineTo(END, GROUND + 21); ctx.stroke();
     ctx.setLineDash([]);
-    draw('drawBase', 68, GROUND);
-    draw('drawCliff', at(sim, sim.course().end) + 10, GROUND);
+    draw(ctx, 'drawBase', 68, GROUND);
+    draw(ctx, 'drawCliff', at(sim, sim.course().end) + 10, GROUND);
     for (let i = 0; i < sim.sites.length; i++) {
       const site = sim.sites[i];
       const x = at(sim, site.a);
-      draw('drawIcePatch', x, GROUND, { ...site, t: now });
-      label(`Mỏm ${i + 1}${site.done ? ' ✓' : ''}`, x, GROUND + 64, site.done ? '#adffae' : '#fff');
+      draw(ctx, 'drawIcePatch', x, GROUND, { ...site, t: now });
+      kit.label(`Mỏm ${i + 1}${site.done ? ' ✓' : ''}`, x, GROUND + 64, site.done ? '#adffae' : '#fff', 14);
       if (site.pump > 0 && !site.done) {
         const pct = Math.min(1, site.pump / sim.pumpTime());
         ctx.fillStyle = '#173747'; ctx.fillRect(x - 30, GROUND - 75, 60, 9);
@@ -120,133 +101,38 @@
       ctx.strokeStyle = 'rgba(95,245,244,.45)'; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.arc(roverX + 42, GROUND - 80, 43 + 8 * Math.sin(now * 9), 0, Math.PI * 2); ctx.stroke();
     }
-    draw('drawRover', roverX, GROUND, {
+    draw(ctx, 'drawRover', roverX, GROUND, {
       wheel: -sim.rev * Math.PI * 2, shake: sim.motorOn ? 0.1 : 0,
       scan: sim.motorOn, pumping: sim.sites.some(s => s.pump > 0 && !s.done),
       tank: sim.has('tank'), pump: sim.has('pump'), solar: sim.has('solar'), t: now
     });
-    draw('drawWaterMeter', 18, 19, sim.got(), sim.sites.length, sim.liters());
-    label(`${sim.x.toFixed(0)} cm`, Math.max(60, Math.min(W - 60, roverX)), GROUND - 112, '#fff', 13);
-    if (sim.advanced) label(`NÂNG CAO · ${sim.runT.toFixed(1)}/${sim.limit()} giây`, 695, 48, sim.runT > sim.limit() ? '#ffaba1' : '#fff', 16);
-    sparks.splice(0, sparks.length, ...sparks.filter(s => now - s.t < 1.1));
-    for (const s of sparks) {
-      const p = (now - s.t) / 1.1;
-      ctx.globalAlpha = 1 - p; ctx.fillStyle = '#fcf7a5';
-      ctx.beginPath(); ctx.arc(s.x + s.dx * p, s.y + s.dy * p, 5 * (1 - p), 0, Math.PI * 2); ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-    const idle = $('scene-idle');
-    if (idle) idle.hidden = sim.running || sim.got() > 0;
-  }
+    draw(ctx, 'drawWaterMeter', 18, 19, sim.got(), sim.sites.length, sim.liters());
+    kit.label(`${sim.x.toFixed(0)} cm`, Math.max(60, Math.min(W - 60, roverX)), GROUND - 112, '#fff', 13);
+    if (sim.advanced) kit.label(`NÂNG CAO · ${sim.runT.toFixed(1)}/${sim.limit()} giây`, 695, 48, sim.runT > sim.limit() ? '#ffaba1' : '#fff', 16);
+    },
 
-  function startFrame() {
-    if (active && mode === 'story' && ctx && !raf) {
-      last = 0;
-      raf = requestAnimationFrame(frame);
+    onEvent(type, data, kit) {
+      const sim = window.simEngine;
+      if (type === 'start') {
+        hinted.clear();
+      } else if (type === 'found') {
+        if (window.SFX?.tone) window.SFX.tone(790, 0.08);
+      } else if (type === 'pumped' && sim) {
+        kit.burst(at(sim, data.site.a), GROUND - 30);
+        if (window.SFX?.ding) window.SFX.ding();
+        kit.toast('ok', `Đã bơm ${data.count}/3 mẫu!`, `Robot đã lấy ${sim.liters()} lít nước. Tiếp tục đi tới mỏm băng kế tiếp.`);
+      } else if (type === 'allSampled') {
+        kit.toast('ok', 'Đã tìm đủ 3 nguồn nước!', `${data.liters} lít trong ${data.secs.toFixed(1)} giây.${data.inTime ? ' Hoàn thành thử thách Nâng cao!' : ''}`);
+      } else if (type === 'late') {
+        kit.toast('warn', 'Hết 17 giây!', 'Hãy chọn tốc độ nhanh hơn hoặc thử máy bơm mạnh rồi chạy lại.');
+      } else if (type === 'miss' && !hinted.has(data)) {
+        hinted.add(data);
+        kit.toast('warn', 'Chưa lấy được nước', data === 'short' ? 'Đợi robot dừng bơm đủ 3 giây (1,5 giây nếu nâng cấp).' : 'Hãy dùng Chờ vật cản rồi Stop trước khi robot đi qua mỏm băng.');
+      } else if (type === 'wall') {
+        kit.toast('warn', 'Đã đến vách núi', 'Robot đã đi hết đường. Hãy thử điều chỉnh chương trình.', { label: 'Thử lại', run: () => sim?.start() });
+      } else if (type === 'sampleDone') {
+        kit.toast('ok', 'Đúng chương trình mẫu!', 'Động cơ chạy, cảm biến phát hiện mỏm băng, robot dừng bơm đủ thời gian và lặp lại.');
+      }
     }
-  }
-  function stopFrame() {
-    if (raf) cancelAnimationFrame(raf);
-    raf = 0;
-  }
-  function clearToast() {
-    clearTimeout(toastTimer);
-    toastTimer = 0;
-    const el = $('scene-toast');
-    if (el) el.hidden = true;
-    const btn = $('scene-toast-btn');
-    if (btn) btn.onclick = null;
-  }
-
-  function toast(kind, title, message, action) {
-    const el = $('scene-toast');
-    if (!el) return;
-    el.dataset.k = kind;
-    const heading = $('scene-toast-title');
-    if (heading) heading.textContent = title;
-    const body = $('scene-toast-text');
-    if (body) body.textContent = message;
-    const btn = $('scene-toast-btn');
-    if (btn) {
-      btn.hidden = !action;
-      btn.onclick = action ? () => { clearToast(); action.run(); } : null;
-      if (action) btn.textContent = action.label;
-    }
-    el.hidden = false;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => { el.hidden = true; }, action ? 6500 : 3200);
-  }
-  function burst(x, y) {
-    const now = performance.now() / 1000;
-    for (let i = 0; i < 16; i++) {
-      const a = i * Math.PI * 2 / 16;
-      sparks.push({ t: now, x, y, dx: Math.cos(a) * 55, dy: Math.sin(a) * 55 });
-    }
-  }
-  function onEvent(type, data) {
-    const sim = window.simEngine;
-    if (type === 'start') {
-      hinted.clear();
-      clearToast();
-    } else if (type === 'found') {
-      if (window.SFX?.tone) window.SFX.tone(790, 0.08);
-    } else if (type === 'pumped' && sim) {
-      burst(at(sim, data.site.a), GROUND - 30);
-      if (window.SFX?.ding) window.SFX.ding();
-      toast('ok', `Đã bơm ${data.count}/3 mẫu!`, `Robot đã lấy ${sim.liters()} lít nước. Tiếp tục đi tới mỏm băng kế tiếp.`);
-    } else if (type === 'allSampled') {
-      toast('ok', 'Đã tìm đủ 3 nguồn nước!', `${data.liters} lít trong ${data.secs.toFixed(1)} giây.${data.inTime ? ' Hoàn thành thử thách Nâng cao!' : ''}`);
-    } else if (type === 'late') {
-      toast('warn', 'Hết 18 giây!', 'Hãy chọn tốc độ nhanh hơn hoặc thử máy bơm mạnh rồi chạy lại.');
-    } else if (type === 'miss' && !hinted.has(data)) {
-      hinted.add(data);
-      toast('warn', 'Chưa lấy được nước', data === 'short' ? 'Đợi robot dừng bơm đủ 3 giây (1,5 giây nếu nâng cấp).' : 'Hãy dùng Chờ vật cản rồi Stop trước khi robot đi qua mỏm băng.');
-    } else if (type === 'wall') {
-      toast('warn', 'Đã đến vách núi', 'Robot đã đi hết đường. Hãy thử điều chỉnh chương trình.', { label: 'Thử lại', run: () => sim?.start() });
-    } else if (type === 'sampleDone') {
-      toast('ok', 'Đúng chương trình mẫu!', 'Động cơ chạy, cảm biến phát hiện mỏm băng, robot dừng bơm đủ thời gian và lặp lại.');
-    }
-  }
-  function setMode(next) {
-    mode = next === 'robot' ? 'robot' : 'story';
-    if (mode === 'robot') stopFrame();
-    const wrap = $('scene-wrap'); if (wrap) wrap.dataset.mode = mode;
-    const btn = $('scene-toggle');
-    if (btn) { btn.textContent = mode === 'story' ? 'Xem robot thật' : 'Xem câu chuyện'; btn.setAttribute('aria-pressed', String(mode === 'robot')); }
-    if (active) {
-      if (mode === 'robot') window.ZMSandbox?.open();
-      else window.ZMSandbox?.close();
-    }
-    resize();
-    startFrame();
-  }
-  function enter() {
-    active = true;
-    resize();
-    if (resizeObserver && canvas) resizeObserver.observe(canvas);
-    if (mode === 'robot') window.ZMSandbox?.open();
-    startFrame();
-  }
-  function leave() {
-    active = false;
-    stopFrame();
-    if (resizeObserver) resizeObserver.disconnect();
-    clearToast();
-    window.ZMSandbox?.close();
-  }
-
-  zmReady(() => {
-    canvas = $('space-scene');
-    if (!canvas) return;
-    ctx = canvas.getContext('2d');
-    resize();
-    if (typeof ResizeObserver !== 'undefined') {
-      resizeObserver = new ResizeObserver(resize);
-      if (active) resizeObserver.observe(canvas);
-    }
-    $('scene-toggle')?.addEventListener('click', () => setMode(mode === 'story' ? 'robot' : 'story'));
-    $('scene-toast-close')?.addEventListener('click', clearToast);
-    startFrame();
   });
-  window.ZMScene = { enter, leave, onEvent, setMode, mode: () => mode };
 })();

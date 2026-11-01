@@ -5,21 +5,12 @@
 
   const W = 900, H = 560;
   const $ = id => document.getElementById(id);
-  let canvas, ctx, raf = 0, last = 0, active = false, currentMode = 'story';
-  let toastTimer = 0, shakeUntil = 0, flashUntil = 0;
-
-  function resize() {
-    if (!canvas) return;
-    const width = canvas.clientWidth || W;
-    const scale = Math.min(2, window.devicePixelRatio || 1);
-    canvas.width = Math.round(width * scale);
-    canvas.height = Math.round(width * H / W * scale);
-  }
+  let flashUntil = 0;
 
   // Cửa van trong FloodArt: gate=0 đóng xuống, gate=1 mở lên.
   // Động cơ trong bài học: angle=0 đê chưa chắn, angle=90 đê chắn hoàn toàn.
   // Vì vậy đổi chiều giá trị khi chuyển từ mô phỏng sang hình vẽ.
-  function drawArt(sim, t) {
+  function drawArt(ctx, sim, t) {
     const A = window.FloodArt;
     const water = sim.water();
     const hold = Math.max(0, Math.min(1, sim.angle / 90));
@@ -39,7 +30,7 @@
     if (sim.running && sim.runT >= 5 && !isFlood) A.drawRescueBoat(ctx, 655, 390, t);
   }
 
-  function drawSimple(sim, t) {
+  function drawSimple(ctx, sim, t) {
     const flood = sim.water();
     const gradient = ctx.createLinearGradient(0, 0, 0, H);
     gradient.addColorStop(0, flood > 0.2 ? '#7a91a8' : '#87cff2');
@@ -93,7 +84,7 @@
     }
   }
 
-  function pill(text, x, y, color) {
+  function pill(ctx, text, x, y, color) {
     ctx.font = '700 18px "Be Vietnam Pro", "Segoe UI", sans-serif';
     ctx.textAlign = 'left';
     ctx.fillStyle = 'rgba(18,43,59,.9)';
@@ -102,166 +93,87 @@
     ctx.fillText(text, x, y);
   }
 
-  function frame(ts) {
-    if (!active) { raf = 0; return; }
-    raf = requestAnimationFrame(frame);
-    const sim = window.simEngine;
-    if (!ctx || !sim || !active || currentMode !== 'story') return;
-    if (ts - last < 25) return;
-    last = ts;
-    const t = ts / 1000;
-    ctx.setTransform(canvas.width / W, 0, 0, canvas.height / H, 0, 0);
-    ctx.clearRect(0, 0, W, H);
-    ctx.save();
-    if (t < shakeUntil) ctx.translate(Math.sin(t * 52) * 4, 0);
-    if (window.FloodArt && [
-      'drawBackground', 'drawLevee', 'drawWater', 'drawFloodgate',
-      'drawWaterLevelMarker', 'drawVillage', 'drawTouchSensor', 'drawRescueBoat'
-    ].every(name => typeof window.FloodArt[name] === 'function')) drawArt(sim, t);
-    else drawSimple(sim, t);
-    ctx.restore();
-    pill(`Đê ${Math.round(sim.angle)}° · cần ${sim.need()}°${sim.advanced ? `–${sim.maxOk()}°` : '+'}`, 25, 48, '#fff');
-    if (sim.running) {
-      const status = sim.runT < 5 ? `Lũ tới sau ${Math.ceil(5 - sim.runT)} giây`
-        : sim.runT < 9 ? 'LŨ ĐANG QUA!' : 'Nước đang rút';
-      pill(status, 25, 99, '#ffe69b');
-    } else if (sim.flooded) pill('Nước đã tràn qua đê', 25, 99, '#ff9c9c');
-    else if (sim.lastRun) pill('Làng đã an toàn!', 25, 99, '#a5f5c6');
-    if (t < flashUntil) {
-      ctx.fillStyle = 'rgba(255,235,120,.16)';
-      ctx.fillRect(0, 0, W, H);
-    }
-    const idle = $('scene-idle');
-    if (idle) idle.hidden = sim.running || sim.angle > 0;
-    $('scene-hand')?.classList.toggle('is-waiting', !!sim.waitingTouch);
-  }
-
-  function toast(kind, title, message, action) {
-    const box = $('scene-toast');
-    if (!box) return;
-    box.dataset.k = kind;
-    const t = $('scene-toast-title'), text = $('scene-toast-text'), btn = $('scene-toast-btn');
-    if (t) t.textContent = title;
-    if (text) text.textContent = message;
-    if (btn) {
-      btn.hidden = !action;
-      if (action) {
-        btn.textContent = action.label;
-        btn.onclick = () => { box.hidden = true; action.run(); };
+  window.ZMSceneKit.create({
+    W,
+    H,
+    idleHidden: sim => sim.running || sim.angle > 0,
+    draw(ctx, t, sim) {
+      ctx.clearRect(0, 0, W, H);
+      if (window.FloodArt && [
+        'drawBackground', 'drawLevee', 'drawWater', 'drawFloodgate',
+        'drawWaterLevelMarker', 'drawVillage', 'drawTouchSensor', 'drawRescueBoat'
+      ].every(name => typeof window.FloodArt[name] === 'function')) drawArt(ctx, sim, t);
+      else drawSimple(ctx, sim, t);
+      pill(ctx, `Đê ${Math.round(sim.angle)}° · cần ${sim.need()}°${sim.advanced ? `–${sim.maxOk()}°` : '+'}`, 25, 48, '#fff');
+      if (sim.running) {
+        const status = sim.runT < 5 ? `Lũ tới sau ${Math.ceil(5 - sim.runT)} giây`
+          : sim.runT < 9 ? 'LŨ ĐANG QUA!' : 'Nước đang rút';
+        pill(ctx, status, 25, 99, '#ffe69b');
+      } else if (sim.flooded) pill(ctx, 'Nước đã tràn qua đê', 25, 99, '#ff9c9c');
+      else if (sim.lastRun) pill(ctx, 'Làng đã an toàn!', 25, 99, '#a5f5c6');
+      if (t < flashUntil) {
+        ctx.fillStyle = 'rgba(255,235,120,.16)';
+        ctx.fillRect(0, 0, W, H);
       }
+      $('scene-hand')?.classList.toggle('is-waiting', !!sim.waitingTouch);
+    },
+    onEvent(type, data, kit) {
+      const now = performance.now() / 1000;
+      const retry = { label: 'Thử lại', run: () => window.simEngine?.start() };
+      if (type === 'sample') {
+        flashUntil = now + 0.4;
+        kit.toast('ok', 'Đúng chương trình mẫu!', 'Nhấn lần một nâng đê 0,5 giây, lần hai đổi chiều và hạ đê 0,5 giây.');
+      } else if (type === 'flood') {
+        kit.shake(0.8);
+        kit.toast('bad', 'Lũ tràn qua đê!', `Đê cao ${Math.round(data.angle)}°, cần ít nhất ${data.need}°. Hãy nâng sớm hơn hoặc lâu hơn.`, retry);
+      } else if (type === 'tooHigh') {
+        kit.toast('bad', 'Đê nâng quá cao!', `Thuyền cứu hộ cần đê không quá ${data.max}°. Hãy giảm thời gian quay.`, retry);
+      } else if (type === 'saved') {
+        flashUntil = now + 1;
+        window.SFX?.ding();
+        kit.toast('ok', 'Ngôi làng an toàn!', 'Đê giữ vững trong đợt lũ. Hãy thử cải tiến chương trình hoặc chinh phục mức lũ tiếp theo.');
+      } else if (type === 'target') {
+        kit.toast('info', 'Mực lũ mới', `Cần giữ cửa đê trong khoảng ${data}–${data + 20}°. Em hãy tính lại thời gian quay.`);
+      }
+    },
+    init(canvas) {
+      // 3D có thể phát zm:step trước khi app.js lắng nghe; cập nhật ảnh sách ngay.
+      const firstBook = window.LESSON?.book({ page: Number($('slider')?.value) || 1 });
+      if (firstBook && $('book-img')) {
+        $('book-img').src = firstBook.src;
+        $('book-img').alt = firstBook.alt;
+        if ($('book-loc')) $('book-loc').textContent = firstBook.loc;
+        if ($('book-cap')) $('book-cap').textContent = firstBook.cap;
+        if ($('book-pdf')) $('book-pdf').href = firstBook.pdf;
+      }
+      // Bài này cải tiến chương trình, không có gói lắp thêm.
+      const creativeTab = $('tab-btn-creative');
+      if (creativeTab) {
+        creativeTab.hidden = true;
+        creativeTab.style.display = 'none';
+      }
+      try {
+        if (localStorage.getItem('zm12_stage') === 'creative') localStorage.setItem('zm12_stage', 'sim');
+      } catch (e) {}
+      document.addEventListener('keydown', e => {
+        const active = $('stage-sim')?.classList?.contains('is-active');
+        if (!active || !['ArrowLeft', 'ArrowRight'].includes(e.key) ||
+            !['assembly', 'sim'].includes(e.target?.dataset?.stage)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        window.ZMStages?.go(e.target.dataset.stage === 'assembly' ? 'sim' : 'assembly', true);
+      }, true);
+      // Khung chung gửi press(), trong khi Bài 12 dùng pressTouch() và nút #scene-hand.
+      const press = () => window.simEngine?.pressTouch();
+      $('scene-hand')?.addEventListener('click', press);
+      canvas.addEventListener('click', press);
+      document.addEventListener('keydown', e => {
+        if (e.code !== 'Space' || window.ZMScene?.mode() !== 'story' ||
+            !$('stage-sim')?.classList?.contains('is-active') ||
+            /^(INPUT|TEXTAREA|BUTTON|SELECT)$/.test(document.activeElement?.tagName || '')) return;
+        e.preventDefault();
+        press();
+      });
     }
-    box.hidden = false;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => { box.hidden = true; }, action ? 6500 : 3500);
-  }
-  function dismissToast() {
-    clearTimeout(toastTimer);
-    toastTimer = 0;
-    const box = $('scene-toast');
-    if (box) box.hidden = true;
-  }
-
-  function onEvent(type, data) {
-    const now = performance.now() / 1000;
-    const retry = { label: 'Thử lại', run: () => window.simEngine?.start() };
-    if (type === 'start') {
-      dismissToast();
-    } else if (type === 'press') {
-      window.SFX?.tone(860, 0.08);
-    } else if (type === 'sample') {
-      flashUntil = now + 0.4;
-      toast('ok', 'Đúng chương trình mẫu!', 'Nhấn lần một nâng đê 0,5 giây, lần hai đổi chiều và hạ đê 0,5 giây.');
-    } else if (type === 'flood') {
-      shakeUntil = now + 0.8;
-      toast('bad', 'Lũ tràn qua đê!', `Đê cao ${Math.round(data.angle)}°, cần ít nhất ${data.need}°. Hãy nâng sớm hơn hoặc lâu hơn.`, retry);
-    } else if (type === 'tooHigh') {
-      toast('bad', 'Đê nâng quá cao!', `Thuyền cứu hộ cần đê không quá ${data.max}°. Hãy giảm thời gian quay.`, retry);
-    } else if (type === 'saved') {
-      flashUntil = now + 1;
-      window.SFX?.ding();
-      toast('ok', 'Ngôi làng an toàn!', 'Đê giữ vững trong đợt lũ. Hãy thử cải tiến chương trình hoặc chinh phục mức lũ tiếp theo.');
-    } else if (type === 'target') {
-      toast('info', 'Mực lũ mới', `Cần giữ cửa đê trong khoảng ${data}–${data + 20}°. Em hãy tính lại thời gian quay.`);
-    }
-  }
-
-  function setMode(next) {
-    currentMode = next === 'robot' ? 'robot' : 'story';
-    const wrap = $('scene-wrap'), toggle = $('scene-toggle');
-    if (wrap) wrap.dataset.mode = currentMode;
-    if (toggle) {
-      toggle.textContent = currentMode === 'story' ? 'Xem mô hình thật' : 'Xem câu chuyện';
-      toggle.setAttribute('aria-pressed', String(currentMode === 'robot'));
-    }
-    if (!active) return;
-    if (currentMode === 'robot') window.ZMSandbox?.open();
-    else window.ZMSandbox?.close();
-    resize();
-  }
-  function enter() {
-    if (active) return;
-    active = true;
-    resize();
-    if (currentMode === 'robot') window.ZMSandbox?.open();
-    if (!raf && ctx) raf = requestAnimationFrame(frame);
-  }
-  function leave() {
-    active = false;
-    if (raf) cancelAnimationFrame(raf);
-    raf = 0;
-    last = 0;
-    dismissToast();
-    window.ZMSandbox?.close();
-  }
-
-  zmReady(() => {
-    // Trình xem 3D có thể phát zm:step trước khi app.js đăng ký listener.
-    // Hiển thị ngay hướng dẫn bước đang mở, kể cả khi chưa đổi thanh bước.
-    const firstBook = window.LESSON?.book({ page: Number($('slider')?.value) || 1 });
-    if (firstBook && $('book-img')) {
-      $('book-img').src = firstBook.src;
-      $('book-img').alt = firstBook.alt;
-      if ($('book-loc')) $('book-loc').textContent = firstBook.loc;
-      if ($('book-cap')) $('book-cap').textContent = firstBook.cap;
-      if ($('book-pdf')) $('book-pdf').href = firstBook.pdf;
-    }
-    // Giáo án cải tiến bằng chương trình điều khiển, không có gói lắp thêm.
-    // Ẩn chặng sáng tạo trống mà không phải sửa js/app.js dùng chung.
-    const creativeTab = $('tab-btn-creative');
-    if (creativeTab) {
-      creativeTab.hidden = true;
-      creativeTab.style.display = 'none';
-    }
-    try {
-      if (localStorage.getItem('zm12_stage') === 'creative') localStorage.setItem('zm12_stage', 'sim');
-    } catch (e) {}
-    document.addEventListener('keydown', e => {
-      if (!active || !['ArrowLeft', 'ArrowRight'].includes(e.key) ||
-          !['assembly', 'sim'].includes(e.target?.dataset?.stage)) return;
-      e.preventDefault();
-      e.stopPropagation();
-      const next = e.target.dataset.stage === 'assembly' ? 'sim' : 'assembly';
-      window.ZMStages?.go(next, true);
-    }, true);
-    canvas = $('space-scene');
-    if (!canvas) return;
-    ctx = canvas.getContext('2d');
-    if (typeof ResizeObserver !== 'undefined') new ResizeObserver(resize).observe(canvas);
-    else window.addEventListener('resize', resize);
-    $('scene-toggle')?.addEventListener('click', () => setMode(currentMode === 'story' ? 'robot' : 'story'));
-    $('scene-toast-close')?.addEventListener('click', dismissToast);
-    const press = () => window.simEngine?.pressTouch();
-    $('scene-hand')?.addEventListener('click', press);
-    canvas.addEventListener('click', press);
-    document.addEventListener('keydown', e => {
-      if (e.code !== 'Space' || !active || currentMode !== 'story' ||
-          /^(INPUT|TEXTAREA|BUTTON|SELECT)$/.test(document.activeElement?.tagName || '')) return;
-      e.preventDefault();
-      press();
-    });
-    resize();
-    if (active && !raf) raf = requestAnimationFrame(frame);
   });
-
-  window.ZMScene = { enter, leave, onEvent, setMode, mode: () => currentMode };
 })();

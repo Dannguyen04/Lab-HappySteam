@@ -34,6 +34,14 @@ function makeFetch(log) {
   };
 }
 
+// Bài mới (có content/<lop>/<bai>/build.json) tự vào danh sách, không cần mã băm cố định
+for (const lop of fs.readdirSync(path.join(ROOT, 'content')).filter(d => /^lop\d+$/.test(d))) {
+  for (const bai of fs.readdirSync(path.join(ROOT, 'content', lop))) {
+    const key = `${lop}/${bai}`;
+    if (!(key in LESSONS) && fs.existsSync(path.join(ROOT, 'content', key, 'build.json'))) LESSONS[key] = null;
+  }
+}
+
 (async () => {
   const kitFiles = new Set();
   for (const [lesson, sha256] of Object.entries(LESSONS)) {

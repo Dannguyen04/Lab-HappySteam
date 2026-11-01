@@ -8,10 +8,12 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "node tests/run-suite.js logic && vitest run",
+    "check:lessons": "node scripts/check-lessons.js",
     "test:smoke": "node tests/run-suite.js smoke",
     "test:all": "npm run test && npm run test:smoke",
     "test:dist": "npm run build && node tests/run-dist.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "gen:seed": "node scripts/gen-lessons-seed.js"
   },
   "devDependencies": {
     "playwright": "^1.58.2",
@@ -19,5 +21,8 @@
     "vite": "^6.4.1",
     "vite-plugin-static-copy": "^2.3.2",
     "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.118.0"
   }
 }

@@ -72,7 +72,7 @@ async function sceneIsDrawn(page) {
 
     page.once('dialog', dialog => dialog.accept());
     await page.click('#btn-load-sample');
-    assert.match(await page.locator('#ghost-score').innerText(), /đúng 7\/7 khối/i);
+    assert.match(await page.locator('#ghost-score').innerText(), /đúng 10\/10 khối/i);
     assert.equal(await page.evaluate(() => window.simEngine.matchesSample()), true);
     await page.click('#program-canvas-chain .zb-block-start');
     await page.waitForFunction(() => !window.simEngine.running, null, { timeout: 20000 });
@@ -88,11 +88,12 @@ async function sceneIsDrawn(page) {
     assert.equal(await page.locator('#btn-mode').innerText(), 'Chế độ: Nâng cao');
     assert.ok(await page.locator('#chip-m5').isVisible());
     assert.equal(await page.evaluate(() => window.simEngine.advanced), true);
-    // Thử thách 5 đống trong tối đa 4 chu kỳ: giữ chương trình mẫu, đổi Wait 1s → 5s.
+    // Thử thách 5 đống trong tối đa 4 lượt: đổi duy nhất Wait 1s đầu → 2s.
     const wait = page.locator('#program-canvas-chain .zb-block').filter({ hasText: '1s' });
     assert.equal(await wait.count(), 1);
-    for (let i = 0; i < 4; i++) await page.locator('#program-canvas-chain .zb-block').nth(4).click();
-    assert.match(await page.locator('#program-canvas-chain .zb-block').nth(4).innerText(), /5s/);
+    await page.locator('#program-canvas-chain .zb-block').nth(4).click();
+    assert.match(await page.locator('#program-canvas-chain .zb-block').nth(4).innerText(), /2s/);
+    assert.match(await page.locator('#program-canvas-chain .zb-block').nth(8).innerText(), /0[,.]2s/);
     await page.click('#btn-run-program');
     await page.waitForFunction(() => !window.simEngine.running, null, { timeout: 20000 });
     assert.equal(await page.evaluate(() => window.simEngine.left()), 0);

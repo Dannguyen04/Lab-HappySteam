@@ -1,5 +1,5 @@
 // Cảnh câu chuyện Lớp 3 · Bài 8 (chặng ③): tìm kiếm cứu nạn nhìn từ trên xuống. Máy bay treo ở đầu cần bay vòng quanh
-// đài điều khiển; bóng máy bay và kích thước cho biết độ cao (thêm thước độ cao bên phải). Radar quét phía trước máy bay
+// đài điều khiển; bóng máy bay và kích thước cho biết độ cao (thêm thước đo độ cao bên phải). Radar quét phía trước máy bay
 // làm hiện người gặp nạn; bay thấp + chậm ngang qua thì thả thang cứu. Nâng cao: mây bão phủ cảnh theo giờ.
 // Hình vẽ từ js/lop3-bai08/art.js (window.RescueArt) nếu có, không thì hình đơn giản dưới đây.
 // Cùng giao diện window.ZMScene với các bài khác.

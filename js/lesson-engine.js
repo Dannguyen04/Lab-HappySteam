@@ -5,16 +5,20 @@
 //   integrate(dt)       – vật lý mỗi bước thời gian (nhớ cộng this.runT)
 //   onMotor(b)          – sau khi chạy khối động cơ (this.power, this.motorOn đã đặt)
 //   onStopBlock(wasOn)  – sau khi chạy khối Dừng
-//   onBlock(b)          – khối riêng của bài; trả về số giây khối chiếm (mặc định 0)
+//   onInstant(b)        – khối tức thì của bài (Màn hình…); trả về true nếu đã xử lý
+//   onBlock(b)          – khối riêng của bài có thời lượng; trả về số giây khối chiếm (mặc định 0)
+//   opts.levels         – mức động cơ của khối chậm/vừa/nhanh (mặc định 4/6/8); opts.sig – cách so chương trình mẫu
+//   opts.orphanEnd      – 'stop': gặp Lặp lại mà không có Bắt đầu lặp thì kết thúc chương trình
 //   missionExtra()      – dữ liệu thêm gửi kèm nhiệm vụ (best, upgrades…)
 //   updateUI()          – gọi super.updateUI() rồi điền các ô số đo
 // Cùng giao diện với SimulationEngine của Bài 9 để js/app.js dùng chung.
 (function () {
   'use strict';
 
-  const LEVEL = { low: 3, medium: 5, high: 8 };
+  // Mức chuẩn cho mọi bài (theo Bài 9 – KHGD chỉ ghi chậm/vừa/nhanh, Motor Power mặc định 8)
+  const LEVEL = { low: 4, medium: 6, high: 8 };
   const TIMED = new Set(['wait', 'melody', 'sensor_touch', 'sensor_obstacle']);
-  const sig = b => (b.type === 'motor' ? 'motor:' + b.speed : b.type === 'wait' ? 'wait:' + b.duration : b.type);
+  const sig = b => (b.type === 'motor' ? 'motor:' + b.speed : b.type === 'wait' ? 'wait:' + b.duration : b.type === 'drive' ? 'drive:' + b.move : b.type);
 
   class LessonEngine {
     // opts: { sample, labels, baseLabel, core, melodyTime, logLimit, touch }
@@ -135,7 +139,8 @@
       this.checkMissions();
     }
     matchesSample(sample = this.sample) {
-      return this.prog.length === sample.length && this.prog.every((b, i) => sig(b) === sample[i]);
+      const f = this.opts.sig || sig;
+      return this.prog.length === sample.length && this.prog.every((b, i) => f(b) === sample[i]);
     }
 
     advance(dt) {
@@ -155,14 +160,14 @@
         }
         if (b.type === 'repeatEnd') {
           const r = this.prog.findIndex(x => x.type === 'repeatStart');
-          this.pc = r < 0 ? this.pc + 1 : r + 1;
+          this.pc = r < 0 ? (this.opts.orphanEnd === 'stop' ? this.prog.length : this.pc + 1) : r + 1;
           this.onLoopEnd();
           // vòng lặp không có khối nào tốn thời gian: nhường khung hình sau
           if (r >= 0 && !this.prog.slice(r + 1).some(x => TIMED.has(x.type) || this.touchTypes.has(x.type))) break;
           continue;
         }
         if (b.type === 'motor' || b.type === 'motor_power') {
-          this.power = b.type === 'motor_power' ? Math.max(1, Math.min(8, b.power || 8)) : LEVEL[b.speed] || 8;
+          this.power = b.type === 'motor_power' ? Math.max(1, Math.min(8, b.power || 8)) : (this.opts.levels || LEVEL)[b.speed] || 8;
           this.motorOn = true;
           this.onMotor(b);
           this.pc++;
@@ -198,6 +203,11 @@
           budget = 0;
           break;
         }
+        // Khối tức thì của bài (Màn hình, bật đèn…): onInstant(b) trả về true thì đi tiếp ngay, không đánh dấu khối
+        if (!this.entered && this.onInstant(b)) {
+          this.pc++;
+          continue;
+        }
         // Khối có thời lượng (Đợi, Giai điệu, khối riêng của bài)
         if (!this.entered) {
           this.entered = true;
@@ -232,6 +242,9 @@
     onMotor() {}
     onStopBlock() {}
     onLoopEnd() {}
+    onInstant() {
+      return false;
+    }
     onBlock() {
       return 0;
     }

@@ -40,7 +40,7 @@ async function checkPaintedScene(page) {
     assert.equal(await page.evaluate(() => window.robotViewer.stats().instances), 75);
     assert.equal(await page.locator('#mission-summary-badge').innerText(), '0/4 nhiệm vụ');
 
-    // Kiểm từng bước: thẻ sách thực sự giải mã được, PDF đúng bài và nút hoàn tất cập nhật NV1.
+    // Kiểm từng bước: ảnh sách giải mã được, liên kết sách trỏ đúng ảnh và nút hoàn tất cập nhật NV1.
     const assembly = await page.evaluate(async () => {
       const issues = [];
       for (let step = 1; step <= 31; step++) {
@@ -49,7 +49,7 @@ async function checkPaintedScene(page) {
         const pdf = document.getElementById('book-pdf');
         try { await img.decode(); } catch (e) { issues.push(`Bước ${step}: ảnh không tải được`); }
         if (!img.naturalWidth || !img.getAttribute('src').endsWith(`assets/lop1-bai11/step-${String(step).padStart(2, '0')}.jpg`)) issues.push(`Bước ${step}: sai ảnh sách`);
-        if (!pdf.getAttribute('href').endsWith(`references/lop1/bai11/bai11.pdf#page=${step}`)) issues.push(`Bước ${step}: sai PDF`);
+        if (pdf.getAttribute('href') !== img.getAttribute('src')) issues.push(`Bước ${step}: liên kết sách khác ảnh`);
         if (!/bỏ/i.test(document.getElementById('doneBtn').textContent)) document.getElementById('doneBtn').click();
       }
       return { issues, done: document.getElementById('am-done').textContent };
@@ -115,7 +115,7 @@ async function checkPaintedScene(page) {
       assert.ok(sizes[0] <= sizes[1], `375px tràn ngang ở ${tab}: ${sizes}`);
     }
     assert.deepEqual(errors, [], 'Không có lỗi console, JavaScript hoặc request thất bại');
-    console.log('PASS: lop1-bai11 – 31/31 ảnh sách/PDF, 4 gói nâng cấp 3D, mẫu 10 khối, NV1–4, Bé/Nâng cao NV5, canvas, mobile 375px.');
+    console.log('PASS: lop1-bai11 – 31/31 ảnh sách/liên kết, 4 gói nâng cấp 3D, mẫu 10 khối, NV1–4, Bé/Nâng cao NV5, canvas, mobile 375px.');
   } finally {
     await browser.close();
   }

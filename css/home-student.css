@@ -1,0 +1,7 @@
+.home-student { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem; margin-bottom: .5rem; }
+.home-student[hidden], .home-network-note[hidden] { display: none; }
+.home-student-avatar { font-size: 1.8rem; line-height: 1.2; }
+.home-student strong { font-size: 1rem; }
+.home-network-note { padding: .6rem .85rem; border-radius: .6rem; background: #fff0cf; color: #68400a; font-size: .9rem; }
+.lesson-card.is-locked { opacity: .62; cursor: not-allowed; }
+.lesson-card.is-locked .lc-go { font-weight: 700; }

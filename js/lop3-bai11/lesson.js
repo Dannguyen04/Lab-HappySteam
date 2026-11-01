@@ -97,21 +97,21 @@
         alt: `Bước ${d.step}: hình hướng dẫn lắp ráp robot tìm nguồn nước`,
         loc: `Bước ${d.step} · trang ${d.page}`,
         cap: d.step === d.total ? 'Robot tìm kiếm nguồn nước đã hoàn thành.' : 'Quan sát vị trí linh kiện và lắp theo hình hướng dẫn.',
-        pdf: `references/lop3/bai11/bai11.pdf#page=${d.page}`
+        pdf: `assets/lop3-bai11/step-${String(d.step).padStart(2, '0')}.jpg`
       };
     },
 
     missions: { core: ['m1', 'm2', 'm3', 'm4'], pro: ['m5'] },
     cards: {
-      m2: { n: 2, title: 'Ghép khối giống hàng mẫu', text: 'Ghép đúng chương trình trong phiếu: Start, lặp lại { động cơ chạy, chờ cảm biến thấy vật cản, Stop, chờ 3 giây }. Chạy hết một vòng lặp.' },
+      m2: { n: 2, title: 'Ghép khối giống hàng mẫu', text: 'Ghép đúng chương trình trong sách: Start, lặp lại { động cơ chạy, chờ cảm biến thấy vật cản, Stop, chờ 3 giây }. Chạy hết một vòng lặp.' },
       m3: { n: 3, title: 'Lấy đủ nước ở 3 mỏm băng', text: 'Robot chạy dọc đường trên sao Hỏa, cảm biến thấy mỏm băng thì dừng lại và bơm nước 3 giây. Lấy đủ mẫu nước ở cả 3 mỏm băng!' },
       m4: { n: 4, title: 'Thử robot sáng tạo', text: 'Gắn thêm chi tiết ở chặng Sáng tạo, rồi quay lại chạy chương trình.', go: ['creative', 'Đến xưởng sáng tạo'] },
-      m5: { n: 5, title: 'Thi đấu tìm nước nhanh nhất', text: 'Đường dài hơn, mỏm băng ở chỗ mới. Lấy đủ nước ở 3 mỏm trong 18 giây: chọn tốc độ phù hợp (chạy chậm quá sẽ không kịp) và thử gắn máy bơm mạnh.' },
+      m5: { n: 5, title: 'Thi đấu tìm nước nhanh nhất', text: 'Đường dài hơn, mỏm băng ở chỗ mới. Lấy đủ nước ở 3 mỏm trong 17 giây: chọn tốc độ phù hợp (chạy chậm quá sẽ không kịp) và thử gắn máy bơm mạnh.' },
       m1: { n: 1, title: 'Lắp xong robot tìm nước', text: 'Bấm “Đã lắp xong bước này” ở cả 15 bước của chặng Lắp ráp.', go: ['assembly', 'Đến chặng lắp ráp'] }
     },
     cardOrder: { kid: ['m2', 'm3', 'm4', 'm1'], pro: ['m2', 'm3', 'm4', 'm5', 'm1'] },
 
-    // Chương trình mẫu trong phiếu học tập: Start → Repeat → động cơ chạy → Chờ vật cản (cảm biến) → Stop → Wait 3s → Repeat End
+    // Chương trình mẫu trong sách: Start → Repeat → động cơ chạy → Chờ vật cản (cảm biến) → Stop → Wait 3s → Repeat End
     blocks: {
       toolbox: ['obstacle', 'lowSpeed', 'highSpeed', 'motorStop', 'wait', 'melodyA'],
       pro: ['motorPower', 'motorReverse'],

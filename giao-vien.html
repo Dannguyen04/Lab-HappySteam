@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Giáo viên · Happy STEAM</title>
+  <link rel="stylesheet" href="css/lab.css">
+  <link rel="stylesheet" href="css/teacher.css">
+</head>
+<body>
+<div class="wrap teacher">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Happy STEAM · Phòng Lab ZMrobo ảo</div>
+      <h1>Giáo viên</h1>
+      <p class="lede">Tạo lớp, chuẩn bị danh sách và mở buổi học cho các em.</p>
+    </div>
+    <div class="tools-top"><a class="iconbtn" href="vao-hoc.html">Trang học sinh</a> <a class="iconbtn" href="index.html">Chọn bài</a></div>
+  </header>
+
+  <p class="t-msg" id="t-status" role="status" aria-live="polite" hidden></p>
+
+  <section class="t-card" id="t-offline" hidden>
+    <h2>Chưa bật đăng nhập</h2>
+    <p>Bản này chưa kết nối máy chủ nên chưa đăng nhập được. Các bài học vẫn dùng bình thường trên máy này.</p>
+  </section>
+
+  <section class="t-card" id="t-login" hidden>
+    <h2>Đăng nhập</h2>
+    <form id="t-login-form" novalidate>
+      <label for="t-email">Email của thầy cô</label>
+      <input id="t-email" type="email" autocomplete="email" required placeholder="ten@truong.edu.vn">
+      <button type="submit" class="btn btn-primary" id="t-send">Gửi liên kết đăng nhập</button>
+    </form>
+    <p class="t-hint">Chúng tôi gửi một liên kết vào email, bấm vào là đăng nhập, không cần mật khẩu.</p>
+  </section>
+
+  <section class="t-card" id="t-profile" hidden>
+    <h2>Họ và tên</h2>
+    <form id="t-profile-form" novalidate>
+      <label for="t-name">Họ và tên (1–80 ký tự)</label>
+      <input id="t-name" type="text" maxlength="80" autocomplete="name" required>
+      <button type="submit" class="btn btn-primary">Lưu</button>
+    </form>
+  </section>
+
+  <section class="t-card" id="t-home" hidden>
+    <div class="t-who">
+      <span>Đã đăng nhập: <strong id="t-user"></strong></span>
+      <button type="button" class="btn" id="t-logout">Đăng xuất</button>
+    </div>
+    <div class="t-row"><h2>Lớp của tôi</h2><button type="button" class="btn btn-primary" id="t-new-class">+ Tạo lớp</button></div>
+    <ul class="t-classes" id="t-classes"></ul>
+    <p id="t-empty" hidden>Chưa có lớp</p>
+    <form id="t-class-form" class="t-subcard" hidden>
+      <div class="t-row"><h2 id="t-editor-title">Tạo lớp</h2><button type="button" class="btn" id="t-cancel-class">Đóng</button></div>
+      <label for="t-class-name">Tên lớp</label>
+      <input id="t-class-name" required maxlength="80" placeholder="1A – 2026">
+      <div class="t-columns">
+        <label>Khối <select id="t-grade"><option value="1">Lớp 1</option><option value="3">Lớp 3</option></select></label>
+        <label>Năm học <input id="t-school-year" required maxlength="20" placeholder="2026-2027"></label>
+      </div>
+      <label for="t-week-one">Thứ Hai của tuần học đầu tiên</label>
+      <input id="t-week-one" type="date" required>
+      <label for="t-breaks">Tuần nghỉ (mỗi dòng: YYYY-MM-DD | ghi chú)</label>
+      <textarea id="t-breaks" rows="3" placeholder="2027-02-08 | Nghỉ Tết"></textarea>
+      <label for="t-paste">Dán tên gọi ngắn (mỗi dòng một tên, tối đa 12 ký tự)</label>
+      <textarea id="t-paste" rows="4" placeholder="An&#10;Bình&#10;Minh"></textarea>
+      <button type="button" class="btn" id="t-add-names">Thêm tên vào danh sách</button>
+      <div class="t-row"><strong>Học sinh và con vật</strong><span class="t-hint" id="t-roster-count">0 em</span></div>
+      <div id="t-roster-editor" class="t-roster-editor"></div>
+      <button type="submit" class="btn btn-primary" id="t-save-class">Lưu lớp</button>
+    </form>
+    <section id="t-session" class="t-subcard t-projector" hidden>
+      <div class="t-row"><h2 id="t-session-title">Buổi học</h2><button type="button" id="t-close-session" class="btn">Kết thúc buổi</button></div>
+      <p>Học sinh mở <strong>vao-hoc.html</strong> rồi nhập mã:</p>
+      <div id="t-join-code" class="t-join-code" aria-label="Mã vào buổi"></div>
+      <p id="t-session-expiry" class="t-hint"></p>
+      <div class="t-row"><h3>Chờ giáo viên duyệt</h3><button type="button" id="t-approve-all" class="btn btn-primary">Duyệt các máy không trùng</button></div>
+      <ul id="t-pending" class="t-device-list"></ul>
+      <h3>Đã vào buổi (<span id="t-attendee-count">0</span>)</h3>
+      <ul id="t-attendees" class="t-device-list"></ul>
+      <p id="t-session-note" class="t-hint" role="status"></p>
+    </section>
+  </section>
+</div>
+<script type="module" src="js/teacher-auth.js"></script>
+</body>
+</html>

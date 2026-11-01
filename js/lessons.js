@@ -84,6 +84,36 @@
       scripts: ['js/lop3-bai11/lesson.js', 'js/lop3-bai11/water-scene.js', 'js/lop3-bai11/water-engine.js'],
       optional: ['js/lop3-bai11/art.js'],
       order: order('js/lop3-bai11/lesson.js', 'js/lop3-bai11/water-scene.js', 'js/lop3-bai11/water-engine.js', 'js/lop3-bai11/art.js')
+    },
+    'lop3-bai12': {
+      content: 'lop3/bai12',
+      scripts: ['js/lop3-bai12/lesson.js', 'js/lop3-bai12/plant-scene.js', 'js/lop3-bai12/plant-engine.js'],
+      optional: ['js/lop3-bai12/art.js'],
+      order: order('js/lop3-bai12/lesson.js', 'js/lop3-bai12/plant-scene.js', 'js/lop3-bai12/plant-engine.js', 'js/lop3-bai12/art.js')
+    },
+    'lop3-bai13': {
+      content: 'lop3/bai13',
+      scripts: ['js/lop3-bai13/lesson.js', 'js/lop3-bai13/rocket-scene.js', 'js/lop3-bai13/rocket-engine.js'],
+      optional: ['js/lop3-bai13/art.js'],
+      order: order('js/lop3-bai13/lesson.js', 'js/lop3-bai13/rocket-scene.js', 'js/lop3-bai13/rocket-engine.js', 'js/lop3-bai13/art.js')
+    },
+    'lop3-bai16': {
+      content: 'lop3/bai16',
+      scripts: ['js/lop3-bai16/lesson.js', 'js/lop3-bai16/launch-transport-scene.js', 'js/lop3-bai16/launch-transport-engine.js'],
+      optional: ['js/lop3-bai16/art.js'],
+      order: order('js/lop3-bai16/lesson.js', 'js/lop3-bai16/launch-transport-scene.js', 'js/lop3-bai16/launch-transport-engine.js', 'js/lop3-bai16/art.js')
+    },
+    'lop3-bai15': {
+      content: 'lop3/bai15',
+      scripts: ['js/lop3-bai15/lesson.js', 'js/lop3-bai15/push-scene.js', 'js/lop3-bai15/push-engine.js'],
+      optional: ['js/lop3-bai15/art.js'],
+      order: order('js/lop3-bai15/lesson.js', 'js/lop3-bai15/push-scene.js', 'js/lop3-bai15/push-engine.js', 'js/lop3-bai15/art.js')
+    },
+    'lop1-bai19': {
+      content: 'lop1/bai19',
+      scripts: ['js/lop1-bai19/lesson.js', 'js/lop1-bai19/snail-scene.js', 'js/lop1-bai19/snail-engine.js'],
+      optional: ['js/lop1-bai19/art.js'],
+      order: order('js/lop1-bai19/lesson.js', 'js/lop1-bai19/snail-scene.js', 'js/lop1-bai19/snail-engine.js', 'js/lop1-bai19/art.js')
     }
   };
 })();

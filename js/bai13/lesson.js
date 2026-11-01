@@ -104,19 +104,19 @@
 
     missions: { core: ['m1', 'm2', 'm3', 'm4'], pro: ['m5'] },
     cards: {
-      m2: { n: 2, title: 'Ghép khối giống hàng mẫu', text: 'Đặt các khối giống hàng mẫu mờ (có khối Lặp), chạm Start. Cảm biến thấy đống tuyết là xe tự chạy 1 giây rồi dừng, lặp lại.' },
-      m3: { n: 3, title: 'Dọn sạch tuyết trên đường', text: 'Cho xe đẩy hết các đống tuyết mà không đụng tường cuối đường. Gợi ý: tuyết dày, chạy chậm (mức dưới 5) sẽ bị kẹt, hãy chạy nhanh hoặc gắn lưỡi gạt.' },
+      m2: { n: 2, title: 'Ghép mẫu 10 khối', text: 'Đặt trong khối Lặp rồi chạm Start: Chờ vật cản → Tiến thẳng → Chờ 1 giây → Chờ vật cản → Dừng → Rẽ trái → Chờ 0,2 giây.' },
+      m3: { n: 3, title: 'Dọn sạch sân tuyết', text: 'Cho xe tiến và rẽ trái để dọn cả 3 đống tuyết. Chạy nhanh mới đẩy được tuyết dày. Có lưỡi gạt thì chạy chậm (từ mức 3) cũng được.' },
       m4: { n: 4, title: 'Thử xe sáng tạo', text: 'Gắn thêm chi tiết ở chặng Sáng tạo, rồi quay lại chạy chương trình.', go: ['creative', 'Đến xưởng sáng tạo'] },
-      m5: { n: 5, title: 'Bão tuyết: dọn trong 4 lần chạy', text: 'Đường dài 230 cm có 5 đống tuyết. Tính: tốc độ (bảng bên cạnh) × số giây Wait = quãng đường mỗi lần. Dọn sạch chỉ với tối đa 4 lần chạy.' },
+      m5: { n: 5, title: 'Bão tuyết: tối đa 4 lượt tiến', text: 'Sân có 5 đống tuyết. Đổi Chờ 1 giây thành 2 giây, dọn hết trong 4 lượt tiến.' },
       m1: { n: 1, title: 'Lắp xong xe dọn tuyết', text: 'Bấm “Đã lắp xong bước này” ở mọi bước của chặng Lắp ráp.', go: ['assembly', 'Đến chặng lắp ráp'] }
     },
     cardOrder: { kid: ['m2', 'm3', 'm4', 'm1'], pro: ['m2', 'm3', 'm4', 'm5', 'm1'] },
 
-    // Chương trình mẫu trong giáo án: Start → Lặp { Chờ vật cản → Quay nhanh → Chờ 1 giây → Dừng }
+    // Theo sách: Start → Lặp { Chờ vật cản → Tiến thẳng → Chờ 1 giây → Chờ vật cản → Dừng → Rẽ trái → Chờ 0,2 giây }.
     blocks: {
-      toolbox: ['repeatStart', 'repeatEnd', 'obstacle', 'highSpeed', 'motorPower', 'wait', 'motorStop', 'motorReverse', 'melodyA', 'melodyB'],
+      toolbox: ['repeatStart', 'repeatEnd', 'obstacle', 'moveForward', 'turnLeft', 'highSpeed', 'motorPower', 'wait', 'motorStop', 'motorReverse', 'melodyA', 'melodyB'],
       pro: [],
-      sample: ['start', 'repeatStart', 'obstacle', 'highSpeed', ['wait', { duration: 1 }], 'motorStop', 'repeatEnd'],
+      sample: ['start', 'repeatStart', 'obstacle', 'moveForward', ['wait', { duration: 1 }], 'obstacle', 'motorStop', 'turnLeft', ['wait', { duration: 0.2 }], 'repeatEnd'],
       empty: ['start']
     },
 

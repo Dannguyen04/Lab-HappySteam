@@ -1,0 +1,73 @@
+{
+  "title": "Ốc sên quý hiếm",
+  "topic": "Ốc sên quý hiếm",
+  "model": "ốc sên robot",
+  "sheetName": "Bài 19: Ốc sên quý hiếm",
+  "folder": "lop1-bai19",
+  "steps": 21,
+  "assetFolder": "lop1-bai19",
+  "bookAlt": "Hình lắp ráp gốc bước 1 của ốc sên robot",
+  "firstStep": "Lắp thân ốc sên",
+  "baseName": "Thân ốc sên",
+  "assemblyAria": "Mô hình ốc sên robot 3D; kéo để xoay, cuộn để phóng to",
+  "sliderAria": "Chọn bước lắp ráp",
+  "lede": "Tìm hiểu loài ốc sên quý hiếm phát sáng, lắp mô hình ZM Alpha 330 qua 21 bước, lập trình hai bánh và cảm biến siêu âm để ốc sên tìm đường, tránh đá và ăn rau.",
+  "victory": "Em đã lắp ốc sên robot, lập trình bò tránh đá, ăn đủ lá rau non và thử ý tưởng sáng tạo của mình.",
+  "engine": { "class": "SnailEngine", "file": "snail-engine.js" },
+  "scene": {
+    "file": "snail-scene.js",
+    "aria": "Vườn rau ban đêm nhìn từ trên: ốc sên bò tránh đá và ăn lá rau",
+    "stage": "Mô hình ốc sên robot 3D theo chương trình",
+    "idle": "Chạm <b>Start</b> hoặc nút <b>▶</b>. Bấm <b>✋</b> để đưa tay trước mắt ốc sên.",
+    "hand": true
+  },
+  "missions": {
+    "m1": { "tip": "Đánh dấu đủ 21 bước lắp ráp" },
+    "m2": {
+      "chip": "Ghép đúng chương trình",
+      "tip": "Chờ vật cản · Tiến thẳng · Chờ 1 giây · Chờ vật cản · Dừng · Rẽ trái · Chờ 0,2 giây, trong khối Lặp",
+      "title": "Ghép khối giống hàng mẫu",
+      "text": "Đặt các khối giống hàng mẫu mờ rồi chạm Start. Ốc sên bò tới đá, dừng và rẽ."
+    },
+    "m3": {
+      "chip": "Ăn đủ 3 lá rau",
+      "tip": "Chỉnh thời gian rẽ để ốc sên vòng qua đá và ăn đủ 3 lá rau",
+      "title": "Ăn đủ 3 lá rau non",
+      "text": "Rẽ 0,2 giây còn ít, ốc sên húc đá. Chạm khối Chờ sau Rẽ trái để rẽ lâu hơn."
+    },
+    "m4": {
+      "chip": "Thử sáng tạo",
+      "tip": "Gắn một gói sáng tạo và cho ốc sên bò",
+      "title": "Thử ốc sên sáng tạo",
+      "text": "Gắn thêm râu, đèn hoặc bánh gai ở chặng Sáng tạo. Rồi cho ốc sên bò thử."
+    },
+    "m5": {
+      "pro": true,
+      "chip": "Bò qua nhớt dính",
+      "tip": "Nâng cao: vệt nhớt dính làm ốc sên bò chậm; vẫn phải ăn đủ 3 lá",
+      "title": "Bò qua vệt nhớt dính",
+      "text": "Đoạn đầu vườn có nhớt dính, ốc sên bò chậm còn 0,4 lần. Xem ô Quãng đường rồi tăng thời gian Tiến, hoặc gắn bánh gai."
+    }
+  },
+  "blocks": {
+    "toolbox": ["repeatStart", "repeatEnd", "obstacle", "moveForward", "turnLeft", "motorPower", "wait", "motorStop", "melodyA"],
+    "pro": [],
+    "sample": ["start", "repeatStart", "obstacle", "moveForward", ["wait", { "duration": 1 }], "obstacle", "motorStop", "turnLeft", ["wait", { "duration": 0.2 }], "repeatEnd"],
+    "empty": ["start"]
+  },
+  "creative": {
+    "intro": "Giúp ốc sên đẹp và khỏe hơn. Thử <b>râu kép dài</b>, <b>mai phát quang</b>, <b>bánh gai</b> không dính nhớt, hoặc <b>đèn mắt kép</b>.",
+    "slots": 4,
+    "slotHint": "4 vị trí trên ốc sên"
+  },
+  "meters": [
+    { "label": "Quãng đường", "id": "m-dist", "value": 0, "unit": "cm", "note": "Quãng đường đã bò", "noteId": "m-dist-note" },
+    { "label": "Hướng đầu", "id": "m-angle", "value": 0, "unit": "độ", "note": "0° là nhìn sang phải" },
+    { "label": "Lá rau đã ăn", "id": "m-leaf", "value": 0, "unit": "/ 3 lá", "note": "Ăn đủ 3 lá là thắng", "noteId": "m-leaf-note" },
+    { "label": "Lượt tiến", "id": "m-sample", "value": 0, "note": "Số lần bò tiến" }
+  ],
+  "calcTitle": "Đo đường bò",
+  "calc": "Tiến · rẽ · vệt nhớt",
+  "calcProOnly": true,
+  "hint": "<b>NV2:</b> Ghép đúng hàng mẫu: Chờ vật cản, Tiến thẳng, Chờ 1 giây, Chờ vật cản, Dừng, Rẽ trái, Chờ 0,2 giây. <b>NV3:</b> Đổi Chờ 0,2 giây sau Rẽ trái thành lâu hơn để ốc sên quay vòng qua đá. <b>NV4:</b> Gắn gói ở chặng Sáng tạo rồi chạy. <span class=\"pro-only\"><b>NV5:</b> Trên nhớt dính ốc sên bò chậm: đổi Chờ 1 giây sau Tiến thành 2 giây (và Chờ sau Rẽ thành 1 giây), hoặc gắn bánh gai.</span>"
+}

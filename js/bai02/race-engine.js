@@ -32,36 +32,20 @@
   };
   // Chương trình mẫu trong phiếu học tập: Start → High Speed → Wait 3s → Stop
   const SAMPLE = ['start', 'motor:high', 'wait:3', 'stop'];
-  const sig = b => (b.type === 'wait' ? 'wait:' + b.duration : b.type === 'motor' ? 'motor:' + b.speed : b.type);
   const NAMES = { wing: 'Cánh gió đuôi', bigwheel: 'Bánh to hơn', nose: 'Mũi xe nhọn', lights: 'Đèn pha + số xe' };
 
-  class RaceEngine {
+  class RaceEngine extends window.LessonEngine {
     constructor() {
-      this.prog = [];
-      this.logs = [];
-      this.t = 0;
-      this.upgrades = new Set();
-      this.advanced = false;
-      this.assemblyDone = false;
+      super({ sample: SAMPLE, labels: NAMES, baseLabel: 'Xe cơ bản', touch: [] });
       this.done = { m2: false, m3: false, m5: false };
       this.lastRun = null;
-      this.loopActive = true;
-      this.rafId = null;
-      this.reset();
+      // Các trường nội bộ của khung chung không thuộc snapshot trạng thái cũ của xe.
+      for (const key of ['runT', 'pressed', 'pressT', 'waitingPress', 'blkDur'])
+        Object.defineProperty(this, key, { value: this[key], enumerable: false, writable: true, configurable: true });
     }
-    init() {
-      this.startLoop();
-    }
-    resizeCanvas() {}
 
-    reset() {
-      this.running = false;
-      this.pc = 0;
-      this.entered = false;
-      this.blkT = 0;
-      this.motorOn = false;
+    resetState() {
       this.power = 8;
-      this.dir = 1;
       this.x = 0;
       this.rev = 0;
       this.crashed = false;
@@ -71,61 +55,18 @@
       this.maxPower = 0;
       this.driveT = 0;
       this.curSpeed = 0;
-      if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
     }
 
-    emit(type, data) {
-      if (this.onEvent) this.onEvent(type, data);
-    }
     log(kind, text) {
-      this.logs.unshift({ time: this.t.toFixed(1) + 's', kind, text });
-      if (this.logs.length > 8) this.logs.length = 8;
-      const el = document.getElementById('sim-log-list');
-      if (el)
-        el.innerHTML = this.logs
-          .map(e => `<li class="log-item" data-kind="${e.kind}"><time class="log-time">${e.time}</time><span class="log-dot"></span><span class="log-text">${e.text}</span></li>`)
-          .join('');
+      // Bài 02 dùng đồng hồ khung hình (t), và có câu chữ riêng khi bắt đầu/chưa gắn gói.
+      this.runT = this.t;
+      if (text === 'Bắt đầu chạy chương trình.') text = 'Xe vào vạch xuất phát, bắt đầu chạy chương trình.';
+      if (kind === 'ok' && text === 'Xe cơ bản') text = 'Xe cơ bản (chưa gắn thêm)';
+      super.log(kind, text);
     }
 
-    setProgram(blocks) {
-      this.prog = blocks || [];
-      this.stop(true);
-      this.reset();
-    }
-    start() {
-      this.reset();
-      this.running = true;
-      if (window.SFX) window.SFX.init();
-      this.log('info', 'Xe vào vạch xuất phát, bắt đầu chạy chương trình.');
-      this.emit('start');
-    }
-    stop(silent) {
-      const was = this.running;
-      this.running = false;
-      this.motorOn = false;
-      if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
-      if (was && !silent) {
-        this.log('info', 'Đã dừng chương trình.');
-        this.emit('stop');
-      }
-    }
-
-    setAssemblyDone(done) {
-      if (this.assemblyDone === !!done) return;
-      this.assemblyDone = !!done;
-      this.checkMissions();
-    }
-    setUpgrades(list) {
-      this.upgrades = new Set(list || []);
-      this.upgradeRun = false;
-      const names = [...this.upgrades].map(t => NAMES[t] || t);
-      const badge = document.getElementById('sim-active-upgrade-badge');
-      if (badge) badge.textContent = names.length ? names.join(' · ') : 'Xe cơ bản';
-      this.log('ok', names.length ? 'Đã gắn: ' + names.join(', ') : 'Xe cơ bản (chưa gắn thêm)');
-    }
-    has(t) {
-      return this.upgrades.has(t);
-    }
+    // Bài 02 không dùng nút nhấn; giữ hành vi cũ khi công cụ trace gọi press().
+    press() {}
     setAdvanced(on) {
       on = !!on;
       if (this.advanced === on) return;
@@ -157,8 +98,9 @@
     speed() {
       return this.motorOn ? speedOf(this.power) * this.dir * this.factor(this.section().kind) : 0;
     }
-    matchesSample() {
-      return this.prog.length === SAMPLE.length && this.prog.every((b, i) => sig(b) === SAMPLE[i]);
+    onMotor() {
+      this.stalled = false;
+      this.maxPower = Math.max(this.maxPower, this.power);
     }
     parked() {
       const [a, b] = this.track().park;
@@ -175,66 +117,7 @@
         this.slideStep(dt);
         return;
       }
-      let budget = dt,
-        guard = 0;
-      while (this.running && guard++ < 30) {
-        if (this.pc >= this.prog.length) {
-          this.finish();
-          break;
-        }
-        const b = this.prog[this.pc];
-        if (b.type === 'start' || b.type === 'repeatStart') {
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'repeatEnd') {
-          const r = this.prog.findIndex(x => x.type === 'repeatStart');
-          this.pc = r + 1;
-          if (r < 0) this.pc++;
-          continue;
-        }
-        if (b.type === 'motor' || b.type === 'motor_power') {
-          this.power = b.type === 'motor_power' ? Math.max(1, Math.min(8, b.power || 8)) : b.speed === 'low' ? 4 : b.speed === 'medium' ? 6 : 8;
-          this.motorOn = true;
-          this.stalled = false;
-          this.maxPower = Math.max(this.maxPower, this.power);
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'motor_reverse') {
-          this.dir = -this.dir;
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'stop') {
-          this.motorOn = false;
-          this.pc++;
-          continue;
-        }
-        // Khối tốn thời gian: wait, melody
-        if (!this.entered) {
-          this.entered = true;
-          this.blkT = 0;
-          if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
-          if (b.type === 'melody') {
-            if (window.SFX) window.SFX.melody(b.tune);
-            this.emit('melody', b.tune);
-          }
-        }
-        const dur = b.type === 'melody' ? 1 : b.type === 'wait' ? b.duration || 3 : 0;
-        const need = dur - this.blkT;
-        if (budget < need) {
-          this.blkT += budget;
-          this.integrate(budget);
-          budget = 0;
-          break;
-        }
-        this.integrate(need);
-        budget -= need;
-        this.entered = false;
-        this.pc++;
-      }
-      if (budget > 0 && this.running) this.integrate(budget);
+      super.advance(dt);
     }
 
     // Xe không đủ lực hoặc động cơ dừng giữa dốc: trôi ngược xuống chân dốc
@@ -309,7 +192,7 @@
           this.x = T.wall;
           this.crashed = true;
           this.motorOn = false;
-          this.log('warn', 'Xe chạy quá xa và đâm vào tường lốp!');
+          this.log('warn', 'Xe chạy quá xa và đâm vào tường!');
           this.emit('crash');
           this.finish();
           return;
@@ -359,37 +242,27 @@
       this.checkMissions();
     }
 
-    checkMissions() {
-      const m1 = this.assemblyDone;
-      const m4 = this.upgrades.size > 0 && !!this.upgradeRun;
-      if (this.onMissionUpdate)
-        this.onMissionUpdate({
-          m1, m2: this.done.m2, m3: this.done.m3, m4, m5: this.done.m5,
-          allDone: m1 && this.done.m2 && this.done.m3 && m4,
-          upgrades: [...this.upgrades], lastRun: this.lastRun
-        });
+    missionExtra() {
+      return { upgrades: [...this.upgrades], lastRun: this.lastRun };
     }
 
     updateUI() {
+      super.updateUI();
       const pill = document.getElementById('sim-status-pill');
       if (pill) {
         pill.textContent = this.running ? 'Đang chạy' : this.flipped ? 'Xe lật' : 'Đã dừng';
         pill.dataset.k = this.running ? 'ok' : this.flipped ? 'warn' : 'muted';
       }
-      const set = (id, html) => {
-        const el = document.getElementById(id);
-        if (el) el.innerHTML = html;
-      };
       const sec = this.section();
       const T = this.track();
       const v = this.motorOn ? this.curSpeed || Math.abs(this.speed()) : 0;
       const kindName = { flat: 'Phẳng', up: 'Lên dốc', down: 'Xuống dốc' }[sec.kind];
-      set('m-speed', `${v.toFixed(1)} <small>cm/giây</small>`);
-      set('m-speed-note', `Mức ${this.power}/8 · ${this.dir > 0 ? 'tiến' : 'lùi'}`);
-      set('m-dist', `${Math.round(this.x)} <small>cm</small>`);
-      set('m-section', kindName);
-      set('m-park', `${T.park[0]}–${T.park[1]} <small>cm</small>`);
-      set('m-park-note', `Vạch đích ${T.finish} cm`);
+      this.set('m-speed', `${v.toFixed(1)} <small>cm/giây</small>`);
+      this.set('m-speed-note', `Mức ${this.power}/8 · ${this.dir > 0 ? 'tiến' : 'lùi'}`);
+      this.set('m-dist', `${Math.round(this.x)} <small>cm</small>`);
+      this.set('m-section', kindName);
+      this.set('m-park', `${T.park[0]}–${T.park[1]} <small>cm</small>`);
+      this.set('m-park-note', `Vạch đích ${T.finish} cm`);
       const desc = document.getElementById('sim-status-desc');
       if (desc)
         desc.textContent = this.running
@@ -401,28 +274,6 @@
       if (calc2) calc2.textContent = `Quãng đường = tốc độ × số giây. Mức 8 chạy 2 giây trên đường phẳng: 39,3 × 2 ≈ 79 cm. Ô đỗ nằm ở ${T.park[0]}–${T.park[1]} cm.`;
     }
 
-    startLoop() {
-      cancelAnimationFrame(this.rafId);
-      this.loopActive = true;
-      let last = performance.now();
-      const loop = now => {
-        if (!this.loopActive) return;
-        const dt = Math.min(0.05, (now - last) / 1000);
-        last = now;
-        this.t += dt;
-        this.advance(dt);
-        this.updateUI();
-        this.rafId = requestAnimationFrame(loop);
-      };
-      this.rafId = requestAnimationFrame(loop);
-    }
-    pauseLoop() {
-      this.loopActive = false;
-      cancelAnimationFrame(this.rafId);
-    }
-    resumeLoop() {
-      if (!this.loopActive) this.startLoop();
-    }
   }
 
   RaceEngine.SPEED = speedOf;

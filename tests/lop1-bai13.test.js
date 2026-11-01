@@ -93,6 +93,7 @@ const sceneContext = {
   cancelAnimationFrame() {}, clearTimeout() {}, setTimeout: () => 1,
   zmReady(fn) { fn(); }
 };
+vm.runInNewContext(fs.readFileSync(path.join(root, 'js/scene-kit.js'), 'utf8'), sceneContext);
 vm.runInNewContext(fs.readFileSync(path.join(root, 'js/bai13/snow-scene.js'), 'utf8'), sceneContext);
 for (const method of ['enter', 'leave', 'onEvent', 'setMode']) {
   assert.equal(typeof sceneContext.window.ZMScene[method], 'function', 'Cảnh thiếu ' + method);
@@ -104,39 +105,47 @@ sceneContext.window.ZMScene.setMode('robot');
 sceneContext.window.ZMScene.setMode('story');
 sceneContext.window.ZMScene.leave();
 
-let readyScene, nextFrame = 0;
+let readyScene, nextFrame = 0, hands = 0;
 const cancelled = [], cleared = [], timers = [], callbacks = new Map();
+const clickHandlers = {};
 const nodes = {
-  'space-scene': { clientWidth: 600, getContext: () => ({}), addEventListener() {} },
+  'space-scene': { clientWidth: 600, getContext: () => ({}), addEventListener(type, fn) { clickHandlers[`canvas:${type}`] = fn; } },
+  'scene-hand': { addEventListener(type, fn) { clickHandlers[`hand:${type}`] = fn; }, classList: { toggle() {} } },
   'scene-toast': { hidden: true, dataset: {} },
   'scene-toast-btn': { hidden: true },
   'scene-toast-title': {}, 'scene-toast-text': {}
 };
 const liveScene = {
-  window: {}, document: { getElementById: id => nodes[id] || null },
+  window: { simEngine: { press() {}, putHand() { hands++; } } },
+  document: { getElementById: id => nodes[id] || null, addEventListener() {} },
   performance: { now: () => 1000 },
   requestAnimationFrame(fn) { callbacks.set(++nextFrame, fn); return nextFrame; },
   cancelAnimationFrame(id) { cancelled.push(id); callbacks.delete(id); },
   setTimeout(fn) { timers.push(fn); return timers.length; },
   clearTimeout(id) { cleared.push(id); },
+  ResizeObserver: class { observe() {} disconnect() {} },
   zmReady(fn) { readyScene = fn; }
 };
+vm.runInNewContext(fs.readFileSync(path.join(root, 'js/scene-kit.js'), 'utf8'), liveScene);
 vm.runInNewContext(fs.readFileSync(path.join(root, 'js/bai13/snow-scene.js'), 'utf8'), liveScene);
 readyScene();
+clickHandlers['hand:click']();
+clickHandlers['canvas:click']();
+assert.equal(hands, 2, 'Nút bàn tay và chạm cảnh phải kích hoạt cảm biến siêu âm');
 liveScene.window.ZMScene.enter();
 assert.equal(nextFrame, 1, 'Vào chặng phải khởi động vẽ');
 liveScene.window.ZMScene.onEvent('short', { left: 2 });
 assert.equal(nodes['scene-toast'].hidden, false, 'Thông báo được hiển thị khi đang ở chặng');
 liveScene.window.ZMScene.setMode('robot');
-assert.ok(cancelled.includes(1), 'Xem mô hình 3D phải dừng vẽ 2D');
+assert.equal(nextFrame, 1, 'Đổi sang 3D không khởi tạo thêm vòng vẽ');
 liveScene.window.ZMScene.setMode('story');
-assert.equal(nextFrame, 2, 'Quay lại câu chuyện phải vẽ tiếp');
+assert.equal(nextFrame, 1, 'Quay về 2D tái sử dụng vòng vẽ của kit');
 liveScene.window.ZMScene.leave();
-assert.ok(cancelled.includes(2), 'Rời chặng phải cancelAnimationFrame');
+assert.ok(cancelled.includes(1), 'Rời chặng phải cancelAnimationFrame');
 assert.equal(nodes['scene-toast'].hidden, true, 'Rời chặng phải ẩn thông báo');
 assert.ok(cleared.includes(1), 'Rời chặng phải xóa timer');
-callbacks.get(2)?.(1200);
-assert.equal(nextFrame, 2, 'Callback còn sót không được tạo vòng vẽ mới');
+callbacks.get(1)?.(1200);
+assert.equal(nextFrame, 1, 'Callback còn sót không được tạo vòng vẽ mới');
 liveScene.window.ZMScene.onEvent('short', { left: 2 });
 assert.equal(timers.length, 1, 'Rời chặng không được tạo timer mới');
 const artContext = { window: {} };
@@ -145,6 +154,7 @@ for (const method of ['drawBackground', 'drawStation', 'drawPile', 'drawWall', '
   assert.equal(typeof artContext.window.SnowArt[method], 'function', 'Hình vẽ thiếu ' + method);
 }
 
+vm.runInNewContext(fs.readFileSync(path.join(root, 'js/lesson-engine.js'), 'utf8'), context);
 vm.runInNewContext(fs.readFileSync(path.join(root, 'js/bai13/plow-engine.js'), 'utf8'), context);
 const Plow = context.window.PlowEngine;
 assert.ok(Math.abs(Plow.SPEED(8) - 39.27) < 0.01, 'Mức 8 ≈ 39,3 cm/giây');
@@ -155,126 +165,131 @@ const B = {
   rs: { type: 'repeatStart' },
   re: { type: 'repeatEnd' },
   obs: { type: 'sensor_obstacle' },
+  fw: { type: 'drive', move: 'forward', speed: 'high' },
+  turn: { type: 'drive', move: 'left', speed: 'high' },
   high: { type: 'motor', speed: 'high' },
   low: { type: 'motor', speed: 'low' },
-  p: n => ({ type: 'motor_power', power: n }),
+  power: n => ({ type: 'motor_power', power: n }),
   wait: s => ({ type: 'wait', duration: s }),
   stop: { type: 'stop' }
 };
+function cycle(waitTime = 1, turn = true) {
+  return [B.start, B.rs, B.obs, B.fw, B.wait(waitTime), B.obs, B.stop,
+    ...(turn ? [B.turn, B.wait(.2)] : []), B.re];
+}
 function run(program, seconds, { upgrades = [], advanced = false, hands = [] } = {}) {
-  const sim = new Plow();
-  const states = [], events = [];
+  const sim = new Plow(), states = [], events = [];
   sim.onMissionUpdate = s => states.push(s);
-  sim.onEvent = t => events.push(t);
+  sim.onEvent = type => events.push(type);
   if (advanced) sim.setAdvanced(true);
   sim.setUpgrades(upgrades);
   sim.setProgram(program);
   sim.start();
-  for (let t = 0; t < seconds; t += 0.02) {
-    if (hands.some(h => Math.abs(h - t) < 0.01)) sim.putHand();
-    sim.advance(0.02);
+  for (let t = 0; t < seconds && sim.running; t += .02) {
+    if (hands.some(h => Math.abs(h - t) < .01)) sim.putHand();
+    sim.advance(.02);
   }
   sim.checkMissions();
   return { sim, state: states.at(-1), events };
 }
-const near = (a, b, tol, msg) => assert.ok(Math.abs(a - b) <= tol, `${msg}: ${a} ≠ ${b}`);
-const cycle = (power, w) => [B.start, B.rs, B.obs, power, B.wait(w), B.stop, B.re];
-const sample = cycle(B.high, 1);
-
-// Chương trình mẫu: thấy tuyết → chạy nhanh 1 giây → dừng, lặp lại. 3 chu kỳ: 39,3 · 78,5 · 115 cm (đến đống cuối là xong)
+const near = (a, b, tol, message) => assert.ok(Math.abs(a - b) <= tol,
+  message + ': got ' + a + ', expected ' + b);
+const sample = cycle(1);
+assert.deepEqual(sample.map(b => b.type), [
+  'start', 'repeatStart', 'sensor_obstacle', 'drive', 'wait', 'sensor_obstacle',
+  'stop', 'drive', 'wait', 'repeatEnd'
+], 'Mẫu KHGD phải đúng thứ tự 10 khối');
+assert.equal(L.blocks.sample.length, 10);
+assert.ok(L.blocks.toolbox.includes('moveForward') && L.blocks.toolbox.includes('turnLeft'));
+assert.ok(page.includes('Chờ 0,2 giây'), 'Chip NV2 thiếu thời gian rẽ 0,2s');
+assert.equal(new Plow().matchesSample(), false);
 const s = run(sample, 10);
-near(s.sim.x, 115, 0.6, 'Dừng ngay khi đẩy tới đống cuối (115 cm)');
-assert.equal(s.sim.left(), 0);
+assert.ok(s.sim.matchesSample(), '10 khối đúng chữ ký KHGD');
+assert.equal(s.sim.left(), 0, 'Mẫu phải dọn sạch 3 đống trên sân Bé');
 assert.equal(s.sim.cycles, 3);
-assert.ok(s.state.m2 && s.state.m3 && !s.state.m5, 'Mẫu đạt NV2 và NV3: ' + JSON.stringify(s.state));
+assert.ok(s.state.m2 && s.state.m3 && !s.state.m5,
+  'NV2, NV3 đạt theo mẫu: ' + JSON.stringify(s.state));
 assert.ok(s.events.includes('deliver') && !s.events.includes('crash'));
 assert.equal(s.state.lastRun.cycles, 3);
-const firstCycle = run(sample, 1.2);
-assert.ok(firstCycle.state.m2 && !firstCycle.state.m3 && firstCycle.sim.left() === 2,
-  'NV2 phải đạt ngay sau một chu kỳ đúng mẫu, trước khi dọn sạch đường');
-// Sai mẫu thì không đạt NV2
-assert.ok(!run(cycle(B.low, 1), 15, { upgrades: [] }).state.m2, 'Quay chậm không phải mẫu');
-assert.ok(!run(cycle(B.low, 1), 15, { upgrades: ['blade'] }).state.m2,
-  'Lưỡi gạt giúp mức chậm dọn sạch nhưng không được tính đúng chương trình mẫu');
-assert.ok(!run(cycle(B.p(5), 1), 15, { upgrades: ['blade'] }).state.m2,
-  'Motor Power 5 với lưỡi gạt vẫn sai chữ ký High Speed');
-assert.ok(!run(cycle(B.high, 2), 10).state.m2, 'Wait 2 giây không phải mẫu');
-assert.ok(!run([B.start, B.obs, B.high, B.wait(1), B.stop], 10).state.m2, 'Thiếu khối Lặp không phải mẫu');
-assert.ok(run(cycle(B.p(8), 1), 10).state.m3, 'Motor Power 8 vẫn dọn sạch tuyết (chỉ NV2 mới đòi High Speed)');
-assert.ok(run(cycle(B.p(8), 1), 10).state.m2, 'Motor Power cũng tính là khối chạy (giống Bài 3)');
-
-// Không lặp: chỉ một lần chạy thì còn tuyết
-const once = run([B.start, B.obs, B.high, B.wait(1), B.stop], 5);
-assert.equal(once.sim.left(), 2);
-assert.ok(once.events.includes('short') && !once.state.m3, 'Chạy một lần còn tuyết: ' + once.events);
-// Wait 3 giây mỗi lần: 118 cm đẩy sạch cả 3 đống ngay lần đầu
-const w3 = run(cycle(B.high, 3), 6);
-assert.ok(w3.state.m3 && w3.sim.cycles === 1, 'Wait 3 giây dọn sạch trong một lần');
-// Chạy quá xa: đâm tường 150 cm
-const crash = run([B.start, B.high, B.wait(6), B.stop], 8);
-assert.ok(crash.events.includes('crash') && crash.sim.x === 150 && !crash.state.m3, 'Đụng tường cuối đường');
-// Cảm biến không thấy gì thì chờ mãi, đưa tay thì chạy
-const lone = run([B.start, B.rs, B.obs, B.high, B.wait(1), B.stop, B.re], 2, { hands: [] });
-assert.ok(lone.sim.x > 0, 'Đống tuyết đầu trong tầm 40 cm nên cảm biến tự thấy');
-const far = new Plow();
-far.setProgram(sample);
-far.start();
-far.piles[0].x = 100; // thay đổi sa bàn sau khi start() thiết lập lại trạng thái
-for (let t = 0; t < 2; t += 0.02) far.advance(0.02);
-assert.ok(far.waitingHand && far.x === 0, 'Đống tuyết xa thì xe đứng chờ vật cản');
-far.putHand();
-for (let t = 0; t < 1.2; t += 0.02) far.advance(0.02);
-assert.ok(far.x > 30 && !far.waitingHand, 'Đưa tay thì xe chạy');
-
-// Tuyết dày: mức thấp bị kẹt, lưỡi gạt giúp đẩy từ mức 3
-const slow = run(cycle(B.low, 1), 15);
-assert.ok(slow.events.includes('stuck') && !slow.state.m3, 'Mức 4 kẹt ở đống đầu: ' + slow.events);
-near(slow.sim.x, 31, 0.1, 'Kẹt ngay trước đống tuyết (35 − 4 cm)');
-const blade = run(cycle(B.low, 1), 15, { upgrades: ['blade'] });
-assert.ok(blade.state.m3 && !blade.events.includes('stuck') && blade.state.m4, 'Lưỡi gạt đẩy được ở mức 4');
-assert.ok(run(cycle(B.p(3), 1), 25, { upgrades: ['blade'] }).state.m3, 'Lưỡi gạt đẩy được ở mức 3');
-assert.ok(run(cycle(B.p(2), 1), 25, { upgrades: ['blade'] }).events.includes('stuck'), 'Mức 2 vẫn kẹt');
-assert.ok(run(cycle(B.p(5), 1), 25).state.m3, 'Không lưỡi gạt thì mức 5 đẩy được');
-assert.ok(run(cycle(B.p(4), 1), 25).events.includes('stuck'), 'Không lưỡi gạt thì mức 4 kẹt');
-// NV4: có gói và động cơ chạy; đèn chỉ trang trí vẫn tính
-assert.ok(run(sample, 1, { upgrades: ['beacon'] }).state.m4, 'Gói đèn và động cơ chạy đạt NV4');
-assert.ok(!run([B.start, B.stop], 1, { upgrades: ['salt'] }).state.m4, 'Chưa bật động cơ thì chưa đạt NV4');
-assert.ok(!s.state.m4, 'Không gắn gói thì chưa đạt NV4');
-assert.equal(run(sample, 10, { upgrades: ['salt'] }).sim.x.toFixed(1), s.sim.x.toFixed(1), 'Thùng muối không đổi tốc độ');
-
-// NV1: lắp xong
+assert.ok(s.sim.theta > .3 && s.sim.y > 0, 'Xe thực sự rẽ trên sa bàn 2D');
+assert.ok(s.sim.wheelLeft !== s.sim.wheelRight, 'Hai bánh phải có quãng quay khác nhau khi rẽ');
+const first = run(sample, 1.5);
+assert.ok(first.state.m2 && !first.state.m3 && first.sim.left() >= 1,
+  'NV2 đạt sau một vòng lặp, trước khi dọn sạch toàn sân');
+assert.ok(!run(cycle(2), 8).state.m2, 'Chỉnh Wait 2 giây không còn đúng mẫu NV2');
+assert.ok(!run(cycle(1, false), 8).state.m2, 'Thiếu rẽ trái không đạt NV2');
+const noTurn = run(cycle(1, false), 10);
+assert.ok(noTurn.sim.left() > 0 && !noTurn.state.m3,
+  'Thiếu Rẽ trái phải còn tuyết: ' + noTurn.sim.left());
+const lone = run([B.start, B.obs, B.fw, B.wait(1), B.stop], 3);
+assert.ok(lone.sim.x > 0 && lone.sim.left() > 0, 'Không Lặp thì không dọn hết');
+const turn = run([B.start, B.turn, B.wait(.2), B.stop], .5);
+near(turn.sim.theta, .2, .01, 'Rẽ 0,2s ≈ 0,2 rad');
+near(turn.sim.x, 0, .01, 'Rẽ tại chỗ không dịch X');
+near(turn.sim.y, 0, .01, 'Rẽ tại chỗ không dịch Y');
+assert.ok(turn.sim.wheelLeft < 0 && turn.sim.wheelRight > 0,
+  'Trái lùi / phải tiến khi rẽ trái');
+const straight = run([B.start, B.fw, B.wait(.5), B.stop], 1);
+near(straight.sim.x, Plow.SPEED(8) * .5, .02, 'Tiến thẳng hai bánh');
+near(straight.sim.wheelLeft, straight.sim.wheelRight, 1e-8, 'Hai bánh cùng quay khi tiến');
+near(straight.sim.theta, 0, 1e-8, 'Không đổi hướng khi tiến thẳng');
+const legacy = run([B.start, B.high, B.wait(.5), B.stop], 1);
+near(legacy.sim.x, straight.sim.x, .01, 'Khối Quay nhanh cũ vẫn tiến');
+const legacyPower = run([B.start, B.power(8), B.wait(.5), B.stop], 1);
+near(legacyPower.sim.x, straight.sim.x, .01, 'Motor Power cũ vẫn tiến');
+const pose = turn.sim.pose3d();
+assert.ok(pose.wheelLeft > 0 && pose.wheelRight < 0 && Number.isFinite(pose.heading),
+  'pose3d trả góc quay của cả hai bánh và heading');
+assert.equal(JSON.stringify(new Plow().pose3d().offset), '[0,0,0]');
+const blocked = new Plow();
+blocked.setProgram(sample);
+blocked.start();
+blocked.piles.forEach(p => { p.x = -40; });
+blocked.advance(.05);
+assert.ok(blocked.waitingHand && blocked.x === 0, 'Không có vật phía trước thì chờ');
+blocked.putHand();
+blocked.advance(.05);
+assert.ok(blocked.x > 0, 'Nút tay mở chờ cảm biến');
+const behind = new Plow();
+behind.setProgram(sample);
+behind.start();
+behind.piles.forEach(p => { p.x = -10; });
+assert.equal(behind.seesObstacle(), false, 'Cảm biến không nhìn phía sau');
+behind.piles[0].x = 20;
+behind.piles[0].y = 50;
+assert.equal(behind.seesObstacle(), false, 'Cảm biến không nhìn lệch khỏi hướng xe');
+const slow = run([B.start, B.low, B.wait(1), B.stop], 2);
+assert.ok(slow.events.includes('stuck') && !slow.state.m3, 'Mức thấp phải kẹt ở tuyết dày');
+const blade = run([B.start, B.low, B.wait(1), B.stop], 2, { upgrades: ['blade'] });
+assert.ok(!blade.events.includes('stuck') && blade.state.m4, 'Lưỡi gạt giúp mức 4');
+assert.ok(run([B.start, B.power(2), B.wait(2), B.stop], 3,
+  { upgrades: ['blade'] }).events.includes('stuck'), 'Lưỡi gạt mức 2 vẫn kẹt');
+assert.ok(run(sample, 1, { upgrades: ['beacon'] }).state.m4, 'Gắn đèn rồi chạy đạt NV4');
+assert.ok(!run([B.start, B.stop], 1, { upgrades: ['salt'] }).state.m4,
+  'Không chạy bánh thì không đạt NV4');
 const asm = new Plow();
 let seen;
-asm.onMissionUpdate = st => (seen = st);
+asm.onMissionUpdate = state => (seen = state);
 asm.setAssemblyDone(true);
-assert.ok(seen.m1 && !seen.allDone);
-
-// Sửa chương trình thì không tự chạy
+assert.ok(seen.m1 && !seen.allDone, 'Đánh dấu hoàn tất lắp ráp đạt NV1');
 const idle = new Plow();
 idle.setProgram(sample);
-idle.advance(0.5);
-assert.equal(idle.running, false, 'Sửa chương trình không tự chạy');
-assert.equal(JSON.stringify(idle.pose3d().offset), '[0,0,0]');
-const moved = run(sample, 0.8).sim.pose3d();
-assert.ok(moved.offset[0] > 0 && moved.output < 0, 'Xe tiến theo +X, bánh quay');
-
-// Nâng cao: bão tuyết, đường 230 cm, 5 đống, tối đa 4 lần chạy
-const adv = { advanced: true };
-const sw = new Plow();
-assert.equal(sw.trackEnd(), 150);
-sw.setAdvanced(true);
-assert.equal(sw.trackEnd(), 230);
-assert.equal(sw.piles.length, 5);
-const slowAdv = run(sample, 20, adv);
-assert.equal(slowAdv.sim.cycles, 5, 'Mẫu cần 5 lần chạy trên đường Nâng cao');
-assert.ok(slowAdv.state.m3 && !slowAdv.state.m5, 'Đạt NV3 nhưng quá 4 lần chạy thì chưa đạt NV5');
-const tuned = run(cycle(B.high, 1.3), 20, adv);
-assert.equal(tuned.sim.cycles, 4);
-assert.ok(tuned.state.m5 && tuned.state.m3 && tuned.events.includes('deliver'), 'Wait 1,3 giây dọn sạch trong 4 lần: ' + tuned.events);
-assert.ok(!run(cycle(B.high, 1.3), 20).state.m5, 'Đường Bé không tính NV5');
-const over = run(cycle(B.high, 3), 40, { ...adv, hands: [3.5] });
-assert.ok(over.events.includes('crash') && !over.state.m5, 'Wait 3 giây: lần 2 đụng tường 230 cm');
-
-console.log('PASS: Lớp 1 Bài 13 – 22 ảnh sách, giao diện, cảnh/art, mô hình 3D và mô phỏng NV1–NV5.');
-
+idle.advance(.5);
+assert.equal(idle.running, false, 'Ghép chương trình không tự chạy');
+const advanced = new Plow();
+advanced.setAdvanced(true);
+assert.equal(advanced.piles.length, 5);
+assert.equal(advanced.trackEnd(), 235);
+const proSample = run(sample, 10, { advanced: true });
+assert.equal(proSample.state.m5, false, 'Mẫu không tự đạt thử thách Nâng cao');
+const tuned = run(cycle(2), 12, { advanced: true });
+assert.ok(tuned.state.m5 && tuned.state.m3 && tuned.sim.cycles <= 4,
+  'Đổi Chờ đầu thành 2s đạt NV5: ' + JSON.stringify(tuned.state));
+assert.equal(tuned.sim.left(), 0);
+assert.ok(tuned.events.includes('deliver'));
+assert.equal(run(cycle(2), 12).state.m5, false, 'Chế độ Bé không cấp NV5');
+const unsafe = run(cycle(3), 15, { advanced: true });
+assert.ok(unsafe.events.includes('crash') && !unsafe.state.m5,
+  'Chạy quá xa phải báo va chạm và không đạt NV5');
+console.log('PASS: Bài 13 – 22 hình sách, scene/3D, đúng mẫu 10 khối, 2 bánh, cảm biến, NV1–NV5.');
 })().catch(err => { console.error(err); process.exit(1); });

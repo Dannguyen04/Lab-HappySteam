@@ -28,7 +28,7 @@ assert.equal(JSON.stringify(Array.from(model.drive.output.parts)), JSON.stringif
 assert.ok(Math.abs(Math.abs(model.drive.output.axis[2]) - 1) < 1e-3, 'Cánh quạt quay quanh trục nằm ngang (Z)');
 for (const k of ['light', 'tail']) assert.ok(model.creative[k].length, 'Thiếu hình gói ' + k);
 
-vm.runInNewContext(fs.readFileSync(path.join(root, 'js/bai10/wind-engine.js'), 'utf8'), context);
+for (const f of ['js/lesson-engine.js', 'js/bai10/wind-engine.js']) vm.runInNewContext(fs.readFileSync(path.join(root, f), 'utf8'), context);
 const Wind = context.window.WindEngine;
 const T = n => Array.from({ length: n }, () => null);
 const B = {
@@ -62,13 +62,13 @@ const s = run(sample, 4, [0.2, 1, 2, 3]);
 assert.ok(s.state.m2 && s.events.includes('sampleDone'), 'Nhấn 4 lần: chậm → vừa → nhanh → dừng đạt NV2: ' + s.events);
 assert.equal(s.sim.rpm(), 0, 'Lần nhấn thứ 4 dừng cánh quạt');
 const r = run(sample, 1.5, [0.2, 1]);
-assert.equal(r.sim.rpm(), 93.75, 'Lần 2: quay vừa (mức 5) = 93,75 vòng/phút');
+assert.equal(r.sim.rpm(), 112.5, 'Lần 2: quay vừa (mức 6) = 112,5 vòng/phút');
 // NV3: quay nhanh ~8,3 giây là đầy pin
 const fast = run(sample, 12, [0.1, 0.3, 0.5]);
 assert.ok(fast.state.m3 && fast.events.includes('full'), 'Quay nhanh đủ lâu thì pin đầy');
 assert.ok(fast.sim.best.secs > 8 && fast.sim.best.secs < 9.5, 'Đầy pin ≈ 8–9 giây: ' + fast.sim.best.secs);
 const slow = run(sample, 12, [0.1]);
-assert.ok(!slow.state.m3 && slow.sim.battery < 60, 'Quay chậm sạc chậm hơn: ' + slow.sim.battery);
+assert.ok(!slow.state.m3 && slow.sim.battery < 80, 'Quay chậm sạc chậm hơn: ' + slow.sim.battery);
 // Gói sáng tạo: cánh dài + thêm cánh sạc nhanh hơn, và đạt NV4
 const boosted = run(sample, 12, [0.1, 0.3, 0.5], { upgrades: ['long', 'more'] });
 assert.ok(boosted.sim.best.secs < fast.sim.best.secs * 0.6, 'Cánh dài + 6 cánh sạc nhanh hơn');

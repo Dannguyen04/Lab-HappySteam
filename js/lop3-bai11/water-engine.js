@@ -4,7 +4,7 @@
 // Cảm biến trên cột cao nhìn phía trước: khối "Chờ vật cản" đi tiếp khi một mỏm băng chưa lấy nước cách mũi robot ≤ 15 cm.
 // Máy bơm hút nước khi robot ĐỨNG YÊN trong tầm 15 cm của mỏm băng: bơm liên tục 3 giây (máy bơm mạnh: 1,5 giây) là
 // lấy xong một mẫu (2 lít, có bồn chứa: 3 lít). Chạy tiếp trước khi bơm xong thì phải bơm lại từ đầu.
-// Nâng cao: đường dài hơn, mỏm băng ở chỗ mới, phải lấy đủ 3 mẫu trong 18 giây.
+// Nâng cao: đường dài hơn, mỏm băng ở chỗ mới, phải lấy đủ 3 mẫu trong 17 giây (chạy chậm ≈ 18,4 giây – phải nhanh hơn).
 // Cùng giao diện với SimulationEngine của Bài 9 để js/app.js dùng chung.
 (function () {
   'use strict';
@@ -15,114 +15,55 @@
   const PUMP = 3; // giây bơm liên tục để đầy một mẫu; máy bơm mạnh: một nửa
   const LITERS = 2; // lít mỗi mẫu; có bồn chứa: 3 lít
   const KID = { sites: [50, 110, 170], end: 220 }; // cm từ căn cứ
-  const PRO = { sites: [60, 130, 200], end: 240, limit: 18 }; // giây
+  const PRO = { sites: [60, 130, 200], end: 240, limit: 17 }; // giây
   const SAMPLE = ['start', 'repeatStart', 'motor:low', 'sensor_obstacle', 'stop', 'wait:3', 'repeatEnd'];
   const sig = b => b.type === 'wait' ? 'wait:' + (b.duration || 3)
     : b.type === 'motor' ? 'motor:' + (b.speed || 'high')
       : b.type === 'motor_power' ? 'motor:power:' + (b.power || 8) : b.type;
   const speedOf = p => (2 * Math.PI * WHEEL_R * MAX_RPM * p) / 8 / 60; // cm/giây
-  const NAME = { 3: 'chậm', 5: 'vừa', 8: 'nhanh' };
-  const LEVEL = { low: 3, medium: 5, high: 8 };
+  const NAME = { 4: 'chậm', 6: 'vừa', 8: 'nhanh' }; // mức chuẩn 4/6/8
 
-  class WaterEngine {
+  class WaterEngine extends window.LessonEngine {
     constructor() {
-      this.prog = [];
-      this.logs = [];
-      this.t = 0;
-      this.upgrades = new Set();
-      this.advanced = false;
-      this.assemblyDone = false;
+      super({
+        sample: SAMPLE,
+        sig,
+        labels: { tank: 'Bồn chứa nước', pump: 'Máy bơm mạnh', solar: 'Pin mặt trời' },
+        baseLabel: 'Robot cơ bản'
+      });
       this.done = { m2: false, m3: false, m5: false };
-      this.best = null; // lần lấy đủ nước gần nhất { secs, liters }
-      this.rafId = null;
-      this.loopActive = true;
-      this.reset();
     }
-    init() {
-      this.startLoop();
-    }
-    resizeCanvas() {}
     course() {
       return this.advanced ? PRO : KID;
     }
-    reset() {
-      this.running = false;
-      this.pc = 0;
-      this.entered = false;
-      this.blkT = 0;
-      this.motorOn = false;
+    resetState() {
+      // Lớp gốc đặt power = 0; bài này dùng 8 khi robot chưa chạy.
       this.power = 8;
-      this.dir = 1;
+      // Bài dò vật cản bằng khoảng cách, không sử dụng trạng thái nút nhấn.
+      delete this.pressed;
+      delete this.pressT;
+      delete this.waitingPress;
+      // Snapshot cũ ghi x/rev trước runT; giữ thứ tự trường ngay lần reset đầu.
+      const firstReset = !Object.prototype.hasOwnProperty.call(this, 'x');
+      if (firstReset) delete this.runT;
       this.x = 0; // cm từ căn cứ
       this.rev = 0; // số vòng bánh (cho hình bánh quay)
-      this.runT = 0;
+      if (firstReset) this.runT = 0;
       this.loops = 0;
       this.walled = false;
       this.late = false;
       this.idleT = 0;
       this.sites = this.course().sites.map(a => ({ a, seen: false, pump: 0, done: false, passed: false, short: false }));
-      if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
     }
-    emit(type, data) {
-      if (this.onEvent) this.onEvent(type, data);
-    }
-    log(kind, text) {
-      this.logs.unshift({ time: this.runT.toFixed(1) + 's', kind, text });
-      if (this.logs.length > 8) this.logs.length = 8;
-      const el = document.getElementById('sim-log-list');
-      if (el)
-        el.innerHTML = this.logs
-          .map(e => `<li class="log-item" data-kind="${e.kind}"><time class="log-time">${e.time}</time><span class="log-dot"></span><span class="log-text">${e.text}</span></li>`)
-          .join('');
-    }
-
-    setProgram(blocks) {
-      this.prog = blocks || [];
-      this.stop(true);
-      this.reset();
-    }
-    start() {
-      this.reset();
-      this.running = true;
-      if (window.SFX) window.SFX.init();
-      this.log('info', 'Bắt đầu chạy chương trình.');
-      this.emit('start');
-    }
-    stop(silent) {
-      const was = this.running;
-      this.running = false;
-      this.motorOn = false;
-      if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
-      if (was && !silent) {
-        this.log('info', 'Đã dừng chương trình.');
-        this.emit('stop');
-      }
-    }
+    // Giữ API nút nhấn là no-op như bài gốc; cảm biến chỉ dò vật cản.
     press() {}
-    setAssemblyDone(done) {
-      if (this.assemblyDone === !!done) return;
-      this.assemblyDone = !!done;
-      this.checkMissions();
-    }
     setUpgrades(list) {
-      this.upgrades = new Set(list || []);
-      this.upgradeRun = false;
-      const labels = { tank: 'Bồn chứa nước', pump: 'Máy bơm mạnh', solar: 'Pin mặt trời' };
-      const badge = document.getElementById('sim-active-upgrade-badge');
-      if (badge) badge.textContent = this.upgrades.size ? [...this.upgrades].map(t => labels[t]).join(' · ') : 'Robot cơ bản';
-      this.log('ok', this.upgrades.size ? 'Đã gắn: ' + [...this.upgrades].map(t => labels[t]).join(', ') : 'Robot cơ bản (chưa gắn thêm)');
-    }
-    has(t) {
-      return this.upgrades.has(t);
-    }
-    // Nâng cao: đường dài hơn, mỏm băng ở chỗ mới, thi đấu trong 18 giây
-    setAdvanced(on) {
-      on = !!on;
-      if (this.advanced === on) return;
-      this.advanced = on;
-      this.stop(true);
-      this.reset();
-      this.checkMissions();
+      super.setUpgrades(list);
+      if (!this.upgrades.size) {
+        // Giữ nguyên lời ghi nhật ký cũ, trong khi nhãn badge vẫn là "Robot cơ bản".
+        this.logs.shift();
+        this.log('ok', 'Robot cơ bản (chưa gắn thêm)');
+      }
     }
     pumpTime() {
       return PUMP / (this.has('pump') ? 2 : 1);
@@ -146,9 +87,6 @@
     seen() {
       return this.sites.find(s => !s.done && s.a - this.x >= 0 && s.a - this.x <= SENSE) || null;
     }
-    matchesSample() {
-      return this.prog.length === SAMPLE.length && this.prog.every((b, i) => sig(b) === SAMPLE[i]);
-    }
     // Tư thế cho sa bàn 3D: bánh quay theo quãng đường, cả robot dời theo trục +X (thu nhỏ để không ra khỏi khung)
     pose3d() {
       return { output: -this.rev * Math.PI * 2, motor: 0, offset: [this.x * 0.0015, 0, 0] };
@@ -169,27 +107,17 @@
           continue;
         }
         if (b.type === 'repeatEnd') {
-          this.loops++;
-          if (this.loops === 1 && this.matchesSample() && !this.done.m2) {
-            this.done.m2 = true;
-            this.log('ok', 'Đúng chương trình mẫu: chạy, cảm biến thấy mỏm băng thì dừng và bơm 3 giây.');
-            this.emit('sampleDone');
-            this.checkMissions();
-          }
+          this.onLoopEnd();
           const r = this.prog.findIndex(x => x.type === 'repeatStart');
           this.pc = r < 0 ? this.pc + 1 : r + 1;
           if (budget <= 0) break;
           continue;
         }
         if (b.type === 'motor' || b.type === 'motor_power') {
-          this.power = b.type === 'motor_power' ? Math.max(1, Math.min(8, b.power || 8)) : LEVEL[b.speed] || 8;
+          this.power = b.type === 'motor_power' ? Math.max(1, Math.min(8, b.power || 8)) : window.LessonEngine.LEVEL[b.speed] || 8;
           this.dir = b.dir === 'ccw' ? -1 : 1;
           this.setMotor(true);
-          this.log('info', `Động cơ chạy ${NAME[this.power] || 'mức ' + this.power}: ${speedOf(this.power).toFixed(1)} cm/giây.`);
-          if (this.upgrades.size && !this.upgradeRun) {
-            this.upgradeRun = true;
-            this.checkMissions();
-          }
+          this.onMotor(b);
           this.pc++;
           continue;
         }
@@ -199,7 +127,7 @@
           continue;
         }
         if (b.type === 'stop') {
-          this.setMotor(false);
+          this.onStopBlock();
           this.pc++;
           continue;
         }
@@ -250,6 +178,23 @@
         this.pc++;
       }
       if (budget > 0 && this.running) this.integrate(budget);
+    }
+
+    onLoopEnd() {
+      this.loops++;
+      if (this.loops === 1 && this.matchesSample() && !this.done.m2) {
+        this.done.m2 = true;
+        this.log('ok', 'Đúng chương trình mẫu: chạy, cảm biến thấy mỏm băng thì dừng và bơm 3 giây.');
+        this.emit('sampleDone');
+        this.checkMissions();
+      }
+    }
+    onMotor() {
+      this.log('info', `Động cơ chạy ${NAME[this.power] || 'mức ' + this.power}: ${speedOf(this.power).toFixed(1)} cm/giây.`);
+      this.noteUpgradeRun();
+    }
+    onStopBlock() {
+      this.setMotor(false);
     }
 
     // Bật/tắt động cơ; bật khi đang bơm dở thì bơm phải làm lại từ đầu
@@ -318,7 +263,7 @@
       }
       if (this.advanced && !this.late && this.runT > PRO.limit) {
         this.late = true;
-        this.log('warn', 'Quá 18 giây mà chưa lấy đủ nước – chạy nhanh hơn hoặc bơm mạnh hơn!');
+        this.log('warn', 'Quá 17 giây mà chưa lấy đủ nước – chạy nhanh hơn hoặc bơm mạnh hơn!');
         this.emit('late');
       }
     }
@@ -333,45 +278,23 @@
       this.finish();
     }
 
-    finish() {
-      this.running = false;
-      this.motorOn = false;
-      if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
-      this.emit('end');
-      this.checkMissions();
-    }
-
-    checkMissions() {
-      const m1 = this.assemblyDone;
-      const m4 = this.upgrades.size > 0 && !!this.upgradeRun;
-      if (this.onMissionUpdate)
-        this.onMissionUpdate({
-          m1, m2: this.done.m2, m3: this.done.m3, m4, m5: this.done.m5,
-          allDone: m1 && this.done.m2 && this.done.m3 && m4,
-          upgrades: [...this.upgrades], best: this.best
-        });
-    }
-
     updateUI() {
+      super.updateUI();
       const pill = document.getElementById('sim-status-pill');
       if (pill) {
         pill.textContent = this.running ? (this.motorOn ? 'Đang chạy' : 'Đang bơm / chờ') : 'Đã dừng';
         pill.dataset.k = this.running ? 'ok' : 'muted';
       }
-      const set = (id, html) => {
-        const el = document.getElementById(id);
-        if (el) el.innerHTML = html;
-      };
       const lim = this.limit();
-      set('m-speed', `${Math.abs(this.speed()).toFixed(0)} <small>cm/giây</small>`);
-      set('m-speed-note', this.motorOn ? 'Mức ' + this.power + (this.dir < 0 ? ' · lùi' : '') : 'Động cơ dừng');
-      set('m-dist', `${this.x.toFixed(0)} <small>cm</small>`);
+      this.set('m-speed', `${Math.abs(this.speed()).toFixed(0)} <small>cm/giây</small>`);
+      this.set('m-speed-note', this.motorOn ? 'Mức ' + this.power + (this.dir < 0 ? ' · lùi' : '') : 'Động cơ dừng');
+      this.set('m-dist', `${this.x.toFixed(0)} <small>cm</small>`);
       const nxt = this.sites.find(s => !s.done);
-      set('m-dist-note', nxt ? `Mỏm băng kế tiếp ở ${nxt.a} cm` : 'Đã lấy đủ nước');
-      set('m-water', `${this.got()} <small>/ 3 mẫu</small>`);
-      set('m-water-note', `${this.liters()} lít nước`);
-      set('m-time', `${this.runT.toFixed(0)} <small>giây</small>`);
-      set('m-time-note', Number.isFinite(lim) ? `Thi đấu: tối đa ${lim} giây` : 'Không giới hạn');
+      this.set('m-dist-note', nxt ? `Mỏm băng kế tiếp ở ${nxt.a} cm` : 'Đã lấy đủ nước');
+      this.set('m-water', `${this.got()} <small>/ 3 mẫu</small>`);
+      this.set('m-water-note', `${this.liters()} lít nước`);
+      this.set('m-time', `${this.runT.toFixed(0)} <small>giây</small>`);
+      this.set('m-time-note', Number.isFinite(lim) ? `Thi đấu: tối đa ${lim} giây` : 'Không giới hạn');
       const desc = document.getElementById('sim-status-desc');
       if (desc)
         desc.textContent = this.running
@@ -390,28 +313,6 @@
       }
     }
 
-    startLoop() {
-      cancelAnimationFrame(this.rafId);
-      this.loopActive = true;
-      let last = performance.now();
-      const loop = now => {
-        if (!this.loopActive) return;
-        const dt = Math.min(0.05, (now - last) / 1000);
-        last = now;
-        this.t += dt;
-        this.advance(dt);
-        this.updateUI();
-        this.rafId = requestAnimationFrame(loop);
-      };
-      this.rafId = requestAnimationFrame(loop);
-    }
-    pauseLoop() {
-      this.loopActive = false;
-      cancelAnimationFrame(this.rafId);
-    }
-    resumeLoop() {
-      if (!this.loopActive) this.startLoop();
-    }
   }
 
   WaterEngine.KID = KID;

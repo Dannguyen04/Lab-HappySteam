@@ -1,0 +1,56 @@
+{
+  "title": "Cối xoay gió",
+  "topic": "Bạn gió tinh nghịch, gió ở đâu?",
+  "model": "cối xoay gió",
+  "sheetName": "Bài 10: Bạn gió tinh nghịch – cối xoay gió",
+  "steps": 15,
+  "lede": "Lắp cối xoay gió theo 15 bước của sách, gắn thêm chi tiết sáng tạo, rồi lập trình cho nút bấm đổi tốc độ cánh quạt: chậm, vừa, nhanh, dừng – biến gió thành điện thắp sáng ngôi nhà.",
+  "victory": "Em đã lắp xong cối xoay gió, lập trình đúng theo sách, sạc đầy pin cho ngôi nhà và thử nâng cấp sáng tạo của mình.",
+  "engine": { "class": "WindEngine", "file": "wind-engine.js" },
+  "scene": {
+    "file": "wind-scene.js",
+    "aria": "Cảnh cánh đồng gió: cối xoay gió sạc pin thắp đèn ngôi nhà",
+    "stage": "Cối xoay gió 3D quay theo chương trình",
+    "idle": "Chạm khối <b>Start</b> màu vàng hoặc nút <b>▶</b>, rồi nhấn <b>nút đỏ</b> để cánh quạt quay",
+    "press": true
+  },
+  "missions": {
+    "m2": {
+      "chip": "Lập trình theo mẫu",
+      "tip": "Start · Repeat · (Waiting for Pressed · Low Speed · Waiting for Pressed · Medium Speed · Waiting for Pressed · High Speed · Waiting for Pressed · Stop) · Repeat End",
+      "title": "Ghép khối giống hàng mẫu",
+      "text": "Đặt khối giống hàng mẫu mờ, chạm Start. Nhấn nút đỏ 4 lần: chậm, vừa, nhanh, dừng."
+    },
+    "m3": {
+      "chip": "Sạc đầy pin",
+      "tip": "Cho cánh quạt quay đến khi pin đầy, ngôi nhà sáng đèn",
+      "title": "Sạc đầy pin cho ngôi nhà",
+      "text": "Cho cánh quạt quay để sạc đầy pin, ngôi nhà sẽ sáng đèn. Quay nhanh thì sạc nhanh hơn!"
+    },
+    "m5": {
+      "pro": true,
+      "chip": "Vượt qua cơn bão",
+      "tip": "Nâng cao: thời tiết đổi, khi bão phải cho cánh quạt dừng rồi sạc đầy pin",
+      "title": "Vượt qua cơn bão",
+      "text": "Thời tiết đổi: gió nhẹ, gió mạnh, bão. Khi bão tới, nhấn nút cho cánh quạt dừng. Hết bão thì chạy lại và sạc đầy pin."
+    }
+  },
+  "blocks": {
+    "toolbox": ["touch", "lowSpeed", "mediumSpeed", "highSpeed", "motorStop", "motorPower", "wait", "melodyA"],
+    "pro": [],
+    "sample": ["start", "repeatStart", "touch", "lowSpeed", "touch", "mediumSpeed", "touch", "highSpeed", "touch", "motorStop", "repeatEnd"],
+    "empty": ["start", "repeatStart", "repeatEnd"]
+  },
+  "creative": {
+    "intro": "Gió là năng lượng sạch. Hãy làm cối xoay gió <b>quay nhanh hơn</b> để <b>sinh nhiều điện hơn</b>, và đẹp hơn. Chọn gói gợi ý hoặc tự gắn chi tiết, chi tiết mới sẽ rơi vào mô hình.",
+    "slots": 4
+  },
+  "meters": [
+    { "label": "Cánh quạt", "id": "m-rpm", "value": 0, "unit": "vòng/phút", "note": "Đang dừng", "noteId": "m-rpm-note" },
+    { "label": "Pin", "id": "m-battery", "value": 0, "unit": "%", "note": "ngôi nhà" },
+    { "label": "Sạc", "id": "m-rate", "value": 0, "unit": "%/giây", "note": "theo tốc độ và gió" },
+    { "label": "Thời tiết", "id": "m-weather", "value": "Gió nhẹ", "note": "Ổn định", "noteId": "m-weather-note" }
+  ],
+  "calc": "Quay nhanh hơn → nhiều điện hơn",
+  "hint": "<b>NV2:</b> Ghép đúng chương trình mẫu trong sách, chạy rồi nhấn nút đỏ 4 lần (chậm → vừa → nhanh → dừng). <b>NV3:</b> Cho cánh quạt quay đến khi pin đầy 100%: quay nhanh sạc nhanh nhất. Nút đỏ trên cảnh hoặc phím Cách (Space) là nhấn cảm biến chạm."
+}

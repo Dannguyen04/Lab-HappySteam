@@ -1,0 +1,48 @@
+{
+  "title": "Xe chở tên lửa vũ trụ",
+  "pageTitle": "Xe chở tên lửa vũ trụ",
+  "topic": "Vận chuyển tên lửa đến bệ phóng",
+  "model": "xe chở tên lửa vũ trụ",
+  "sheetName": "Lớp 3 · Bài 16: Xe chở tên lửa vũ trụ",
+  "baseName": "Xe chở tên lửa",
+  "steps": 32,
+  "assetFolder": "lop3-bai16",
+  "bookAlt": "Bước 1: sách lắp xe chở tên lửa vũ trụ",
+  "firstStep": "Xe chở tên lửa vũ trụ",
+  "lede": "Lắp xe 32 bước, dùng động cơ đưa tên lửa vũ trụ từ nhà xưởng đến đúng ô bệ phóng. Quan sát màn LED 5×5 và âm thanh khi xe chạy, rồi tính thời gian để xe dừng chính xác.",
+  "victory": "Em đã lắp xe, chạy đủ chương trình mẫu, dừng đúng bệ phóng và thử một thiết kế sáng tạo. Em hãy giải thích cách dùng quãng đường và tốc độ để tính thời gian chạy.",
+  "engine": { "class": "LaunchTransportEngine", "file": "launch-transport-engine.js" },
+  "scene": {
+    "file": "launch-transport-scene.js",
+    "aria": "Cảnh nhìn ngang sân bay vũ trụ: xe chở tên lửa từ nhà xưởng đến bệ phóng, có vạch cự ly và màn LED 5 nhân 5",
+    "stage": "Xe chở tên lửa vũ trụ chạy theo chương trình",
+    "idle": "Ghép 10 khối mẫu và chạy thử. Hãy chỉnh thời gian để dừng đúng bệ phóng."
+  },
+  "missions": {
+    "m1": { "chip": "Lắp đủ 32 bước", "title": "Lắp xe chở tên lửa", "tip": "Hoàn thành cả 32 bước sách lắp" },
+    "m2": { "chip": "Đúng 10 khối mẫu", "title": "Chạy trọn một vòng chương trình mẫu", "tip": "Start · Lặp · Mặt cười · Giai điệu A · Nhanh · Chờ 3 giây · Dừng · Mặt buồn · Giai điệu B · Hết lặp", "text": "Lắp đúng 10 khối theo ảnh lập trình và chạy hết một vòng. Xe hiển thị mặt cười, phát A, chạy nhanh 3 giây, dừng, hiện mặt buồn rồi phát B." },
+    "m3": { "chip": "Dừng đúng bệ phóng", "title": "Đỗ xe đúng ô bệ phóng", "tip": "Chỉnh khối Chờ: 3 giây làm xe vượt bệ phóng ở cự ly vừa", "text": "Dùng vạch cự ly để tính thời gian xe chạy. Chỉnh thời gian Chờ để xe dừng đúng ô; đúng thì tên lửa vũ trụ phóng lên, sai thì màn LED báo mặt buồn. Khi đúng, em có thể đổi khối mặt buồn thành mặt cười." },
+    "m4": { "chip": "Sáng tạo xe", "title": "Thử xe sáng tạo", "tip": "Gắn pin mặt trời, ăng-ten, đèn pha kép hoặc tấm chắn trước và chạy thử" },
+    "m5": { "pro": true, "chip": "Cự ly thay đổi", "title": "Tính đúng cự ly ngẫu nhiên", "tip": "Quan sát bệ phóng ở gần, vừa hoặc xa mỗi lượt và chỉnh thời gian", "text": "Mỗi lượt bệ phóng được đặt ngẫu nhiên ở vạch gần, vừa hoặc xa. Quan sát vạch, tính thời gian chạy rồi cho xe dừng đúng ô bệ phóng." }
+  },
+  "blocks": {
+    "toolbox": ["displaySmile", "displaySad", "melodyA", "melodyB", "highSpeed", "motorStop", "wait"],
+    "pro": ["lowSpeed", "mediumSpeed", "motorPower"],
+    "sample": ["start", "repeatStart", "displaySmile", "melodyA", "highSpeed", ["wait", { "duration": 3 }], "motorStop", "displaySad", "melodyB", "repeatEnd"],
+    "empty": ["start", "repeatStart", "repeatEnd"]
+  },
+  "creative": {
+    "intro": "Thử gắn <b>tấm pin mặt trời</b>, <b>ăng-ten vệ tinh</b>, <b>đèn pha kép</b> hoặc <b>tấm chắn trước</b> lên xe chở tên lửa vũ trụ. Quan sát phụ kiện trên mô hình và sa bàn.",
+    "slots": 4,
+    "badge": "Xe cơ bản",
+    "slotHint": "Bốn vị trí nâng cấp"
+  },
+  "meters": [
+    { "label": "Tốc độ", "id": "m-speed", "value": 0, "unit": "cm/giây", "note": "Xe đang dừng", "noteId": "m-speed-note" },
+    { "label": "Còn cách bệ", "id": "m-dist", "value": 0, "unit": "cm", "note": "Đọc vạch cự ly", "noteId": "m-dist-note" },
+    { "label": "Vị trí bệ", "id": "m-pad", "value": "Vừa", "note": "Gần · Vừa · Xa", "noteId": "m-pad-note" },
+    { "label": "Thời gian", "id": "m-time", "value": 0, "unit": "giây", "note": "Quãng đường ÷ tốc độ", "noteId": "m-time-note" }
+  ],
+  "calc": "Thời gian = quãng đường ÷ tốc độ",
+  "hint": "<b>M2:</b> chạy đúng 10 khối mẫu hết một vòng. <b>M3:</b> 3 giây chạy quá vạch vừa; chỉnh thời gian ở khối Chờ. <b>Nâng cao:</b> quan sát vạch gần/vừa/xa mỗi lượt để tính lại. Khi dừng đúng, thử đổi mặt buồn thành mặt cười."
+}

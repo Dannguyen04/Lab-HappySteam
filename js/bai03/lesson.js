@@ -86,9 +86,9 @@
     missions: { core: ['m1', 'm2', 'm3', 'm4'], pro: ['m5'] },
     cards: {
       m2: { n: 2, title: 'Ghép khối giống hàng mẫu', text: 'Đặt các khối giống hàng mẫu mờ, chạm Start, rồi bấm ✋ để đưa tay trước cảm biến.' },
-      m3: { n: 3, title: 'Chở mẫu cây tới điểm B', text: 'Cho robot dừng đúng ở điểm B mà mẫu cây không rơi. Gợi ý: chạy chậm hơn (Tốc độ mức 4) và đổi số giây chờ, hoặc gắn thùng chở mẫu.' },
+      m3: { n: 3, title: 'Chở mẫu cây tới điểm B', text: 'Cho robot dừng đúng ở điểm B, mẫu cây không rơi. Gợi ý: chạy chậm hơn (Tốc độ mức 4), đổi số giây chờ.' },
       m4: { n: 4, title: 'Thử robot sáng tạo', text: 'Gắn thêm chi tiết ở chặng Sáng tạo, rồi quay lại chạy chương trình.', go: ['creative', 'Đến xưởng sáng tạo'] },
-      m5: { n: 5, title: 'Đo quãng đường', text: 'Điểm B đổi chỗ sau mỗi lần chở đúng. Tính: tốc độ (bảng bên cạnh) × số giây = quãng đường. Chở đúng 3 vị trí B khác nhau.' },
+      m5: { n: 5, title: 'Đo quãng đường', text: 'Chở đúng tới 3 điểm B khác nhau. Gợi ý: tốc độ (bảng bên cạnh) × số giây = quãng đường.' },
       m1: { n: 1, title: 'Lắp xong Robot Milo', text: 'Bấm “Đã lắp xong bước này” ở cả 22 bước của chặng Lắp ráp.', go: ['assembly', 'Đến chặng lắp ráp'] }
     },
     cardOrder: { kid: ['m2', 'm3', 'm4', 'm1'], pro: ['m2', 'm3', 'm4', 'm5', 'm1'] },

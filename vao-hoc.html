@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ebeff2">
+  <title>Vào buổi học · Happy STEAM</title>
+  <link rel="stylesheet" href="css/lab.css">
+  <link rel="stylesheet" href="css/student-join.css">
+</head>
+<body>
+  <main class="join-wrap">
+    <header class="join-header">
+      <div class="eyebrow">Happy STEAM · Vào lớp</div>
+      <h1>Chào em! 👋</h1>
+      <p>Nhập mã 4 số trên bảng của thầy cô nhé.</p>
+    </header>
+    <div class="join-notice" id="j-notice" hidden role="alert" aria-live="assertive"></div>
+    <section class="join-panel" id="j-code-panel">
+      <h2>① Mã buổi học</h2>
+      <output id="j-code" class="join-code" aria-label="Mã 4 số" aria-live="polite">••••</output>
+      <div id="j-keypad" class="join-keypad" aria-label="Bàn phím nhập mã">
+        <button type="button" data-digit="1">1</button><button type="button" data-digit="2">2</button><button type="button" data-digit="3">3</button>
+        <button type="button" data-digit="4">4</button><button type="button" data-digit="5">5</button><button type="button" data-digit="6">6</button>
+        <button type="button" data-digit="7">7</button><button type="button" data-digit="8">8</button><button type="button" data-digit="9">9</button>
+        <button type="button" data-action="clear" aria-label="Xóa hết">✕</button><button type="button" data-digit="0">0</button>
+        <button type="button" data-action="back" aria-label="Xóa một số">⌫</button>
+      </div>
+      <button type="button" id="j-lookup" class="join-primary" disabled>Chọn tên của em →</button>
+    </section>
+    <section class="join-panel" id="j-name-panel" hidden>
+      <div class="join-step"><h2>② Em là bạn nào?</h2><button type="button" class="join-link" id="j-change-code">Đổi mã</button></div>
+      <p>Chạm vào con vật và tên của em nhé!</p>
+      <div id="j-roster" class="join-roster"></div>
+    </section>
+    <section class="join-panel join-wait" id="j-wait-panel" hidden>
+      <div class="join-wait-icon" id="j-wait-icon" aria-hidden="true">⏳</div>
+      <h2 id="j-wait-title">Đợi thầy cô duyệt nhé!</h2>
+      <p id="j-wait-detail">Thầy cô sẽ cho em vào lớp.</p>
+      <strong id="j-device-tag" class="join-device-tag"></strong>
+      <button type="button" id="j-change-name" class="join-link">Em chọn nhầm tên</button>
+    </section>
+    <p class="join-foot">🔒 Chỉ dùng tên gọi ngắn và hình con vật của em.</p>
+  </main>
+  <script type="module" src="js/student-join.js"></script>
+</body>
+</html>

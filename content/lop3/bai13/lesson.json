@@ -1,0 +1,48 @@
+{
+  "title": "Phi thuyền không gian",
+  "pageTitle": "Phi thuyền không gian",
+  "topic": "Phi thuyền không gian",
+  "model": "phi thuyền bánh lăn",
+  "sheetName": "Lớp 3 · Bài 13: Phi thuyền không gian",
+  "baseName": "Thân phi thuyền",
+  "steps": 41,
+  "assetFolder": "lop3-bai13",
+  "bookAlt": "Bước 1: hình sách lắp phi thuyền",
+  "firstStep": "Động cơ và hai chốt",
+  "lede": "Lắp phi thuyền 41 bước, dùng một động cơ M1 tăng tốc qua ba cấp trên đường băng sân bay vũ trụ. Chỉnh thời gian để cất cánh trước hàng rào.",
+  "victory": "Em đã lắp phi thuyền, lập trình ba cấp tốc độ và cất cánh an toàn trong sân bay vũ trụ.",
+  "engine": { "class": "RocketEngine", "file": "rocket-engine.js" },
+  "scene": {
+    "file": "rocket-scene.js",
+    "aria": "Sa bàn nhìn ngang đường băng sân bay vũ trụ, phi thuyền tăng tốc, cất cánh hoặc phanh trước hàng rào",
+    "stage": "Phi thuyền 3D tăng tốc trên đường băng",
+    "idle": "Xếp chương trình mẫu rồi nhấn Start để thử đường băng"
+  },
+  "missions": {
+    "m1": { "chip": "Lắp đủ 41 bước", "title": "Lắp phi thuyền", "tip": "Hoàn thành đủ 41 trang sách hướng dẫn" },
+    "m2": { "chip": "Đúng 10 khối mẫu", "title": "Chạy hết một vòng mẫu", "tip": "Start · B · Lặp · Chậm ngược · Chờ 3s · Vừa ngược · Chờ 3s · Nhanh ngược · Chờ 3s · Hết lặp", "text": "Lắp đúng 10 khối của ảnh lập trình và chạy hết một vòng, kể cả khi phải phanh." },
+    "m3": { "chip": "Cất cánh", "title": "Cất cánh trước cuối đường băng", "tip": "Chỉnh số giây ở khối Chờ để đủ tốc trước hàng rào", "text": "Chỉnh thời gian chạy từng cấp. Mẫu 3–3–3 giây thiếu một chút vận tốc; tăng khối Chờ sau cấp Nhanh lên 4 giây để thử lại." },
+    "m4": { "chip": "Thử gói sáng tạo", "title": "Nâng cấp phi thuyền", "tip": "Gắn cánh phụ, động cơ đẩy, radar hoặc chân đáp rồi thử chạy", "text": "Gắn ít nhất một gói sáng tạo và chạy mô phỏng để thấy ảnh hưởng tới tăng tốc." },
+    "m5": { "pro": true, "chip": "Đổi trọng lực", "title": "Cất cánh ở ba thiên thể", "tip": "Mặt Trăng, sao Hỏa, tiểu hành tinh đổi theo lượt; chỉnh lại giây chờ", "text": "Nâng cao: trọng lực thay đổi theo lượt. Quan sát quãng lấy đà rồi chỉnh thời gian để cất cánh ở cả ba môi trường." }
+  },
+  "blocks": {
+    "toolbox": ["melodyB", "lowSpeed", "mediumSpeed", "highSpeed", "wait"],
+    "pro": ["motorPower", "motorReverse", "motorStop"],
+    "sample": ["start", "melodyB", "repeatStart", ["lowSpeed", { "dir": "ccw" }], ["wait", { "duration": 3 }], ["mediumSpeed", { "dir": "ccw" }], ["wait", { "duration": 3 }], ["highSpeed", { "dir": "ccw" }], ["wait", { "duration": 3 }], "repeatEnd"],
+    "empty": ["start", "repeatStart", "repeatEnd"]
+  },
+  "creative": {
+    "intro": "Chọn gói sáng tạo cho phi thuyền: <b>cánh phụ thăng bằng</b> nhẹ và tăng gia tốc 2%; <b>cụm động cơ đẩy</b> thêm lực đẩy 8%; <b>ăng-ten radar</b> thêm khối lượng, giảm gia tốc 2%; <b>chân đáp giảm chấn</b> thêm khối lượng, giảm gia tốc 3%. Các mức chỉ là mô phỏng để so sánh.",
+    "slots": 4,
+    "badge": "Phi thuyền cơ bản",
+    "slotHint": "Bốn vị trí nâng cấp"
+  },
+  "meters": [
+    { "label": "Vận tốc", "id": "m-speed", "value": 0, "unit": "cm/giây", "note": "Cần đủ tốc để cất cánh", "noteId": "m-speed-note" },
+    { "label": "Đã chạy", "id": "m-dist", "value": 0, "unit": "cm", "note": "Hàng rào ở cuối đường băng", "noteId": "m-dist-note" },
+    { "label": "Trọng lực", "id": "m-gravity", "value": 0, "unit": "", "note": "Đổi mỗi lượt Nâng cao", "noteId": "m-gravity-note" },
+    { "label": "Thời gian", "id": "m-time", "value": 0, "unit": "giây", "note": "Một vòng chương trình", "noteId": "m-time-note" }
+  ],
+  "calc": "Vận tốc tăng nhờ gia tốc · cần đủ tốc trước mốc 41 cm",
+  "hint": "<b>M2:</b> chạy hết một vòng 10 khối theo ảnh. <b>M3:</b> chỉnh ít nhất một khối Chờ, ví dụ cấp Nhanh từ 3 lên 4 giây. <b>Nâng cao:</b> trọng lực đổi sau mỗi lượt, hãy thử lại thời gian."
+}

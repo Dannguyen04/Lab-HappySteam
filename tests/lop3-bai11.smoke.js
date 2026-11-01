@@ -25,7 +25,7 @@ const { pageUrl } = require('./helpers/page-url');
     assert.equal(await page.locator('#mission-summary-badge').innerText(), '0/5 nhiệm vụ');
     assert.equal(await page.evaluate(() => window.robotViewer.stats().instances), 29, 'Mô hình 29 linh kiện CAD');
 
-    // Đúng ảnh JPG thực của từng trang PDF, tải và giải mã được trong trình duyệt.
+    // Đúng ảnh JPG thực của từng bước, tải và giải mã được trong trình duyệt.
     for (let step = 1; step <= 15; step++) {
       assert.equal(await page.locator('#countNow').innerText(), String(step));
       const img = page.locator('#book-img');
@@ -37,7 +37,8 @@ const { pageUrl } = require('./helpers/page-url');
       // Khi vừa tải, nhãn tĩnh ban đầu chỉ ghi "Bước 1"; từ bước 2 có cả số trang.
       assert.match(await page.locator('#book-loc').innerText(),
         step === 1 ? /^Bước 1(?: · trang 1)?$/ : new RegExp(`Bước ${step} · trang ${step}`));
-      assert.equal(await page.locator('#book-pdf').getAttribute('href'), `references/lop3/bai11/bai11.pdf#page=${step}`);
+      // Mọi bước (kể cả liên kết tĩnh bước 1 trong page.html) trỏ về ảnh sách được deploy, không về references/
+      assert.equal(await page.locator('#book-pdf').getAttribute('href'), `assets/lop3-bai11/step-${String(step).padStart(2, '0')}.jpg`);
       await page.click('#doneBtn');
       await page.waitForFunction(n => parseInt(document.getElementById('am-done').textContent, 10) === n,
         step, { timeout: 5000 });
@@ -120,7 +121,7 @@ const { pageUrl } = require('./helpers/page-url');
       assert.ok(widths[0] <= widths[1], `Tràn ngang 375px tại ${tab}: ${widths}`);
     }
     assert.deepEqual(mobileErrors, []);
-    console.log('PASS: lop3-bai11 – 15 bước/JPEG + PDF, xưởng 3D, mẫu 7 khối đạt NV1–4, hai chế độ, canvas có vẽ, mobile 375px.');
+    console.log('PASS: lop3-bai11 – 15 bước/JPEG, xưởng 3D, mẫu 7 khối đạt NV1–4, hai chế độ, canvas có vẽ, mobile 375px.');
   } finally {
     await browser.close();
   }

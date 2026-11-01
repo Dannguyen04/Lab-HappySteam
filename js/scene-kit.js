@@ -11,7 +11,7 @@
   function create(spec) {
     const W = spec.W || 900,
       H = spec.H || 560;
-    let cv, ctx, last = 0, mode = 'story', active = false, toastTimer = 0;
+    let cv, ctx, raf = 0, last = 0, mode = 'story', active = false, toastTimer = 0;
     const fx = { stars: [], shakeUntil: 0 };
 
     function resize() {
@@ -47,12 +47,13 @@
       },
       toast(kind, title, text, action) {
         const el = $('scene-toast');
+        if (!el) return;
         el.dataset.k = kind;
         $('scene-toast-title').textContent = title;
         $('scene-toast-text').textContent = text;
         const btn = $('scene-toast-btn');
-        btn.hidden = !action;
-        if (action) {
+        if (btn) btn.hidden = !action;
+        if (action && btn) {
           btn.textContent = action.label;
           btn.onclick = () => {
             el.hidden = true;
@@ -65,8 +66,10 @@
       }
     };
 
+    // Chỉ vẽ khi đang ở chặng ③: rời chặng thì dừng hẳn vòng vẽ
     function frame(ts) {
-      requestAnimationFrame(frame);
+      raf = active ? requestAnimationFrame(frame) : 0;
+      if (!active) return;
       const sim = window.simEngine;
       if (!sim || !ctx || mode !== 'story') return;
       const now = ts / 1000;
@@ -92,15 +95,19 @@
     }
 
     function onEvent(type, data) {
-      if (type === 'start') $('scene-toast').hidden = true;
+      if (type === 'start' && $('scene-toast')) $('scene-toast').hidden = true;
       else if (type === 'press' && window.SFX) window.SFX.tone(990, 0.08);
       if (spec.onEvent) spec.onEvent(type, data, kit);
     }
     function setMode(m) {
       mode = m;
-      $('scene-wrap').dataset.mode = m;
-      $('scene-toggle').textContent = m === 'story' ? 'Xem robot thật' : 'Xem câu chuyện';
-      $('scene-toggle').setAttribute('aria-pressed', String(m === 'robot'));
+      const wrap = $('scene-wrap'),
+        toggle = $('scene-toggle');
+      if (wrap) wrap.dataset.mode = m;
+      if (toggle) {
+        toggle.textContent = m === 'story' ? 'Xem robot thật' : 'Xem câu chuyện';
+        toggle.setAttribute('aria-pressed', String(m === 'robot'));
+      }
       if (!active) return;
       if (m === 'robot') window.ZMSandbox?.open();
       else window.ZMSandbox?.close();
@@ -109,10 +116,14 @@
     function enter() {
       active = true;
       resize();
+      if (!raf && ctx) raf = requestAnimationFrame(frame);
       if (mode === 'robot') window.ZMSandbox?.open();
     }
     function leave() {
       active = false;
+      cancelAnimationFrame(raf);
+      raf = 0;
+      clearTimeout(toastTimer);
       window.ZMSandbox?.close();
     }
 
@@ -121,8 +132,8 @@
       if (!cv) return;
       ctx = cv.getContext('2d');
       new ResizeObserver(resize).observe(cv);
-      $('scene-toggle').addEventListener('click', () => setMode(mode === 'story' ? 'robot' : 'story'));
-      $('scene-toast-close').addEventListener('click', () => ($('scene-toast').hidden = true));
+      $('scene-toggle')?.addEventListener('click', () => setMode(mode === 'story' ? 'robot' : 'story'));
+      $('scene-toast-close')?.addEventListener('click', () => ($('scene-toast').hidden = true));
       const press = () => window.simEngine && window.simEngine.press();
       $('scene-press')?.addEventListener('click', press);
       cv.addEventListener('click', press);
@@ -133,7 +144,7 @@
         press();
       });
       if (spec.init) spec.init(cv, kit);
-      requestAnimationFrame(frame);
+      if (active && !raf) raf = requestAnimationFrame(frame);
     });
 
     window.ZMScene = { enter, leave, onEvent, setMode, mode: () => mode };

@@ -1,0 +1,101 @@
+<title>Ốc sên quý hiếm · Lớp 1 · Bài 19 · Happy STEAM</title>
+<template data-slot="header-copy">
+      <div class="eyebrow">Lớp 1 · Bài 19 · Ốc sên quý hiếm</div>
+      <h1>Ốc sên quý hiếm</h1>
+      <p class="lede pro-only">Tìm hiểu loài ốc sên quý hiếm phát sáng, lắp mô hình ZM Alpha 330 qua 21 bước, lập trình hai bánh và cảm biến siêu âm để ốc sên tìm đường, tránh đá và ăn rau.</p>
+</template>
+
+<template data-slot="mission-chips">
+    <span class="chip" id="chip-m1" title="Đánh dấu đủ 21 bước lắp ráp"><i>1</i>Lắp xong 21 bước</span>
+    <span class="chip" id="chip-m2" title="Chờ vật cản · Tiến thẳng · Chờ 1 giây · Chờ vật cản · Dừng · Rẽ trái · Chờ 0,2 giây, trong khối Lặp"><i>2</i>Ghép đúng chương trình</span>
+    <span class="chip" id="chip-m3" title="Chỉnh thời gian rẽ để ốc sên vòng qua đá và ăn đủ 3 lá rau"><i>3</i>Ăn đủ 3 lá rau</span>
+    <span class="chip" id="chip-m4" title="Gắn một gói sáng tạo và cho ốc sên bò"><i>4</i>Thử sáng tạo</span>
+    <span class="chip pro-only" id="chip-m5" title="Nâng cao: vệt nhớt dính làm ốc sên bò chậm; vẫn phải ăn đủ 3 lá"><i>5</i>Bò qua nhớt dính</span>
+</template>
+
+<template data-slot="victory-copy">
+      <p>Em đã lắp ốc sên robot, lập trình bò tránh đá, ăn đủ lá rau non và thử ý tưởng sáng tạo của mình.</p>
+      <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM19</code></p>
+</template>
+
+<template data-slot="assembly-tab">
+      <i>1</i><span><b>Lắp ráp</b><small>21 bước theo sách</small></span>
+</template>
+
+<template data-slot="assembly-count">
+          <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 21</span></span>
+</template>
+
+<template data-slot="assembly-canvas">
+              <canvas id="view" aria-label="Mô hình ốc sên robot 3D; kéo để xoay, cuộn để phóng to"></canvas>
+</template>
+
+<template data-slot="assembly-slider">
+                <input id="slider" type="range" min="1" max="21" value="1" aria-label="Chọn bước lắp ráp">
+</template>
+
+<template data-slot="assembly-meter-step">
+          <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 21</small></div><div class="s" id="am-step-s">Lắp thân ốc sên</div></dd></div>
+</template>
+
+<template data-slot="assembly-meter-done">
+          <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 21</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+</template>
+
+<template data-slot="book-image">
+          <img id="book-img" src="assets/lop1-bai19/step-01.jpg" alt="Hình lắp ráp gốc bước 1 của ốc sên robot">
+</template>
+
+<template data-slot="book-link">
+          <a id="book-pdf" class="link" href="assets/lop1-bai19/step-01.jpg" target="_blank" rel="noopener">Mở hình lớn ↗</a>
+</template>
+
+<template data-slot="creative-intro">
+          <p class="status-text">Giúp ốc sên đẹp và khỏe hơn. Thử <b>râu kép dài</b>, <b>mai phát quang</b>, <b>bánh gai</b> không dính nhớt, hoặc <b>đèn mắt kép</b>.</p>
+</template>
+
+<template data-slot="creative-canvas">
+        <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình ốc sên robot 3D đang sáng tạo"></div>
+</template>
+
+<template data-slot="creative-slot-label">
+        <div class="panel-h"><h2>Tự gắn chi tiết</h2><small>4 vị trí trên ốc sên</small></div>
+</template>
+
+<template data-slot="creative-result-label">
+        <div class="panel-h"><h2>Thân ốc sên của em sẽ có</h2></div>
+</template>
+
+<template data-slot="sim-upgrade-label">
+            <small id="sim-active-upgrade-badge" class="status-tag">Thân ốc sên cơ bản</small>
+</template>
+
+<template data-slot="sim-scene">
+          <canvas id="space-scene" aria-label="Vườn rau ban đêm nhìn từ trên: ốc sên bò tránh đá và ăn lá rau"></canvas>
+          <div class="sim-stage" id="sim-stage" aria-label="Mô hình ốc sên robot 3D theo chương trình"></div>
+          <p class="scene-idle" id="scene-idle">Chạm <b>Start</b> hoặc nút <b>▶</b>. Bấm <b>✋</b> để đưa tay trước mắt ốc sên.</p>
+          <button type="button" class="hand-btn" id="scene-hand" title="Nhấn cảm biến chạm trên mô hình" aria-label="Nhấn cảm biến chạm">✋</button>
+</template>
+
+<template data-slot="sim-meters">
+        <dl class="meters pro-only">
+          <div class="meter"><dt>Quãng đường</dt><dd><div class="v" id="m-dist">0<small>cm</small></div><div class="s" id="m-dist-note">Quãng đường đã bò</div></dd></div>
+          <div class="meter"><dt>Hướng đầu</dt><dd><div class="v" id="m-angle">0<small>độ</small></div><div class="s">0° là nhìn sang phải</div></dd></div>
+          <div class="meter"><dt>Lá rau đã ăn</dt><dd><div class="v" id="m-leaf">0<small>/ 3 lá</small></div><div class="s" id="m-leaf-note">Ăn đủ 3 lá là thắng</div></dd></div>
+          <div class="meter"><dt>Lượt tiến</dt><dd><div class="v" id="m-sample">0</div><div class="s">Số lần bò tiến</div></dd></div>
+        </dl>
+</template>
+
+<template data-slot="sim-calculation">
+        <div class="pro-only">
+        <div class="panel-h"><h2>Đo đường bò</h2><small>Tiến · rẽ · vệt nhớt</small></div>
+        <div class="pad calc">
+          <p class="calc-eq" id="calc-eq1"></p>
+          <p class="calc-eq" id="calc-eq2"></p>
+        </div>
+        </div>
+</template>
+
+<template data-slot="sim-hint">
+            <p class="hint"><b>NV2:</b> Ghép đúng hàng mẫu: Chờ vật cản, Tiến thẳng, Chờ 1 giây, Chờ vật cản, Dừng, Rẽ trái, Chờ 0,2 giây. <b>NV3:</b> Đổi Chờ 0,2 giây sau Rẽ trái thành lâu hơn để ốc sên quay vòng qua đá. <b>NV4:</b> Gắn gói ở chặng Sáng tạo rồi chạy. <span class="pro-only"><b>NV5:</b> Trên nhớt dính ốc sên bò chậm: đổi Chờ 1 giây sau Tiến thành 2 giây (và Chờ sau Rẽ thành 1 giây), hoặc gắn bánh gai.</span></p>
+</template>

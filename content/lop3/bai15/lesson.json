@@ -1,0 +1,69 @@
+{
+  "title": "Robot đẩy xe",
+  "pageTitle": "Robot đẩy xe",
+  "topic": "Robot đẩy xe",
+  "model": "robot hai chân đẩy xe hàng",
+  "sheetName": "Lớp 3 · Bài 15: Robot đẩy xe",
+  "baseName": "Robot đẩy xe",
+  "steps": 27,
+  "assetFolder": "lop3-bai15",
+  "bookAlt": "Bước 1: hình sách lắp robot đẩy xe",
+  "firstStep": "Thân robot",
+  "lede": "Lắp robot hai chân và xe hàng 27 bước với một động cơ M1. Lực đẩy từ hai chân đưa xe tiến về phía trước; chỉnh thời gian chạy và lệnh dừng để xe dừng đúng vạch đích.",
+  "victory": "Em đã lắp robot đẩy xe, điều khiển xe dừng đúng vạch đích và thử cải tiến mô hình để chở hàng tốt hơn.",
+  "engine": { "class": "PushEngine", "file": "push-engine.js" },
+  "scene": {
+    "file": "push-scene.js",
+    "aria": "Sa bàn ngang đường đua lực đẩy: robot hai chân đẩy xe hàng tới vạch đích",
+    "stage": "Robot đẩy xe 3D chạy theo chương trình",
+    "idle": "Xếp chương trình mẫu rồi nhấn Start để robot đẩy xe"
+  },
+  "missions": {
+    "m1": { "chip": "Lắp đủ 27 bước", "title": "Lắp robot đẩy xe", "tip": "Hoàn thành 27 trang sách hướng dẫn lắp" },
+    "m2": {
+      "chip": "Đúng 4 khối mẫu",
+      "title": "Chạy chương trình mẫu",
+      "tip": "Start · Bắt đầu lặp · Quay nhanh · Lặp lại",
+      "text": "Lắp đúng 4 khối trong sách và nhấn Start: động cơ quay nhanh, hai chân bước và đẩy xe tiến lên."
+    },
+    "m3": {
+      "chip": "Dừng đúng vạch 80 cm",
+      "title": "Đẩy xe tới vạch đích",
+      "tip": "Thêm khối Chờ và Dừng để xe dừng cách xuất phát 80 cm (sai số 5 cm)",
+      "text": "Chương trình mẫu không tự dừng nên xe lao quá vạch. Thêm Chờ và Dừng: tốc độ nhanh là 20 cm/giây, em tính xem cần chờ bao nhiêu giây."
+    },
+    "m4": {
+      "chip": "Nâng cấp robot",
+      "title": "Thử robot sáng tạo",
+      "tip": "Gắn đầu đẩy rộng, thanh chống, khung chặn hàng hoặc khay chở thùng rồi chạy",
+      "text": "Thử một trong bốn chi tiết 3D sáng tạo."
+    },
+    "m5": {
+      "pro": true,
+      "chip": "Giao đủ 3 lượt",
+      "title": "Giao hàng với tải thay đổi",
+      "tip": "Mỗi lượt có vạch và tải khác nhau; chỉnh lại thời gian rồi chạy lại",
+      "text": "Nâng cao: lượt 1 vạch 80 cm, lượt 2 xe chở nặng đi chậm hơn và vạch 45 cm, lượt 3 vạch 100 cm. Đạt lượt nào thì sang lượt kế; trượt thì chỉnh và chạy lại lượt đó."
+    }
+  },
+  "blocks": {
+    "toolbox": ["highSpeed", "mediumSpeed", "lowSpeed", "wait", "motorStop"],
+    "pro": ["motorPower", "motorReverse"],
+    "sample": ["start", "repeatStart", "highSpeed", "repeatEnd"],
+    "empty": ["start", "repeatStart", "repeatEnd"]
+  },
+  "creative": {
+    "intro": "Sáng tạo cho robot đẩy xe: <b>đầu đẩy rộng</b> giữ xe thẳng, <b>thanh chống</b> hai bên xe nặng, <b>khung chặn hàng</b> phía sau và <b>khay chở thùng</b> có chốt giữ. Gắn từng phụ kiện lên mô hình 3D.",
+    "slots": 4,
+    "badge": "Robot cơ bản",
+    "slotHint": "Bốn vị trí nâng cấp"
+  },
+  "meters": [
+    { "label": "Tốc độ xe", "id": "m-speed", "value": 0, "unit": "cm/giây", "note": "Chưa chạy", "noteId": "m-speed-note" },
+    { "label": "Xe đã đi", "id": "m-dist", "value": 0, "unit": "cm", "note": "Tính từ vạch xuất phát", "noteId": "m-dist-note" },
+    { "label": "Vạch đích", "id": "m-line", "value": 80, "unit": "cm", "note": "Chưa tới đích", "noteId": "m-line-note" },
+    { "label": "Thời gian", "id": "m-time", "value": 0, "unit": "giây", "note": "Quãng đường = tốc độ × thời gian", "noteId": "m-time-note" }
+  ],
+  "calc": "Quãng đường = tốc độ × thời gian · chậm 10, vừa 15, nhanh 20 cm/giây",
+  "hint": "<b>M2:</b> 4 khối theo sách, hai chân bước đẩy xe. <b>M3:</b> thêm Chờ và Dừng để xe dừng ở 80 cm. <b>Nâng cao:</b> ba lượt có vạch và tải khác nhau, tính lại thời gian mỗi lượt."
+}

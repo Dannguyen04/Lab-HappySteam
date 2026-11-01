@@ -40,12 +40,26 @@
   ],
   "from": "lop1/bai03"
  },
+ "BP-3035|(02)": {
+  "originalPart": "2815.dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/2815-02-b6957cb3.json"
+  ],
+  "from": "lop3/bai16 (.io)"
+ },
  "BP-3976|(16)": {
   "originalPart": "bp-3976(16).dat",
   "meshes": [
    "content/kits/alpha330/meshes/bp-3976-16-16-b07393b1.json"
   ],
   "from": "lop1/bai09"
+ },
+ "BP-3990|(04)": {
+  "originalPart": "32062.dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/32062-05-b58ab512.json"
+  ],
+  "from": "bai19 color alias of BP-3990|(05)"
  },
  "BP-3990|(05)": {
   "originalPart": "32062.dat",
@@ -152,6 +166,13 @@
   ],
   "from": "lop3/bai08"
  },
+ "BP-7016|t": {
+  "originalPart": "3749.dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/3749-t-7989a71b.json"
+  ],
+  "from": "lop3/bai16 (.io)"
+ },
  "BP-7017|M": {
   "originalPart": "bp-7017m.dat",
   "meshes": [
@@ -223,12 +244,26 @@
   ],
   "from": "lop1/bai09"
  },
+ "BP-7046|(02)": {
+  "originalPart": "32498.dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/32498-02-46eba1f5.json"
+  ],
+  "from": "lop3/bai16 (.io)"
+ },
  "BP-7047|(03)": {
   "originalPart": "3648.dat",
   "meshes": [
    "content/kits/alpha330/meshes/3648-03-32dca209.json"
   ],
   "from": "lop3/bai08"
+ },
+ "BP-7048|(02)": {
+  "originalPart": "32269.dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/32269-02-b38f12c6.json"
+  ],
+  "from": "lop3/bai16 (.io)"
  },
  "BP-7050|(01)": {
   "originalPart": "4716.dat",
@@ -237,12 +272,27 @@
   ],
   "from": "lop3/bai08"
  },
+ "BP-7053|(02)": {
+  "originalPart": "rbb:BP-7053",
+  "meshes": [
+   "content/kits/alpha330/meshes/rbb-bp-7053-02-591a10ad.json"
+  ],
+  "from": "RoboBuilder",
+  "frame": "rbb"
+ },
  "BP-7054|(03)": {
   "originalPart": "10928.dat",
   "meshes": [
    "content/kits/alpha330/meshes/10928-03-9537cf8e.json"
   ],
   "from": "lop1/bai09"
+ },
+ "BP-7073|M": {
+  "originalPart": "32009.dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/32009-m-bbace4d6.json"
+  ],
+  "from": "bai19 color alias of BP-7073|m"
  },
  "BP-7073|m": {
   "originalPart": "32009.dat",
@@ -251,12 +301,34 @@
   ],
   "from": "lop1/bai03"
  },
+ "BP-7074|(16)": {
+  "originalPart": "bp-7074(16).dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/bp-7074-16-16-bc690d75.json"
+  ],
+  "from": "lop3/bai16 (.io)"
+ },
  "BP-7075|(16)": {
   "originalPart": "bp-7075(16).dat",
   "meshes": [
    "content/kits/alpha330/meshes/bp-7075-16-16-54c27ed9.json"
   ],
   "from": "lop3/bai08"
+ },
+ "BP-7076|M": {
+  "originalPart": "rbb:BP-7076",
+  "meshes": [
+   "content/kits/alpha330/meshes/rbb-bp-7076-m-3dcdabfc.json"
+  ],
+  "from": "RoboBuilder",
+  "frame": "rbb"
+ },
+ "BP-7077|(16)": {
+  "originalPart": "bp-7077(16).dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/bp-7077-16-16-67ccdf27.json"
+  ],
+  "from": "lop3/bai16 (.io)"
  },
  "BP-7078|(06)": {
   "originalPart": "32526.dat",
@@ -278,6 +350,13 @@
    "content/kits/alpha330/meshes/99773-01-97e37464.json"
   ],
   "from": "lop3/bai08"
+ },
+ "BP-7089|(19)": {
+  "originalPart": "6587.dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/6587-19-e4b37ebb.json"
+  ],
+  "from": "lop3/bai16 (.io)"
  },
  "BP-7090|(03)": {
   "originalPart": "87083.dat",
@@ -404,6 +483,13 @@
    "content/kits/alpha330/meshes/3737-02-0dbac256.json"
   ],
   "from": "lop3/bai08"
+ },
+ "BP-7640|(01)": {
+  "originalPart": "94925.dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/94925-01-9ac5c2b4.json"
+  ],
+  "from": "lop3/bai16 (.io)"
  },
  "BP-8813|(06)": {
   "originalPart": "bp-8813(06).dat",

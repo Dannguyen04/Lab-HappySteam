@@ -94,7 +94,7 @@
       m2: { n: 2, title: 'Ghép khối giống hàng mẫu', text: 'Ghép đúng chương trình trong sách: M1, M2 chậm → nhanh → chậm ngược → nhanh ngược, mỗi lần chờ 3 giây, lặp lại. Chạy hết một vòng lặp.' },
       m3: { n: 3, title: 'Cứu 3 người gặp nạn', text: 'Hạ máy bay xuống thấp (M2) và bay chậm (M1 Low) khi đi ngang người gặp nạn để thả thang. Cứu đủ 3 người!' },
       m4: { n: 4, title: 'Thử máy bay sáng tạo', text: 'Gắn thêm chi tiết ở chặng Sáng tạo, rồi quay lại chạy chương trình.', go: ['creative', 'Đến xưởng sáng tạo'] },
-      m5: { n: 5, title: 'Cứu nạn trong bão', text: 'Bão kéo tới theo lượt: khi có bão phải bay lên cao trên mây, trời quang mới hạ thấp để cứu. Cứu đủ 3 người mà không bị rung lắc rơi.' },
+      m5: { n: 5, title: 'Cứu nạn trong bão', text: 'Bão kéo tới theo lượt: khi có bão phải bay lên cao trên mây, trời quang mới hạ thấp để cứu. Cứu đủ 3 người mà không bị rung lắc làm rơi người.' },
       m1: { n: 1, title: 'Lắp xong giàn bay', text: 'Bấm “Đã lắp xong bước này” ở cả 30 bước của chặng Lắp ráp.', go: ['assembly', 'Đến chặng lắp ráp'] }
     },
     cardOrder: { kid: ['m2', 'm3', 'm4', 'm1'], pro: ['m2', 'm3', 'm4', 'm5', 'm1'] },

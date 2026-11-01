@@ -1,45 +1,98 @@
 <title>Vượt bão · Lớp 3 · Bài 9 · Happy STEAM</title>
 <template data-slot="header-copy">
-  <div class="eyebrow">Lớp 3 · Bài 9 · Vượt bão</div>
-  <h1>Thuyền vượt bão</h1>
-  <p class="lede pro-only">Lắp thuyền một động cơ M1 theo 27 bước, truyền lực qua bánh răng tới bánh xe đẩy thuyền. Lập trình đổi tốc độ, tránh đá ngầm, thử nâng cấp và chọn cách vượt bão an toàn.</p>
+      <div class="eyebrow">Lớp 3 · Bài 9 · Vượt bão</div>
+      <h1>Thuyền vượt bão</h1>
+      <p class="lede pro-only">Lắp thuyền một động cơ M1 theo 27 bước, truyền lực qua bánh răng tới bánh xe đẩy thuyền. Lập trình đổi tốc độ, tránh đá ngầm, thử nâng cấp và chọn cách vượt bão an toàn.</p>
 </template>
+
 <template data-slot="mission-chips">
-  <span class="chip" id="chip-m1" title="Hoàn tất cả 27 bước lắp ráp"><i>1</i>Lắp xong 27 bước</span>
-  <span class="chip" id="chip-m2" title="Start · Repeat · M1 Low · Wait 3 giây · Medium · Wait 3 giây · High · Wait 3 giây · Repeat End"><i>2</i>Lập trình theo mẫu</span>
-  <span class="chip" id="chip-m3" title="Đi 30 m, qua đá ngầm 20–27 m bằng Low (hoặc Medium khi có đèn)"><i>3</i>Cập cảng an toàn</span>
-  <span class="chip" id="chip-m4" title="Gắn chi tiết sáng tạo rồi cho M1 chạy"><i>4</i>Thử nâng cấp</span>
-  <span class="chip pro-only" id="chip-m5" title="Vượt qua các đợt bão rồi đến cảng không bị lật"><i>5</i>Vượt bão nâng cao</span>
+    <span class="chip" id="chip-m1" title="Hoàn tất cả 27 bước lắp ráp"><i>1</i>Lắp xong 27 bước</span>
+    <span class="chip" id="chip-m2" title="Start · Repeat · M1 Low · Wait 3 giây · Medium · Wait 3 giây · High · Wait 3 giây · Repeat End"><i>2</i>Lập trình theo mẫu</span>
+    <span class="chip" id="chip-m3" title="Đi 30 m, qua đá ngầm 20–27 m bằng Low (hoặc Medium khi có đèn)"><i>3</i>Cập cảng an toàn</span>
+    <span class="chip" id="chip-m4" title="Gắn chi tiết sáng tạo rồi cho M1 chạy"><i>4</i>Thử nâng cấp</span>
+    <span class="chip pro-only" id="chip-m5" title="Vượt qua các đợt bão rồi đến cảng không bị lật"><i>5</i>Vượt bão nâng cao</span>
 </template>
+
 <template data-slot="victory-copy">
-  <p>Em đã lắp ráp thuyền, lập trình đổi tốc độ, đi qua bãi đá ngầm, cập cảng an toàn và thử thiết kế sáng tạo.</p>
-  <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM3-09</code></p>
+      <p>Em đã lắp ráp thuyền, lập trình đổi tốc độ, đi qua bãi đá ngầm, cập cảng an toàn và thử thiết kế sáng tạo.</p>
+      <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM3-09</code></p>
 </template>
-<template data-slot="assembly-tab"><i>1</i><span><b>Lắp ráp</b><small>27 bước theo sách</small></span></template>
-<template data-slot="assembly-count"><span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 27</span></span></template>
-<template data-slot="assembly-canvas"><canvas id="view" aria-label="Mô hình thuyền vượt bão 3D: kéo để xoay, cuộn để phóng to"></canvas></template>
-<template data-slot="assembly-slider"><input id="slider" type="range" min="1" max="27" value="1" aria-label="Chọn bước lắp"></template>
-<template data-slot="assembly-meter-step"><div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 27</small></div><div class="s" id="am-step-s">Thuyền vượt bão</div></dd></div></template>
-<template data-slot="assembly-meter-done"><div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 27</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div></template>
-<template data-slot="book-image"><img id="book-img" src="assets/lop3-bai09/step-01.jpg" alt="Hình hướng dẫn lắp ráp bước 1"></template>
-<template data-slot="book-link"><a id="book-pdf" class="link" href="assets/lop3-bai09/step-01.jpg" target="_blank" rel="noopener">Mở hình lớn ↗</a></template>
-<template data-slot="creative-intro"><p class="status-text">Biển có đá ngầm và sóng lớn. Hãy thử <b>phao thăng bằng</b> để chịu bão lâu hơn, <b>đèn dẫn đường</b> để qua đá ở tốc độ Medium, hoặc <b>buồm thêm</b> để chạy nhanh khi trời quang.</p></template>
-<template data-slot="creative-canvas"><div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình 3D của thuyền đang sáng tạo"></div></template>
-<template data-slot="creative-slot-label"><div class="panel-h"><h2>Tự gắn chi tiết</h2><small>3 vị trí trên thuyền</small></div></template>
-<template data-slot="creative-result-label"><div class="panel-h"><h2>Thuyền của em sẽ có</h2></div></template>
-<template data-slot="sim-upgrade-label"><small id="sim-active-upgrade-badge" class="status-tag">Thuyền cơ bản</small></template>
+
+<template data-slot="assembly-tab">
+      <i>1</i><span><b>Lắp ráp</b><small>27 bước theo sách</small></span>
+</template>
+
+<template data-slot="assembly-count">
+          <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 27</span></span>
+</template>
+
+<template data-slot="assembly-canvas">
+              <canvas id="view" aria-label="Mô hình thuyền vượt bão 3D: kéo để xoay, cuộn để phóng to"></canvas>
+</template>
+
+<template data-slot="assembly-slider">
+                <input id="slider" type="range" min="1" max="27" value="1" aria-label="Chọn bước lắp">
+</template>
+
+<template data-slot="assembly-meter-step">
+          <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 27</small></div><div class="s" id="am-step-s">Thuyền vượt bão</div></dd></div>
+</template>
+
+<template data-slot="assembly-meter-done">
+          <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 27</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+</template>
+
+<template data-slot="book-image">
+          <img id="book-img" src="assets/lop3-bai09/step-01.jpg" alt="Hình hướng dẫn lắp ráp bước 1">
+</template>
+
+<template data-slot="book-link">
+          <a id="book-pdf" class="link" href="assets/lop3-bai09/step-01.jpg" target="_blank" rel="noopener">Mở hình lớn ↗</a>
+</template>
+
+<template data-slot="creative-intro">
+          <p class="status-text">Biển có đá ngầm và sóng lớn. Hãy thử <b>phao thăng bằng</b> để chịu bão lâu hơn, <b>đèn dẫn đường</b> để qua đá ở tốc độ Medium, hoặc <b>buồm thêm</b> để chạy nhanh khi trời quang.</p>
+</template>
+
+<template data-slot="creative-canvas">
+        <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình 3D của thuyền đang sáng tạo"></div>
+</template>
+
+<template data-slot="creative-slot-label">
+        <div class="panel-h"><h2>Tự gắn chi tiết</h2><small>3 vị trí trên thuyền</small></div>
+</template>
+
+<template data-slot="creative-result-label">
+        <div class="panel-h"><h2>Thuyền của em sẽ có</h2></div>
+</template>
+
+<template data-slot="sim-upgrade-label">
+            <small id="sim-active-upgrade-badge" class="status-tag">Thuyền cơ bản</small>
+</template>
+
 <template data-slot="sim-scene">
-  <canvas id="space-scene" aria-label="Cảnh thuyền vượt biển 30 mét, bãi đá ngầm từ 20 tới 27 mét, cảng và cơn bão"></canvas>
-  <div class="sim-stage" id="sim-stage" aria-label="Thuyền 3D chạy theo động cơ M1"></div>
-  <p class="scene-idle" id="scene-idle">Chạm khối <b>Start</b> màu vàng hoặc nút <b>▶</b> để thuyền xuất phát</p>
+          <canvas id="space-scene" aria-label="Cảnh thuyền vượt biển 30 mét, bãi đá ngầm từ 20 tới 27 mét, cảng và cơn bão"></canvas>
+          <div class="sim-stage" id="sim-stage" aria-label="Thuyền 3D chạy theo động cơ M1"></div>
+          <p class="scene-idle" id="scene-idle">Chạm khối <b>Start</b> màu vàng hoặc nút <b>▶</b> để thuyền xuất phát</p>
 </template>
+
 <template data-slot="sim-meters">
-  <dl class="meters">
-    <div class="meter"><dt>Tốc độ</dt><dd><div class="v" id="m-speed">0<small>m/giây</small></div><div class="s" id="m-speed-note">M1 dừng</div></dd></div>
-    <div class="meter"><dt>Quãng đường</dt><dd><div class="v" id="m-dist">0<small>/ 30 m</small></div><div class="s" id="m-dist-note">Trên biển</div></dd></div>
-    <div class="meter pro-only"><dt>Góc nghiêng</dt><dd><div class="v" id="m-tilt">0<small>°</small></div><div class="s" id="m-tilt-note">Thăng bằng</div></dd></div>
-    <div class="meter pro-only"><dt>Thời tiết</dt><dd><div class="v" id="m-weather">Trời quang</div><div class="s" id="m-weather-note">Ổn định</div></dd></div>
-  </dl>
+        <dl class="meters">
+          <div class="meter"><dt>Tốc độ</dt><dd><div class="v" id="m-speed">0<small>m/giây</small></div><div class="s" id="m-speed-note">M1 dừng</div></dd></div>
+          <div class="meter"><dt>Quãng đường</dt><dd><div class="v" id="m-dist">0<small>/ 30 m</small></div><div class="s" id="m-dist-note">Trên biển</div></dd></div>
+          <div class="meter pro-only"><dt>Góc nghiêng</dt><dd><div class="v" id="m-tilt">0<small>°</small></div><div class="s" id="m-tilt-note">Thăng bằng</div></dd></div>
+          <div class="meter pro-only"><dt>Thời tiết</dt><dd><div class="v" id="m-weather">Trời quang</div><div class="s" id="m-weather-note">Ổn định</div></dd></div>
+        </dl>
 </template>
-<template data-slot="sim-calculation"><div class="panel-h"><h2>Tính toán</h2><small>Tốc độ · Quãng đường · Thời gian</small></div><div class="pad calc"><p class="calc-eq" id="calc-eq1"></p><p class="calc-eq" id="calc-eq2"></p></div></template>
-<template data-slot="sim-hint"><p class="hint"><b>NV2</b> ghép Start → Repeat → Low/Wait 3s → Medium/Wait 3s → High/Wait 3s → Repeat End. <b>NV3</b> chạy nhanh ngoài khơi, đổi về Low trước đá ngầm 20–27 m, sau đó tới cảng ở 30 m. <b>NV5</b> trong hai đợt bão hãy giảm tốc hoặc dùng Stop chờ trời quang; chạy High trong bão quá lâu sẽ lật.</p></template>
+
+<template data-slot="sim-calculation">
+        <div class="panel-h"><h2>Tính toán</h2><small>Tốc độ · Quãng đường · Thời gian</small></div>
+        <div class="pad calc">
+          <p class="calc-eq" id="calc-eq1"></p>
+          <p class="calc-eq" id="calc-eq2"></p>
+        </div>
+</template>
+
+<template data-slot="sim-hint">
+            <p class="hint"><b>NV2</b> ghép Start → Repeat → Low/Wait 3s → Medium/Wait 3s → High/Wait 3s → Repeat End. <b>NV3</b> chạy nhanh ngoài khơi, đổi về Low trước đá ngầm 20–27 m, sau đó tới cảng ở 30 m. <b>NV5</b> trong hai đợt bão hãy giảm tốc hoặc dùng Stop chờ trời quang; chạy High trong bão quá lâu sẽ lật.</p>
+</template>

@@ -9,27 +9,9 @@
   const A_X = 110, // px của Trạm A (0 cm)
     PX = 4.4; // px mỗi cm: 150 cm cuối đường ≈ 770 px
   const $ = id => document.getElementById(id);
-  let cv, ctx, dpr = 1, raf = 0, last = 0, mode = 'story', active = false;
-  const fx = { stars: [], shakeUntil: 0, drop: null, waves: [], handUntil: 0, grab: false };
+  const fx = { hitUntil: 0, drop: null, waves: [], grab: false };
   const ground = () => (window.MarsArt ? window.MarsArt.GROUND_Y : 430);
   const xOf = cm => A_X + cm * PX;
-
-  function resize() {
-    if (!cv) return;
-    const w = cv.clientWidth || W;
-    dpr = Math.min(2, window.devicePixelRatio || 1);
-    cv.width = Math.round(w * dpr);
-    cv.height = Math.round(((w * H) / W) * dpr);
-  }
-  function label(text, x, y, color, size = 16) {
-    ctx.font = `700 ${size}px "Be Vietnam Pro","Segoe UI",sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = 'rgba(60,20,10,.75)';
-    ctx.strokeText(text, x, y);
-    ctx.fillStyle = color;
-    ctx.fillText(text, x, y);
-  }
 
   // ---------- hình đơn giản khi chưa có js/bai03/art.js ----------
   const Simple = {
@@ -157,18 +139,14 @@
   const art = () => window.MarsArt || Simple;
 
   // ---------- vẽ ----------
-  function frame(ts) {
-    raf = requestAnimationFrame(frame);
-    const sim = window.simEngine;
-    if (!sim || !ctx || mode !== 'story') return;
-    const now = ts / 1000;
-    if (now - last < 1 / 40) return;
-    last = now;
+  window.ZMSceneKit.create({
+    W,
+    H,
+    idleHidden: sim => sim.running || sim.x > 0,
+    draw(ctx, now, sim, kit) {
     const A = art(),
       G = ground();
-    ctx.setTransform(cv.width / W, 0, 0, cv.width / W, 0, 0);
-    const hit = now < fx.shakeUntil;
-    if (hit) ctx.translate((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10);
+    const hit = now < fx.hitUntil;
     A.drawBackground(ctx, now);
     // đá dọc đường (trang trí) và tảng đá lớn cuối đường
     A.drawRock(ctx, xOf(25), 14, 3);
@@ -194,10 +172,10 @@
     A.drawStation(ctx, xOf(0) - 70, 'A');
     A.drawStation(ctx, xOf(sim.bPos), 'B');
     if (!window.MarsArt) {
-      label('Trạm A', xOf(0) - 70, G - 100, '#fff');
-      label('Điểm B', xOf(sim.bPos), G - 100, '#fff');
+      kit.label('Trạm A', xOf(0) - 70, G - 100, '#fff');
+      kit.label('Điểm B', xOf(sim.bPos), G - 100, '#fff');
     }
-    if (sim.advanced) label(`B cách A ${sim.bPos} cm`, xOf(sim.bPos), G + 72, '#fff', 15);
+    if (sim.advanced) kit.label(`B cách A ${sim.bPos} cm`, xOf(sim.bPos), G + 72, '#fff', 15);
     // vùng dừng đúng quanh B
     ctx.fillStyle = 'rgba(255,240,120,.35)';
     ctx.fillRect(xOf(sim.bPos - sim.tol()), G - 4, sim.tol() * 2 * PX, 8);
@@ -234,7 +212,6 @@
         ctx.stroke();
       }
     }
-    drawStars(now);
     if (sim.advanced) {
       // bảng tốc độ để tính quãng đường
       ctx.fillStyle = 'rgba(255,255,255,.88)';
@@ -253,115 +230,47 @@
       ctx.fillText(`Mức 4: ${sp(4)} cm/giây`, 26, 56);
       ctx.fillText(`Mức 8: ${sp(8)} cm/giây`, 26, 74);
     }
-    $('scene-idle').hidden = sim.running || sim.x > 0;
-    $('scene-hand').classList.toggle('is-waiting', !!sim.waitingHand);
-  }
-  function drawStars(now) {
-    fx.stars = fx.stars.filter(s => now - s.t0 < 1.4);
-    for (const s of fx.stars) {
-      const k = (now - s.t0) / 1.4;
-      ctx.globalAlpha = 1 - k;
-      ctx.fillStyle = s.c;
-      ctx.beginPath();
-      ctx.arc(s.x + s.vx * k * 90, s.y + s.vy * k * 90 + 40 * k * k, 7 * (1 - k * 0.5), 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-  }
-
-  // ---------- thông báo chữ to ----------
-  let toastTimer = 0;
-  function toast(kind, title, text, action) {
-    const el = $('scene-toast');
-    el.dataset.k = kind;
-    $('scene-toast-title').textContent = title;
-    $('scene-toast-text').textContent = text;
-    const btn = $('scene-toast-btn');
-    btn.hidden = !action;
-    if (action) {
-      btn.textContent = action.label;
-      btn.onclick = () => {
-        el.hidden = true;
-        action.run();
-      };
-    }
-    el.hidden = false;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => (el.hidden = true), action ? 6000 : 3500);
-  }
-  const retry = { label: 'Thử lại', run: () => window.simEngine.start() };
-
-  function onEvent(type, data) {
+    $('scene-hand')?.classList.toggle('is-waiting', !!sim.waitingHand);
+    },
+    onEvent(type, data, kit) {
     const now = performance.now() / 1000,
       sim = window.simEngine;
     if (type === 'start') {
       fx.drop = null;
       fx.grab = false;
-      $('scene-toast').hidden = true;
     } else if (type === 'hand' && window.SFX) window.SFX.tone(880, 0.1);
     else if (type === 'seen' && window.SFX) window.SFX.tone(1320, 0.12);
     else if (type === 'drop') {
       fx.drop = { t0: now, x: xOf(data) - 20 };
       if (window.SFX) window.SFX.tone(220, 0.2);
     } else if (type === 'crash') {
-      fx.shakeUntil = now + 0.7;
+      fx.hitUntil = now + 0.7;
+      kit.shake(0.7);
       if (window.SFX) window.SFX.tone(140, 0.35);
-      toast('bad', 'Ối! Robot đụng tảng đá', 'Robot chạy quá xa. Hãy cho robot chạy ít giây hơn.', retry);
+      kit.toast('bad', 'Ối! Robot đụng tảng đá', 'Robot chạy quá xa. Hãy cho robot chạy ít giây hơn.', retry);
     } else if (type === 'deliver') {
       const x = xOf(sim.x);
-      for (let i = 0; i < 14; i++) {
-        const a = (i / 14) * Math.PI * 2;
-        fx.stars.push({ t0: now, x, y: ground() - 120, vx: Math.cos(a), vy: Math.sin(a), c: ['#ffd23f', '#fff', '#8cc152'][i % 3] });
-      }
+      kit.burst(x, ground() - 120);
       if (sim.has('antenna')) fx.waves.push({ t0: now, x }, { t0: now + 0.4, x }, { t0: now + 0.8, x });
       if (sim.has('arm')) fx.grab = true;
       if (window.SFX) window.SFX.ding();
-      toast('ok', 'Giỏi quá!', sim.has('arm') ? 'Robot chở mẫu cây tới điểm B và nhặt thêm một mẫu đá!' : 'Robot đã chở mẫu cây tới điểm B.');
+      kit.toast('ok', 'Giỏi quá!', sim.has('arm') ? 'Robot chở mẫu cây tới điểm B và nhặt thêm một mẫu đá!' : 'Robot đã chở mẫu cây tới điểm B.');
     } else if (type === 'short') {
-      toast('bad', 'Chưa tới điểm B', `Robot còn cách B ${Math.round(-data.off)} cm. Hãy cho robot chạy lâu hơn hoặc nhanh hơn.`, retry);
+      kit.toast('bad', 'Chưa tới điểm B', `Robot còn cách B ${Math.round(-data.off)} cm. Hãy cho robot chạy lâu hơn hoặc nhanh hơn.`, retry);
     } else if (type === 'over') {
-      toast('bad', 'Quá điểm B rồi', `Robot chạy quá B ${Math.round(data.off)} cm. Hãy cho robot chạy ít giây hơn hoặc chậm hơn.`, retry);
+      kit.toast('bad', 'Quá điểm B rồi', `Robot chạy quá B ${Math.round(data.off)} cm. Hãy cho robot chạy ít giây hơn hoặc chậm hơn.`, retry);
     } else if (type === 'emptyArrive') {
-      toast('bad', 'Mẫu cây rơi mất rồi', 'Chạy nhanh làm rơi mẫu cây. Hãy chạy chậm hơn (Tốc độ mức 4) hoặc gắn thùng chở mẫu.', retry);
+      kit.toast('bad', 'Mẫu cây rơi mất rồi', 'Chạy nhanh làm rơi mẫu cây. Hãy chạy chậm hơn (Tốc độ mức 4) hoặc gắn thùng chở mẫu.', retry);
     } else if (type === 'target' && sim.advanced) {
-      toast('ok', 'Điểm B mới', `Điểm B giờ cách Trạm A ${data} cm. Em tính xem cần chạy mấy giây?`);
+      kit.toast('ok', 'Điểm B mới', `Điểm B giờ cách Trạm A ${data} cm. Em tính xem cần chạy mấy giây?`);
     }
-  }
-
-  // ---------- chế độ: câu chuyện ⇄ robot 3D ----------
-  function setMode(m) {
-    mode = m;
-    $('scene-wrap').dataset.mode = m;
-    $('scene-toggle').textContent = m === 'story' ? 'Xem robot thật' : 'Xem câu chuyện';
-    $('scene-toggle').setAttribute('aria-pressed', String(m === 'robot'));
-    if (!active) return;
-    if (m === 'robot') window.ZMSandbox?.open();
-    else window.ZMSandbox?.close();
-    resize();
-  }
-  function enter() {
-    active = true;
-    resize();
-    if (mode === 'robot') window.ZMSandbox?.open();
-  }
-  function leave() {
-    active = false;
-    window.ZMSandbox?.close();
-  }
-
-  zmReady(() => {
-    cv = $('space-scene');
-    if (!cv) return;
-    ctx = cv.getContext('2d');
-    new ResizeObserver(resize).observe(cv);
-    $('scene-toggle').addEventListener('click', () => setMode(mode === 'story' ? 'robot' : 'story'));
-    $('scene-toast-close').addEventListener('click', () => ($('scene-toast').hidden = true));
-    // Đưa tay trước cảm biến: nút ✋ hoặc chạm vào cảnh
-    const hand = () => window.simEngine && window.simEngine.putHand();
-    $('scene-hand').addEventListener('click', hand);
-    cv.addEventListener('click', hand);
-    raf = requestAnimationFrame(frame);
+    },
+    init(cv) {
+      // Giữ cảm biến siêu âm riêng: nút tay hoặc chạm sa bàn.
+      const hand = () => window.simEngine?.putHand();
+      $('scene-hand')?.addEventListener('click', hand);
+      cv.addEventListener('click', hand);
+    }
   });
-
-  window.ZMScene = { enter, leave, onEvent, setMode, mode: () => mode };
+  const retry = { label: 'Thử lại', run: () => window.simEngine.start() };
 })();

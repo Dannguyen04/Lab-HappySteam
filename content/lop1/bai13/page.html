@@ -7,14 +7,14 @@
 
 <template data-slot="mission-chips">
     <span class="chip" id="chip-m1" title="Bấm “Đã lắp xong bước này” ở cả 22 bước"><i>1</i>Lắp xong 22 bước</span>
-    <span class="chip" id="chip-m2" title="Start · Lặp · Chờ vật cản · Quay nhanh · Chờ 1s · Dừng"><i>2</i>Lập trình theo mẫu</span>
+    <span class="chip" id="chip-m2" title="Start · Lặp · Chờ vật cản · Tiến thẳng · Chờ 1 giây · Chờ vật cản · Dừng · Rẽ trái · Chờ 0,2 giây · Hết lặp"><i>2</i>Lập trình theo mẫu</span>
     <span class="chip" id="chip-m3" title="Đẩy sạch mọi đống tuyết, không đụng tường cuối đường"><i>3</i>Dọn sạch tuyết</span>
     <span class="chip" id="chip-m4" title="Gắn gói nâng cấp ở chặng Sáng tạo, đưa vào sa bàn và cho động cơ chạy"><i>4</i>Thử nâng cấp sáng tạo</span>
-    <span class="chip pro-only" id="chip-m5" title="Nâng cao: bão tuyết, đường dài 230 cm, dọn 5 đống trong tối đa 4 lần chạy"><i>5</i>Bão tuyết</span>
+    <span class="chip pro-only" id="chip-m5" title="Nâng cao: bão tuyết, 5 đống trong tối đa 4 lượt tiến. Hãy thử Chờ 2 giây"><i>5</i>Bão tuyết</span>
 </template>
 
 <template data-slot="victory-copy">
-      <p>Em đã tìm hiểu hiện tượng tuyết rơi, lắp xong xe dọn tuyết, lập trình đúng theo giáo án, dọn sạch tuyết trên đường và thử nâng cấp sáng tạo của mình.</p>
+      <p>Em đã tìm hiểu hiện tượng tuyết rơi, lắp xong xe dọn tuyết, lập trình đúng theo sách, dọn sạch tuyết trên đường và thử nâng cấp sáng tạo của mình.</p>
       <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM13</code></p>
 </template>
 
@@ -71,7 +71,7 @@
 </template>
 
 <template data-slot="sim-scene">
-          <canvas id="space-scene" aria-label="Cảnh đường phố có tuyết: xe dọn tuyết chạy từ ga-ra, đẩy các đống tuyết theo chương trình"></canvas>
+          <canvas id="space-scene" aria-label="Sa bàn tuyết nhìn từ trên cao: xe hai bánh tiến thẳng và rẽ trái để dọn tuyết"></canvas>
           <div class="sim-stage" id="sim-stage" aria-label="Xe dọn tuyết 3D chạy theo chương trình"></div>
           <p class="scene-idle" id="scene-idle">Chạm khối <b>Start</b> màu vàng hoặc nút <b>▶</b>, rồi bấm <b>✋</b> để đưa tay trước cảm biến</p>
           <button type="button" class="hand-btn" id="scene-hand" title="Đưa tay trước cảm biến siêu âm" aria-label="Đưa tay trước cảm biến">✋</button>
@@ -80,9 +80,9 @@
 <template data-slot="sim-meters">
         <dl class="meters pro-only">
           <div class="meter"><dt>Tốc độ</dt><dd><div class="v" id="m-speed">0<small>cm/giây</small></div><div class="s" id="m-speed-note">Mức 8/8</div></dd></div>
-          <div class="meter"><dt>Đã đi</dt><dd><div class="v" id="m-dist">0<small>cm</small></div><div class="s">tính từ ga-ra</div></dd></div>
+          <div class="meter"><dt>Cách ga-ra</dt><dd><div class="v" id="m-dist">0<small>cm</small></div><div class="s">khoảng cách đến điểm xuất phát</div></dd></div>
           <div class="meter"><dt>Tuyết còn</dt><dd><div class="v" id="m-target">3<small>đống</small></div><div class="s" id="m-target-note">Tuyết còn lại / 3</div></dd></div>
-          <div class="meter"><dt>Lần chạy</dt><dd><div class="v" id="m-sample">0</div><div class="s">khối Chờ đã chạy</div></dd></div>
+          <div class="meter"><dt>Lượt tiến</dt><dd><div class="v" id="m-sample">0</div><div class="s">số lượt xe tiến thẳng</div></dd></div>
         </dl>
 </template>
 
@@ -95,5 +95,5 @@
 </template>
 
 <template data-slot="sim-hint">
-            <p class="hint"><b>NV2</b> ghép đúng chương trình mẫu (có khối Lặp). Cảm biến thấy đống tuyết trong tầm là xe tự chạy, hoặc bấm ✋ đưa tay trước cảm biến. <b>NV3</b> đẩy sạch mọi đống tuyết mà không đụng tường: tuyết dày, chạy dưới mức 5 sẽ kẹt nếu chưa có lưỡi gạt. Mức 8 đi ≈ 39 cm mỗi giây, mức 4 ≈ 20 cm mỗi giây.</p>
+            <p class="hint"><b>NV2</b> ghép mẫu 10 khối: Chờ vật cản → Tiến thẳng → Chờ 1 giây → Chờ vật cản → Dừng → Rẽ trái → Chờ 0,2 giây; đặt trong Lặp. <b>NV3</b> dọn hết các đống tuyết rải lệch nhau. Cảm biến nhìn theo đầu xe; bấm ✋ để đưa tay ra trước cảm biến nếu xe đang chờ. <b>Nâng cao</b>: thử đổi Chờ 1 giây thành 2 giây để dọn 5 đống trong không quá 4 lượt tiến.</p>
 </template>

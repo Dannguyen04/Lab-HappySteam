@@ -48,7 +48,7 @@ async function checkPaintedScene(page) {
         const pdf = document.getElementById('book-pdf');
         try { await img.decode(); } catch (e) { issues.push(`Bước ${step}: ảnh không tải được`); }
         if (!img.naturalWidth || !img.getAttribute('src').endsWith(`assets/lop1-bai12/step-${String(step).padStart(2, '0')}.jpg`)) issues.push(`Bước ${step}: sai ảnh sách`);
-        if (!pdf.getAttribute('href').endsWith(`references/lop1/bai12/bai12.pdf#page=${step}`)) issues.push(`Bước ${step}: sai PDF`);
+        if (!pdf.getAttribute('href').endsWith(`assets/lop1-bai12/step-${String(step).padStart(2, '0')}.jpg`)) issues.push(`Bước ${step}: sai ảnh tham chiếu`);
         if (!/bỏ/i.test(document.getElementById('doneBtn').textContent)) document.getElementById('doneBtn').click();
       }
       return { issues, done: document.getElementById('am-done').textContent };

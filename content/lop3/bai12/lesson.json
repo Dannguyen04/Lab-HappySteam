@@ -1,0 +1,148 @@
+{
+  "title": "Robot trồng cây trên sao Hỏa",
+  "pageTitle": "Robot trồng cây",
+  "topic": "Sống trên sao Hỏa – Trồng cây",
+  "model": "robot gắp chậu trồng cây",
+  "sheetName": "Lớp 3 · Bài 12: Sống trên sao Hỏa – Trồng cây",
+  "baseName": "Thân robot",
+  "steps": 31,
+  "assetFolder": "lop3-bai12",
+  "bookAlt": "Bước 1: hình sách lắp robot trồng cây",
+  "firstStep": "Robot trồng cây",
+  "lede": "Lắp robot 31 bước với hai động cơ M1 (bánh xe), M2 (khung gắp) và cảm biến siêu âm. Phát hiện chậu non, gắp về luống trồng trong nhà kính sao Hỏa và xử lý bão bụi.",
+  "victory": "Em đã lắp robot, vận chuyển đủ ba chậu cây vào luống và thử cải tiến thiết kế để thích nghi với sao Hỏa.",
+  "engine": {
+    "class": "PlantEngine",
+    "file": "plant-engine.js"
+  },
+  "scene": {
+    "file": "plant-scene.js",
+    "aria": "Sa bàn ngang nhà kính sao Hỏa, robot gắp ba chậu cây non, trồng vào luống và tránh bão bụi",
+    "stage": "Robot trồng cây 3D chạy theo chương trình",
+    "idle": "Xếp chương trình mẫu rồi nhấn Start để robot đến chậu cây"
+  },
+  "missions": {
+    "m1": {
+      "chip": "Lắp đủ 31 bước",
+      "title": "Lắp robot gắp cây",
+      "tip": "Hoàn thành 31 trang sách hướng dẫn lắp"
+    },
+    "m2": {
+      "chip": "Đúng 13 khối KHGD",
+      "title": "Hoàn thành một vòng chương trình mẫu",
+      "tip": "Start · Lặp · M1 chậm · Chờ vật cản · Dừng · Giai điệu A · M2 chậm · Chờ 1 giây · Dừng · M1 chậm ngược · Chờ 3 giây · Dừng · Hết lặp",
+      "text": "Lắp đúng 13 khối KHGD và chạy trọn một vòng: xe tới chậu, dừng, phát giai điệu A, hạ khung gắp và lùi lại."
+    },
+    "m3": {
+      "chip": "Trồng ba cây",
+      "title": "Đưa đủ ba chậu vào luống trồng",
+      "tip": "Chỉnh thời gian lùi để chậu đứng đúng ô luống; đừng gắp khi quá xa",
+      "text": "Trồng đủ 3 chậu: lùi thiếu hoặc quá vị trí đều làm chậu đổ. Có thể phải thay đổi thời gian lùi ở mỗi lượt."
+    },
+    "m4": {
+      "chip": "Nâng cấp robot",
+      "title": "Thử robot sáng tạo",
+      "tip": "Gắn khung gắp rộng, bình tưới, đèn chiếu hoặc pin mặt trời rồi chạy",
+      "text": "Thử một trong bốn chi tiết 3D sáng tạo."
+    },
+    "m5": {
+      "pro": true,
+      "chip": "Tránh bão bụi",
+      "title": "Trồng cây an toàn qua bão",
+      "tip": "Mỗi vòng có bão bụi, phải đợi đường trống mới di chuyển",
+      "text": "Nâng cao: vị trí chậu thay đổi theo lượt, bão bụi xuất hiện bất kỳ giữa các lượt. Chạy khi đang bão làm đổ chậu; dùng khối Đợi đường trống."
+    }
+  },
+  "blocks": {
+    "toolbox": [
+      "m1Motor",
+      "m2Motor",
+      "obstacle",
+      "motorStop",
+      "melodyA",
+      "wait",
+      "waitClear"
+    ],
+    "pro": [
+      "motorPower",
+      "motorReverse"
+    ],
+    "sample": [
+      "start",
+      "repeatStart",
+      "m1Motor",
+      "obstacle",
+      "motorStop",
+      "melodyA",
+      "m2Motor",
+      [
+        "wait",
+        {
+          "duration": 1
+        }
+      ],
+      "motorStop",
+      [
+        "m1Motor",
+        {
+          "dir": "ccw"
+        }
+      ],
+      [
+        "wait",
+        {
+          "duration": 3
+        }
+      ],
+      "motorStop",
+      "repeatEnd"
+    ],
+    "empty": [
+      "start",
+      "repeatStart",
+      "repeatEnd"
+    ]
+  },
+  "creative": {
+    "intro": "Sáng tạo cho nhà kính: <b>khung gắp rộng</b> để giữ chậu to, <b>bình tưới</b> nuôi cây, <b>đèn chiếu</b> hỗ trợ quang hợp và <b>pin mặt trời</b> cung cấp năng lượng. Gắn từng phụ kiện lên mô hình 3D.",
+    "slots": 4,
+    "badge": "Robot cơ bản",
+    "slotHint": "Bốn vị trí nâng cấp"
+  },
+  "meters": [
+    {
+      "label": "Động cơ",
+      "id": "m-speed",
+      "value": 0,
+      "unit": "cm/giây",
+      "note": "Chưa chạy",
+      "noteId": "m-speed-note"
+    },
+    {
+      "label": "Cách chậu",
+      "id": "m-dist",
+      "value": 0,
+      "unit": "cm",
+      "note": "Cảm biến siêu âm",
+      "noteId": "m-dist-note"
+    },
+    {
+      "label": "Đã trồng",
+      "id": "m-water",
+      "value": 0,
+      "unit": "/ 3 cây",
+      "note": "Luống cây sao Hỏa",
+      "noteId": "m-water-note"
+    },
+    {
+      "label": "Thời gian",
+      "id": "m-time",
+      "value": 0,
+      "unit": "giây",
+      "note": "Quan sát bão bụi",
+      "noteId": "m-time-note"
+    }
+  ],
+  "calc": "Quãng đường = tốc độ × thời gian · căn khoảng cách để đặt chậu",
+  "hint": "<b>M2:</b> 13 khối theo KHGD, M1 chạy bánh, M2 hạ khung gắp. <b>M3:</b> chỉnh thời gian lùi cho ba chậu vào đúng luống. <b>Nâng cao:</b> dùng Đợi đường trống trước khi chạy để vượt bão bụi."
+}

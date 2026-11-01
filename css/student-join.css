@@ -1,0 +1,34 @@
+/* S-01: nút lớn cho học sinh lớp 1 và máy tính bảng cầm một tay. */
+.join-wrap [hidden] { display: none !important; }
+.join-wrap { max-width: 800px; margin: 0 auto; padding: max(18px, env(safe-area-inset-top)) 16px 36px; display: grid; gap: 14px; }
+.join-header { text-align: center; }
+.join-header h1 { font-size: clamp(30px, 6vw, 46px); margin: 10px 0 4px; }
+.join-header p { margin: 0; color: var(--muted); font-size: 16px; }
+.join-panel { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: clamp(18px, 4vw, 32px); display: grid; gap: 15px; box-shadow: 0 8px 25px #15212b0a; }
+.join-panel h2 { margin: 0; font: 700 clamp(20px, 4vw, 28px)/1.2 var(--f-display); }
+.join-panel p { margin: 0; color: var(--muted); }
+.join-code { font: 700 clamp(38px, 8vw, 68px)/1.1 var(--f-mono); letter-spacing: .16em; text-align: center; background: var(--sunk); border-radius: 12px; padding: 12px; font-variant-numeric: tabular-nums; }
+.join-keypad { max-width: 380px; width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; justify-self: center; }
+.join-keypad button { min-height: 68px; border: 2px solid var(--line); border-radius: 16px; background: #fff; font: 700 30px/1 var(--f-display); touch-action: manipulation; cursor: pointer; }
+.join-keypad button:active, .join-person:active { background: var(--accent-soft); transform: scale(.97); }
+.join-primary { min-height: 58px; border: 0; border-radius: 14px; background: var(--accent); color: white; font: 700 18px var(--f-body); cursor: pointer; }
+.join-primary:disabled { opacity: .45; cursor: default; }
+.join-step { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.join-link { min-height: 56px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--sunk); font-weight: 700; cursor: pointer; }
+.join-roster { display: grid; grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)); gap: 12px; }
+.join-person { min-height: 130px; padding: 14px 10px; border: 2px solid var(--line); border-radius: 16px; background: var(--sunk); display: grid; justify-items: center; align-content: center; gap: 6px; cursor: pointer; touch-action: manipulation; }
+.join-animal { font-size: 54px; line-height: 1.2; }
+.join-person-name { font: 700 18px/1.2 var(--f-body); overflow-wrap: anywhere; }
+.join-notice { background: var(--warn-soft); color: var(--ink); border: 2px solid var(--warn); border-radius: 14px; padding: 14px; text-align: center; font-size: 18px; font-weight: 700; }
+.join-wait { justify-items: center; text-align: center; min-height: 310px; align-content: center; }
+.join-wait-icon { font-size: 72px; }
+.join-device-tag { padding: 10px 20px; background: var(--accent-soft); border-radius: 12px; font: 700 21px var(--f-mono); }
+.join-foot { text-align: center; color: var(--muted); font-size: 13px; margin: 0; }
+@media (max-width: 460px) {
+  .join-wrap { padding-inline: 10px; gap: 10px; }
+  .join-panel { padding: 16px; }
+  .join-keypad { gap: 8px; }
+  .join-keypad button { min-height: 62px; }
+  .join-person { min-height: 112px; }
+  .join-roster { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

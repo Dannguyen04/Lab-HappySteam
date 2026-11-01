@@ -1,0 +1,98 @@
+<title>Robot trồng cây · Lớp 3 · Bài 12 · Happy STEAM</title>
+<template data-slot="header-copy">
+      <div class="eyebrow">Lớp 3 · Bài 12 · Sống trên sao Hỏa – Trồng cây</div>
+      <h1>Robot trồng cây trên sao Hỏa</h1>
+      <p class="lede pro-only">Lắp robot 31 bước với hai động cơ M1 (bánh xe), M2 (khung gắp) và cảm biến siêu âm. Phát hiện chậu non, gắp về luống trồng trong nhà kính sao Hỏa và xử lý bão bụi.</p>
+</template>
+
+<template data-slot="mission-chips">
+    <span class="chip" id="chip-m1" title="Hoàn thành 31 trang sách hướng dẫn lắp"><i>1</i>Lắp đủ 31 bước</span>
+    <span class="chip" id="chip-m2" title="Start · Lặp · M1 chậm · Chờ vật cản · Dừng · Giai điệu A · M2 chậm · Chờ 1 giây · Dừng · M1 chậm ngược · Chờ 3 giây · Dừng · Hết lặp"><i>2</i>Đúng 13 khối KHGD</span>
+    <span class="chip" id="chip-m3" title="Chỉnh thời gian lùi để chậu đứng đúng ô luống; đừng gắp khi quá xa"><i>3</i>Trồng ba cây</span>
+    <span class="chip" id="chip-m4" title="Gắn khung gắp rộng, bình tưới, đèn chiếu hoặc pin mặt trời rồi chạy"><i>4</i>Nâng cấp robot</span>
+    <span class="chip pro-only" id="chip-m5" title="Mỗi vòng có bão bụi, phải đợi đường trống mới di chuyển"><i>5</i>Tránh bão bụi</span>
+</template>
+
+<template data-slot="victory-copy">
+      <p>Em đã lắp robot, vận chuyển đủ ba chậu cây vào luống và thử cải tiến thiết kế để thích nghi với sao Hỏa.</p>
+      <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM3-12</code></p>
+</template>
+
+<template data-slot="assembly-tab">
+      <i>1</i><span><b>Lắp ráp</b><small>31 bước theo sách</small></span>
+</template>
+
+<template data-slot="assembly-count">
+          <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 31</span></span>
+</template>
+
+<template data-slot="assembly-canvas">
+              <canvas id="view" aria-label="Mô hình robot gắp chậu trồng cây 3D: kéo để xoay, cuộn để phóng to"></canvas>
+</template>
+
+<template data-slot="assembly-slider">
+                <input id="slider" type="range" min="1" max="31" value="1" aria-label="Chọn bước lắp">
+</template>
+
+<template data-slot="assembly-meter-step">
+          <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 31</small></div><div class="s" id="am-step-s">Robot trồng cây</div></dd></div>
+</template>
+
+<template data-slot="assembly-meter-done">
+          <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 31</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+</template>
+
+<template data-slot="book-image">
+          <img id="book-img" src="assets/lop3-bai12/step-01.jpg" alt="Bước 1: hình sách lắp robot trồng cây">
+</template>
+
+<template data-slot="book-link">
+          <a id="book-pdf" class="link" href="assets/lop3-bai12/step-01.jpg" target="_blank" rel="noopener">Mở hình lớn ↗</a>
+</template>
+
+<template data-slot="creative-intro">
+          <p class="status-text">Sáng tạo cho nhà kính: <b>khung gắp rộng</b> để giữ chậu to, <b>bình tưới</b> nuôi cây, <b>đèn chiếu</b> hỗ trợ quang hợp và <b>pin mặt trời</b> cung cấp năng lượng. Gắn từng phụ kiện lên mô hình 3D.</p>
+</template>
+
+<template data-slot="creative-canvas">
+        <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình robot gắp chậu trồng cây 3D đang sáng tạo"></div>
+</template>
+
+<template data-slot="creative-slot-label">
+        <div class="panel-h"><h2>Tự gắn chi tiết</h2><small>Bốn vị trí nâng cấp</small></div>
+</template>
+
+<template data-slot="creative-result-label">
+        <div class="panel-h"><h2>Thân robot của em sẽ có</h2></div>
+</template>
+
+<template data-slot="sim-upgrade-label">
+            <small id="sim-active-upgrade-badge" class="status-tag">Robot cơ bản</small>
+</template>
+
+<template data-slot="sim-scene">
+          <canvas id="space-scene" aria-label="Sa bàn ngang nhà kính sao Hỏa, robot gắp ba chậu cây non, trồng vào luống và tránh bão bụi"></canvas>
+          <div class="sim-stage" id="sim-stage" aria-label="Robot trồng cây 3D chạy theo chương trình"></div>
+          <p class="scene-idle" id="scene-idle">Xếp chương trình mẫu rồi nhấn Start để robot đến chậu cây</p>
+</template>
+
+<template data-slot="sim-meters">
+        <dl class="meters pro-only">
+          <div class="meter"><dt>Động cơ</dt><dd><div class="v" id="m-speed">0<small>cm/giây</small></div><div class="s" id="m-speed-note">Chưa chạy</div></dd></div>
+          <div class="meter"><dt>Cách chậu</dt><dd><div class="v" id="m-dist">0<small>cm</small></div><div class="s" id="m-dist-note">Cảm biến siêu âm</div></dd></div>
+          <div class="meter"><dt>Đã trồng</dt><dd><div class="v" id="m-water">0<small>/ 3 cây</small></div><div class="s" id="m-water-note">Luống cây sao Hỏa</div></dd></div>
+          <div class="meter"><dt>Thời gian</dt><dd><div class="v" id="m-time">0<small>giây</small></div><div class="s" id="m-time-note">Quan sát bão bụi</div></dd></div>
+        </dl>
+</template>
+
+<template data-slot="sim-calculation">
+        <div class="panel-h"><h2>Tính toán</h2><small>Quãng đường = tốc độ × thời gian · căn khoảng cách để đặt chậu</small></div>
+        <div class="pad calc">
+          <p class="calc-eq" id="calc-eq1"></p>
+          <p class="calc-eq" id="calc-eq2"></p>
+        </div>
+</template>
+
+<template data-slot="sim-hint">
+            <p class="hint"><b>M2:</b> 13 khối theo KHGD, M1 chạy bánh, M2 hạ khung gắp. <b>M3:</b> chỉnh thời gian lùi cho ba chậu vào đúng luống. <b>Nâng cao:</b> dùng Đợi đường trống trước khi chạy để vượt bão bụi.</p>
+</template>

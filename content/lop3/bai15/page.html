@@ -1,0 +1,98 @@
+<title>Robot đẩy xe · Lớp 3 · Bài 15 · Happy STEAM</title>
+<template data-slot="header-copy">
+      <div class="eyebrow">Lớp 3 · Bài 15 · Robot đẩy xe</div>
+      <h1>Robot đẩy xe</h1>
+      <p class="lede pro-only">Lắp robot hai chân và xe hàng 27 bước với một động cơ M1. Lực đẩy từ hai chân đưa xe tiến về phía trước; chỉnh thời gian chạy và lệnh dừng để xe dừng đúng vạch đích.</p>
+</template>
+
+<template data-slot="mission-chips">
+    <span class="chip" id="chip-m1" title="Hoàn thành 27 trang sách hướng dẫn lắp"><i>1</i>Lắp đủ 27 bước</span>
+    <span class="chip" id="chip-m2" title="Start · Bắt đầu lặp · Quay nhanh · Lặp lại"><i>2</i>Đúng 4 khối mẫu</span>
+    <span class="chip" id="chip-m3" title="Thêm khối Chờ và Dừng để xe dừng cách xuất phát 80 cm (sai số 5 cm)"><i>3</i>Dừng đúng vạch 80 cm</span>
+    <span class="chip" id="chip-m4" title="Gắn đầu đẩy rộng, thanh chống, khung chặn hàng hoặc khay chở thùng rồi chạy"><i>4</i>Nâng cấp robot</span>
+    <span class="chip pro-only" id="chip-m5" title="Mỗi lượt có vạch và tải khác nhau; chỉnh lại thời gian rồi chạy lại"><i>5</i>Giao đủ 3 lượt</span>
+</template>
+
+<template data-slot="victory-copy">
+      <p>Em đã lắp robot đẩy xe, điều khiển xe dừng đúng vạch đích và thử cải tiến mô hình để chở hàng tốt hơn.</p>
+      <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM3-15</code></p>
+</template>
+
+<template data-slot="assembly-tab">
+      <i>1</i><span><b>Lắp ráp</b><small>27 bước theo sách</small></span>
+</template>
+
+<template data-slot="assembly-count">
+          <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 27</span></span>
+</template>
+
+<template data-slot="assembly-canvas">
+              <canvas id="view" aria-label="Mô hình robot hai chân đẩy xe hàng 3D: kéo để xoay, cuộn để phóng to"></canvas>
+</template>
+
+<template data-slot="assembly-slider">
+                <input id="slider" type="range" min="1" max="27" value="1" aria-label="Chọn bước lắp">
+</template>
+
+<template data-slot="assembly-meter-step">
+          <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 27</small></div><div class="s" id="am-step-s">Thân robot</div></dd></div>
+</template>
+
+<template data-slot="assembly-meter-done">
+          <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 27</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+</template>
+
+<template data-slot="book-image">
+          <img id="book-img" src="assets/lop3-bai15/step-01.jpg" alt="Bước 1: hình sách lắp robot đẩy xe">
+</template>
+
+<template data-slot="book-link">
+          <a id="book-pdf" class="link" href="assets/lop3-bai15/step-01.jpg" target="_blank" rel="noopener">Mở hình lớn ↗</a>
+</template>
+
+<template data-slot="creative-intro">
+          <p class="status-text">Sáng tạo cho robot đẩy xe: <b>đầu đẩy rộng</b> giữ xe thẳng, <b>thanh chống</b> hai bên xe nặng, <b>khung chặn hàng</b> phía sau và <b>khay chở thùng</b> có chốt giữ. Gắn từng phụ kiện lên mô hình 3D.</p>
+</template>
+
+<template data-slot="creative-canvas">
+        <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình robot hai chân đẩy xe hàng 3D đang sáng tạo"></div>
+</template>
+
+<template data-slot="creative-slot-label">
+        <div class="panel-h"><h2>Tự gắn chi tiết</h2><small>Bốn vị trí nâng cấp</small></div>
+</template>
+
+<template data-slot="creative-result-label">
+        <div class="panel-h"><h2>Robot đẩy xe của em sẽ có</h2></div>
+</template>
+
+<template data-slot="sim-upgrade-label">
+            <small id="sim-active-upgrade-badge" class="status-tag">Robot cơ bản</small>
+</template>
+
+<template data-slot="sim-scene">
+          <canvas id="space-scene" aria-label="Sa bàn ngang đường đua lực đẩy: robot hai chân đẩy xe hàng tới vạch đích"></canvas>
+          <div class="sim-stage" id="sim-stage" aria-label="Robot đẩy xe 3D chạy theo chương trình"></div>
+          <p class="scene-idle" id="scene-idle">Xếp chương trình mẫu rồi nhấn Start để robot đẩy xe</p>
+</template>
+
+<template data-slot="sim-meters">
+        <dl class="meters pro-only">
+          <div class="meter"><dt>Tốc độ xe</dt><dd><div class="v" id="m-speed">0<small>cm/giây</small></div><div class="s" id="m-speed-note">Chưa chạy</div></dd></div>
+          <div class="meter"><dt>Xe đã đi</dt><dd><div class="v" id="m-dist">0<small>cm</small></div><div class="s" id="m-dist-note">Tính từ vạch xuất phát</div></dd></div>
+          <div class="meter"><dt>Vạch đích</dt><dd><div class="v" id="m-line">80<small>cm</small></div><div class="s" id="m-line-note">Chưa tới đích</div></dd></div>
+          <div class="meter"><dt>Thời gian</dt><dd><div class="v" id="m-time">0<small>giây</small></div><div class="s" id="m-time-note">Quãng đường = tốc độ × thời gian</div></dd></div>
+        </dl>
+</template>
+
+<template data-slot="sim-calculation">
+        <div class="panel-h"><h2>Tính toán</h2><small>Quãng đường = tốc độ × thời gian · chậm 10, vừa 15, nhanh 20 cm/giây</small></div>
+        <div class="pad calc">
+          <p class="calc-eq" id="calc-eq1"></p>
+          <p class="calc-eq" id="calc-eq2"></p>
+        </div>
+</template>
+
+<template data-slot="sim-hint">
+            <p class="hint"><b>M2:</b> 4 khối theo sách, hai chân bước đẩy xe. <b>M3:</b> thêm Chờ và Dừng để xe dừng ở 80 cm. <b>Nâng cao:</b> ba lượt có vạch và tải khác nhau, tính lại thời gian mỗi lượt.</p>
+</template>

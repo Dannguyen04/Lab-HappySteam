@@ -1,0 +1,70 @@
+{
+  "title": "Cối xoay nước",
+  "topic": "Nước từ đâu đến?",
+  "model": "cối xoay nước",
+  "sheetName": "Bài 11: Nước từ đâu đến – cối xoay nước",
+  "steps": 31,
+  "assetFolder": "lop1-bai11",
+  "bookAlt": "Hình lắp ráp gốc bước 1 của cối xoay nước",
+  "firstStep": "Cối xoay nước",
+  "assemblyAria": "Mô hình cối xoay nước 3D; kéo để xoay, cuộn để phóng to",
+  "sliderAria": "Chọn bước lắp ráp",
+  "lede": "Tìm hiểu nước sông và cách đưa nước lên bể, lắp mô hình ZM Alpha 330 qua 31 bước, lập trình bánh gầu quay và khám phá sự bay hơi trong vòng tuần hoàn nước.",
+  "victory": "Em đã lắp cối xoay nước, lập trình tiếng nhạc và hình ảnh cho bộ điều khiển, đưa nước vào bể và thử ý tưởng sáng tạo của mình.",
+  "engine": { "class": "WaterEngine", "file": "water-engine.js" },
+  "scene": {
+    "file": "water-scene.js",
+    "aria": "Cảnh sông, bánh gầu, bể nước và ngôi làng; khi chạy nước chảy vào bể",
+    "stage": "Mô hình cối xoay nước 3D theo chương trình",
+    "idle": "Chọn <b>Mẫu trong sách</b>, rồi chạm <b>Start</b> hoặc <b>▶</b> để cối xoay nước hoạt động."
+  },
+  "missions": {
+    "m1": { "tip": "Đánh dấu đủ 31 bước lắp ráp" },
+    "m2": {
+      "chip": "Ghép đúng chương trình",
+      "tip": "Start · Repeat · Trái tim · Melody A · High Speed · Wait 3s · Mặt cười · Melody B · Wait 3s · Repeat End",
+      "title": "Ghép khối giống hàng mẫu",
+      "text": "Đặt khối giống hàng mẫu mờ, chạm Start. Màn hình hiện hình, gầu quay, phát âm thanh A rồi B."
+    },
+    "m3": {
+      "chip": "Đưa nước đầy bể",
+      "tip": "Cho bánh gầu quay để đưa nước sông lên bể",
+      "title": "Đưa nước lên đầy bể",
+      "text": "Cho gầu quay đúng chiều để múc nước lên bể. Bể đầy 100 lít thì dân làng có nước."
+    },
+    "m4": {
+      "chip": "Thử sáng tạo",
+      "tip": "Gắn một gói sáng tạo và cho cối xoay thật sự quay",
+      "title": "Thử cối xoay nước sáng tạo"
+    },
+    "m5": {
+      "pro": true,
+      "chip": "Đầy bể 3 lần",
+      "tip": "Nâng cao: Đưa nước đầy bể 3 lần liên tiếp trong cùng lượt chạy",
+      "title": "Giữ nước cho cả làng",
+      "text": "Nắng làm nước bay hơi 2 lít mỗi giây. Bể 150 lít, đầy 3 lần liền. Tính: vòng/giây × 5 lít − 2 lít."
+    }
+  },
+  "blocks": {
+    "toolbox": ["displayHeart", "displaySmile", "melodyA", "melodyB", "highSpeed", "lowSpeed", "wait", "motorStop", "motorReverse"],
+    "pro": [],
+    "sample": ["start", "repeatStart", "displayHeart", "melodyA", "highSpeed", ["wait", { "duration": 3 }], "displaySmile", "melodyB", ["wait", { "duration": 3 }], "repeatEnd"],
+    "empty": ["start", "repeatStart", "repeatEnd"]
+  },
+  "creative": {
+    "intro": "Nước từ sông được bánh gầu múc lên bể. Thử <b>gầu lớn</b> để múc nhiều hơn, <b>máng dẫn</b> cho nước chảy gọn, <b>mái che</b> giảm bay hơi hoặc thêm <b>bộ lọc</b>. Chọn một gói rồi bấm thử trong sa bàn.",
+    "slots": 4,
+    "slotHint": "4 vị trí quanh cối xoay nước"
+  },
+  "metersProOnly": false,
+  "meters": [
+    { "label": "Bánh gầu", "id": "m-rpm", "value": 0, "unit": "vòng/phút", "note": "Động cơ đang dừng", "noteId": "m-rpm-note" },
+    { "label": "Trong bể", "id": "m-water", "value": 0, "unit": "lít", "note": "Bể chứa 100 lít", "noteId": "m-water-note" },
+    { "label": "Lưu lượng", "id": "m-flow", "value": 0, "unit": "lít/giây", "note": "Nước múc mỗi vòng", "noteId": "m-flow-note" },
+    { "label": "Màn hình", "id": "m-face", "value": "Trống", "note": "Bộ điều khiển" }
+  ],
+  "calcTitle": "Tính lượng nước",
+  "calc": "Vòng quay · lượng nước · bay hơi",
+  "calcProOnly": true,
+  "hint": "<b>NV2:</b> Chọn mẫu để học cách ghép Trái tim → Melody A → High Speed → Wait 3s → Mặt cười → Melody B → Wait 3s → Repeat End. <b>NV3:</b> Để gầu quay đúng chiều đến khi bể đầy. <b>NV4:</b> Gắn gói ở chặng Sáng tạo, đưa vào sa bàn rồi chạy. <span class=\"pro-only\"><b>NV5:</b> Chế độ Nâng cao có bể 150 lít và nắng làm bay hơi; cho bể đầy 3 lần liên tiếp trong một lượt.</span>"
+}

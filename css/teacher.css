@@ -1,0 +1,36 @@
+/* Trang giáo viên (S-05): thẻ đăng nhập, họ tên, danh sách lớp. */
+.teacher [hidden] { display: none !important; }
+.teacher { max-width: 1040px; }
+.t-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 10px; }
+.t-card h2 { margin: 0; font: 700 18px/1.2 var(--f-display); }
+.t-card form { display: grid; gap: 8px; }
+.t-card label { font-weight: 600; font-size: 14px; }
+.t-card input, .t-card select, .t-card textarea { border: 1px solid var(--line); background: var(--sunk); border-radius: 8px; padding: 10px 12px; width: 100%; min-width: 0; }
+.t-card textarea { resize: vertical; }
+.t-hint { margin: 0; font-size: 13px; color: var(--muted); }
+.t-msg { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--accent-soft); }
+.t-msg.is-error { background: var(--bad-soft); color: var(--bad); }
+.t-msg.is-ok { background: var(--ok-soft); color: var(--ok); }
+.t-who { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.t-classes { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.t-classes li { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; background: var(--sunk); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.t-classes .t-meta { color: var(--muted); font-size: 13px; }
+.t-classes li > div:first-child { display: grid; gap: 3px; }
+.t-actions, .t-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.t-subcard { display: grid; gap: 12px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); padding: clamp(16px, 3vw, 24px); }
+.t-subcard h2, .t-subcard h3 { margin: 0; font-family: var(--f-display); }
+.t-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.t-columns label { display: grid; gap: 5px; }
+.t-roster-editor { display: grid; gap: 7px; }
+.t-student-row { display: grid; grid-template-columns: 92px minmax(0, 1fr) auto; gap: 8px; }
+.t-student-row select { font-size: 24px; grid-column: 1; grid-row: 1; }
+.t-student-row input { grid-column: 2; grid-row: 1; }
+.t-student-row button { grid-column: 3; grid-row: 1; }
+.t-student-row .t-name-hint { grid-column: 2 / -1; grid-row: 2; color: var(--bad); font-size: 12px; }
+.t-student-row input[aria-invalid="true"] { outline: 2px solid var(--bad); }
+.t-projector { background: var(--stage); text-align: center; }
+.t-join-code { font: 700 clamp(68px, 17vw, 150px)/1 var(--f-mono); letter-spacing: .12em; font-variant-numeric: tabular-nums; color: var(--ink); padding: 16px; background: var(--surface); border: 3px dashed var(--accent); border-radius: 16px; }
+.t-device-list { padding: 0; margin: 0; list-style: none; display: grid; gap: 8px; text-align: left; }
+.t-device-list li { display: flex; align-items: center; flex-wrap: wrap; justify-content: space-between; gap: 10px; background: var(--surface); border: 1px solid var(--line); padding: 10px; border-radius: 10px; }
+.t-projector .t-hint { font-size: 14px; }
+@media (max-width: 560px) { .t-columns { grid-template-columns: 1fr; } .t-student-row { grid-template-columns: 74px minmax(0, 1fr) auto; } .t-classes li .btn { min-height: 44px; } }

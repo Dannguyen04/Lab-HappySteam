@@ -1,4 +1,4 @@
-// Chạy: node tests/bai03.test.js – dữ liệu 3D và bộ mô phỏng Bài 3 (Robot thám hiểm Milo), chỉ dùng Node.js built-in.
+// Chạy: node tests/lop1-bai03.test.js – dữ liệu 3D và bộ mô phỏng Bài 3 qua LessonEngine chung.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -32,6 +32,7 @@ assert.equal(model.drive.output.radius, 0.025, 'Bán kính lốp 25 mm');
 for (const k of ['bin', 'solar', 'antenna', 'arm']) assert.ok(model.creative[k].length, 'Thiếu hình gói ' + k);
 for (let i = 0; i < 40; i++) assert.equal(model.instances[i].step, plan.byPart.get(i).step);
 
+vm.runInNewContext(fs.readFileSync(path.join(root, 'js/lesson-engine.js'), 'utf8'), context);
 vm.runInNewContext(fs.readFileSync(path.join(root, 'js/bai03/rover-engine.js'), 'utf8'), context);
 const Rover = context.window.RoverEngine;
 assert.ok(Math.abs(Rover.SPEED(8) - 39.27) < 0.01, 'Mức 8 ≈ 39,3 cm/giây');

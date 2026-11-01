@@ -17,7 +17,7 @@
     'BP-7024': 'Bạc nửa vàng (đèn)'
   };
   const FEATURES = {
-    float: { text: 'Phao thăng bằng hai bên: chịu sóng gấp đôi lâu, khó lật khi qua bão (Nâng cao)' },
+    float: { text: 'Phao thăng bằng hai bên: chịu sóng lâu gấp đôi, khó lật khi qua bão (Nâng cao)' },
     light: { text: 'Đèn dẫn đường: thấy đá ngầm từ xa, qua bãi đá được ở tốc độ Medium' },
     sail: { text: 'Buồm thêm: hứng gió, thuyền nhanh hơn 25% khi trời quang' }
   };
@@ -90,7 +90,7 @@
     missions: { core: ['m1', 'm2', 'm3', 'm4'], pro: ['m5'] },
     cards: {
       m2: { n: 2, title: 'Ghép khối giống hàng mẫu', text: 'Ghép đúng chương trình mẫu: M1 chạy chậm → vừa → nhanh, mỗi lần chờ 3 giây, lặp lại. Chạy hết một vòng lặp.' },
-      m3: { n: 3, title: 'Vượt biển, cập cảng', text: 'Cho thuyền chạy nhanh ngoài khơi, nhưng chạy chậm (Low) khi qua bãi đá ngầm. Tới cảng ở 30 m mà không va đá!' },
+      m3: { n: 3, title: 'Vượt biển, cập cảng', text: 'Cho thuyền chạy nhanh ngoài khơi, chạy chậm (Low) khi qua bãi đá ngầm. Tới cảng ở 30 m mà không va đá! Nâng cao có thêm bão từ giây 14: chạy High trong bão sẽ lật, hãy chạy Low hoặc thêm khối Wait chờ bão tan.' },
       m4: { n: 4, title: 'Thử thuyền sáng tạo', text: 'Gắn thêm chi tiết ở chặng Sáng tạo, rồi quay lại chạy chương trình.', go: ['creative', 'Đến xưởng sáng tạo'] },
       m5: { n: 5, title: 'Vượt bão ra khơi', text: 'Bão kéo tới theo lượt: gió đẩy lùi thuyền, chạy nhanh sẽ bị sóng làm lật. Chọn tốc độ hợp lý hoặc dừng chờ bão tan, rồi cập cảng.' },
       m1: { n: 1, title: 'Lắp xong thuyền', text: 'Bấm “Đã lắp xong bước này” ở cả 27 bước của chặng Lắp ráp.', go: ['assembly', 'Đến chặng lắp ráp'] }

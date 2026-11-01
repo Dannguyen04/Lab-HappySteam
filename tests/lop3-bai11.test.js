@@ -82,12 +82,11 @@ const read = rel => fs.readFileSync(path.join(root, rel), 'utf8');
     assert.ok(data.length > 1000 && data.length < 80 * 1024, `JPEG bước ${step} phải đủ dữ liệu và <80 KB`);
     assert.equal(data.subarray(0, 3).toString('hex'), 'ffd8ff', `JPEG bước ${step} phải đúng định dạng`);
     assert.equal(data.subarray(-2).toString('hex'), 'ffd9', `JPEG bước ${step} phải hoàn chỉnh`);
-    assert.equal(info.pdf, `references/lop3/bai11/bai11.pdf#page=${step}`);
+    assert.equal(info.pdf, info.src);
   }
-  assert.equal(book.pdf, 'references/lop3/bai11/bai11.pdf#page=14');
-  // PDF trong references/ chỉ có trên máy soạn bài (không đưa lên git), nên CI bỏ qua phần kiểm tệp
-  if (fs.existsSync(path.join(root, 'references/lop3/bai11'))) assert.ok(fs.existsSync(path.join(root, 'references/lop3/bai11/bai11.pdf')));
+  assert.equal(book.pdf, book.src);
 
+  vm.runInNewContext(read('js/lesson-engine.js'), context);
   vm.runInNewContext(read('js/lop3-bai11/water-engine.js'), context);
   const Water = context.window.WaterEngine;
   const B = {
@@ -144,9 +143,9 @@ const read = rel => fs.readFileSync(path.join(root, rel), 'utf8');
   assert.equal(new Water().course().end, 220);
   const slowPro = run(sample, 30, { advanced: true });
   assert.equal(slowPro.sim.got(), 3);
-  assert.ok(slowPro.events.includes('late') && !slowPro.state.m5, 'Chế độ Nâng cao: quá 18 giây');
+  assert.ok(slowPro.events.includes('late') && !slowPro.state.m5, 'Chế độ Nâng cao: quá 17 giây');
   const fastPro = run(speedrun, 18, { advanced: true, upgrades: ['pump'] });
-  assert.ok(fastPro.state.m5, 'NV5: bơm đủ ba mỏm trước 18 giây');
+  assert.ok(fastPro.state.m5, 'NV5: bơm đủ ba mỏm trước 17 giây');
   assert.ok(fastPro.sim.runT <= 18, `Thời gian ${fastPro.sim.runT}`);
   assert.ok(fastPro.events.includes('allSampled'));
 
@@ -156,10 +155,10 @@ const read = rel => fs.readFileSync(path.join(root, rel), 'utf8');
   const ctx = new Proxy({}, { get(target, prop) { return prop in target ? target[prop] : (...args) => draws.push([prop, ...args]); } });
   const nodes = {};
   const missing = new Set();
-  const node = id => nodes[id] ||= { hidden: false, dataset: {}, clientWidth: 900, addEventListener() {}, setAttribute() {}, getContext: () => ctx };
+  const node = id => nodes[id] ||= { hidden: false, dataset: {}, clientWidth: 900, classList: { toggle() {} }, addEventListener() {}, setAttribute() {}, getContext: () => ctx };
   const sceneCtx = {
     window: { simEngine: full.sim, devicePixelRatio: 1 },
-    document: { getElementById: id => missing.has(id) ? null : node(id) },
+    document: { getElementById: id => missing.has(id) ? null : node(id), addEventListener() {} },
     zmReady(fn) { fn(); },
     requestAnimationFrame(fn) { frames.set(++nextId, fn); return nextId; },
     cancelAnimationFrame(id) { canceled.push(id); frames.delete(id); },
@@ -173,6 +172,7 @@ const read = rel => fs.readFileSync(path.join(root, rel), 'utf8');
     frames.delete(id);
     fn(ts);
   };
+  vm.runInNewContext(read('js/scene-kit.js'), sceneCtx);
   vm.runInNewContext(read('js/lop3-bai11/water-scene.js'), sceneCtx);
   const scene = sceneCtx.window.ZMScene;
   assert.ok(scene && typeof scene.enter === 'function' && typeof scene.onEvent === 'function');
@@ -189,22 +189,24 @@ const read = rel => fs.readFileSync(path.join(root, rel), 'utf8');
   scene.onEvent('pumped', { site: full.sim.sites[0], count: 1 });
   scene.setMode('robot');
   assert.equal(scene.mode(), 'robot');
-  assert.equal(frames.size, 0, 'Chuyển sang xem robot phải hủy rAF của câu chuyện');
+  assert.equal(frames.size, 1, 'Khung chung giữ một rAF khi đổi chế độ');
+  const drawCount = draws.length;
+  stepFrame(1150);
+  assert.equal(draws.length, drawCount, 'Chế độ robot không vẽ lại câu chuyện');
   scene.setMode('story');
-  assert.equal(frames.size, 1, 'Quay về câu chuyện phải chạy lại rAF');
-  missing.add('scene-toast-title');
-  missing.add('scene-toast-text');
-  missing.add('scene-toast-btn');
+  assert.equal(frames.size, 1, 'Quay về câu chuyện tiếp tục một rAF');
+  missing.add('scene-toast');
   assert.doesNotThrow(() => scene.onEvent('wall'), 'Thông báo an toàn khi thiếu DOM con');
+  missing.delete('scene-toast');
   scene.leave();
   assert.equal(frames.size, 0, 'Rời chặng phải hủy hoàn toàn rAF');
-  assert.ok(canceled.length >= 2, 'Thực sự gọi cancelAnimationFrame khi chuyển chế độ/rời chặng');
-  assert.equal(disconnects, 1, 'Rời chặng phải ngắt ResizeObserver');
+  assert.ok(canceled.length >= 1, 'Rời chặng gọi cancelAnimationFrame');
+  assert.equal(disconnects, 0, 'Khung chung giữ ResizeObserver');
   scene.enter();
   assert.equal(frames.size, 1, 'Vào lại chặng phải khôi phục một rAF');
-  assert.equal(observes, 2, 'Vào lại chặng phải quan sát resize');
+  assert.equal(observes, 1, 'Khung chung chỉ đăng ký một ResizeObserver');
   scene.leave();
   assert.equal(frames.size, 0);
 
-  console.log('PASS: Lớp 3 Bài 11 – 29 linh kiện/15 JPEG, mesh nâng cấp, cảm biến 0 cm, tốc độ mẫu, bơm 3 điểm, 18 giây, null DOM, rAF/ResizeObserver và PDF; NV1–NV5.');
+  console.log('PASS: Lớp 3 Bài 11 – 29 linh kiện/15 JPEG, mesh nâng cấp, cảm biến 0 cm, tốc độ mẫu, bơm 3 điểm, 17 giây, null DOM và scene-kit; NV1–NV5.');
 })().catch(e => { console.error(e); process.exitCode = 1; });

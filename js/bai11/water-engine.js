@@ -22,105 +22,65 @@
   const SPEED = { high: 8, medium: 6, low: 4 };
   const rpmOf = p => (MAX_RPM * p) / 8;
 
-  // Khối Màn hình có hai kiểu: trái tim và mặt cười (khối dùng chung chỉ có một kiểu mặc định)
-  if (window.BLOCK_TEMPLATES) {
-    window.BLOCK_TEMPLATES.displayHeart = { type: 'display', name: 'Trái tim', icon: 'heart', color: 'display', label: 'Hiện trái tim' };
-    window.BLOCK_TEMPLATES.displaySmile = { type: 'display', name: 'Mặt cười', icon: 'smile', color: 'display', label: 'Hiện mặt cười' };
-  }
-
-  class WaterEngine {
+  // Chỉ trạng thái vật lý và các khác biệt hành vi của Cối xoay nước nằm ở lớp con.
+  class WaterEngine extends window.LessonEngine {
     constructor() {
-      this.prog = [];
-      this.logs = [];
-      this.t = 0;
-      this.upgrades = new Set();
-      this.advanced = false;
-      this.assemblyDone = false;
+      super({
+        sample: SAMPLE,
+        sig,
+        levels: SPEED,
+        melodyTime: MELODY_T,
+        orphanEnd: 'stop',
+        labels: { scoop: 'Gầu to', pipe: 'Máng dẫn nước', cover: 'Mái che bể', filter: 'Bộ lọc nước' },
+        baseLabel: 'Cối xoay nước cơ bản',
+        core: ['m1', 'm2', 'm3', 'm4']
+      });
       this.done = { m2: false, m3: false };
-      this.proFills = 0; // NV5: số lần đầy bể ở chế độ Nâng cao
+      this.proFills = 0;
       this.lastRun = null;
-      this.loopActive = true;
-      this.rafId = null;
-      this.reset();
+      // Trường tạm của khung chung không thuộc trạng thái công khai của bài cũ.
+      Object.defineProperty(this, 'blkDur', { value: 0, writable: true, configurable: true, enumerable: false });
+      // Trace ghi JSON của trạng thái theo thứ tự thuộc tính cũ.
+      const keys = ['t', 'advanced', 'assemblyDone', 'proFills', 'loopActive', 'running',
+        'pc', 'entered', 'blkT', 'motorOn', 'power', 'dir', 'rev', 'water', 'runT',
+        'face', 'note', 'drain', 'wrongWay', 'evaporated', 'upgradeRun'];
+      const values = keys.map(key => this[key]);
+      keys.forEach(key => delete this[key]);
+      keys.forEach((key, i) => { this[key] = values[i]; });
     }
-    init() {
-      this.startLoop();
-    }
-    resizeCanvas() {}
-
-    reset() {
-      this.running = false;
-      this.pc = 0;
-      this.entered = false;
-      this.blkT = 0;
-      this.motorOn = false;
+    resetState() {
       this.power = 8;
-      this.dir = 1; // 1: đúng chiều (gầu múc nước lên), -1: ngược
-      this.rev = 0; // số vòng gầu
-      this.water = 0; // lít trong bể
-      this.runT = 0;
-      this.face = null; // 'heart' | 'smile' | null: hình trên màn hình M5
-      this.note = null; // 'A' | 'B' | null: âm thanh đang phát
-      this.drain = 0; // giây còn lại của lúc dân làng dùng nước
+      this.rev = 0;
+      this.water = 0;
+      this.face = null;
+      this.note = null;
+      this.drain = 0;
       this.wrongWay = false;
       this.evaporated = 0;
-      this.upgradeRun = false; // NV4 cần chuyển động thật trong lượt chạy hiện tại
-      if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
-    }
-
-    emit(type, data) {
-      if (this.onEvent) this.onEvent(type, data);
-    }
-    log(kind, text) {
-      this.logs.unshift({ time: this.runT.toFixed(1) + 's', kind, text });
-      if (this.logs.length > 8) this.logs.length = 8;
-      const el = document.getElementById('sim-log-list');
-      if (el)
-        el.innerHTML = this.logs
-          .map(e => `<li class="log-item" data-kind="${e.kind}"><time class="log-time">${e.time}</time><span class="log-dot"></span><span class="log-text">${e.text}</span></li>`)
-          .join('');
-    }
-
-    setProgram(blocks) {
-      this.prog = blocks || [];
-      this.stop(true);
-      this.reset();
+      this.upgradeRun = false;
+      // Bài này không có cảm biến chạm; giữ đúng các trường trạng thái trước khi chuyển.
+      delete this.pressed;
+      delete this.pressT;
+      delete this.waitingPress;
     }
     start() {
-      this.reset();
-      this.proFills = 0; // NV5 cần ba lần đầy liên tiếp trong cùng một lượt chạy
-      this.running = true;
-      if (window.SFX) window.SFX.init();
-      this.log('info', 'Bắt đầu chạy chương trình.');
-      this.emit('start');
+      this.proFills = 0;
+      super.start();
     }
+    // Nút chạm của khung chung không được sử dụng trong chương trình Bài 11.
+    press() {}
     stop(silent) {
-      const was = this.running;
-      this.running = false;
-      this.motorOn = false;
+      super.stop(silent);
       this.note = null;
-      if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
-      if (was && !silent) {
-        this.log('info', 'Đã dừng chương trình.');
-        this.emit('stop');
-      }
-    }
-
-    setAssemblyDone(done) {
-      if (this.assemblyDone === !!done) return;
-      this.assemblyDone = !!done;
-      this.checkMissions();
     }
     setUpgrades(list) {
-      this.upgrades = new Set(list || []);
-      this.upgradeRun = false;
-      const labels = { scoop: 'Gầu to', pipe: 'Máng dẫn nước', cover: 'Mái che bể', filter: 'Bộ lọc nước' };
-      const badge = document.getElementById('sim-active-upgrade-badge');
-      if (badge) badge.textContent = this.upgrades.size ? [...this.upgrades].map(t => labels[t]).join(' · ') : 'Cối xoay nước cơ bản';
-      this.log('ok', this.upgrades.size ? 'Đã gắn: ' + [...this.upgrades].map(t => labels[t]).join(', ') : 'Cối xoay nước cơ bản (chưa gắn thêm)');
-    }
-    has(t) {
-      return this.upgrades.has(t);
+      super.setUpgrades(list);
+      if (!this.upgrades.size && this.logs.length) {
+        this.logs[0].text = 'Cối xoay nước cơ bản (chưa gắn thêm)';
+        const el = document.getElementById('sim-log-list');
+        const line = el?.querySelector('.log-text');
+        if (line) line.textContent = this.logs[0].text;
+      }
     }
     setAdvanced(on) {
       on = !!on;
@@ -150,94 +110,30 @@
     rpm() {
       return this.motorOn ? rpmOf(this.power) * GEAR : 0;
     }
-    matchesSample() {
-      return this.prog.length === SAMPLE.length && this.prog.every((b, i) => sig(b) === SAMPLE[i]);
-    }
     // Sa bàn 3D: bánh gầu quay theo số vòng (chiều ngược khi đổi chiều động cơ)
     pose3d() {
       return { output: this.rev * Math.PI * 2, motor: 0 };
     }
 
-    // ---------- chạy chương trình ----------
-    advance(dt) {
-      if (!this.running) return;
-      let budget = dt,
-        guard = 0;
-      while (this.running && guard++ < 40) {
-        if (this.pc >= this.prog.length) {
-          this.finish();
-          break;
-        }
-        const b = this.prog[this.pc];
-        if (b.type === 'start' || b.type === 'repeatStart') {
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'repeatEnd') {
-          if (this.matchesSample() && !this.done.m2) {
-            this.done.m2 = true;
-            this.log('ok', 'Chương trình mẫu chạy đúng một vòng: tim → âm A → quay 3 giây → mặt cười → âm B → quay 3 giây.');
-            this.checkMissions();
-          }
-          const r = this.prog.findIndex(x => x.type === 'repeatStart');
-          this.pc = r < 0 ? this.prog.length : r + 1;
-          // vòng lặp không có khối nào tốn thời gian: nhường khung hình sau
-          if (r >= 0 && !this.prog.slice(r + 1).some(x => x.type === 'wait' || x.type === 'melody')) break;
-          continue;
-        }
-        if (b.type === 'motor' || b.type === 'motor_power') {
-          this.power = b.type === 'motor_power' ? Math.max(1, Math.min(8, b.power || 8)) : SPEED[b.speed] || 8;
-          this.motorOn = true;
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'motor_reverse') {
-          this.dir = -this.dir;
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'stop') {
-          this.motorOn = false;
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'display') {
-          this.face = b.icon || 'smile';
-          this.emit('face', this.face);
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'wait' || b.type === 'melody') {
-          if (!this.entered) {
-            this.entered = true;
-            this.blkT = 0;
-            if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
-            if (b.type === 'melody') {
-              this.note = b.tune;
-              if (window.SFX) window.SFX.melody(b.tune);
-              this.emit('melody', b.tune);
-            }
-          }
-          const dur = b.type === 'melody' ? MELODY_T : b.duration || 3;
-          const need = dur - this.blkT;
-          if (budget < need) {
-            this.blkT += budget;
-            this.integrate(budget);
-            budget = 0;
-            break;
-          }
-          this.integrate(need);
-          budget -= need;
-          this.entered = false;
-          if (b.type === 'melody') this.note = null;
-          this.pc++;
-          continue;
-        }
-        this.pc++; // khối không dùng trong bài này: bỏ qua
+    onLoopEnd() {
+      if (this.matchesSample() && !this.done.m2) {
+        this.done.m2 = true;
+        this.log('ok', 'Chương trình mẫu chạy đúng một vòng: tim → âm A → quay 3 giây → mặt cười → âm B → quay 3 giây.');
+        this.checkMissions();
       }
-      if (budget > 0 && this.running) this.integrate(budget);
     }
-
+    onInstant(b) {
+      if (b.type !== 'display') return false;
+      this.note = null;
+      this.face = b.icon || 'smile';
+      this.emit('face', this.face);
+      return true;
+    }
+    enterBlock(b) {
+      if (b.type === 'melody') this.note = b.tune;
+      else this.note = null;
+      return super.enterBlock(b);
+    }
     integrate(dt) {
       if (dt <= 0) return;
       this.runT += dt;
@@ -289,7 +185,7 @@
       }
     }
 
-    // Hết chương trình: động cơ dừng
+    // Giữ thứ tự sự kiện partial → nhật ký → end của bài trước.
     finish() {
       this.running = false;
       this.motorOn = false;
@@ -300,18 +196,9 @@
       this.emit('end');
       this.checkMissions();
     }
-
-    checkMissions() {
-      const m1 = this.assemblyDone;
-      const m4 = this.upgrades.size > 0 && !!this.upgradeRun;
-      if (this.onMissionUpdate)
-        this.onMissionUpdate({
-          m1, m2: this.done.m2, m3: this.done.m3, m4, m5: this.proFills >= 3,
-          allDone: m1 && this.done.m2 && this.done.m3 && m4,
-          upgrades: [...this.upgrades], lastRun: this.lastRun, fills: this.proFills
-        });
+    missionExtra() {
+      return { m5: this.proFills >= 3, upgrades: [...this.upgrades], lastRun: this.lastRun, fills: this.proFills };
     }
-
     updateUI() {
       const pill = document.getElementById('sim-status-pill');
       if (pill) {
@@ -342,28 +229,6 @@
       if (c2) c2.textContent = `Ví dụ mức 8: 150 ÷ 60 = 2,5 vòng/giây → ${vi(2.5 * this.perRev())} lít/giây. Bể ${this.cap()} lít đầy sau khoảng ${vi(this.cap() / (2.5 * this.perRev() - this.evapRate()))} giây.`;
     }
 
-    startLoop() {
-      cancelAnimationFrame(this.rafId);
-      this.loopActive = true;
-      let last = performance.now();
-      const loop = now => {
-        if (!this.loopActive) return;
-        const dt = Math.min(0.05, (now - last) / 1000);
-        last = now;
-        this.t += dt;
-        this.advance(dt);
-        this.updateUI();
-        this.rafId = requestAnimationFrame(loop);
-      };
-      this.rafId = requestAnimationFrame(loop);
-    }
-    pauseLoop() {
-      this.loopActive = false;
-      cancelAnimationFrame(this.rafId);
-    }
-    resumeLoop() {
-      if (!this.loopActive) this.startLoop();
-    }
   }
 
   WaterEngine.SPEED = rpmOf;

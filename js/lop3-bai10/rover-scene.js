@@ -1,27 +1,12 @@
-// Sa bàn Lớp 3 · Bài 10: đường thám hiểm 170 cm, ba mẫu đá, cảm biến sóng âm và bão bụi.
-// Dùng window.MarsArt (art.js tải tùy chọn) với hình vẽ dự phòng để trang vẫn hoạt động khi thiếu art.js.
+// Sa bàn Lớp 3 · Bài 10: đường thám hiểm 170 cm, ba mẫu đá, cảm biến siêu âm và bão bụi.
+// Dùng window.MarsArt (art.js tùy chọn); khung cảnh và sự kiện do js/scene-kit.js đảm nhận.
 (function () {
   'use strict';
 
   const W = 900, H = 560, GROUND = 430;
   const START_X = 138, END_X = 818;
-  const $ = id => document.getElementById(id);
   const toX = cm => START_X + (END_X - START_X) * cm / 170;
-  let canvas, ctx, mode = 'story', active = false, last = 0, toastTimer = 0, rafId = 0;
-  let sizeObserver = null;
-  const fx = { samples: [], shakeUntil: 0 };
-
-  function label(text, x, y, color = '#fff', size = 17) {
-    ctx.save();
-    ctx.font = `700 ${size}px "Be Vietnam Pro","Segoe UI",sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = '#40251e';
-    ctx.strokeText(text, x, y);
-    ctx.fillStyle = color;
-    ctx.fillText(text, x, y);
-    ctx.restore();
-  }
+  const fx = { samples: [] };
 
   const Simple = {
     drawBackground(c, t, weather) {
@@ -96,31 +81,20 @@
       c.restore();
     }
   };
-  function draw(name, ...args) {
+  function drawArt(ctx, name, ...args) {
     const a = window.MarsArt || window.Lop3Bai10Art || window.RoverArt;
     const fn = a && typeof a[name] === 'function' ? a[name] : Simple[name];
     if (fn) fn(ctx, ...args);
   }
 
-  function resize() {
-    if (!canvas) return;
-    const width = canvas.clientWidth || W, dpr = Math.min(2, window.devicePixelRatio || 1);
-    canvas.width = Math.round(width * dpr);
-    canvas.height = Math.round(width * H / W * dpr);
-  }
-  function frame(ts) {
-    rafId = 0;
-    if (!active) return;
-    rafId = requestAnimationFrame(frame);
-    const sim = window.simEngine;
-    if (!sim || !ctx || mode !== 'story' || ts - last < 25) return;
-    last = ts;
-    const t = ts / 1000, weather = sim.weather(), storm = weather.kind === 'storm';
-    ctx.setTransform(canvas.width / W, 0, 0, canvas.height / H, 0, 0);
+  window.ZMSceneKit.create({
+    W, H,
+    idleHidden: sim => sim.running || sim.got() > 0 || sim.crashed,
+    draw(ctx, t, sim, kit) {
+    const weather = sim.weather(), storm = weather.kind === 'storm';
     ctx.clearRect(0, 0, W, H);
-    if (t < fx.shakeUntil) ctx.translate(Math.sin(t * 75) * 5, 0);
-    draw('drawBackground', t, weather.kind);
-    draw('drawStation', 86, GROUND);
+    drawArt(ctx, 'drawBackground', t, weather.kind);
+    drawArt(ctx, 'drawStation', 86, GROUND);
 
     ctx.save();
     ctx.strokeStyle = 'rgba(255,245,215,.72)'; ctx.lineWidth = 3; ctx.setLineDash([8, 12]);
@@ -130,133 +104,63 @@
     sim.rocks.forEach((r, i) => {
       const distance = r.x - sim.x;
       const scanning = !r.got && !sim.blind() && !sim.motor.on && Math.abs(sim.v) < .5 && distance > 3 && distance <= sim.reach();
-      draw('drawRock', toX(r.x), GROUND, rockTypes[i], {
+      drawArt(ctx, 'drawRock', toX(r.x), GROUND, rockTypes[i], {
         name: r.name, got: r.got, scanning, scanProgress: Math.min(1, r.scanT / 2)
       });
-      label(r.got ? `✓ Mẫu ${i + 1}` : `Mẫu ${i + 1}`, toX(r.x), GROUND + 43, r.got ? '#b8ffcb' : '#fff', 15);
+      kit.label(r.got ? `✓ Mẫu ${i + 1}` : `Mẫu ${i + 1}`, toX(r.x), GROUND + 43, r.got ? '#b8ffcb' : '#fff', 15);
     });
 
     const rx = toX(sim.x);
-    draw('drawSensorWaves', rx + 36, GROUND - 30, sim.reach() * (END_X - START_X) / 170,
+    drawArt(ctx, 'drawSensorWaves', rx + 36, GROUND - 30, sim.reach() * (END_X - START_X) / 170,
       sim.running && !sim.crashed && !sim.blind(), sim.reading() !== null, t);
-    draw('drawRover', rx, GROUND, {
+    drawArt(ctx, 'drawRover', rx, GROUND, {
       wheel: sim.wheel, dish: sim.has('dish'), lamp: sim.has('lamp'), wheels: sim.has('wheels'),
       eyes: sim.reading() !== null, shake: sim.crashed ? 1 : 0,
       stuck: sim.crashWhy === 'stuck' ? 1 : 0, t
     });
 
-    if (storm) draw('drawStorm', t, 0.75);
+    if (storm) drawArt(ctx, 'drawStorm', t, 0.75);
     ctx.fillStyle = 'rgba(28,34,43,.82)'; ctx.fillRect(12, 12, 245, 72);
-    label(`Đã thu ${sim.got()}/3 mẫu đá`, 135, 42, '#fff', 19);
-    label(`Vị trí: ${sim.x.toFixed(0)} / 170 cm`, 135, 66, '#b9ecf7', 14);
+    kit.label(`Đã thu ${sim.got()}/3 mẫu đá`, 135, 42, '#fff', 19);
+    kit.label(`Vị trí: ${sim.x.toFixed(0)} / 170 cm`, 135, 66, '#b9ecf7', 14);
     if (sim.advanced) {
       ctx.fillStyle = storm ? 'rgba(105,28,17,.9)' : 'rgba(37,70,63,.85)';
       ctx.fillRect(303, 14, 300, 44);
-      label(storm ? 'BÃO BỤI: DỪNG XE!' : 'Trời quang trên sao Hỏa', 453, 42, '#fff', 18);
+      kit.label(storm ? 'BÃO BỤI: DỪNG XE!' : 'Trời quang trên sao Hỏa', 453, 42, '#fff', 18);
     }
-    if (sim.crashed) label(sim.crashWhy === 'stuck' ? 'Xe lún cát! Hãy thử lại' : 'Xe chạm đá! Hãy thử lại', 448, 110, '#ffe39b', 22);
+    if (sim.crashed) kit.label(sim.crashWhy === 'stuck' ? 'Xe lún cát! Hãy thử lại' : 'Xe chạm đá! Hãy thử lại', 448, 110, '#ffe39b', 22);
     fx.samples = fx.samples.filter(s => t - s.t0 < 1.5);
-    for (const s of fx.samples) label('✓ ĐÃ THU MẪU!', s.x, GROUND - 86 - (t - s.t0) * 18, '#c7ffd1', 20);
-    const idle = $('scene-idle');
-    if (idle) idle.hidden = sim.running || sim.got() > 0 || sim.crashed;
-  }
-
-  function toast(kind, title, message, action) {
-    const box = $('scene-toast');
-    if (!box) return;
-    box.dataset.k = kind;
-    const heading = $('scene-toast-title'), text = $('scene-toast-text');
-    if (heading) heading.textContent = title;
-    if (text) text.textContent = message;
-    const btn = $('scene-toast-btn');
-    if (btn) btn.hidden = !action;
-    if (btn && action) {
-      btn.textContent = 'Thử lại';
-      btn.onclick = () => { box.hidden = true; window.simEngine?.start(); };
-    } else if (btn) {
-      btn.onclick = null;
-    }
-    box.hidden = false;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => { if (active) box.hidden = true; toastTimer = 0; }, action ? 6000 : 3500);
-  }
-  function onEvent(type, data) {
-    const t = performance.now() / 1000;
+    for (const s of fx.samples) kit.label('✓ ĐÃ THU MẪU!', s.x, GROUND - 86 - (t - s.t0) * 18, '#c7ffd1', 20);
+    },
+    onEvent(type, data, kit) {
     if (type === 'start') {
-      const box = $('scene-toast'); if (box) box.hidden = true;
       fx.samples.length = 0;
     } else if (type === 'seen') {
       if (window.SFX) window.SFX.tone(660, .07);
     } else if (type === 'sample') {
-      fx.samples.push({ x: toX(data.rock.x), t0: t });
+      fx.samples.push({ x: toX(data.rock.x), t0: performance.now() / 1000 });
       if (window.SFX) window.SFX.ding();
-      toast('ok', `Đã thu mẫu ${data.count}/3!`, `Robot đứng yên để lấy ${data.rock.name}.`);
+      kit.toast('ok', `Đã thu mẫu ${data.count}/3!`, `Robot đứng yên để lấy ${data.rock.name}.`);
     } else if (type === 'allSaved') {
-      toast('ok', 'Đã thu đủ 3 mẫu đá!', data.storm ? 'Robot hoàn thành nhiệm vụ sau bão bụi.' : `Hoàn thành sau ${data.secs.toFixed(1)} giây.`);
+      kit.toast('ok', 'Đã thu đủ 3 mẫu đá!', data.storm ? 'Robot hoàn thành nhiệm vụ sau bão bụi.' : `Hoàn thành sau ${data.secs.toFixed(1)} giây.`);
     } else if (type === 'weather' && data.kind === 'storm') {
-      toast('warn', 'Bão bụi đang đến!', 'Dừng xe và chờ bão tan; đèn pha giúp cảm biến tiếp tục dò đá.');
+      kit.toast('warn', 'Bão bụi đang đến!', 'Dừng xe và chờ bão tan; đèn pha giúp cảm biến tiếp tục dò đá.');
     } else if (type === 'weather' && data.kind === 'clear') {
-      toast('ok', 'Bão đã tan', 'Xe có thể tiếp tục thám hiểm.');
+      kit.toast('ok', 'Bão đã tan', 'Xe có thể tiếp tục thám hiểm.');
     } else if (type === 'crash') {
-      fx.shakeUntil = t + .65;
+      kit.shake(.65);
       if (window.SFX) window.SFX.tone(150, .3);
-      toast('bad', data === 'stuck' ? 'Xe bị lún cát!' : 'Xe va vào đá!',
-        data === 'stuck' ? 'Chờ bão bụi tan hoặc thử bánh gai.' : 'Hãy dùng Chờ vật cản rồi Stop để phanh.', true);
+      kit.toast('bad', data === 'stuck' ? 'Xe bị lún cát!' : 'Xe va vào đá!',
+        data === 'stuck' ? 'Chờ bão bụi tan hoặc thử bánh gai.' : 'Hãy dùng Chờ vật cản rồi Stop để phanh.',
+        { label: 'Thử lại', run: () => window.simEngine?.start() });
     } else if (type === 'sampleDone') {
-      toast('ok', 'Đúng chương trình mẫu!', 'Robot đã hoàn thành vòng lặp đầu tiên.');
+      kit.toast('ok', 'Đúng chương trình mẫu!', 'Robot đã hoàn thành vòng lặp đầu tiên.');
     } else if (type === 'miss' && data === 'moving') {
-      toast('warn', 'Robot cần đứng yên!', 'Cho động cơ dừng để quét mẫu đá đủ 2 giây.');
+      kit.toast('warn', 'Robot cần đứng yên!', 'Cho động cơ dừng để quét mẫu đá đủ 2 giây.');
     }
-  }
-
-  function setMode(value) {
-    mode = value === 'robot' ? 'robot' : 'story';
-    const wrap = $('scene-wrap'), toggle = $('scene-toggle');
-    if (wrap) wrap.dataset.mode = mode;
-    if (toggle) {
-      toggle.textContent = mode === 'story' ? 'Xem robot thật' : 'Xem câu chuyện';
-      toggle.setAttribute('aria-pressed', String(mode === 'robot'));
+    },
+    init() {
+      fx.samples.length = 0;
     }
-    if (active) {
-      if (mode === 'robot') window.ZMSandbox?.open();
-      else window.ZMSandbox?.close();
-    }
-    resize();
-  }
-  function enter() {
-    if (active) return;
-    active = true;
-    last = 0;
-    resize();
-    if (canvas) {
-      if (typeof ResizeObserver === 'function') {
-        if (!sizeObserver) sizeObserver = new ResizeObserver(resize);
-        sizeObserver.observe(canvas);
-      } else window.addEventListener('resize', resize);
-      rafId = requestAnimationFrame(frame);
-    }
-    if (mode === 'robot') window.ZMSandbox?.open();
-  }
-  function leave() {
-    active = false;
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = 0;
-    clearTimeout(toastTimer);
-    toastTimer = 0;
-    if (sizeObserver) sizeObserver.disconnect();
-    else window.removeEventListener('resize', resize);
-    const box = $('scene-toast');
-    if (box) box.hidden = true;
-    window.ZMSandbox?.close();
-  }
-
-  zmReady(() => {
-    canvas = $('space-scene');
-    if (!canvas) return;
-    ctx = canvas.getContext('2d');
-    resize();
-    $('scene-toggle')?.addEventListener('click', () => setMode(mode === 'story' ? 'robot' : 'story'));
-    $('scene-toast-close')?.addEventListener('click', () => { const box = $('scene-toast'); if (box) box.hidden = true; });
   });
-  window.ZMScene = { enter, leave, onEvent, setMode, mode: () => mode };
 })();

@@ -1,4 +1,4 @@
-// Cảnh câu chuyện Bài 2 (chặng ③): đường đua nhìn ngang có dốc, vạch đích, ô đỗ xe và tường lốp.
+// Cảnh câu chuyện Bài 2 (chặng ③): đường đua nhìn ngang có dốc, vạch đích, ô đỗ xe và tường.
 // Lấy trạng thái từ window.simEngine (RaceEngine) mỗi khung hình; hình vẽ từ js/bai02/art.js (window.RaceArt) nếu có,
 // không thì vẽ hình đơn giản (Simple). Cùng giao diện window.ZMScene với cảnh Bài 3: enter, leave, onEvent, setMode.
 //
@@ -14,26 +14,7 @@
   const G = 400, // y mặt đường phẳng đầu tiên
     RISE = 70, // độ cao dốc (px)
     A_X = 70; // px của vạch xuất phát
-  const $ = id => document.getElementById(id);
-  let cv, ctx, dpr = 1, raf = 0, last = 0, mode = 'story', active = false;
-  const fx = { shakeUntil: 0, flipAt: 0, stars: [] };
-
-  function resize() {
-    if (!cv) return;
-    const w = cv.clientWidth || W;
-    dpr = Math.min(2, window.devicePixelRatio || 1);
-    cv.width = Math.round(w * dpr);
-    cv.height = Math.round(((w * H) / W) * dpr);
-  }
-  function label(text, x, y, color, size = 16) {
-    ctx.font = `700 ${size}px "Be Vietnam Pro","Segoe UI",sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = 'rgba(20,40,60,.75)';
-    ctx.strokeText(text, x, y);
-    ctx.fillStyle = color;
-    ctx.fillText(text, x, y);
-  }
+  const fx = { flipAt: 0, carShakeUntil: 0 };
 
   // ---------- hình đơn giản khi chưa có js/bai02/art.js ----------
   const Simple = {
@@ -222,19 +203,15 @@
   }
 
   // ---------- vẽ ----------
-  function frame(ts) {
-    raf = requestAnimationFrame(frame);
-    const sim = window.simEngine;
-    if (!sim || !ctx || mode !== 'story') return;
-    const now = ts / 1000;
-    if (now - last < 1 / 40) return;
-    last = now;
+  window.ZMSceneKit.create({
+    W,
+    H,
+    idleHidden: sim => sim.running || sim.x > 0,
+    draw(ctx, now, sim, kit) {
     const A = art(),
       L = layout(sim),
       T = L.T;
-    ctx.setTransform(cv.width / W, 0, 0, cv.width / W, 0, 0);
-    const hit = now < fx.shakeUntil;
-    if (hit) ctx.translate((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10);
+    const hit = now < fx.carShakeUntil;
     A.drawBackground(ctx, now);
     const pts = [[0, G]];
     L.xs.forEach((cm, i) => pts.push([xOf(L, cm), L.ys[i]]));
@@ -243,7 +220,7 @@
     // vạch xuất phát
     ctx.fillStyle = '#fff';
     ctx.fillRect(A_X - 2, G - 2, 4, 14);
-    label('Xuất phát', A_X, G + 34, '#fff', 14);
+    kit.label('Xuất phát', A_X, G + 34, '#fff', 14);
     // thước đo (Nâng cao)
     if (sim.advanced) {
       ctx.fillStyle = '#fff';
@@ -260,9 +237,9 @@
     A.drawFinish(ctx, xOf(L, T.finish), yOf(L, T.finish));
     A.drawWall(ctx, xOf(L, T.wall), yOf(L, T.wall));
     if (!window.RaceArt) {
-      label('Đích', xOf(L, T.finish), yOf(L, T.finish) - 120, '#fff', 15);
+      kit.label('Đích', xOf(L, T.finish), yOf(L, T.finish) - 120, '#fff', 15);
     }
-    label('Ô đỗ', xOf(L, (T.park[0] + T.park[1]) / 2), yOf(L, T.park[0]) + 54, '#ffeb3b', 15);
+    kit.label('Ô đỗ', xOf(L, (T.park[0] + T.park[1]) / 2), yOf(L, T.park[0]) + 54, '#ffeb3b', 15);
     // xe
     const cx = xOf(L, sim.x),
       cy = yOf(L, sim.x);
@@ -278,7 +255,6 @@
       number: sim.has('lights') ? '07' : '',
       t: now
     });
-    drawStars(now);
     if (sim.advanced) {
       ctx.fillStyle = 'rgba(255,255,255,.88)';
       ctx.strokeStyle = 'rgba(20,40,60,.4)';
@@ -297,82 +273,49 @@
       ctx.fillText(`Mức 8: ${sp(8)} cm/giây`, 26, 74);
       ctx.fillText('Xuống dốc ×1,6 · Lên dốc ×0,6', 26, 92);
     }
-    $('scene-idle').hidden = sim.running || sim.x > 0;
-  }
-  function drawStars(now) {
-    fx.stars = fx.stars.filter(s => now - s.t0 < 1.4);
-    for (const s of fx.stars) {
-      const k = (now - s.t0) / 1.4;
-      ctx.globalAlpha = 1 - k;
-      ctx.fillStyle = s.c;
-      ctx.beginPath();
-      ctx.arc(s.x + s.vx * k * 90, s.y + s.vy * k * 90 + 40 * k * k, 7 * (1 - k * 0.5), 0, Math.PI * 2);
-      ctx.fill();
+    },
+    onEvent(type, data, kit) {
+      onEvent(type, data, kit);
     }
-    ctx.globalAlpha = 1;
-  }
+  });
 
-  // ---------- thông báo chữ to ----------
-  let toastTimer = 0;
-  function toast(kind, title, text, action) {
-    const el = $('scene-toast');
-    el.dataset.k = kind;
-    $('scene-toast-title').textContent = title;
-    $('scene-toast-text').textContent = text;
-    const btn = $('scene-toast-btn');
-    btn.hidden = !action;
-    if (action) {
-      btn.textContent = action.label;
-      btn.onclick = () => {
-        el.hidden = true;
-        action.run();
-      };
-    }
-    el.hidden = false;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => (el.hidden = true), action ? 6000 : 3500);
-  }
   const retry = { label: 'Thử lại', run: () => window.simEngine.start() };
 
-  function onEvent(type, data) {
+  function onEvent(type, data, kit) {
     const now = performance.now() / 1000,
       sim = window.simEngine;
-    if (type === 'start') {
-      $('scene-toast').hidden = true;
-    } else if (type === 'slide') {
+    if (type === 'slide') {
       if (window.SFX) window.SFX.tone(260, 0.2);
       const hint = sim.advanced
         ? `Hãy chạy ở mức ${sim.minClimbPower()} trở lên${sim.has('wing') ? '.' : ' hoặc gắn cánh gió đuôi.'}`
         : `Hãy cho xe chạy nhanh hơn${sim.has('wing') ? '.' : ' hoặc gắn cánh gió đuôi.'}`;
-      toast('bad', 'Xe trôi ngược', `Dốc làm xe tụt xuống. ${hint}`, retry);
+      kit.toast('bad', 'Xe trôi ngược', `Dốc làm xe tụt xuống. ${hint}`, retry);
     } else if (type === 'flip') {
       fx.flipAt = now;
-      fx.shakeUntil = now + 0.5;
+      fx.carShakeUntil = now + 0.5;
+      kit.shake(0.5);
       if (window.SFX) window.SFX.tone(150, 0.35);
-      toast('bad', 'Xe lật rồi!', 'Xuống dốc xe chạy rất nhanh. Hãy đổi sang Low Speed (chạy chậm) trước khi xuống dốc.', retry);
+      kit.toast('bad', 'Xe lật rồi!', 'Xuống dốc xe chạy rất nhanh. Hãy đổi sang Low Speed (chạy chậm) trước khi xuống dốc.', retry);
     } else if (type === 'crash') {
-      fx.shakeUntil = now + 0.7;
+      fx.carShakeUntil = now + 0.7;
+      kit.shake(0.7);
       if (window.SFX) window.SFX.tone(140, 0.35);
-      toast('bad', 'Ối! Xe đâm vào tường lốp', 'Xe chạy quá xa. Hãy cho xe chạy ít giây hơn.', retry);
+      kit.toast('bad', 'Ối! Xe đâm vào tường', 'Xe chạy quá xa. Hãy cho xe chạy ít giây hơn.', retry);
     } else if (type === 'park') {
-      const x = cacheX(sim.x);
-      for (let i = 0; i < 14; i++) {
-        const a = (i / 14) * Math.PI * 2;
-        fx.stars.push({ t0: now, x, y: yOfNow(sim) - 90, vx: Math.cos(a), vy: Math.sin(a), c: ['#ffd23f', '#fff', '#8cc152'][i % 3] });
-      }
+      kit.burst(cacheX(sim.x), yOfNow(sim) - 90);
       if (window.SFX) window.SFX.ding();
-      toast('ok', 'Giỏi quá!', 'Xe qua vạch đích và đỗ gọn trong ô đỗ.');
+      kit.toast('ok', 'Giỏi quá!', 'Xe qua vạch đích và đỗ gọn trong ô đỗ.');
     } else if (type === 'short') {
       if (sim.stalled) return;
       const T = sim.track();
       const pro = sim.advanced; // chế độ Bé không hiện con số
       if (data.x < T.finish)
-        toast('bad', data.x > 80 ? 'Xe mới tới đỉnh dốc' : 'Chưa tới vạch đích', `${pro ? `Xe còn cách vạch đích ${Math.round(T.finish - data.x)} cm.` : 'Xe chưa tới vạch đích.'} Hãy cho xe chạy lâu hơn (đổi số giây ở khối Wait).`, retry);
-      else toast('bad', 'Chưa tới ô đỗ', `${pro ? `Xe qua vạch đích nhưng còn cách ô đỗ ${Math.round(T.park[0] - data.x)} cm.` : 'Xe qua vạch đích rồi nhưng chưa vào ô đỗ.'} Hãy chạy lâu hơn một chút.`, retry);
+        kit.toast('bad', data.x > 80 ? 'Xe mới tới đỉnh dốc' : 'Chưa tới vạch đích', `${pro ? `Xe còn cách vạch đích ${Math.round(T.finish - data.x)} cm.` : 'Xe chưa tới vạch đích.'} Hãy cho xe chạy lâu hơn (đổi số giây ở khối Wait).`, retry);
+      else kit.toast('bad', 'Chưa tới ô đỗ', `${pro ? `Xe qua vạch đích nhưng còn cách ô đỗ ${Math.round(T.park[0] - data.x)} cm.` : 'Xe qua vạch đích rồi nhưng chưa vào ô đỗ.'} Hãy chạy lâu hơn một chút.`, retry);
     } else if (type === 'over') {
-      toast('bad', 'Đỗ quá ô rồi', `${sim.advanced ? `Xe đỗ quá ô ${Math.round(data.off)} cm.` : 'Xe chạy qua ô đỗ mất rồi.'} Hãy cho xe chạy ít giây hơn.`, retry);
+      kit.toast('bad', 'Đỗ quá ô rồi', `${sim.advanced ? `Xe đỗ quá ô ${Math.round(data.off)} cm.` : 'Xe chạy qua ô đỗ mất rồi.'} Hãy cho xe chạy ít giây hơn.`, retry);
     } else if (type === 'track' && sim.advanced) {
-      toast('ok', 'Đường đua Nâng cao', 'Có dốc lên rồi dốc xuống. Lên dốc chạy nhanh, xuống dốc chạy chậm nhé!');
+      kit.toast('ok', 'Đường đua Nâng cao', 'Có dốc lên rồi dốc xuống. Lên dốc chạy nhanh, xuống dốc chạy chậm nhé!');
     }
   }
   function cacheX(cm) {
@@ -382,36 +325,4 @@
     return cache ? yOf(cache, sim.x) : G;
   }
 
-  // ---------- chế độ: câu chuyện ⇄ xe 3D ----------
-  function setMode(m) {
-    mode = m;
-    $('scene-wrap').dataset.mode = m;
-    $('scene-toggle').textContent = m === 'story' ? 'Xem xe thật' : 'Xem câu chuyện';
-    $('scene-toggle').setAttribute('aria-pressed', String(m === 'robot'));
-    if (!active) return;
-    if (m === 'robot') window.ZMSandbox?.open();
-    else window.ZMSandbox?.close();
-    resize();
-  }
-  function enter() {
-    active = true;
-    resize();
-    if (mode === 'robot') window.ZMSandbox?.open();
-  }
-  function leave() {
-    active = false;
-    window.ZMSandbox?.close();
-  }
-
-  zmReady(() => {
-    cv = $('space-scene');
-    if (!cv) return;
-    ctx = cv.getContext('2d');
-    new ResizeObserver(resize).observe(cv);
-    $('scene-toggle').addEventListener('click', () => setMode(mode === 'story' ? 'robot' : 'story'));
-    $('scene-toast-close').addEventListener('click', () => ($('scene-toast').hidden = true));
-    raf = requestAnimationFrame(frame);
-  });
-
-  window.ZMScene = { enter, leave, onEvent, setMode, mode: () => mode };
 })();

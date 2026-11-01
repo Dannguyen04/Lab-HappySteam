@@ -1,6 +1,6 @@
 // Cảnh câu chuyện Bài 10 (chặng ③): cánh đồng gió – cối xoay gió quay theo chương trình, dây điện sạc cục pin,
 // pin có điện thì ngôi nhà sáng đèn. Hình vẽ từ js/bai10/art.js (window.WindArt) nếu có, không thì hình đơn giản.
-// Nút đỏ trên cảnh (hoặc phím cách) = nhấn cảm biến chạm. Cùng giao diện window.ZMScene với các bài khác.
+// Nút đỏ trên cảnh (hoặc phím cách) = nhấn cảm biến chạm. Phần khung (vòng vẽ, toast, sao, nút) ở js/scene-kit.js.
 (function () {
   'use strict';
 
@@ -9,26 +9,6 @@
   const MILL_X = 260,
     BAT = [560, 360],
     HOUSE_X = 720;
-  const $ = id => document.getElementById(id);
-  let cv, ctx, raf = 0, last = 0, mode = 'story', active = false;
-  const fx = { stars: [], shakeUntil: 0, flash: 0 };
-
-  function resize() {
-    if (!cv) return;
-    const w = cv.clientWidth || W,
-      dpr = Math.min(2, window.devicePixelRatio || 1);
-    cv.width = Math.round(w * dpr);
-    cv.height = Math.round(((w * H) / W) * dpr);
-  }
-  function label(text, x, y, color, size = 16) {
-    ctx.font = `700 ${size}px "Be Vietnam Pro","Segoe UI",sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = 'rgba(20,40,30,.7)';
-    ctx.strokeText(text, x, y);
-    ctx.fillStyle = color;
-    ctx.fillText(text, x, y);
-  }
 
   // ---------- hình đơn giản khi chưa có js/bai10/art.js ----------
   const G = 440;
@@ -196,146 +176,63 @@
   };
   const art = () => window.WindArt || Simple;
 
-  function frame(ts) {
-    raf = requestAnimationFrame(frame);
-    const sim = window.simEngine;
-    if (!sim || !ctx || mode !== 'story') return;
-    const now = ts / 1000;
-    if (now - last < 1 / 40) return;
-    last = now;
-    const A = art(),
-      gy = A.GROUND_Y || G;
-    ctx.setTransform(cv.width / W, 0, 0, cv.width / W, 0, 0);
-    const w = sim.weather();
-    if (now < fx.shakeUntil) ctx.translate((Math.random() - 0.5) * 8, 0);
-    A.drawBackground(ctx, now, w.kind);
-    A.drawWindLines(ctx, now, { light: 0.35, strong: 0.75, storm: 1 }[w.kind] || 0);
-    const level = sim.battery / 100,
-      flow = sim.chargeRate() / 12;
-    A.drawCable(ctx, MILL_X + 55, gy - 20, BAT[0] - 26, BAT[1] + 20, now, flow);
-    A.drawCable(ctx, BAT[0] + 26, BAT[1] + 20, HOUSE_X - 60, gy - 30, now, level > 0 ? 0.5 : 0);
-    A.drawBattery(ctx, BAT[0], BAT[1], level);
-    A.drawHouse(ctx, HOUSE_X, Math.min(1, level * 1.4));
-    A.drawWindmill(ctx, MILL_X, {
-      angle: sim.rev * Math.PI * 2,
-      blades: sim.has('more') ? 6 : 3,
-      long: sim.has('long'),
-      light: sim.has('light'),
-      tail: sim.has('tail'),
-      pressed: sim.pressed,
-      shake: w.kind === 'storm' && sim.rpm() > 0 ? 1 : 0,
-      t: now
-    });
-    label(`Pin ${Math.floor(sim.battery)}%`, BAT[0], BAT[1] + 80, '#fff');
-    if (sim.broken) label('Cánh quạt gãy!', MILL_X, gy - 330, '#ffb4a8', 20);
-    if (sim.advanced) {
-      const names = { light: 'Gió nhẹ', strong: 'Gió mạnh', storm: 'BÃO!' };
-      ctx.fillStyle = w.kind === 'storm' ? 'rgba(120,20,20,.85)' : 'rgba(255,255,255,.88)';
-      ctx.beginPath();
-      ctx.roundRect(14, 14, 230, 60, 10);
-      ctx.fill();
-      ctx.fillStyle = w.kind === 'storm' ? '#fff' : '#1e2a34';
-      ctx.textAlign = 'left';
-      ctx.font = '700 18px "Be Vietnam Pro","Segoe UI",sans-serif';
-      ctx.fillText(names[w.kind], 26, 40);
-      ctx.font = '500 13px "Be Vietnam Pro","Segoe UI",sans-serif';
-      ctx.fillText(sim.running && Number.isFinite(w.next) ? `Thời tiết đổi sau ${Math.ceil(w.next)} giây` : 'Thời tiết ổn định', 26, 62);
-    }
-    fx.stars = fx.stars.filter(s => now - s.t0 < 1.4);
-    for (const s of fx.stars) {
-      const k = (now - s.t0) / 1.4;
-      ctx.globalAlpha = 1 - k;
-      ctx.fillStyle = s.c;
-      ctx.beginPath();
-      ctx.arc(s.x + s.vx * k * 90, s.y + s.vy * k * 90, 7, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-    $('scene-idle').hidden = sim.running || sim.battery > 0;
-    $('scene-press').classList.toggle('is-waiting', !!sim.waitingPress);
-  }
-
-  let toastTimer = 0;
-  function toast(kind, title, text, action) {
-    const el = $('scene-toast');
-    el.dataset.k = kind;
-    $('scene-toast-title').textContent = title;
-    $('scene-toast-text').textContent = text;
-    const btn = $('scene-toast-btn');
-    btn.hidden = !action;
-    if (action) {
-      btn.textContent = action.label;
-      btn.onclick = () => {
-        el.hidden = true;
-        action.run();
-      };
-    }
-    el.hidden = false;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => (el.hidden = true), action ? 6000 : 3000);
-  }
-
-  function onEvent(type, data) {
-    const now = performance.now() / 1000,
-      sim = window.simEngine;
-    if (type === 'start') $('scene-toast').hidden = true;
-    else if (type === 'press' && window.SFX) window.SFX.tone(990, 0.08);
-    else if (type === 'full') {
-      for (let i = 0; i < 14; i++) {
-        const a = (i / 14) * Math.PI * 2;
-        fx.stars.push({ t0: now, x: HOUSE_X, y: 300, vx: Math.cos(a), vy: Math.sin(a), c: ['#ffd23f', '#fff', '#8cc152'][i % 3] });
+  window.ZMSceneKit.create({
+    W,
+    H,
+    idleHidden: sim => sim.running || sim.battery > 0,
+    draw(ctx, now, sim, kit) {
+      const A = art(),
+        gy = A.GROUND_Y || G;
+      const w = sim.weather();
+      A.drawBackground(ctx, now, w.kind);
+      A.drawWindLines(ctx, now, { light: 0.35, strong: 0.75, storm: 1 }[w.kind] || 0);
+      const level = sim.battery / 100,
+        flow = sim.chargeRate() / 12;
+      A.drawCable(ctx, MILL_X + 55, gy - 20, BAT[0] - 26, BAT[1] + 20, now, flow);
+      A.drawCable(ctx, BAT[0] + 26, BAT[1] + 20, HOUSE_X - 60, gy - 30, now, level > 0 ? 0.5 : 0);
+      A.drawBattery(ctx, BAT[0], BAT[1], level);
+      A.drawHouse(ctx, HOUSE_X, Math.min(1, level * 1.4));
+      A.drawWindmill(ctx, MILL_X, {
+        angle: sim.rev * Math.PI * 2,
+        blades: sim.has('more') ? 6 : 3,
+        long: sim.has('long'),
+        light: sim.has('light'),
+        tail: sim.has('tail'),
+        pressed: sim.pressed,
+        shake: w.kind === 'storm' && sim.rpm() > 0 ? 1 : 0,
+        t: now
+      });
+      kit.label(`Pin ${Math.floor(sim.battery)}%`, BAT[0], BAT[1] + 80, '#fff');
+      if (sim.broken) kit.label('Cánh quạt gãy!', MILL_X, gy - 330, '#ffb4a8', 20);
+      if (sim.advanced) {
+        const names = { light: 'Gió nhẹ', strong: 'Gió mạnh', storm: 'BÃO!' };
+        ctx.fillStyle = w.kind === 'storm' ? 'rgba(120,20,20,.85)' : 'rgba(255,255,255,.88)';
+        ctx.beginPath();
+        ctx.roundRect(14, 14, 230, 60, 10);
+        ctx.fill();
+        ctx.fillStyle = w.kind === 'storm' ? '#fff' : '#1e2a34';
+        ctx.textAlign = 'left';
+        ctx.font = '700 18px "Be Vietnam Pro","Segoe UI",sans-serif';
+        ctx.fillText(names[w.kind], 26, 40);
+        ctx.font = '500 13px "Be Vietnam Pro","Segoe UI",sans-serif';
+        ctx.fillText(sim.running && Number.isFinite(w.next) ? `Thời tiết đổi sau ${Math.ceil(w.next)} giây` : 'Thời tiết ổn định', 26, 62);
       }
-      if (window.SFX) window.SFX.ding();
-      toast('ok', 'Nhà sáng đèn rồi!', data.storm ? 'Cối xoay gió vượt qua cơn bão và sạc đầy pin. Giỏi quá!' : `Cối xoay gió đã sạc đầy pin sau ${data.secs.toFixed(1)} giây.`);
-    } else if (type === 'weather' && data.kind === 'storm') {
-      toast('bad', 'Bão tới!', 'Nhấn nút đỏ để cánh quạt dừng, kẻo gãy cánh.');
-    } else if (type === 'broken') {
-      fx.shakeUntil = now + 0.7;
-      if (window.SFX) window.SFX.tone(140, 0.35);
-      toast('bad', 'Ối! Cánh quạt gãy', 'Khi bão tới, hãy nhấn nút cho cánh quạt dừng lại.', { label: 'Thử lại', run: () => sim.start() });
-    } else if (type === 'sampleDone') {
-      toast('ok', 'Đúng như trong sách!', 'Mỗi lần nhấn nút, cánh quạt đổi tốc độ: chậm → vừa → nhanh → dừng.');
+    },
+    onEvent(type, data, kit) {
+      const sim = window.simEngine;
+      if (type === 'full') {
+        kit.burst(HOUSE_X, 300);
+        if (window.SFX) window.SFX.ding();
+        kit.toast('ok', 'Nhà sáng đèn rồi!', data.storm ? 'Cối xoay gió vượt qua cơn bão và sạc đầy pin. Giỏi quá!' : `Cối xoay gió đã sạc đầy pin sau ${data.secs.toFixed(1)} giây.`);
+      } else if (type === 'weather' && data.kind === 'storm') {
+        kit.toast('bad', 'Bão tới!', 'Nhấn nút đỏ để cánh quạt dừng, kẻo gãy cánh.');
+      } else if (type === 'broken') {
+        kit.shake(0.7);
+        if (window.SFX) window.SFX.tone(140, 0.35);
+        kit.toast('bad', 'Ối! Cánh quạt gãy', 'Khi bão tới, hãy nhấn nút cho cánh quạt dừng lại.', { label: 'Thử lại', run: () => sim.start() });
+      } else if (type === 'sampleDone') {
+        kit.toast('ok', 'Đúng như trong sách!', 'Mỗi lần nhấn nút, cánh quạt đổi tốc độ: chậm → vừa → nhanh → dừng.');
+      }
     }
-  }
-
-  function setMode(m) {
-    mode = m;
-    $('scene-wrap').dataset.mode = m;
-    $('scene-toggle').textContent = m === 'story' ? 'Xem robot thật' : 'Xem câu chuyện';
-    $('scene-toggle').setAttribute('aria-pressed', String(m === 'robot'));
-    if (!active) return;
-    if (m === 'robot') window.ZMSandbox?.open();
-    else window.ZMSandbox?.close();
-    resize();
-  }
-  function enter() {
-    active = true;
-    resize();
-    if (mode === 'robot') window.ZMSandbox?.open();
-  }
-  function leave() {
-    active = false;
-    window.ZMSandbox?.close();
-  }
-
-  zmReady(() => {
-    cv = $('space-scene');
-    if (!cv) return;
-    ctx = cv.getContext('2d');
-    new ResizeObserver(resize).observe(cv);
-    $('scene-toggle').addEventListener('click', () => setMode(mode === 'story' ? 'robot' : 'story'));
-    $('scene-toast-close').addEventListener('click', () => ($('scene-toast').hidden = true));
-    const press = () => window.simEngine && window.simEngine.press();
-    $('scene-press').addEventListener('click', press);
-    cv.addEventListener('click', press);
-    // Phím cách = nhấn nút (khi đang ở chặng ③, không gõ trong ô nhập)
-    document.addEventListener('keydown', e => {
-      if (e.code !== 'Space' || !active || /INPUT|TEXTAREA|BUTTON|SELECT/.test(document.activeElement.tagName)) return;
-      e.preventDefault();
-      press();
-    });
-    raf = requestAnimationFrame(frame);
   });
-
-  window.ZMScene = { enter, leave, onEvent, setMode, mode: () => mode };
 })();

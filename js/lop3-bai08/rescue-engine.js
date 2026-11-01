@@ -1,21 +1,21 @@
 // Bộ mô phỏng Lớp 3 · Bài 8 – Giải cứu máy bay (giàn bay hai động cơ).
-// M1 (đỉnh tháp) quay cần ngang → máy bay bay vòng quanh đài điều khiển. Low/High = mức 3/8 → 12/32 vòng/phút trên cảnh
+// M1 (đỉnh tháp) quay cần ngang → máy bay bay vòng quanh đài điều khiển. Low/Medium/High = mức 4/6/8 → 16/24/32 vòng/phút trên cảnh
 // (chậm lại cho dễ nhìn, không phải tốc độ thật). M2 (chân tháp) quay trục vít 1 mối ăn bánh răng 24 răng (giảm 24 lần)
 // → tay quay 1×2 → cụm trên bập bênh: độ cao = ½ − ½·cos(góc tay quay), 0 = thấp nhất, 1 = cao nhất. Trục vít tự hãm:
 // M2 dừng thì máy bay giữ nguyên độ cao. Cứu người: máy bay đi ngang người gặp nạn khi bay THẤP (≤ 0,3) và CHẬM (M1 Low).
 // Nâng cao: bão kéo tới theo lượt (biết trước giờ) – khi bão phải ở trên mây (độ cao ≥ 0,6), ở dưới mây quá lâu thì rơi.
-// Cùng giao diện với SimulationEngine của Bài 9 để js/app.js dùng chung.
+// Kế thừa LessonEngine chung để js/app.js dùng cùng giao diện mô phỏng.
 (function () {
   'use strict';
 
-  const LEVEL = { low: 3, medium: 5, high: 8 };
-  const NAME = { 3: 'chậm', 5: 'vừa', 8: 'nhanh' };
+  const LEVEL = { low: 4, medium: 6, high: 8 }; // mức chuẩn chung (js/lesson-engine.js)
+  const NAME = { 4: 'chậm', 6: 'vừa', 8: 'nhanh' };
   const ARM_RPM = 32; // vòng/phút của máy bay trên cảnh ở mức 8
   const MOTOR_RPM = 150; // động cơ mức 8
   const WORM = 24; // trục vít 1 mối + bánh răng 24 răng
   const LOW = 0.3, // độ cao tối đa để thả thang
     CLOUD = 0.6; // trong bão phải bay cao hơn mức này
-  const SLOW = 3; // mức tốc độ M1 tối đa để thả thang (Low)
+  const SLOW = 4; // mức tốc độ M1 tối đa để thả thang (Low)
   const CATCH = 0.2; // rad: máy bay cách người gặp nạn ≤ 11° là ở ngay trên
   // Người gặp nạn: góc trên vòng bay (rad, 0 = bên phải, chiều kim đồng hồ trên cảnh), trong sương mù hay không
   const VICTIMS = [

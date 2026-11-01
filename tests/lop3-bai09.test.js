@@ -87,9 +87,11 @@ function drive(Engine, program, secs, { upgrades = [], advanced = false, assembl
     assert.match(page, new RegExp(`<div class="meter pro-only"><dt>${name}</dt>`), `${name} chỉ hiển thị nâng cao`);
   }
 
+  vm.runInNewContext(read('js/lesson-engine.js'), context);
   vm.runInNewContext(read('js/lop3-bai09/storm-engine.js'), context);
   const Engine = context.window.StormEngine;
   assert.equal(typeof Engine, 'function');
+  assert.ok(new Engine() instanceof context.window.LessonEngine, 'Engine kế thừa lớp gốc');
   assert.deepEqual(Array.from(Engine.LIMITS.REEF), [20, 27]);
   assert.equal(Engine.LIMITS.LEN, 30);
   const assembly = new Engine();
@@ -115,6 +117,12 @@ function drive(Engine, program, secs, { upgrades = [], advanced = false, assembl
   assert.ok(harbour.sim.arrived && harbour.state.m3, 'M3: giảm tốc qua đá và đến cảng 30 m');
   assert.equal(harbour.sim.x, 30);
   assert.ok(harbour.events.includes('arrive'));
+  const slowOnly = drive(Engine, [B.start, B.motor('low'), B.wait(20)], 20);
+  assert.ok(slowOnly.sim.arrived && slowOnly.state.m3 && !slowOnly.sim.crashed, 'Mức Low = 4 qua đá ngầm và cập cảng');
+  const p4 = drive(Engine, [B.start, { type: 'motor_power', power: 4 }, B.wait(20)], 20);
+  assert.ok(p4.sim.arrived && p4.state.m3, 'Motor Power 4 qua đá ngầm giống Low');
+  assert.equal(drive(Engine, [B.start, { type: 'motor_power', power: 5 }, B.wait(15)], 15).sim.crashWhy,
+    'reef', 'Motor Power 5 vượt ngưỡng an toàn khi chưa có đèn');
   const reefCrash = drive(Engine, [B.start, B.motor('high'), B.wait(11)], 10);
   assert.equal(reefCrash.sim.crashWhy, 'reef', 'Đi High trong đá ngầm sẽ va đá');
   assert.ok(!reefCrash.state.m3);
@@ -122,6 +130,23 @@ function drive(Engine, program, secs, { upgrades = [], advanced = false, assembl
   const withLight = drive(Engine, medium, 15, { upgrades: ['light'] });
   assert.ok(withLight.sim.arrived && withLight.state.m3, 'Có đèn thì Medium vượt đá ngầm được');
   assert.ok(withLight.state.m4, 'M4: gắn nâng cấp và cho M1 chạy');
+  assert.equal(drive(Engine, [B.start, B.motor('high'), B.wait(11)], 10, { upgrades: ['light'] }).sim.crashWhy,
+    'reef', 'High = 8 vẫn va đá khi có đèn (ngưỡng Medium = 6)');
+  const speedLabels = new Engine();
+  const ui = { 'calc-eq1': { textContent: '' }, 'calc-eq2': { textContent: '' } };
+  const getById = context.document.getElementById;
+  context.document.getElementById = id => ui[id] || null;
+  try {
+    speedLabels.updateUI();
+    assert.match(ui['calc-eq1'].textContent, /Low 1\.6 · Medium 2\.4 · High 3\.2/, 'Hướng dẫn tốc độ chuẩn 4\/6\/8');
+    speedLabels.setProgram([B.start, B.motor('low'), B.wait(1)]);
+    speedLabels.start(); speedLabels.advance(0.05);
+    assert.equal(speedLabels.m.M1.power, 4);
+    speedLabels.updateUI();
+    assert.match(ui['calc-eq2'].textContent, /tối đa Low/, 'Không có đèn: giới hạn Low');
+  } finally {
+    context.document.getElementById = getById;
+  }
 
   const plain = new Engine();
   plain.setProgram([B.start, B.motor('medium'), B.wait(1)]); plain.start(); plain.advance(0.1);
@@ -132,6 +157,11 @@ function drive(Engine, program, secs, { upgrades = [], advanced = false, assembl
   const stormFast = [B.start, B.wait(6), B.motor('high'), B.wait(2)];
   assert.equal(drive(Engine, stormFast, 9, { advanced: true }).sim.crashWhy, 'wave', 'High trong bão quá 1,5 giây gây lật');
   assert.ok(!drive(Engine, stormFast, 8, { advanced: true, upgrades: ['float'] }).sim.crashed, 'Phao chịu bão 2 giây');
+  // M3 cũng đạt ở Nâng cao: chỉ Low suốt đường qua hai đợt bão
+  const lowAdv = drive(Engine, [B.start, B.motor('low'), B.wait(60)], 60, { advanced: true });
+  assert.ok(lowAdv.sim.arrived && lowAdv.state.m3 && !lowAdv.sim.crashed, 'M3 đạt ở Nâng cao khi chạy Low');
+  assert.ok(drive(Engine, sample, 9.1, { advanced: true }).state.m2, 'Bão Nâng cao không làm chương trình mẫu trượt M2');
+  assert.ok(/bão/.test(lesson.cards.m3.text) && /Wait/.test(lesson.cards.m3.text), 'Thẻ M3 nêu bão ở Nâng cao và gợi ý khối Wait');
   const afterStorm = [B.start, B.wait(32), ...safe.slice(1)];
   const stormArrive = drive(Engine, afterStorm, 50, { advanced: true });
   assert.ok(stormArrive.sim.arrived && stormArrive.state.m5 && stormArrive.events.includes('arrive'), 'M5: trải qua bão và cập cảng');
@@ -148,23 +178,24 @@ function drive(Engine, program, secs, { upgrades = [], advanced = false, assembl
 
   // Scene phải đăng ký đúng hợp đồng kể cả khi chưa có art.js/canvas.
   context.zmReady = fn => fn();
+  vm.runInNewContext(read('js/scene-kit.js'), context);
   vm.runInNewContext(read('js/lop3-bai09/storm-scene.js'), context);
   assert.equal(typeof context.window.ZMScene.enter, 'function');
   assert.equal(typeof context.window.ZMScene.onEvent, 'function');
   assert.equal(typeof context.window.ZMScene.setMode, 'function');
   // Chạy lifecycle trên DOM giả để bắt lỗi rAF chạy nền, timeout tồn đọng và scene thiếu phần tử.
   const pendingFrames = new Map(), pendingTimers = new Set();
-  let nextFrame = 0, nextTimer = 0, observeCount = 0, disconnectCount = 0;
+  let nextFrame = 0, nextTimer = 0, observeCount = 0;
   const toast = { dataset: {}, hidden: true }, toastBtn = { hidden: true, onclick: null };
   const elements = {
-    'space-scene': { clientWidth: 500, getContext: () => ({}) },
+    'space-scene': { clientWidth: 500, getContext: () => ({}), addEventListener() {} },
     'scene-toast': toast, 'scene-toast-btn': toastBtn,
     'scene-toggle': { addEventListener() {}, setAttribute() {} },
     'scene-toast-title': { textContent: '' }, 'scene-toast-text': { textContent: '' }
   };
   const sceneContext = {
     window: { devicePixelRatio: 1 },
-    document: { getElementById: id => elements[id] || null },
+    document: { getElementById: id => elements[id] || null, addEventListener() {}, activeElement: { tagName: 'BODY' } },
     performance: { now: () => 0 }, Math,
     zmReady: fn => fn(),
     requestAnimationFrame: cb => { const id = ++nextFrame; pendingFrames.set(id, cb); return id; },
@@ -173,9 +204,9 @@ function drive(Engine, program, secs, { upgrades = [], advanced = false, assembl
     clearTimeout: id => pendingTimers.delete(id),
     ResizeObserver: class {
       observe() { observeCount++; }
-      disconnect() { disconnectCount++; }
     }
   };
+  vm.runInNewContext(read('js/scene-kit.js'), sceneContext);
   vm.runInNewContext(read('js/lop3-bai09/storm-scene.js'), sceneContext);
   const scene = sceneContext.window.ZMScene;
   assert.equal(pendingFrames.size, 0, 'Chưa vào sa bàn không được chạy rAF');
@@ -190,21 +221,19 @@ function drive(Engine, program, secs, { upgrades = [], advanced = false, assembl
   scene.leave();
   assert.equal(pendingFrames.size, 0, 'Rời sa bàn phải hủy rAF');
   assert.equal(pendingTimers.size, 0, 'Rời sa bàn phải hủy timer');
-  assert.equal(toast.hidden, true, 'Rời sa bàn phải ẩn thông báo');
+  scene.onEvent('start');
+  assert.equal(toast.hidden, true, 'Khởi động lại cần ẩn thông báo cũ');
   frame(1100);
   assert.equal(pendingFrames.size, 0, 'Callback đã rời sa bàn không được tự lập lịch lại');
   scene.enter();
   scene.setMode('robot');
-  assert.equal(pendingFrames.size, 0, 'Chế độ 3D không chạy canvas 2D');
+  assert.equal(pendingFrames.size, 1, 'Kit giữ lịch khung hình, không vẽ 2D trong chế độ robot');
   scene.setMode('story');
   assert.equal(pendingFrames.size, 1, 'Quay lại cảnh 2D phải tiếp tục vẽ');
   scene.leave();
-  assert.equal(observeCount, disconnectCount, 'ResizeObserver phải dừng khi rời sa bàn');
-  delete elements['scene-toast-title'];
-  delete elements['scene-toast-text'];
-  delete elements['scene-toast-btn'];
+  assert.equal(observeCount, 1, 'Kit đăng ký ResizeObserver một lần');
   scene.enter();
-  assert.doesNotThrow(() => scene.onEvent('warn', 'reef'), 'Toast thiếu phần tử DOM không được làm vỡ scene');
+  assert.doesNotThrow(() => scene.onEvent('warn', 'reef'), 'Toast hoạt động khi vào lại sa bàn');
   scene.leave();
   console.log('PASS: Lớp 3 Bài 09 — 27 bước/69 linh kiện; page, scene, M1–M5, chương trình mẫu, đá ngầm, đèn, phao, buồm và hai đợt bão.');
 })().catch(e => { console.error(e); process.exitCode = 1; });

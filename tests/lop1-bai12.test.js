@@ -63,10 +63,10 @@ const B = {
     assert.ok(fs.existsSync(image), `Thiếu ảnh sách bước ${step}`);
     assert.ok(fs.statSync(image).size < 80 * 1024, `Ảnh sách bước ${step} quá lớn`);
   }
-  assert.match(bookLast.alt, /Bước 24/);
+  assert.match(bookLast.alt, /bước 24/);
   assert.equal(bookLast.loc, 'Bước 24 / 24');
-  assert.equal(bookLast.pdf, 'references/lop1/bai12/bai12.pdf#page=24');
-  assert.ok(page.includes('href="references/lop1/bai12/bai12.pdf#page=1"'), 'Trang có liên kết PDF bước đầu');
+  assert.equal(bookLast.pdf, bookLast.src);
+  assert.ok(page.includes('href="assets/lop1-bai12/step-01.jpg"'), 'Trang có liên kết hình lớn bước đầu');
   assert.ok(page.includes('src="assets/lop1-bai12/step-01.jpg"'), 'Ảnh mặc định phải hiện ngay khi nạp trang');
   const sampleBlocks = L.blocks.sample.map(item => Array.isArray(item) ? item.join(':') : item);
   assert.equal(sampleBlocks.filter(k => k.includes('wait:')).length, 2);
@@ -74,6 +74,7 @@ const B = {
   assert.equal(L.blocks.sample[4][1].duration, 0.5);
   assert.equal(L.blocks.sample[9][1].duration, 0.5);
 
+  vm.runInNewContext(read('js/lesson-engine.js'), context);
   vm.runInNewContext(read('js/bai12/dam-engine.js'), context);
   const Dam = context.window.DamEngine;
   const near = (actual, expected, tolerance = 0.3) => assert.ok(
@@ -208,28 +209,36 @@ const B = {
     getContext: () => canvasContext,
     addEventListener(name, fn) { handlers[name] = fn; }
   };
-  const rafCallbacks = [], cancelledFrames = [], keyHandlers = [];
+  const rafCallbacks = [], cancelledFrames = [], keyHandlers = [], stageTransitions = [];
+  let stageActive = false;
   const art = {};
   for (const name of ['drawBackground', 'drawLevee', 'drawWater', 'drawFloodgate',
     'drawWaterLevelMarker', 'drawVillage', 'drawTouchSensor', 'drawRescueBoat']) {
     art[name] = (...args) => drawCalls.push({ name, args });
   }
   const sceneContext = {
-    window: { FloodArt: art, simEngine: saved.sim, addEventListener() {} },
+    window: {
+      FloodArt: art, simEngine: saved.sim, addEventListener() {},
+      ZMStages: { go(stage, focus) { stageTransitions.push([stage, focus]); } }
+    },
     document: {
-      getElementById: id => id === 'space-scene' ? sceneCanvas : null,
+      getElementById: id => id === 'space-scene' ? sceneCanvas
+        : id === 'stage-sim' ? { classList: { contains: () => stageActive } } : null,
       addEventListener(name, fn, capture) { if (name === 'keydown') keyHandlers.push({ fn, capture }); }, activeElement: null
     },
     zmReady: cb => cb(),
+    ResizeObserver: class { observe() {} },
     requestAnimationFrame: cb => { rafCallbacks.push(cb); return rafCallbacks.length; },
     cancelAnimationFrame: id => { cancelledFrames.push(id); },
     clearTimeout() {}, setTimeout: () => 1,
     performance: { now: () => 0 }, Math
   };
+  vm.runInNewContext(read('js/scene-kit.js'), sceneContext);
   vm.runInNewContext(read('js/bai12/flood-scene.js'), sceneContext);
   const scene = sceneContext.window.ZMScene;
   assert.ok(scene && typeof scene.enter === 'function' && typeof scene.setMode === 'function');
   scene.enter();
+  stageActive = true;
   rafCallbacks.shift()(100);
   const marker = drawCalls.find(call => call.name === 'drawWaterLevelMarker');
   assert.ok(marker && marker.args[3] >= 0 && marker.args[3] <= 1, 'Mực nước API art phải trong 0..1');
@@ -238,14 +247,19 @@ const B = {
   assert.ok(saved.sim.touch, 'Cảnh chuyển thao tác nhấn tới động cơ');
   scene.setMode('robot');
   assert.equal(scene.mode(), 'robot');
+  const stageHandler = keyHandlers.find(item => item.capture === true);
+  assert.ok(stageHandler, 'Listener chuyển chặng phải được đăng ký');
+  let blocked = 0;
+  stageHandler.fn({ key: 'ArrowRight', target: { dataset: { stage: 'assembly' } }, preventDefault() { blocked++; }, stopPropagation() {} });
+  assert.equal(blocked, 1, 'Phím mũi tên chuyển chặng khi sa bàn đang mở');
+  assert.deepEqual(stageTransitions, [['sim', true]]);
   scene.leave();
+  stageActive = false;
   assert.ok(cancelledFrames.length > 0, 'Rời scene phải hủy frame đang đợi');
   const pendingCount = rafCallbacks.length;
   rafCallbacks.at(-1)(200);
   assert.equal(rafCallbacks.length, pendingCount, 'Callback trễ không tạo frame sau leave');
-  const stageHandler = keyHandlers.find(item => item.capture === true);
-  assert.ok(stageHandler, 'Listener chuyển chặng phải được đăng ký');
-  let blocked = 0;
+  blocked = 0;
   stageHandler.fn({ key: 'ArrowRight', target: { dataset: { stage: 'assembly' } }, preventDefault() { blocked++; }, stopPropagation() {} });
   assert.equal(blocked, 0, 'Phím mũi tên không bị chặn khi scene đã rời');
 

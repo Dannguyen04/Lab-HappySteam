@@ -1,86 +1,99 @@
 <title>Đê ngăn lũ · Lớp 1 · Bài 12 · Happy STEAM</title>
 <template data-slot="header-copy">
-  <div class="eyebrow">Lớp 1 · Bài 12 · Thiên tai và lũ lụt</div>
-  <h1>Đê ngăn lũ</h1>
-  <p class="lede pro-only">Tìm hiểu lũ lụt và cách bảo vệ làng, lắp mô hình đê ngăn lũ theo 24 bước, dùng cảm biến chạm điều khiển động cơ qua bánh răng để nâng và hạ cửa đê.</p>
+      <div class="eyebrow">Lớp 1 · Bài 12 · Thiên tai và lũ lụt</div>
+      <h1>Đê ngăn lũ</h1>
+      <p class="lede pro-only">Tìm hiểu lũ lụt và cách bảo vệ làng, lắp mô hình đê ngăn lũ theo 24 bước, dùng cảm biến chạm điều khiển động cơ qua bánh răng để nâng và hạ cửa đê.</p>
 </template>
 
 <template data-slot="mission-chips">
-  <span class="chip" id="chip-m1" title="Hoàn thành 24 bước lắp ráp"><i>1</i>Lắp xong 24 bước</span>
-  <span class="chip" id="chip-m2" title="Hai lần nhấn nút: nâng 0,5 giây rồi hạ 0,5 giây theo chương trình mẫu"><i>2</i>Lập trình theo mẫu</span>
-  <span class="chip" id="chip-m3" title="Dựng đê tối thiểu 40° trước giây thứ 5 và giữ tới khi nước rút"><i>3</i>Giữ làng an toàn</span>
-  <span class="chip" id="chip-m4" title="Thắng hai lượt bằng hai chương trình khác nhau"><i>4</i>Cải tiến lần hai</span>
-  <span class="chip pro-only" id="chip-m5" title="Nâng cao: chặn ba mức lũ khác nhau mà không nâng đê quá mức"><i>5</i>Chinh phục ba mức lũ</span>
+    <span class="chip" id="chip-m1" title="Hoàn thành 24 bước lắp ráp"><i>1</i>Lắp xong 24 bước</span>
+    <span class="chip" id="chip-m2" title="Hai lần nhấn nút: nâng 0,5 giây rồi hạ 0,5 giây theo chương trình mẫu"><i>2</i>Lập trình theo mẫu</span>
+    <span class="chip" id="chip-m3" title="Dựng đê tối thiểu 40° trước giây thứ 5 và giữ tới khi nước rút"><i>3</i>Giữ làng an toàn</span>
+    <span class="chip" id="chip-m4" title="Thắng hai lượt bằng hai chương trình khác nhau"><i>4</i>Cải tiến lần hai</span>
+    <span class="chip pro-only" id="chip-m5" title="Nâng cao: chặn ba mức lũ khác nhau mà không nâng đê quá mức"><i>5</i>Chinh phục ba mức lũ</span>
 </template>
 
 <template data-slot="victory-copy">
-  <p>Em đã hoàn thành mô hình đê, điều khiển cửa đê bằng cảm biến chạm và bảo vệ ngôi làng qua hai lần thi đấu với chương trình cải tiến.</p>
-  <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM12</code></p>
+      <p>Em đã hoàn thành mô hình đê, điều khiển cửa đê bằng cảm biến chạm và bảo vệ ngôi làng qua hai lần thi đấu với chương trình cải tiến.</p>
+      <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM12</code></p>
 </template>
 
 <template data-slot="assembly-tab">
-  <i>1</i><span><b>Lắp ráp</b><small>24 bước theo sách</small></span>
-</template>
-<template data-slot="assembly-count">
-  <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 24</span></span>
-</template>
-<template data-slot="assembly-canvas">
-  <canvas id="view" aria-label="Mô hình đê ngăn lũ 3D: kéo để xoay, cuộn để phóng to"></canvas>
-</template>
-<template data-slot="assembly-slider">
-  <input id="slider" type="range" min="1" max="24" value="1" aria-label="Chọn bước lắp">
-</template>
-<template data-slot="assembly-meter-step">
-  <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 24</small></div><div class="s" id="am-step-s">Lắp khung đê</div></dd></div>
-</template>
-<template data-slot="assembly-meter-done">
-  <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 24</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
-</template>
-<template data-slot="book-image">
-  <img id="book-img" src="assets/lop1-bai12/step-01.jpg" alt="Hình lắp ráp gốc bước 1 của đê ngăn lũ">
-</template>
-<template data-slot="book-link">
-  <a id="book-pdf" class="link" href="references/lop1/bai12/bai12.pdf#page=1" target="_blank" rel="noopener">Mở PDF sách gốc ↗</a>
+      <i>1</i><span><b>Lắp ráp</b><small>24 bước theo sách</small></span>
 </template>
 
-<!-- Các slot vẫn phải có để bộ nạp dùng chung gắn trang; giáo án bài 12 không có chặng sáng tạo. -->
+<template data-slot="assembly-count">
+          <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 24</span></span>
+</template>
+
+<template data-slot="assembly-canvas">
+              <canvas id="view" aria-label="Mô hình đê ngăn lũ 3D: kéo để xoay, cuộn để phóng to"></canvas>
+</template>
+
+<template data-slot="assembly-slider">
+                <input id="slider" type="range" min="1" max="24" value="1" aria-label="Chọn bước lắp">
+</template>
+
+<template data-slot="assembly-meter-step">
+          <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 24</small></div><div class="s" id="am-step-s">Lắp khung đê</div></dd></div>
+</template>
+
+<template data-slot="assembly-meter-done">
+          <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 24</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+</template>
+
+<template data-slot="book-image">
+          <img id="book-img" src="assets/lop1-bai12/step-01.jpg" alt="Hình lắp ráp gốc bước 1 của đê ngăn lũ">
+</template>
+
+<template data-slot="book-link">
+          <a id="book-pdf" class="link" href="assets/lop1-bai12/step-01.jpg" target="_blank" rel="noopener">Mở hình lớn ↗</a>
+</template>
+
 <template data-slot="creative-intro">
-  <p class="status-text">Bài học này tập trung lắp đê và cải tiến chương trình thi đấu.</p>
+          <p class="status-text">Bài học này tập trung lắp đê và cải tiến chương trình thi đấu.</p>
 </template>
+
 <template data-slot="creative-canvas">
-  <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình đê ngăn lũ 3D"></div>
+        <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình đê ngăn lũ 3D"></div>
 </template>
+
 <template data-slot="creative-slot-label">
-  <div class="panel-h"><h2>Cải tiến mô hình</h2></div>
+        <div class="panel-h"><h2>Cải tiến mô hình</h2></div>
 </template>
+
 <template data-slot="creative-result-label">
-  <div class="panel-h"><h2>Tiến độ lắp ráp</h2></div>
+        <div class="panel-h"><h2>Tiến độ lắp ráp</h2></div>
 </template>
+
 <template data-slot="sim-upgrade-label">
-  <small id="sim-active-upgrade-badge" class="status-tag">Đê ngăn lũ cơ bản</small>
+            <small id="sim-active-upgrade-badge" class="status-tag">Đê ngăn lũ cơ bản</small>
 </template>
 
 <template data-slot="sim-scene">
-  <canvas id="space-scene" aria-label="Sa bàn lũ lụt: đê nâng hạ theo chương trình, nước dâng về làng"></canvas>
-  <div class="sim-stage" id="sim-stage" aria-label="Mô hình đê ngăn lũ 3D đang hoạt động"></div>
-  <p class="scene-idle" id="scene-idle">Chạm khối <b>Start</b> màu vàng hoặc nút <b>▶</b>, rồi bấm <b>✋</b> để nhấn cảm biến chạm.</p>
-  <button type="button" class="hand-btn" id="scene-hand" title="Nhấn cảm biến chạm trên mô hình" aria-label="Nhấn cảm biến chạm">✋</button>
+          <canvas id="space-scene" aria-label="Sa bàn lũ lụt: đê nâng hạ theo chương trình, nước dâng về làng"></canvas>
+          <div class="sim-stage" id="sim-stage" aria-label="Mô hình đê ngăn lũ 3D đang hoạt động"></div>
+          <p class="scene-idle" id="scene-idle">Chạm khối <b>Start</b> màu vàng hoặc nút <b>▶</b>, rồi bấm <b>✋</b> để nhấn cảm biến chạm.</p>
+          <button type="button" class="hand-btn" id="scene-hand" title="Nhấn cảm biến chạm trên mô hình" aria-label="Nhấn cảm biến chạm">✋</button>
 </template>
+
 <template data-slot="sim-meters">
-  <dl class="meters pro-only">
-    <div class="meter"><dt>Tốc độ nâng</dt><dd><div class="v" id="m-speed">0<small>độ/giây</small></div><div class="s" id="m-speed-note">Động cơ dừng</div></dd></div>
-    <div class="meter"><dt>Góc cửa đê</dt><dd><div class="v" id="m-dist">0<small>độ</small></div><div class="s">0° nằm ngang · 90° dựng đứng</div></dd></div>
-    <div class="meter"><dt>Góc cần giữ</dt><dd><div class="v" id="m-target">≥ 40<small>độ</small></div><div class="s" id="m-target-note">Giữ đê khi lũ qua</div></dd></div>
-    <div class="meter"><dt>Ngôi làng</dt><dd><div class="v" id="m-sample">An toàn</div><div class="s">Lũ về ở giây thứ 5</div></dd></div>
-  </dl>
+        <dl class="meters pro-only">
+          <div class="meter"><dt>Tốc độ nâng</dt><dd><div class="v" id="m-speed">0<small>độ/giây</small></div><div class="s" id="m-speed-note">Động cơ dừng</div></dd></div>
+          <div class="meter"><dt>Góc cửa đê</dt><dd><div class="v" id="m-dist">0<small>độ</small></div><div class="s">0° nằm ngang · 90° dựng đứng</div></dd></div>
+          <div class="meter"><dt>Góc cần giữ</dt><dd><div class="v" id="m-target">≥ 40<small>độ</small></div><div class="s" id="m-target-note">Giữ đê khi lũ qua</div></dd></div>
+          <div class="meter"><dt>Ngôi làng</dt><dd><div class="v" id="m-sample">An toàn</div><div class="s">Lũ về ở giây thứ 5</div></dd></div>
+        </dl>
 </template>
+
 <template data-slot="sim-calculation">
-  <div class="panel-h"><h2>Thử tính góc nâng</h2><small>11,25 × mức động cơ × số giây</small></div>
-  <div class="pad calc">
-    <p class="calc-eq" id="calc-eq1"></p>
-    <p class="calc-eq" id="calc-eq2"></p>
-  </div>
+        <div class="panel-h"><h2>Thử tính góc nâng</h2><small>11,25 × mức động cơ × số giây</small></div>
+        <div class="pad calc">
+          <p class="calc-eq" id="calc-eq1"></p>
+          <p class="calc-eq" id="calc-eq2"></p>
+        </div>
 </template>
+
 <template data-slot="sim-hint">
-  <p class="hint"><b>NV2:</b> Theo mẫu trong sách, nhấn cảm biến hai lần: quay chậm 0,5 giây nâng cửa đê, nhấn lần nữa hạ cửa đê. <b>NV3:</b> Để chống lũ, hãy điều chỉnh thời gian nâng đủ ít nhất 40° trước giây thứ 5 và giữ tới giây thứ 9. <b>NV4:</b> Thi đấu lần hai bằng chương trình đã cải tiến. <b>Nâng cao:</b> góc nâng cần nằm trong khoảng mức lũ đến mức lũ + 20° để thuyền cứu hộ đi qua.</p>
+            <p class="hint"><b>NV2:</b> Theo mẫu trong sách, nhấn cảm biến hai lần: quay chậm 0,5 giây nâng cửa đê, nhấn lần nữa hạ cửa đê. <b>NV3:</b> Để chống lũ, hãy điều chỉnh thời gian nâng đủ ít nhất 40° trước giây thứ 5 và giữ tới giây thứ 9. <b>NV4:</b> Thi đấu lần hai bằng chương trình đã cải tiến. <b>Nâng cao:</b> góc nâng cần nằm trong khoảng mức lũ đến mức lũ + 20° để thuyền cứu hộ đi qua.</p>
 </template>

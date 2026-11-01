@@ -24,6 +24,9 @@
     ifSee: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"><path d="M20 4l16 16-16 16L4 20z"/><text x="20" y="26.5" text-anchor="middle" fill="#fff" stroke="none" font-family="Chakra Petch, sans-serif" font-weight="800" font-size="17">?</text></svg>`,
     ifEnd: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6l-6 14 6 14"/><path d="M18 20h16"/><path d="M28 14l6 6-6 6"/></svg>`,
     photo: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"><path d="M5 13h7l3-5h10l3 5h7v19H5z"/><circle cx="20" cy="22" r="6"/><path d="M31 4l4-3M33 8h5" stroke-linecap="round" stroke-width="2.4"/></svg>`,
+    // Xe hai động cơ (KHGD Lớp 1 Bài 13): Move Forward – mũi tên thẳng; Turn Left – xe nghiêng, mũi tên cong sang trái
+    moveForward: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="4" width="20" height="16" rx="4"/><path d="M20 36V24M14 29l6-6 6 6"/></svg>`,
+    turnLeft: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="14" width="18" height="16" rx="4" transform="rotate(-25 23 22)"/><path d="M10 18c0-8 6-12 12-12M6 10l4 8 7-4"/></svg>`,
     touch: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><rect x="9" y="24" width="22" height="7" rx="2" fill="#fff"/><path d="M20 7v13M14 15l6 6 6-6"/></svg>`
   };
 
@@ -41,6 +44,11 @@
     motorStop: { type: 'stop', name: 'Stop', color: 'motor', label: 'Dừng motor' },
     wait: { type: 'wait', name: 'Wait', duration: 3, color: 'wait', label: 'Chờ' },
     display: { type: 'display', name: 'Display', icon: 'smile', color: 'display', label: 'Màn hình' },
+    moveForward: { type: 'drive', name: 'Move Forward', move: 'forward', speed: 'high', color: 'motor', label: 'Tiến thẳng' },
+    turnLeft: { type: 'drive', name: 'Turn Left', move: 'left', speed: 'high', color: 'motor', label: 'Rẽ trái' },
+    displayHeart: { type: 'display', name: 'Trái tim', icon: 'heart', color: 'display', label: 'Hiện trái tim' },
+    displaySmile: { type: 'display', name: 'Mặt cười', icon: 'smile', color: 'display', label: 'Hiện mặt cười' },
+    displaySad: { type: 'display', name: 'Mặt buồn', icon: 'sad', color: 'display', label: 'Hiện mặt buồn' },
     obstacle: { type: 'sensor_obstacle', name: 'Chờ vật cản', color: 'sensor', label: 'Chờ vật cản' },
     // Khối động cơ có cổng (Lớp 3 Bài 8 – hai động cơ M1, M2): chạm đổi chậm → nhanh → chậm ngược → nhanh ngược
     m1Motor: { type: 'motor', name: 'Low Speed', speed: 'low', dir: 'cw', port: 'M1', color: 'motor', label: 'Động cơ M1' },
@@ -400,6 +408,7 @@
     if (b.type === 'if_see') return SVG_ICONS.ifSee;
     if (b.type === 'if_end') return SVG_ICONS.ifEnd;
     if (b.type === 'photo') return SVG_ICONS.photo;
+    if (b.type === 'drive') return b.move === 'left' ? SVG_ICONS.turnLeft : SVG_ICONS.moveForward;
     return '';
   }
   const SPEEDS = {

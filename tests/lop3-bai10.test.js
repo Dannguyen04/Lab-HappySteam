@@ -72,6 +72,7 @@ if (fs.existsSync(buildFile)) {
   }
 }
 
+vm.runInNewContext(fs.readFileSync(path.join(root, 'js/lesson-engine.js'), 'utf8'), context);
 vm.runInNewContext(fs.readFileSync(path.join(root, 'js/lop3-bai10/rover-engine.js'), 'utf8'), context);
 const Rover = context.window.RoverEngine;
 const B = {
@@ -148,7 +149,7 @@ function scanAtStorm(upgrades = []) {
   s.setAdvanced(true);
   s.setUpgrades(upgrades);
   s.running = true;
-  s.x = 30; // cách tảng đá đầu tiên 10 cm, xe đứng yên
+  s.x = 40; // cách tảng đá đầu tiên 10 cm, xe đứng yên
   s.runT = 12;
   for (let i = 0; i < 45; i++) s.tick(0.05);
   return s;
@@ -166,29 +167,35 @@ const st = run(waitStorm, 48, { advanced: true });
 assert.ok(!st.sim.crashed, 'Đứng yên trong bão: không kẹt');
 assert.equal(st.sim.got(), 3);
 assert.ok(st.state.m5 && st.state.m3, 'NV5: thu đủ mẫu sau khi qua bão bụi');
+// Thẻ NV3 phải nói rõ điều kiện bão ở Nâng cao và gợi ý khối chờ; NV3 đạt được ở cả hai chế độ
+assert.ok(/bão/.test(L.cards.m3.text) && /Wait/.test(L.cards.m3.text), 'Thẻ NV3 nêu bão bụi và khối Wait');
+assert.ok(run(sample, 30).state.m3 && st.state.m3, 'NV3 đạt ở cả Bé và Nâng cao');
 // Chế độ Bé không có bão: thu đủ mẫu không tính NV5
 assert.ok(!run(sample, 30).state.m5);
 
-// Scene an toàn khi thiếu thành phần toast; không để callback rAF/timer chạy nền sau leave().
+// Scene dùng kit chung: toast có đầy đủ thành phần DOM và rAF/timer dừng sau leave().
 {
   const frames = new Map(), timers = new Map(), events = {};
-  let nextId = 0, disconnected = 0;
+  let nextId = 0, observed = 0;
   const box = { dataset: {}, hidden: true };
-  const canvas = { clientWidth: 900, getContext: () => ({}) };
-  const elements = { 'space-scene': canvas, 'scene-toast': box };
+  const canvas = { clientWidth: 900, getContext: () => ({}), addEventListener() {} };
+  const elements = { 'space-scene': canvas, 'scene-toast': box,
+    'scene-toast-title': { textContent: '' }, 'scene-toast-text': { textContent: '' },
+    'scene-toast-btn': { hidden: true } };
   const sceneContext = {
     window: { addEventListener() {}, removeEventListener() {} },
-    document: { getElementById: id => elements[id] || null },
+    document: { getElementById: id => elements[id] || null, addEventListener() {}, activeElement: { tagName: 'BODY' } },
     performance: { now: () => 0 },
     zmReady: fn => fn(),
     requestAnimationFrame: fn => { const id = ++nextId; frames.set(id, fn); return id; },
     cancelAnimationFrame: id => frames.delete(id),
     setTimeout: fn => { const id = ++nextId; timers.set(id, fn); return id; },
     clearTimeout: id => timers.delete(id),
-    ResizeObserver: class { observe() {} disconnect() { disconnected++; } },
+    ResizeObserver: class { observe() { observed++; } disconnect() {} },
     Math
   };
   sceneContext.window.window = sceneContext.window;
+  vm.runInNewContext(fs.readFileSync(path.join(root, 'js/scene-kit.js'), 'utf8'), sceneContext);
   vm.runInNewContext(fs.readFileSync(path.join(root, 'js/lop3-bai10/rover-scene.js'), 'utf8'), sceneContext);
   const scene = sceneContext.window.ZMScene;
   scene.enter();
@@ -196,15 +203,16 @@ assert.ok(!run(sample, 30).state.m5);
   const scheduled = [...frames.values()][0];
   frames.clear(); scheduled(100); // vòng tiếp theo phải được đăng ký khi đang active
   assert.equal(frames.size, 1);
-  assert.doesNotThrow(() => scene.onEvent('sample', { rock: { x: 40, name: 'đá đỏ' }, count: 1 }),
-    'Thiếu title/text/button của toast không được làm văng lỗi');
+  assert.doesNotThrow(() => scene.onEvent('sample', { rock: { x: 50, name: 'đá đỏ' }, count: 1 }),
+    'Cảnh chung phải hiển thị thông báo thu mẫu');
   assert.equal(box.hidden, false);
   assert.equal(timers.size, 1);
   scene.leave();
   assert.equal(frames.size, 0, 'Rời sa bàn phải hủy requestAnimationFrame');
   assert.equal(timers.size, 0, 'Rời sa bàn phải dọn timeout thông báo');
-  assert.ok(disconnected > 0, 'Rời sa bàn phải ngừng ResizeObserver');
-  assert.equal(box.hidden, true);
+  assert.equal(observed, 1, 'Khung chung quản lý ResizeObserver của canvas');
+  scene.onEvent('start');
+  assert.equal(box.hidden, true, 'Chạy lại phải ẩn thông báo cũ');
   scene.enter();
   assert.equal(frames.size, 1, 'Trở lại sa bàn phải khởi chạy lại khung hình');
   scene.leave();

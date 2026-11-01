@@ -85,14 +85,129 @@
     };
   }
 
+  // <lesson.json> – phần dưới do scripts/new-lesson.js sinh từ content/lop1/bai10/lesson.json, đừng sửa tay – sửa lesson.json rồi chạy lại
+  const SPEC = {
+    "id": "lop1-bai10",
+    "label": "Bài 10",
+    "code": "ZM10",
+    "sheetName": "Bài 10: Bạn gió tinh nghịch – cối xoay gió",
+    "store": "zm10_",
+    "baseName": "Cối xoay gió",
+    "Engine": "WindEngine",
+    "missions": {
+      "core": [
+        "m1",
+        "m2",
+        "m3",
+        "m4"
+      ],
+      "pro": [
+        "m5"
+      ]
+    },
+    "cards": {
+      "m1": {
+        "n": 1,
+        "title": "Lắp xong cối xoay gió",
+        "text": "Bấm “Đã lắp xong bước này” ở cả 15 bước của chặng Lắp ráp.",
+        "go": [
+          "assembly",
+          "Đến chặng lắp ráp"
+        ]
+      },
+      "m2": {
+        "n": 2,
+        "title": "Ghép khối giống hàng mẫu",
+        "text": "Đặt khối giống hàng mẫu mờ, chạm Start. Nhấn nút đỏ 4 lần: chậm, vừa, nhanh, dừng."
+      },
+      "m3": {
+        "n": 3,
+        "title": "Sạc đầy pin cho ngôi nhà",
+        "text": "Cho cánh quạt quay để sạc đầy pin, ngôi nhà sẽ sáng đèn. Quay nhanh thì sạc nhanh hơn!"
+      },
+      "m4": {
+        "n": 4,
+        "title": "Thử cối xoay gió sáng tạo",
+        "text": "Gắn thêm chi tiết ở chặng Sáng tạo, rồi quay lại chạy chương trình.",
+        "go": [
+          "creative",
+          "Đến xưởng sáng tạo"
+        ]
+      },
+      "m5": {
+        "n": 5,
+        "title": "Vượt qua cơn bão",
+        "text": "Thời tiết đổi: gió nhẹ, gió mạnh, bão. Khi bão tới, nhấn nút cho cánh quạt dừng. Hết bão thì chạy lại và sạc đầy pin."
+      }
+    },
+    "cardOrder": {
+      "kid": [
+        "m2",
+        "m3",
+        "m4",
+        "m1"
+      ],
+      "pro": [
+        "m2",
+        "m3",
+        "m4",
+        "m5",
+        "m1"
+      ]
+    },
+    "blocks": {
+      "toolbox": [
+        "touch",
+        "lowSpeed",
+        "mediumSpeed",
+        "highSpeed",
+        "motorStop",
+        "motorPower",
+        "wait",
+        "melodyA"
+      ],
+      "pro": [],
+      "sample": [
+        "start",
+        "repeatStart",
+        "touch",
+        "lowSpeed",
+        "touch",
+        "mediumSpeed",
+        "touch",
+        "highSpeed",
+        "touch",
+        "motorStop",
+        "repeatEnd"
+      ],
+      "empty": [
+        "start",
+        "repeatStart",
+        "repeatEnd"
+      ]
+    },
+    "sampleSig": [
+      "start",
+      "repeatStart",
+      "sensor_touch",
+      "motor:low",
+      "sensor_touch",
+      "motor:medium",
+      "sensor_touch",
+      "motor:high",
+      "sensor_touch",
+      "stop",
+      "repeatEnd"
+    ],
+    "creative": {
+      "store": "zm10.creative",
+      "emptyText": "Cối xoay gió cơ bản – chưa có tính năng mới."
+    }
+  };
+  // </lesson.json>
+
   window.LESSON = {
-    id: 'lop1-bai10',
-    label: 'Bài 10',
-    code: 'ZM10',
-    sheetName: 'Bài 10: Bạn gió tinh nghịch – cối xoay gió',
-    store: 'zm10_',
-    baseName: 'Cối xoay gió',
-    Engine: 'WindEngine',
+    ...SPEC,
 
     book(d) {
       const src = `assets/bai10/step-${String(d.page).padStart(2, '0')}.jpg`;
@@ -105,23 +220,6 @@
       };
     },
 
-    missions: { core: ['m1', 'm2', 'm3', 'm4'], pro: ['m5'] },
-    cards: {
-      m2: { n: 2, title: 'Ghép khối giống hàng mẫu', text: 'Đặt các khối giống hàng mẫu mờ, chạm Start, rồi nhấn nút đỏ 4 lần: chậm → vừa → nhanh → dừng.' },
-      m3: { n: 3, title: 'Sạc đầy pin cho ngôi nhà', text: 'Cho cánh quạt quay để sạc đầy pin, ngôi nhà sẽ sáng đèn. Quay nhanh thì sạc nhanh hơn!' },
-      m4: { n: 4, title: 'Thử cối xoay gió sáng tạo', text: 'Gắn thêm chi tiết ở chặng Sáng tạo, rồi quay lại chạy chương trình.', go: ['creative', 'Đến xưởng sáng tạo'] },
-      m5: { n: 5, title: 'Vượt qua cơn bão', text: 'Thời tiết đổi: gió nhẹ → gió mạnh → bão → gió nhẹ. Khi bão tới, nhấn nút cho cánh quạt dừng, hết bão chạy lại và sạc đầy pin.' },
-      m1: { n: 1, title: 'Lắp xong cối xoay gió', text: 'Bấm “Đã lắp xong bước này” ở cả 15 bước của chặng Lắp ráp.', go: ['assembly', 'Đến chặng lắp ráp'] }
-    },
-    cardOrder: { kid: ['m2', 'm3', 'm4', 'm1'], pro: ['m2', 'm3', 'm4', 'm5', 'm1'] },
-
-    // Chương trình mẫu trong giáo án: nhấn nút → chậm → nhấn → vừa → nhấn → nhanh → nhấn → dừng, lặp lại
-    blocks: {
-      toolbox: ['touch', 'lowSpeed', 'mediumSpeed', 'highSpeed', 'motorStop', 'motorPower', 'wait', 'melodyA'],
-      pro: [],
-      sample: ['start', 'repeatStart', 'touch', 'lowSpeed', 'touch', 'mediumSpeed', 'touch', 'highSpeed', 'touch', 'motorStop', 'repeatEnd'],
-      empty: ['start', 'repeatStart', 'repeatEnd']
-    },
 
     details(t) {
       const out = [];
@@ -131,14 +229,13 @@
     },
 
     creative: {
-      store: 'zm10.creative',
+      ...SPEC.creative,
       kit: KIT,
       names: NAMES,
       features: FEATURES,
       slots: SLOTS,
       pics: PICS,
       presets: PRESETS,
-      emptyText: 'Cối xoay gió cơ bản – chưa có tính năng mới.',
       placements
     }
   };

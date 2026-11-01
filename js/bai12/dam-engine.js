@@ -23,14 +23,9 @@
   const sig = b => (b.type === 'wait' ? 'wait:' + b.duration : b.type === 'motor' ? 'motor:' + (b.speed || 'low') : b.type);
   const rateOf = p => DEG_PER_P * p; // độ/giây
 
-  class DamEngine {
+  class DamEngine extends window.LessonEngine {
     constructor() {
-      this.prog = [];
-      this.logs = [];
-      this.t = 0;
-      this.upgrades = new Set();
-      this.advanced = false;
-      this.assemblyDone = false;
+      super({ sample: SAMPLE, sig, levels: { low: 4, medium: 6, high: 8 } });
       this.done = { m2: false, m3: false };
       this.wins = 0; // số lượt bảo vệ làng thành công
       this.winSigs = []; // chữ ký chương trình của các lượt thắng (NV4: lượt 2 phải khác lượt 1)
@@ -39,23 +34,20 @@
       this.level = NEED_KID; // độ đê cần có lúc này
       this.levelTimer = null;
       this.lastRun = null;
-      this.loopActive = true;
-      this.rafId = null;
-      this.reset();
+      // Trace lưu Object.entries(state) theo thứ tự; khôi phục thứ tự trường
+      // của engine cũ sau khi constructor lớp gốc đã khai báo trường chung.
+      const fields = ['t', 'advanced', 'assemblyDone', 'wins', 'm4', 'level', 'levelTimer',
+        'loopActive', 'running', 'pc', 'entered', 'blkT', 'motorOn', 'power', 'dir',
+        'revNext', 'angle', 'rev', 'touch', 'touchT', 'waitingTouch', 'progDone',
+        'runT', 'flooded', 'tooHigh', 'sawUp', 'maxPower', 'maxAngle', 'upgradeRun'];
+      const values = fields.map(key => this[key]);
+      fields.forEach(key => { delete this[key]; });
+      fields.forEach((key, i) => { this[key] = values[i]; });
     }
-    init() {
-      this.startLoop();
-    }
-    resizeCanvas() {}
 
-    reset() {
+    resetState() {
       clearTimeout(this.levelTimer);
       this.levelTimer = null;
-      this.running = false;
-      this.pc = 0;
-      this.entered = false;
-      this.blkT = 0;
-      this.motorOn = false;
       this.power = 4;
       this.dir = 1; // +1 nâng đê, -1 hạ đê
       this.revNext = false; // khối "Đổi chiều quay" chỉ áp cho khối quay liền sau
@@ -65,19 +57,18 @@
       this.touchT = 0;
       this.waitingTouch = false;
       this.progDone = false;
-      this.runT = 0; // giây kể từ lúc bấm chạy
       this.flooded = false; // nước tràn qua đê
       this.tooHigh = false; // Nâng cao: đê cao quá, thuyền cứu hộ không qua
       this.sawUp = false; // vòng nâng – hạ cho NV2
       this.maxPower = 0;
       this.maxAngle = 0;
       this.upgradeRun = false;
-      if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
+      // Bài 12 dùng touch/touchT/waitingTouch; không để các cờ của cảm biến chung lọt vào trace.
+      delete this.pressed;
+      delete this.pressT;
+      delete this.waitingPress;
     }
-
-    emit(type, data) {
-      if (this.onEvent) this.onEvent(type, data);
-    }
+    // Nhật ký gốc của bài 12 lấy mốc từ đồng hồ hiển thị this.t.
     log(kind, text) {
       this.logs.unshift({ time: this.t.toFixed(1) + 's', kind, text });
       if (this.logs.length > 8) this.logs.length = 8;
@@ -88,11 +79,7 @@
           .join('');
     }
 
-    setProgram(blocks) {
-      this.prog = blocks || [];
-      this.stop(true);
-      this.reset();
-    }
+    // Câu báo bắt đầu của bài có nội dung riêng về đợt lũ.
     start() {
       this.reset();
       this.running = true;
@@ -101,16 +88,13 @@
       this.emit('start');
     }
     stop(silent) {
-      const was = this.running;
-      this.running = false;
-      this.motorOn = false;
+      super.stop(silent);
+      delete this.waitingPress;
       this.waitingTouch = false;
-      if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
-      if (was && !silent) {
-        this.log('info', 'Đã dừng chương trình.');
-        this.emit('stop');
-      }
     }
+    // Trước khi chuyển khung, bài chỉ nhận pressTouch/putHand, không nhận press().
+    // Cảnh vẫn gọi pressTouch, còn press() của kit giữ nguyên không tác dụng.
+    press() {}
     // Học sinh nhấn cảm biến chạm (nút ✋ hoặc chạm cảnh); nhấn sớm quá thì nhớ trong 1,2 giây
     pressTouch() {
       this.touch = true;
@@ -121,17 +105,9 @@
       this.pressTouch();
     }
 
-    setAssemblyDone(done) {
-      if (this.assemblyDone === !!done) return;
-      this.assemblyDone = !!done;
-      this.checkMissions();
-    }
     setUpgrades(list) {
       this.upgrades = new Set(list || []);
       this.checkMissions();
-    }
-    has(t) {
-      return this.upgrades.has(t);
     }
     setAdvanced(on) {
       on = !!on;
@@ -162,9 +138,6 @@
       if (this.runT < FLOOD_AT) return (this.runT - (FLOOD_AT - FLOOD_RISE)) / FLOOD_RISE;
       if (this.runT <= FLOOD_END - 1) return 1;
       return Math.max(0, FLOOD_END - this.runT);
-    }
-    matchesSample() {
-      return this.prog.length === SAMPLE.length && this.prog.every((b, i) => sig(b) === SAMPLE[i]);
     }
     speed() {
       return this.motorOn ? rateOf(this.power) * this.dir : 0; // độ/giây
@@ -381,28 +354,6 @@
       if (calc2) calc2.textContent = this.advanced ? `Mức lũ hiện tại cần đê nâng từ ${this.level}° tới ${this.maxOk()}°.` : `Mức lũ hiện tại cần đê nâng ít nhất ${this.level}°.`;
     }
 
-    startLoop() {
-      cancelAnimationFrame(this.rafId);
-      this.loopActive = true;
-      let last = performance.now();
-      const loop = now => {
-        if (!this.loopActive) return;
-        const dt = Math.min(0.05, (now - last) / 1000);
-        last = now;
-        this.t += dt;
-        this.advance(dt);
-        this.updateUI();
-        this.rafId = requestAnimationFrame(loop);
-      };
-      this.rafId = requestAnimationFrame(loop);
-    }
-    pauseLoop() {
-      this.loopActive = false;
-      cancelAnimationFrame(this.rafId);
-    }
-    resumeLoop() {
-      if (!this.loopActive) this.startLoop();
-    }
   }
 
   DamEngine.RATE = rateOf;

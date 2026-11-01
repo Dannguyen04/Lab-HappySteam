@@ -39,7 +39,7 @@ const near = (actual, expected, tolerance, label) =>
   // PDF trong references/ chỉ có trên máy soạn bài (không đưa lên git), nên CI bỏ qua phần kiểm tệp
   if (fs.existsSync(path.join(root, 'references/lop1/bai11'))) assert.ok(fs.existsSync(path.join(root, 'references/lop1/bai11/bai11.pdf')), 'Sách PDF gốc có tồn tại');
 
-  for (const f of ['js/blocks-engine.js', 'js/bai11/lesson.js', 'js/bai11/water-engine.js', 'js/bai11/water-scene.js']) {
+  for (const f of ['js/blocks-engine.js', 'js/bai11/lesson.js', 'js/lesson-engine.js', 'js/bai11/water-engine.js', 'js/scene-kit.js', 'js/bai11/water-scene.js']) {
     vm.runInNewContext(read(f), context, { filename: f });
   }
   const L = context.window.LESSON;
@@ -65,8 +65,8 @@ const near = (actual, expected, tolerance, label) =>
     assert.ok(fs.existsSync(image), `Thiếu ảnh sách bước ${step}`);
     assert.ok(fs.statSync(image).size < 80 * 1024, `Ảnh bước ${step} vượt 80 KiB`);
   }
-  assert.match(book1.pdf, /bai11\.pdf#page=1$/);
-  assert.match(book31.pdf, /bai11\.pdf#page=31$/);
+  assert.equal(book1.pdf, book1.src);
+  assert.equal(book31.pdf, book31.src);
   assert.match(book31.cap, /hoàn thành/i);
 
   const blocks = new context.window.BlockEngine('none', 'none', L.blocks);
@@ -102,23 +102,30 @@ const near = (actual, expected, tolerance, label) =>
   const timers = new Map(), cleared = [];
   const draw = new Proxy({}, { get: (obj, prop) => prop === 'createLinearGradient'
     ? () => ({ addColorStop() {} }) : () => {} });
-  const canvas = { clientWidth: 900, getContext: () => draw };
+  const canvas = { clientWidth: 900, getContext: () => draw, addEventListener() {} };
   const toast = { dataset: {}, hidden: true };
+  const toastTitle = { textContent: '' }, toastText = { textContent: '' };
   const sceneContext = {
     window: { simEngine: new Water(), addEventListener() {} },
-    document: { getElementById: id => ({ 'space-scene': canvas, 'scene-toast': toast })[id] || null },
+    document: {
+      getElementById: id => ({ 'space-scene': canvas, 'scene-toast': toast,
+        'scene-toast-title': toastTitle, 'scene-toast-text': toastText })[id] || null,
+      addEventListener() {}, activeElement: { tagName: 'BODY' }
+    },
+    ResizeObserver: class { observe() {} },
     zmReady: fn => fn(), performance: { now: () => 10000 }, Math,
     requestAnimationFrame(fn) { pending.set(++sequence, fn); return sequence; },
     cancelAnimationFrame(id) { cancelled.push(id); pending.delete(id); },
     setTimeout(fn) { timers.set(++sequence, fn); return sequence; },
     clearTimeout(id) { cleared.push(id); timers.delete(id); }
   };
+  vm.runInNewContext(read('js/scene-kit.js'), sceneContext);
   vm.runInNewContext(read('js/bai11/water-scene.js'), sceneContext);
   const scene = sceneContext.window.ZMScene;
-  assert.doesNotThrow(() => scene.onEvent('wrongWay'), 'Thiếu DOM nút/tiêu đề vẫn thông báo được');
+  assert.doesNotThrow(() => scene.onEvent('wrongWay'), 'Thiếu DOM nút vẫn thông báo được');
   assert.ok(timers.size > 0, 'Thông báo tạo timer để tự đóng');
   scene.onEvent('start');
-  assert.equal(timers.size, 0, 'Start phải xóa timeout thông báo cũ');
+  assert.equal(toast.hidden, true, 'Start phải đóng thông báo cũ');
   assert.doesNotThrow(() => scene.onEvent('full', { secs: 8, fills: 1 }));
   scene.enter();
   assert.equal(pending.size, 1, 'Enter phải khởi tạo một frame');

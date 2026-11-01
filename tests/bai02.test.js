@@ -26,6 +26,7 @@ assert.equal(model.drive.output.radius, 0.025, 'Bán kính lốp 25 mm');
 for (const k of ['wing', 'bigwheel', 'nose', 'lights']) assert.ok(model.creative[k].length, 'Thiếu hình gói ' + k);
 for (let i = 1; i <= 14; i++) assert.ok(fs.existsSync(path.join(root, `assets/bai02/step-${String(i).padStart(2, '0')}.png`)), 'Thiếu hình sách bước ' + i);
 
+vm.runInNewContext(fs.readFileSync(path.join(root, 'js/lesson-engine.js'), 'utf8'), context);
 vm.runInNewContext(fs.readFileSync(path.join(root, 'js/bai02/race-engine.js'), 'utf8'), context);
 const Race = context.window.RaceEngine;
 assert.ok(Math.abs(Race.SPEED(8) - 39.27) < 0.01, 'Mức 8 ≈ 39,3 cm/giây');
@@ -53,6 +54,16 @@ function run(program, seconds, { upgrades = [], advanced = false } = {}) {
   return { sim, state: states.at(-1), events };
 }
 const near = (a, b, tol, msg) => assert.ok(Math.abs(a - b) <= tol, `${msg}: ${a} ≠ ${b}`);
+
+// repeatEnd không có repeatStart phải bỏ qua, không nhảy lại khối thứ hai.
+const orphan = run([B.start, B.high, B.wait(0.5), { type: 'repeatEnd' }, B.stop], 3);
+assert.equal(orphan.sim.running, false, 'Kết thúc lặp lẻ phải chạy tiếp tới cuối chương trình');
+assert.equal(orphan.sim.pc, 5, 'Không được quay lại khối thứ hai');
+near(orphan.sim.x, Race.SPEED(8) * 0.5, 0.5, 'Đoạn chạy không bị lặp lại');
+assert.equal(orphan.events.filter(event => event === 'end').length, 1, 'Chỉ kết thúc một lần');
+const orphanOnly = run([B.start, { type: 'repeatEnd' }], 1);
+assert.equal(orphanOnly.sim.running, false, 'repeatEnd lẻ ở cuối cũng phải thoát');
+assert.equal(orphanOnly.sim.pc, 2);
 
 // Chương trình mẫu: 50 cm phẳng (1,27 s) + 40 cm dốc x0,6 (1,70 s) + 1,2 cm → ≈ 91 cm, ngay sau đỉnh dốc
 const sample = [B.start, B.high, B.wait(3), B.stop];

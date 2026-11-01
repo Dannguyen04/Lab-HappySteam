@@ -11,3 +11,12 @@ tests/screenshots/
 node_modules/
 # Phiếu giao việc cho công cụ AI khác (chỉ dùng ở máy)
 docs/giao-viec/
+
+# Bí mật Supabase: mật khẩu DB, service_role. Chỉ .env.example được commit
+.env
+.env.*
+!.env.example
+docs/giao-viec/logs/
+
+# Skill tham khảo thiết kế (baoyu-design, giấy phép hỗn hợp) – chỉ dùng trên máy, không commit
+.agents/skills/claude-design/

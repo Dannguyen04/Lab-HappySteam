@@ -7,7 +7,7 @@ module.exports = async () => {
     build: {
       rollupOptions: {
         input: Object.fromEntries(
-          ['index', 'bai', 'lop1-bai03', 'lop1-bai09', 'lop1-bai10', 'lop1-du-an', 'lop1-trung-bay']
+          ['index', 'bai', 'lop1-bai03', 'lop1-bai09', 'lop1-bai10', 'lop1-du-an', 'lop1-trung-bay', 'giao-vien', 'vao-hoc']
             .map(name => [name, path.resolve(__dirname, `${name}.html`)])
         )
       }

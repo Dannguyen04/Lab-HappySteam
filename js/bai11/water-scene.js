@@ -12,25 +12,9 @@
     HOUSE_X = 760,
     G = 430;
   const $ = id => document.getElementById(id);
-  let cv, ctx, raf = 0, last = 0, mode = 'story', active = false;
-  const fx = { stars: [], shakeUntil: 0, drops: [], rain: 0, wrongUntil: 0 };
-
-  function resize() {
-    if (!cv) return;
-    const w = cv.clientWidth || W,
-      dpr = Math.min(2, window.devicePixelRatio || 1);
-    cv.width = Math.round(w * dpr);
-    cv.height = Math.round(((w * H) / W) * dpr);
-  }
-  function label(text, x, y, color, size = 16) {
-    ctx.font = `700 ${size}px "Be Vietnam Pro","Segoe UI",sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = 'rgba(15,45,70,.7)';
-    ctx.strokeText(text, x, y);
-    ctx.fillStyle = color;
-    ctx.fillText(text, x, y);
-  }
+  // WaterArt nhận context qua hàm vẽ; hiệu ứng và vòng vẽ do SceneKit quản lý.
+  let ctx;
+  const fx = { rain: 0, wrongUntil: 0 };
   // Gọi hàm vẽ của art.js nếu có; lỗi hoặc thiếu thì dùng hình đơn giản
   function viaArt(name, fallback, ...args) {
     const A = window.WaterArt;
@@ -185,17 +169,12 @@
     }
   };
 
-  // ---------- vẽ ----------
-  function frame(ts) {
-    if (!active) { raf = 0; return; }
-    raf = requestAnimationFrame(frame);
-    const sim = window.simEngine;
-    if (!sim || !ctx || mode !== 'story') return;
-    const now = ts / 1000;
-    if (now - last < 1 / 40) return;
-    last = now;
-    ctx.setTransform(cv.width / W, 0, 0, cv.width / W, 0, 0);
-    if (now < fx.shakeUntil) ctx.translate((Math.random() - 0.5) * 8, (Math.random() - 0.5) * 8);
+  window.ZMSceneKit.create({
+    W,
+    H,
+    idleHidden: sim => sim.running || sim.water > 0,
+    draw(context, now, sim, kit) {
+      ctx = context;
     const level = Math.max(0, Math.min(1, sim.water / sim.cap()));
     const up = { scoop: sim.has('scoop'), pipe: sim.has('pipe'), cover: sim.has('cover'), filter: sim.has('filter') };
 
@@ -245,120 +224,32 @@
     }
     // màn hình M5 trên cối xoay nước
     viaArt('drawFace', Simple.face, WHEEL[0] - 90, WHEEL[1] - 20, sim.face);
-    if (sim.note) label('♪ ' + sim.note, WHEEL[0] - 90, WHEEL[1] - 52, '#ffd23f', 22);
-    label('Sông', 110, G + 70, '#fff');
-    label('Cối xoay nước', WHEEL[0], G + 70, '#fff');
-    label(`Bể ${Math.round(sim.water)}/${sim.cap()} lít`, TANK[0] + TANK[2] / 2, TANK[1] + TANK[3] + 28, '#fff', 15);
-    label('Làng', HOUSE_X, G + 70, '#fff');
-    if (now < fx.wrongUntil) label('Ngược chiều rồi!', WHEEL[0], WHEEL[1] - 130, '#ff8a80', 20);
-    // sao chúc mừng
-    fx.stars = fx.stars.filter(s => now - s.t0 < 1.4);
-    for (const s of fx.stars) {
-      const k = (now - s.t0) / 1.4;
-      ctx.globalAlpha = 1 - k;
-      ctx.fillStyle = s.c;
-      ctx.beginPath();
-      ctx.arc(s.x + s.vx * k * 90, s.y + s.vy * k * 90, 7, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-    const idle = $('scene-idle');
-    if (idle) idle.hidden = sim.running || sim.water > 0;
-  }
-
-  // ---------- thông báo chữ to ----------
-  let toastTimer = 0;
-  function dismissToast() {
-    clearTimeout(toastTimer);
-    toastTimer = 0;
-    const el = $('scene-toast');
-    if (el) el.hidden = true;
-  }
-  function toast(kind, title, text, action) {
-    const el = $('scene-toast');
-    if (!el) return;
-    el.dataset.k = kind;
-    if ($('scene-toast-title')) $('scene-toast-title').textContent = title;
-    if ($('scene-toast-text')) $('scene-toast-text').textContent = text;
-    const btn = $('scene-toast-btn');
-    if (btn) btn.hidden = !action;
-    if (btn && action) {
-      btn.textContent = action.label;
-      btn.onclick = () => {
-        el.hidden = true;
-        action.run();
-      };
-    }
-    el.hidden = false;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => (el.hidden = true), action ? 6000 : 3500);
-  }
-
-  function onEvent(type, data) {
-    const now = performance.now() / 1000,
-      sim = window.simEngine;
-    if (type === 'start') {
-      dismissToast();
-      fx.wrongUntil = 0;
-    } else if (type === 'face' && window.SFX) window.SFX.tone(data === 'heart' ? 660 : 880, 0.08);
-    else if (type === 'wrongWay') {
-      fx.wrongUntil = now + 3;
-      if (window.SFX) window.SFX.tone(160, 0.25);
-      toast('bad', 'Gầu quay ngược chiều', 'Nước chảy ngược xuống sông. Bỏ khối “Đổi chiều quay” để gầu múc nước lên bể.', { label: 'Thử lại', run: () => sim.start() });
-    } else if (type === 'full') {
-      for (let i = 0; i < 14; i++) {
-        const a = (i / 14) * Math.PI * 2;
-        fx.stars.push({ t0: now, x: HOUSE_X, y: 300, vx: Math.cos(a), vy: Math.sin(a), c: ['#ffd23f', '#fff', '#8cc152'][i % 3] });
+    if (sim.note) kit.label('♪ ' + sim.note, WHEEL[0] - 90, WHEEL[1] - 52, '#ffd23f', 22);
+    kit.label('Sông', 110, G + 70, '#fff');
+    kit.label('Cối xoay nước', WHEEL[0], G + 70, '#fff');
+    kit.label(`Bể ${Math.round(sim.water)}/${sim.cap()} lít`, TANK[0] + TANK[2] / 2, TANK[1] + TANK[3] + 28, '#fff', 15);
+    kit.label('Làng', HOUSE_X, G + 70, '#fff');
+    if (now < fx.wrongUntil) kit.label('Ngược chiều rồi!', WHEEL[0], WHEEL[1] - 130, '#ff8a80', 20);
+    },
+    onEvent(type, data, kit) {
+      const now = performance.now() / 1000;
+      const sim = window.simEngine;
+      if (type === 'start') {
+        fx.wrongUntil = 0;
+      } else if (type === 'face' && window.SFX) {
+        window.SFX.tone(data === 'heart' ? 660 : 880, 0.08);
+      } else if (type === 'wrongWay') {
+        fx.wrongUntil = now + 3;
+        if (window.SFX) window.SFX.tone(160, 0.25);
+        kit.toast('bad', 'Gầu quay ngược chiều', 'Nước chảy ngược xuống sông. Bỏ khối “Đổi chiều quay” để gầu múc nước lên bể.', { label: 'Thử lại', run: () => sim.start() });
+      } else if (type === 'full') {
+        kit.burst(HOUSE_X, 300);
+        if (sim.advanced) fx.rain = now + 3;
+        if (window.SFX) window.SFX.ding();
+        kit.toast('ok', 'Bể đầy rồi!', sim.advanced ? 'Lần ' + data.fills + ': dân làng dùng nước, nước bay hơi thành mây rồi rơi xuống thành mưa.' : 'Cối xoay nước đưa đầy bể sau ' + data.secs.toFixed(1) + ' giây. Cả làng có nước dùng!');
+      } else if (type === 'partial') {
+        kit.toast('bad', 'Bể chưa đầy', 'Bể mới có ' + Math.round(data.water) + '/' + sim.cap() + ' lít. Hãy cho gầu quay lâu hơn hoặc nhanh hơn.', { label: 'Thử lại', run: () => sim.start() });
       }
-      if (sim.advanced) fx.rain = now + 3;
-      if (window.SFX) window.SFX.ding();
-      toast('ok', 'Bể đầy rồi!', sim.advanced ? `Lần ${data.fills}: dân làng dùng nước, nước bay hơi thành mây rồi rơi xuống thành mưa.` : `Cối xoay nước đưa đầy bể sau ${data.secs.toFixed(1)} giây. Cả làng có nước dùng!`);
-    } else if (type === 'partial') {
-      toast('bad', 'Bể chưa đầy', `Bể mới có ${Math.round(data.water)}/${sim.cap()} lít. Hãy cho gầu quay lâu hơn hoặc nhanh hơn.`, { label: 'Thử lại', run: () => sim.start() });
     }
-  }
-
-  // ---------- chế độ: câu chuyện ⇄ mô hình 3D ----------
-  function setMode(m) {
-    mode = m;
-    const wrap = $('scene-wrap'), toggle = $('scene-toggle');
-    if (wrap) wrap.dataset.mode = m;
-    if (toggle) {
-      toggle.textContent = m === 'story' ? 'Xem mô hình thật' : 'Xem câu chuyện';
-      toggle.setAttribute('aria-pressed', String(m === 'robot'));
-    }
-    if (!active) return;
-    if (m === 'robot') window.ZMSandbox?.open();
-    else window.ZMSandbox?.close();
-    resize();
-  }
-  function enter() {
-    if (active) return;
-    active = true;
-    resize();
-    if (mode === 'robot') window.ZMSandbox?.open();
-    if (!raf && ctx) raf = requestAnimationFrame(frame);
-  }
-  function leave() {
-    active = false;
-    if (raf) cancelAnimationFrame(raf);
-    raf = 0;
-    last = 0;
-    dismissToast();
-    window.ZMSandbox?.close();
-  }
-
-  zmReady(() => {
-    cv = $('space-scene');
-    if (!cv) return;
-    ctx = cv.getContext('2d');
-    if (!ctx) return;
-    if (typeof ResizeObserver !== 'undefined') new ResizeObserver(resize).observe(cv);
-    else window.addEventListener?.('resize', resize);
-    $('scene-toggle')?.addEventListener('click', () => setMode(mode === 'story' ? 'robot' : 'story'));
-    $('scene-toast-close')?.addEventListener('click', dismissToast);
-    if (active && !raf) raf = requestAnimationFrame(frame);
   });
-
-  window.ZMScene = { enter, leave, onEvent, setMode, mode: () => mode };
 })();

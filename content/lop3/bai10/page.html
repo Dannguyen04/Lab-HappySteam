@@ -2,19 +2,19 @@
 <template data-slot="header-copy">
   <div class="eyebrow">Lớp 3 · Bài 10 · Khám phá Hành tinh Đỏ</div>
   <h1>Robot thám hiểm sao Hỏa</h1>
-  <p class="lede pro-only">Lắp robot 15 bước với động cơ và cảm biến siêu âm. Ghép khối Start, Repeat, Motor Low, Chờ vật cản, Stop, Wait 3s để xe dừng trước đá và thu mẫu. Thử cải tiến robot để vượt bão bụi trong chế độ Nâng cao.</p>
+  <p class="lede pro-only">Lắp robot 15 bước với động cơ và cảm biến siêu âm. Ghép khối Start, Repeat, Low Speed, Chờ vật cản, Stop, Wait 3s để xe dừng trước đá và thu mẫu. Thử cải tiến robot để vượt bão bụi trong chế độ Nâng cao.</p>
 </template>
 
 <template data-slot="mission-chips">
   <span class="chip" id="chip-m1" title="Đánh dấu hoàn thành cả 15 bước lắp ráp"><i>1</i>Lắp xong 15 bước</span>
-  <span class="chip" id="chip-m2" title="Start · Repeat · Motor Low · Chờ vật cản · Stop · Wait 3s · Repeat End"><i>2</i>Lập trình theo mẫu</span>
+  <span class="chip" id="chip-m2" title="Start · Repeat · Low Speed · Chờ vật cản · Stop · Wait 3s · Repeat End"><i>2</i>Lập trình theo mẫu</span>
   <span class="chip" id="chip-m3" title="Dừng cách mỗi tảng đá từ 3–15 cm và đứng yên 2 giây"><i>3</i>Thu 3 mẫu đá</span>
   <span class="chip" id="chip-m4" title="Gắn nâng cấp ở chặng Sáng tạo, rồi chạy robot"><i>4</i>Chạy robot sáng tạo</span>
   <span class="chip pro-only" id="chip-m5" title="Nâng cao: chờ bão bụi qua rồi thu đủ ba mẫu"><i>5</i>Vượt bão bụi</span>
 </template>
 
 <template data-slot="victory-copy">
-  <p>Em đã lắp ráp robot, lập trình cảm biến sóng âm, thu đủ ba mẫu đá và thử nâng cấp robot thám hiểm.</p>
+  <p>Em đã lắp ráp robot, lập trình cảm biến siêu âm, thu đủ ba mẫu đá và thử nâng cấp robot thám hiểm.</p>
   <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM3-10</code></p>
 </template>
 
@@ -71,7 +71,7 @@
 </template>
 
 <template data-slot="sim-scene">
-  <canvas id="space-scene" aria-label="Sa bàn sao Hỏa: xe thám hiểm chạy tới ba tảng đá, cảm biến sóng âm phát hiện vật cản và thu mẫu"></canvas>
+  <canvas id="space-scene" aria-label="Sa bàn sao Hỏa: xe thám hiểm chạy tới ba tảng đá, cảm biến siêu âm phát hiện vật cản và thu mẫu"></canvas>
   <div class="sim-stage" id="sim-stage" aria-label="Robot thám hiểm 3D chuyển động theo chương trình"></div>
   <p class="scene-idle" id="scene-idle">Chạm khối <b>Start</b> màu vàng hoặc nút <b>▶</b> để robot bắt đầu thám hiểm</p>
 </template>
@@ -91,5 +91,5 @@
 </template>
 
 <template data-slot="sim-hint">
-  <p class="hint"><b>NV2:</b> Ghép đúng hàng mẫu và chạy một vòng lặp. <b>NV3:</b> cho xe chạy chậm tới đá, dùng <b>Chờ vật cản</b> rồi <b>Stop</b>, đợi ít nhất 2 giây để lấy mẫu. <b>Nâng cao:</b> bão bụi từ giây 10 đến 18; dùng khối <b>Wait</b> để chờ bão tan trước khi tiến tiếp.</p>
+  <p class="hint"><b>NV2:</b> Ghép đúng hàng mẫu và chạy một vòng lặp. <b>NV3:</b> cho xe chạy chậm tới đá, dùng <b>Chờ vật cản</b> rồi <b>Stop</b>, chờ ít nhất 2 giây để lấy mẫu. <b>Nâng cao:</b> bão bụi từ giây 10 đến 18; dùng khối <b>Wait</b> để chờ bão tan trước khi tiến tiếp.</p>
 </template>

@@ -1,15 +1,15 @@
 // Bộ mô phỏng Lớp 3 · Bài 10 – Robot thám hiểm sao Hỏa (xe thám hiểm 1 động cơ + cảm biến sóng âm).
-// Động cơ chạy tới (cw) / lùi (ccw); Low/Medium/High = mức 3/5/8 → 7,5 / 12,5 / 20 cm/giây trên sa bàn (thu nhỏ, không phải tốc độ thật).
+// Động cơ chạy tới (cw) / lùi (ccw); Low/Medium/High = mức 4/6/8 → 10 / 15 / 20 cm/giây trên sa bàn (thu nhỏ, không phải tốc độ thật).
 // Cảm biến sóng âm đo khoảng cách tới tảng đá phía trước: khối "Chờ vật cản" chờ cho tới khi đá nằm trong tầm 15 cm (ăng-ten: gấp đôi).
 // Thu mẫu: xe đứng yên 2 giây khi đá cách 3–tầm cảm biến (đủ gần, chưa chạm). Đâm vào đá (≤ 3 cm) thì hỏng. Xe có đà: chạy nhanh phanh xa hơn.
 // Nâng cao: bão bụi (biết trước giờ) – cảm biến "mù" (gắn đèn pha thì vẫn thấy) và xe chạy trong bão bị lún cát,
 // chạy quá lâu thì kẹt (bánh gai gấp đôi thời gian).
-// Cùng giao diện với SimulationEngine của Bài 9 để js/app.js dùng chung.
+// Kế thừa LessonEngine chung để js/app.js dùng cùng giao diện mô phỏng.
 (function () {
   'use strict';
 
-  const LEVEL = { low: 3, medium: 5, high: 8 };
-  const NAME = { 3: 'chậm', 5: 'vừa', 8: 'nhanh' };
+  const LEVEL = { low: 4, medium: 6, high: 8 }; // mức chuẩn chung (js/lesson-engine.js)
+  const NAME = { 4: 'chậm', 6: 'vừa', 8: 'nhanh' };
   const CMS = 2.5; // cm/giây cho mỗi mức tốc độ
   const ACCEL = 25; // cm/giây² (tăng/giảm tốc)
   const REACH = 15; // cm: tầm cảm biến sóng âm
@@ -19,9 +19,9 @@
   const TRACK = 170; // cm chiều dài đường thám hiểm
   const SOUND = 343; // m/giây
   const ROCKS = [
-    { x: 40, name: 'đá đỏ' },
-    { x: 90, name: 'đá xám' },
-    { x: 140, name: 'đá xanh' }
+    { x: 50, name: 'đá đỏ' },
+    { x: 100, name: 'đá xám' },
+    { x: 150, name: 'đá xanh' }
   ];
   // Nâng cao: [đến giây, thời tiết]
   const WEATHER = [
@@ -32,34 +32,27 @@
   const SAMPLE = ['start', 'repeatStart', 'motor:low:cw', 'sensor_obstacle', 'stop', 'wait:3', 'repeatEnd'];
   const sig = b => (b.type === 'motor' ? ['motor', b.speed, b.dir || 'cw'].join(':') : b.type === 'wait' ? 'wait:' + b.duration : b.type);
 
-  class RoverEngine {
+  class RoverEngine extends window.LessonEngine {
     constructor() {
-      this.prog = [];
-      this.logs = [];
-      this.t = 0;
-      this.upgrades = new Set();
-      this.advanced = false;
-      this.assemblyDone = false;
+      super({
+        sample: SAMPLE, sig,
+        labels: { dish: 'Ăng-ten', lamp: 'Đèn pha', wheels: 'Bánh gai' },
+        baseLabel: 'Robot cơ bản'
+      });
       this.done = { m2: false, m3: false, m5: false };
-      this.best = null; // lần thu đủ mẫu gần nhất { secs }
-      this.rafId = null;
-      this.loopActive = true;
-      this.reset();
+      // Các cờ cảm biến chạm của lớp gốc không thuộc trạng thái công khai của xe.
+      for (const key of ['motorOn', 'power', 'dir', 'pressed', 'pressT', 'waitingPress'])
+        Object.defineProperty(this, key, { enumerable: false, writable: true, configurable: true, value: this[key] });
     }
-    init() {
-      this.startLoop();
-    }
-    resizeCanvas() {}
-    reset() {
-      this.running = false;
-      this.pc = 0;
-      this.entered = false;
-      this.blkT = 0;
+    resetState() {
+      // Giữ thứ tự thuộc tính công khai như bản cũ để ảnh chụp trace trùng khớp.
+      const firstReset = !Object.prototype.hasOwnProperty.call(this, 'x');
+      if (firstReset) delete this.runT;
       this.motor = { on: false, power: 0, dir: 1 };
       this.x = 0; // cm từ căn cứ
       this.v = 0; // cm/giây (có dấu)
       this.wheel = 0; // góc bánh xe (rad)
-      this.runT = 0;
+      if (firstReset) this.runT = 0;
       this.rocks = ROCKS.map(r => ({ ...r, scanT: 0, got: false }));
       this.loops = 0;
       this.stuckT = 0;
@@ -67,69 +60,16 @@
       this.crashWhy = '';
       this.stormSeen = false;
       this.hintT = -10;
-      if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
     }
-    emit(type, data) {
-      if (this.onEvent) this.onEvent(type, data);
-    }
-    log(kind, text) {
-      this.logs.unshift({ time: this.runT.toFixed(1) + 's', kind, text });
-      if (this.logs.length > 8) this.logs.length = 8;
-      const el = document.getElementById('sim-log-list');
-      if (el)
-        el.innerHTML = this.logs
-          .map(e => `<li class="log-item" data-kind="${e.kind}"><time class="log-time">${e.time}</time><span class="log-dot"></span><span class="log-text">${e.text}</span></li>`)
-          .join('');
-    }
-
-    setProgram(blocks) {
-      this.prog = blocks || [];
-      this.stop(true);
-      this.reset();
-    }
-    start() {
-      this.reset();
-      this.running = true;
-      if (window.SFX) window.SFX.init();
-      this.log('info', 'Bắt đầu chạy chương trình.');
-      this.emit('start');
+    onStart() {
       this.emit('weather', this.weather());
     }
     stop(silent) {
-      const was = this.running;
-      this.running = false;
+      super.stop(silent);
       this.motor.on = false;
-      if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
-      if (was && !silent) {
-        this.log('info', 'Đã dừng chương trình.');
-        this.emit('stop');
-      }
     }
+    // Xe dùng cảm biến khoảng cách, không nhận sự kiện nút đỏ.
     press() {}
-    setAssemblyDone(done) {
-      if (this.assemblyDone === !!done) return;
-      this.assemblyDone = !!done;
-      this.checkMissions();
-    }
-    setUpgrades(list) {
-      this.upgrades = new Set(list || []);
-      this.upgradeRun = false;
-      const labels = { dish: 'Ăng-ten', lamp: 'Đèn pha', wheels: 'Bánh gai' };
-      const badge = document.getElementById('sim-active-upgrade-badge');
-      if (badge) badge.textContent = this.upgrades.size ? [...this.upgrades].map(t => labels[t]).join(' · ') : 'Robot cơ bản';
-      this.log('ok', this.upgrades.size ? 'Đã gắn: ' + [...this.upgrades].map(t => labels[t]).join(', ') : 'Robot cơ bản');
-    }
-    has(t) {
-      return this.upgrades.has(t);
-    }
-    setAdvanced(on) {
-      on = !!on;
-      if (this.advanced === on) return;
-      this.advanced = on;
-      this.stop(true);
-      this.reset();
-      this.checkMissions();
-    }
     // Thời tiết hiện tại: { kind, next } – chế độ Bé luôn trời quang
     weather(t = this.runT) {
       if (!this.advanced) return { kind: 'clear', next: Infinity };
@@ -165,14 +105,34 @@
     targetSpeed() {
       return this.motor.on && !this.crashed ? this.motor.power * CMS * this.motor.dir : 0;
     }
-    matchesSample() {
-      return this.prog.length === SAMPLE.length && this.prog.every((b, i) => sig(b) === SAMPLE[i]);
-    }
     // Tư thế cho sa bàn 3D: bánh xe quay theo quãng đường đi được
     pose3d() {
       return { output: this.wheel };
     }
 
+    onLoopEnd() {
+      this.loops++;
+      if (this.loops === 1 && this.matchesSample() && !this.done.m2) {
+        this.done.m2 = true;
+        this.log('ok', 'Đúng chương trình mẫu: chạy tới, cảm biến thấy đá thì dừng và thu mẫu.');
+        this.emit('sampleDone');
+        this.checkMissions();
+      }
+    }
+    onMotor(b) {
+      const mo = this.motor;
+      mo.power = b.type === 'motor_power' ? Math.max(1, Math.min(8, b.power || 8)) : LEVEL[b.speed] || 8;
+      if (b.type === 'motor') mo.dir = b.dir === 'ccw' ? -1 : 1;
+      mo.on = true;
+      this.log('info', `Động cơ chạy ${NAME[mo.power] || 'mức ' + mo.power}${mo.dir < 0 ? ', lùi lại' : ', tiến tới'}.`);
+      this.noteUpgradeRun();
+    }
+    onStopBlock(wasOn) {
+      if (wasOn) this.log('info', 'Động cơ dừng – xe trượt thêm một đoạn rồi đứng yên.');
+      this.motor.on = false;
+    }
+    // Cần hook chung cho cảm biến đo khoảng cách và vòng lặp không thời lượng.
+    // Trong lúc chờ cảm biến, điều kiện thoát thay đổi sau từng bước vật lý.
     advance(dt) {
       if (!this.running) return;
       let budget = dt,
@@ -188,27 +148,13 @@
           continue;
         }
         if (b.type === 'repeatEnd') {
-          this.loops++;
-          if (this.loops === 1 && this.matchesSample() && !this.done.m2) {
-            this.done.m2 = true;
-            this.log('ok', 'Đúng chương trình mẫu: chạy tới, cảm biến thấy đá thì dừng và thu mẫu.');
-            this.emit('sampleDone');
-            this.checkMissions();
-          }
+          this.onLoopEnd();
           const r = this.prog.findIndex(x => x.type === 'repeatStart');
           this.pc = r < 0 ? this.pc + 1 : r + 1;
           continue;
         }
         if (b.type === 'motor' || b.type === 'motor_power') {
-          const mo = this.motor;
-          mo.power = b.type === 'motor_power' ? Math.max(1, Math.min(8, b.power || 8)) : LEVEL[b.speed] || 8;
-          if (b.type === 'motor') mo.dir = b.dir === 'ccw' ? -1 : 1;
-          mo.on = true;
-          this.log('info', `Động cơ chạy ${NAME[mo.power] || 'mức ' + mo.power}${mo.dir < 0 ? ', lùi lại' : ', tiến tới'}.`);
-          if (this.upgrades.size && !this.upgradeRun) {
-            this.upgradeRun = true;
-            this.checkMissions();
-          }
+          this.onMotor(b);
           this.pc++;
           continue;
         }
@@ -218,8 +164,7 @@
           continue;
         }
         if (b.type === 'stop') {
-          if (this.motor.on) this.log('info', 'Động cơ dừng – xe trượt thêm một đoạn rồi đứng yên.');
-          this.motor.on = false;
+          this.onStopBlock(this.motor.on);
           this.pc++;
           continue;
         }
@@ -228,7 +173,7 @@
             this.entered = true;
             this.blkT = 0;
             if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
-            this.log('info', `Cảm biến sóng âm đang dò: chờ đá trong tầm ${this.reach()} cm.`);
+            this.log('info', `Cảm biến siêu âm đang dò: chờ đá trong tầm ${this.reach()} cm.`);
           }
           const d = this.reading();
           if (d !== null) {
@@ -247,10 +192,7 @@
           this.entered = true;
           this.blkT = 0;
           if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
-          if (b.type === 'melody') {
-            if (window.SFX) window.SFX.melody(b.tune);
-            this.emit('melody', b.tune);
-          }
+          if (b.type === 'melody') this.enterBlock(b);
         }
         const dur = b.type === 'melody' ? 1 : b.type === 'wait' ? b.duration || 3 : 0;
         const need = dur - this.blkT;
@@ -334,22 +276,8 @@
     }
 
     finish() {
-      this.running = false;
+      super.finish();
       this.motor.on = false;
-      if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
-      this.emit('end');
-      this.checkMissions();
-    }
-
-    checkMissions() {
-      const m1 = this.assemblyDone;
-      const m4 = this.upgrades.size > 0 && !!this.upgradeRun;
-      if (this.onMissionUpdate)
-        this.onMissionUpdate({
-          m1, m2: this.done.m2, m3: this.done.m3, m4, m5: this.done.m5,
-          allDone: m1 && this.done.m2 && this.done.m3 && m4,
-          upgrades: [...this.upgrades], best: this.best
-        });
     }
 
     updateUI() {
@@ -389,28 +317,6 @@
         : `Thu mẫu khi đá cách ${NEAR}–${this.reach()} cm và xe đứng yên ${SCAN} giây. Xe chạy nhanh phải phanh xa hơn.`;
     }
 
-    startLoop() {
-      cancelAnimationFrame(this.rafId);
-      this.loopActive = true;
-      let last = performance.now();
-      const loop = now => {
-        if (!this.loopActive) return;
-        const dt = Math.min(0.05, (now - last) / 1000);
-        last = now;
-        this.t += dt;
-        this.advance(dt);
-        this.updateUI();
-        this.rafId = requestAnimationFrame(loop);
-      };
-      this.rafId = requestAnimationFrame(loop);
-    }
-    pauseLoop() {
-      this.loopActive = false;
-      cancelAnimationFrame(this.rafId);
-    }
-    resumeLoop() {
-      if (!this.loopActive) this.startLoop();
-    }
   }
 
   RoverEngine.WEATHER = WEATHER;

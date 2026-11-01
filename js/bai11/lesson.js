@@ -97,21 +97,21 @@
         alt: `Hình lắp ráp gốc bước ${page} của cối xoay nước`,
         loc: `Bước ${page} · trang ${page}/31`,
         cap: page === 31 ? 'Mô hình hoàn thành. Đối chiếu ảnh với mô hình 3D.' : 'Làm theo hình bước này và đối chiếu mô hình 3D.',
-        pdf: `references/lop1/bai11/bai11.pdf#page=${page}`
+        pdf: `assets/lop1-bai11/step-${String(page).padStart(2, '0')}.jpg`
       };
     },
 
     missions: { core: ['m1', 'm2', 'm3', 'm4'], pro: ['m5'] },
     cards: {
-      m2: { n: 2, title: 'Ghép khối giống hàng mẫu', text: 'Đặt các khối giống hàng mẫu mờ, chạm Start: màn hình hiện trái tim rồi mặt cười, gầu quay, kêu A rồi B.' },
-      m3: { n: 3, title: 'Đưa nước lên đầy bể', text: 'Cho gầu quay đúng chiều để múc nước từ sông lên bể chứa. Bể đầy 100 lít thì dân làng có nước dùng.' },
+      m2: { n: 2, title: 'Ghép khối giống hàng mẫu', text: 'Đặt khối giống hàng mẫu mờ, chạm Start. Màn hình hiện hình, gầu quay, phát âm thanh A rồi B.' },
+      m3: { n: 3, title: 'Đưa nước lên đầy bể', text: 'Cho gầu quay đúng chiều để múc nước lên bể. Bể đầy 100 lít thì dân làng có nước.' },
       m4: { n: 4, title: 'Thử cối xoay nước sáng tạo', text: 'Gắn thêm chi tiết ở chặng Sáng tạo, rồi quay lại chạy chương trình.', go: ['creative', 'Đến xưởng sáng tạo'] },
-      m5: { n: 5, title: 'Giữ nước cho cả làng', text: 'Trời nắng làm nước bay hơi (2 lít mỗi giây). Bể 150 lít, đầy 3 lần liền. Tính: vòng/giây × 5 lít − 2 lít bay hơi.' },
+      m5: { n: 5, title: 'Giữ nước cho cả làng', text: 'Nắng làm nước bay hơi 2 lít mỗi giây. Bể 150 lít, đầy 3 lần liền. Tính: vòng/giây × 5 lít − 2 lít.' },
       m1: { n: 1, title: 'Lắp xong cối xoay nước', text: 'Bấm “Đã lắp xong bước này” ở cả 31 bước của chặng Lắp ráp.', go: ['assembly', 'Đến chặng lắp ráp'] }
     },
     cardOrder: { kid: ['m2', 'm3', 'm4', 'm1'], pro: ['m2', 'm3', 'm4', 'm5', 'm1'] },
 
-    // Chương trình mẫu trong giáo án: Trái tim, âm A, quay nhanh 3 giây, mặt cười, âm B, tiếp tục quay 3 giây, lặp lại
+    // Chương trình mẫu trong sách: Trái tim, âm A, quay nhanh 3 giây, mặt cười, âm B, tiếp tục quay 3 giây, lặp lại
     blocks: {
       toolbox: ['displayHeart', 'displaySmile', 'melodyA', 'melodyB', 'highSpeed', 'lowSpeed', 'wait', 'motorStop', 'motorReverse'],
       pro: [],
