@@ -85,7 +85,8 @@ const read = rel => fs.readFileSync(path.join(root, rel), 'utf8');
     assert.equal(info.pdf, `references/lop3/bai11/bai11.pdf#page=${step}`);
   }
   assert.equal(book.pdf, 'references/lop3/bai11/bai11.pdf#page=14');
-  assert.ok(fs.existsSync(path.join(root, 'references/lop3/bai11/bai11.pdf')));
+  // references/ chỉ có trên máy soạn bài (không đưa lên git), nên CI bỏ qua phần kiểm tệp
+  if (fs.existsSync(path.join(root, 'references'))) assert.ok(fs.existsSync(path.join(root, 'references/lop3/bai11/bai11.pdf')));
 
   vm.runInNewContext(read('js/lop3-bai11/water-engine.js'), context);
   const Water = context.window.WaterEngine;

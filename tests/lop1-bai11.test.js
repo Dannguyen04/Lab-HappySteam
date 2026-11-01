@@ -36,7 +36,8 @@ const near = (actual, expected, tolerance, label) =>
   assert.ok(data.instances.some(part => part.groupPath === 'Main/1' && part.joins.includes(29)), 'Cụm bánh răng ghép ở bước 29');
   for (let s = 22; s <= 28; s++) assert.equal(data.stepInfo[s - 1].group, 'Cụm bánh răng');
   assert.ok(data.stepInfo[28].joins.includes('Cụm bánh răng'));
-  assert.ok(fs.existsSync(path.join(root, 'references/lop1/bai11/bai11.pdf')), 'Sách PDF gốc có tồn tại');
+  // references/ chỉ có trên máy soạn bài (không đưa lên git), nên CI bỏ qua phần kiểm tệp
+  if (fs.existsSync(path.join(root, 'references'))) assert.ok(fs.existsSync(path.join(root, 'references/lop1/bai11/bai11.pdf')), 'Sách PDF gốc có tồn tại');
 
   for (const f of ['js/blocks-engine.js', 'js/bai11/lesson.js', 'js/bai11/water-engine.js', 'js/bai11/water-scene.js']) {
     vm.runInNewContext(read(f), context, { filename: f });
