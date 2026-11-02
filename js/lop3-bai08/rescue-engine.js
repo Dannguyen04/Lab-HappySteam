@@ -194,7 +194,7 @@
             this.emit('sampleDone');
             this.checkMissions();
           }
-          const r = this.prog.findIndex(x => x.type === 'repeatStart');
+          const r = window.LessonEngine.loopStart(this.prog, this.pc);
           this.pc = r < 0 ? this.pc + 1 : r + 1;
           continue;
         }

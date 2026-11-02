@@ -3,11 +3,11 @@
 // Bước theo sách: scripts/bai03-plan.js; mã/tên/màu: scripts/bai03-parts.js.
 'use strict';
 const path = require('node:path');
-const cad = require('./lib/cad-lesson');
-const plan = require('./bai03-plan');
-const table = require('./bai03-parts');
+const cad = require('../lib/cad-lesson');
+const plan = require('../bai03-plan');
+const table = require('../bai03-parts');
 
-const ROOT = path.join(__dirname, '..');
+const ROOT = path.join(__dirname, '..', '..');
 const source = path.join(ROOT, 'references', 'drive_bai3', 'model2.ldr');
 
 const sections = cad.readSections(source);

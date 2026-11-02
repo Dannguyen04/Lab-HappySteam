@@ -8,7 +8,7 @@
 //         'theory'  – bài không có mô hình: nội dung + phiếu học tập tương tác
 //         'test'    – kiểm tra học kì
 //   thêm: { href: trang bài đã làm xong (có href = mở được, không có = "Sắp có"), cover: ảnh thẻ, about: một câu giới thiệu }
-// Thêm một bài mới đã làm xong: tạo trang lopX-baiYY.html rồi điền href (và cover) cho bài đó ở đây.
+// Thêm một bài mới đã làm xong: đăng ký ở js/lessons.js rồi điền href: 'bai.html?id=lopX-baiYY' (và cover) cho bài đó ở đây.
 (function () {
   'use strict';
 

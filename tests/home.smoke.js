@@ -129,9 +129,6 @@ async function smokeStudentHome(browser) {
     await page.click('.back-link');
     await page.waitForSelector('.lesson-card');
     assert.match(await page.title(), /Chọn bài|Happy STEAM/);
-    await page.goto(pageUrl('lop1-bai09.html?lop=1#lap-rap'));
-    await page.waitForURL(/bai\.html\?id=lop1-bai09&lop=1#lap-rap/);
-    assert.match(page.url(), /bai\.html\?id=lop1-bai09&lop=1#lap-rap/, 'Liên kết cũ giữ query/hash');
     await page.goto(pageUrl('bai.html?id=khong-co'));
     assert.match(await page.locator('#lesson-loading').innerText(), /Không tìm thấy bài học/);
     assert.equal(await page.locator('#lesson-loading a[href="index.html"]').count(), 1, 'ID sai có link về trang chọn bài');

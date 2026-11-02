@@ -5,12 +5,12 @@
 'use strict';
 const fs = require('node:fs');
 const path = require('node:path');
-const cad = require('./lib/cad-lesson');
-const lib = require('./lib/kit-library');
-const { convert } = require('./rbb2content');
-const bai9 = require('./bai9-parts');
+const cad = require('../lib/cad-lesson');
+const lib = require('../lib/kit-library');
+const { convert } = require('../rbb2content');
+const bai9 = require('../bai9-parts');
 
-const ROOT = path.join(__dirname, '..');
+const ROOT = path.join(__dirname, '..', '..');
 const STUDIO = path.resolve(process.env.RBB_STUDIO || path.join(ROOT, '..', 'RBB_Studio'));
 const rbbFile = path.join(STUDIO, 'pdf2rbb', 'out', 'bai2', 'Bai2_dong_co.rbb');
 const rbb = require(path.join(STUDIO, 'pdf2rbb', 'lib', 'rbb.cjs'));

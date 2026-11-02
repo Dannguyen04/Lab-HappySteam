@@ -5,7 +5,7 @@ const { fork } = require('node:child_process');
 const { chromium } = require('playwright');
 
 async function startServer() {
-  const server = fork(path.join(__dirname, 'helpers/static-server.js'), [], {
+  const server = fork(path.join(__dirname, '..', 'tests', 'helpers', 'static-server.js'), [], {
     stdio: ['ignore', 'inherit', 'inherit', 'ipc']
   });
   return new Promise((resolve, reject) => {

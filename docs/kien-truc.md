@@ -54,7 +54,7 @@ tests/
 2. **Triển khai tự động**: workflow GitHub Actions build `dist/` → Pages. Kiểm tra bản online trước khi đi tiếp.
 3. **Module hoá**: đổi các `<script>` + biến toàn cục sang `import/export` trong `src/core`, giữ hành vi.
 4. **Thư viện chi tiết theo kit**: tách hình dạng chi tiết khỏi `data-bai-XX.js`; mỗi bài chỉ còn `build.json`. Đo kích thước tải trước/sau.
-5. **Một trang bài học**: `bai.html?id=…` đọc `content/…`; trang cũ `lop1-bai09.html` chuyển hướng sang link mới (giữ link giáo viên đã lưu).
+5. **Một trang bài học**: `bai.html?id=…` đọc `content/…`. (Trang chuyển hướng cũ `lop1-bai03/09/10.html` đã bỏ ngày 2026-11-02.)
 6. **Lược đồ nội dung + mẫu soạn bài**: định nghĩa "khung" từng loại bài (mô hình / dự án / lý thuyết) bằng TS + zod, kèm phiếu câu hỏi để người soạn điền thông tin một bài mới.
 7. **Tài khoản & dữ liệu tập trung** theo `docs/ba/BRD.md` (lớp, buổi học, phụ huynh, chấm).
 8. Làm tiếp bài mới (Lớp 1 còn lại, rồi Lớp 3 – cùng kit, cùng thư viện chi tiết).

@@ -129,9 +129,9 @@
             this.done.m2 = true;
             this.checkMissions();
           }
-          const i = this.prog.findIndex(v => v.type === 'repeatStart');
+          const i = this.loopStartOf(this.pc);
           if (i < 0) this.pc++;
-          else if (!this.prog.slice(i + 1).some(v => v.type === 'wait' || v.type === 'sensor_obstacle' || v.type === 'melody')) this.pc = this.prog.length;
+          else if (!this.prog.slice(i + 1, this.pc).some(v => v.type === 'wait' || v.type === 'sensor_obstacle' || v.type === 'melody')) this.pc = this.prog.length;
           else this.pc = i + 1;
           continue;
         }

@@ -38,6 +38,7 @@ for (const code of ['BP-7017', 'BP-7018', 'BP-7075']) {
 }
 for (const k of ['radar', 'light']) assert.ok(model.creative[k].length, 'Thiếu hình gói ' + k);
 
+vm.runInNewContext(fs.readFileSync(path.join(root, 'js/lesson-engine.js'), 'utf8'), context); // trang nạp lớp gốc trước engine (js/lessons.js)
 vm.runInNewContext(fs.readFileSync(path.join(root, 'js/lop3-bai08/rescue-engine.js'), 'utf8'), context);
 const Rescue = context.window.RescueEngine;
 const B = {

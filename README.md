@@ -2,7 +2,7 @@
 
 Ứng dụng học tập cho học sinh tiểu học (bộ ZMrobo Alpha 330): lắp mô hình 3D theo sách hướng dẫn, sáng tạo, lập trình bằng khối và mô phỏng. Giao diện tiếng Việt; cần **mở qua HTTP** vì các bài mô hình tải `content/` bằng `fetch` (không hỗ trợ mở trực tiếp bằng `file://`).
 
-**Trang chọn bài (`index.html`):** chọn **Lớp 1–5 → Học kì I/II → bài học**. Danh mục bài nằm ở `js/catalog.js` (Lớp 1 đủ 35 tuần theo khung chương trình; Lớp 2–5 theo thư mục tài liệu hiện có). Bài đã làm xong mở được, các bài khác hiện mờ "Sắp có". Có thể gửi thẳng link một lớp/học kì: `index.html?lop=1&hk=2`. Hiện đã có **Lớp 1 · Bài 3 – Robot thám hiểm Milo** (`lop1-bai03.html`), **Bài 9 – Thông tin liên lạc vũ trụ** (`lop1-bai09.html`) và **Bài 10 – Bạn gió tinh nghịch (cối xoay gió)** (`lop1-bai10.html`); phần dưới đây mô tả Bài 9, Bài 3 và Bài 10 tóm tắt ngay sau.
+**Trang chọn bài (`index.html`):** chọn **Lớp 1–5 → Học kì I/II → bài học**. Danh mục bài nằm ở `js/catalog.js` (Lớp 1 đủ 35 tuần theo khung chương trình; Lớp 2–5 theo thư mục tài liệu hiện có). Bài đã làm xong mở được, các bài khác hiện mờ "Sắp có". Có thể gửi thẳng link một lớp/học kì: `index.html?lop=1&hk=2`. Mỗi bài mở bằng `bai.html?id=lop1-bai03`; danh sách bài đã làm ở `js/lessons.js`. Tổng quan hệ thống: `docs/ban-do-he-thong.md`. Phần dưới đây mô tả Bài 9, Bài 3 và Bài 10 tóm tắt ngay sau.
 
 **Thêm một bài mô hình mới (khung dùng chung):**
 1. Chuẩn bị `content/lop1/baiXX/build.json` và mesh dùng chung trong `content/kits/alpha330/meshes/` qua `scripts/generate-*.js` / `scripts/lib/cad-lesson.js` (không tạo `js/data-bai-XX.js`).
@@ -17,7 +17,7 @@
 
 ## 1. Mở và sử dụng
 
-1. Giữ nguyên cấu trúc thư mục, chạy `npm install` rồi `npm run dev`, mở địa chỉ HTTP mà Vite cung cấp bằng **Chrome** hoặc **Edge**, chọn Lớp 1 → Học kì I → **Bài 9** (hoặc mở `bai.html?id=lop1-bai09`). Các link `lop1-baiXX.html` cũ tự chuyển hướng. Nút "← Tất cả bài học" ở đầu trang bài để quay lại.
+1. Giữ nguyên cấu trúc thư mục, chạy `npm install` rồi `npm run dev`, mở địa chỉ HTTP mà Vite cung cấp bằng **Chrome** hoặc **Edge**, chọn Lớp 1 → Học kì I → **Bài 9** (hoặc mở `bai.html?id=lop1-bai09`). Nút "← Tất cả bài học" ở đầu trang bài để quay lại.
 2. Trang chia **ba chặng** theo tiết học (thanh dưới tiêu đề): **① Lắp ráp** – mô hình 3D 28 bước (kéo để xoay, linh kiện mới rơi vào vị trí, đố vui), bên phải là linh kiện của bước, **hình in của bước đó trong sách** và các công cụ xem; **② Sáng tạo**; **③ Lập trình & thử**. Ứng dụng nhớ chặng đang học.
 3. **② Sáng tạo** (xưởng sáng tạo): mô hình vệ tinh hoàn chỉnh hiện trong 3D; chọn gói gợi ý (cánh pin kép, chảo ra-đa, cảm biến né thiên thạch) hoặc tự gắn chi tiết vào 4 vị trí (hai đầu cánh pin, mặt ngoài đầu vệ tinh, phía trước thân). Chi tiết mới rơi vào mô hình, bảng bên cạnh tính linh kiện cần lấy thêm và báo khi hộp kit không đủ. Bấm **Thử trong sa bàn** để mang tất cả tính năng sang chặng ③ (gắn được nhiều gói cùng lúc).
 4. Ở **③ Lập trình & thử**, thẻ nhiệm vụ cho biết việc cần làm, hàng mẫu mờ cho thấy chương trình trong sách. Chạm khối trong khay để thêm, chạm khối đã đặt để đổi số giây/nốt nhạc/mức tốc độ (nút ×, ◀ ▶ chỉ hiện ở khối đang chọn). Chương trình **chỉ chạy khi chạm khối Start màu vàng** (như phần mềm ZMrobo) **hoặc nút ▶**.
@@ -32,7 +32,7 @@
 - **Lắp ráp 3D:** hình 3D là **hình CAD gốc** trong file `Bài 9 -Thông tin liên lạc vũ trụ.io` (BrickLink Studio; 61 linh kiện, 32 mesh). File này không lưu thứ tự lắp, nên 28 bước được xếp tay theo ô linh kiện và viền đỏ của từng trang sách (`scripts/assembly-plan.js`): bước 19–20 chỉ đổi góc nhìn, 21–27 lắp riêng đầu vệ tinh, 28 ghép lên cột anten. Hoạt ảnh "rơi từ trên xuống" chỉ để minh họa; hướng đưa linh kiện thật xem trong sách.
 - **Mã linh kiện:** file .io dùng mã LEGO/LDraw và **mã màu BrickLink**. Mã ZMROBO tương ứng (`scripts/bai9-parts.js`) lấy từ công cụ `RBB_Studio/io2rbb` (so hình học với 268 linh kiện RoboBuilder, ưu tiên mã có trong kit set2321A). Động cơ là **BE-3581** (file CAD gọi BE-3578). Khớp góc đen ở bước 16–17 trên kit thật bẻ ~22° nhưng RoboBuilder không có mã tương ứng; bảng ghi tạm BP-7029.
 - **Kiểm thử:** `node tests/mission.test.js` (dữ liệu 3D: số linh kiện từng bước khớp sách, mã/màu; chấm điểm mô phỏng) và `node tests/ui.smoke.js` (Playwright: hai cách xem liên kết, hoạt ảnh, desktop/mobile 375px).
-- **Dựng lại dữ liệu 3D:** chạy `node scripts/generate-from-embedded-ldraw.js` để tạo `content/lop1/bai09/build.json` và các mesh kit dùng chung từ `references/original_models/model2.ldr`. Bản trước khi nâng cấp (25 mốc suy luận) lưu trong `.backup/2026-10-30-truoc-nang-cap/`.
+- **Dựng lại dữ liệu 3D:** chạy `node scripts/cu/generate-from-embedded-ldraw.js` để tạo `content/lop1/bai09/build.json` và các mesh kit dùng chung từ `references/original_models/model2.ldr`. Bản trước khi nâng cấp (25 mốc suy luận) lưu trong `.backup/2026-10-30-truoc-nang-cap/`.
 - **Cảnh câu chuyện (chặng ③):** một khung lớn: Trái Đất có trạm mặt đất, vệ tinh (giống mô hình em lắp, có cánh pin kép/chảo/nón cảm biến nếu đã gắn) bay quanh quỹ đạo theo chương trình, đám đá thiên thạch ở 110°–160°. Phát nhạc → sóng tín hiệu bay về trạm; sắp tới đá → đá viền đỏ, biển báo nhấp nháy; đụng đá → rung màn hình, thông báo "Ối!" và nút Thử lại; tránh được → sao bay và "Giỏi quá!" rồi chương trình dừng. Nút **Xem robot thật** đổi sang mô hình 3D trên thảm, cột anten quay theo bánh răng 8 dẫn 40 (không hiện hai khung cùng lúc). Đây là mô phỏng minh họa, không điều khiển robot thật.
 - **Khối lệnh** (puzzle ngang như phần mềm ZMrobo): Start, Repeat, Melody A/B, High Speed, **Motor Power** (mức 1–8), **Motor This Way** (đổi chiều), Wait, Stop và Chờ vật cản. Trang mở với chương trình trống; nút **Mẫu trong sách** nạp chương trình mẫu của bài.
 - **Quy tắc tính tốc độ:** động cơ mức 8 = 150 vòng/phút (mức n = 150 × n/8); bánh răng 8 dẫn 40 ⇒ cột anten 150 × 8/40 = **30 vòng/phút** ở mức 8, tức 0,5 vòng/giây.
@@ -93,9 +93,6 @@ Tiếp theo giáo viên chọn **Triển khai → Tùy chọn triển khai mới
 Lab-HappySteam/
 ├── index.html                    # Trang chọn bài: Lớp → Học kì → Bài
 ├── bai.html                      # Vỏ chung của mọi bài mô hình (?id=lop1-baiXX)
-├── lop1-bai03.html               # Chuyển hướng link cũ → bai.html?id=lop1-bai03
-├── lop1-bai09.html               # Chuyển hướng link cũ → bai.html?id=lop1-bai09
-├── lop1-bai10.html               # Chuyển hướng link cũ → bai.html?id=lop1-bai10
 ├── lop1-du-an.html               # Lớp 1 · Sổ dự án "Hành trình dòng nước" (?hk=1|2)
 ├── lop1-trung-bay.html           # Lớp 1 · Phòng trưng bày poster (tuần 18, 35)
 ├── README.md
@@ -140,7 +137,6 @@ Lab-HappySteam/
     ├── bai03.smoke.js             # Bài 3: giao diện
     ├── bai10.test.js, bai10.smoke.js   # Bài 10: dữ liệu + mô phỏng, giao diện
     ├── project.smoke.js           # Sổ dự án
-    ├── legacy-browser-test.js
     └── screenshots/
 ```
 

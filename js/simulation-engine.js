@@ -326,8 +326,20 @@
       this.emit('stop');
     }
 
+    finish() {
+      this.running = false;
+      this.motorOn = false;
+      this.entered = false;
+      this.segStart = null;
+      if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
+      this.log('info', 'Chương trình đã chạy hết.');
+      this.emit('end');
+      this.checkMissions();
+    }
+
     restart(run = false) {
       this.pc = 0;
+      this.progDone = false;
       this.nearWarned = false;
       this.entered = false;
       this.blkT = 0;
@@ -405,8 +417,19 @@
       let guard = 0;
 
       while (this.running && guard++ < 35) {
+        // Hết chương trình (không có khối Lặp): không tự chạy lại từ đầu. Motor đang bật thì vẫn quay
+        // (như robot thật) cho tới khi bấm Dừng; motor tắt thì chương trình kết thúc.
         if (this.pc >= this.prog.length) {
-          this.pc = 0;
+          if (!this.motorOn) {
+            this.finish();
+            break;
+          }
+          if (!this.progDone) {
+            this.progDone = true;
+            if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
+            this.log('info', 'Chương trình đã chạy hết – motor vẫn quay, bấm Dừng để ngắt điện.');
+          }
+          break;
         }
 
         const b = this.prog[this.pc];
@@ -426,9 +449,12 @@
           this.loopsDone++;
           this.emit('loop', this.loopsDone);
           if (this.loopsDone === 1) this.checkMissions();
-          // Quay lại sau khối repeatStart
-          const rIdx = this.prog.findIndex(x => x.type === 'repeatStart');
-          this.pc = rIdx !== -1 ? rIdx + 1 : 0;
+          // Quay lại sau khối Bắt đầu lặp ghép cặp với khối này; không có thì đi tiếp
+          const end = this.pc;
+          const rIdx = window.LessonEngine ? window.LessonEngine.loopStart(this.prog, end) : this.prog.findIndex(x => x.type === 'repeatStart');
+          this.pc = rIdx !== -1 ? rIdx + 1 : end + 1;
+          // Thân vòng lặp không có khối tốn thời gian: nhường khung hình sau (tránh đếm hàng chục vòng mỗi khung)
+          if (rIdx !== -1 && !this.prog.slice(rIdx + 1, end).some(x => ['wait', 'melody', 'photo', 'sensor_obstacle', 'wait_clear'].includes(x.type))) break;
           continue;
         }
 

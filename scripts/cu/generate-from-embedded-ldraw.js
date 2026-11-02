@@ -3,11 +3,11 @@
 // Phần đọc CAD/dựng mesh dùng chung ở scripts/lib/cad-lesson.js.
 'use strict';
 const path = require('node:path');
-const cad = require('./lib/cad-lesson');
-const plan = require('./assembly-plan');
-const table = require('./bai9-parts');
+const cad = require('../lib/cad-lesson');
+const plan = require('../assembly-plan');
+const table = require('../bai9-parts');
 
-const ROOT = path.join(__dirname, '..');
+const ROOT = path.join(__dirname, '..', '..');
 const source = path.join(ROOT, 'references', 'original_models', 'model2.ldr');
 
 const sections = cad.readSections(source);

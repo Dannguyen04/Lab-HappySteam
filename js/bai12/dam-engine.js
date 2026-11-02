@@ -167,7 +167,7 @@
           continue;
         }
         if (b.type === 'repeatEnd') {
-          const r = this.prog.findIndex(x => x.type === 'repeatStart');
+          const r = this.loopStartOf(this.pc);
           this.pc = r < 0 ? this.pc + 1 : r + 1;
           continue;
         }

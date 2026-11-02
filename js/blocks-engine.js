@@ -190,12 +190,25 @@
     }
 
     moveBlock(fromIdx, toIdx) {
-      if (toIdx < 1 || toIdx >= this.blocks.length) return; // Không vượt trước Start
-      const item = this.blocks.splice(fromIdx, 1)[0];
-      this.blocks.splice(toIdx, 0, item);
+      if (toIdx < 1 || toIdx >= this.blocks.length) return false; // Không vượt trước Start
+      const next = this.blocks.slice();
+      next.splice(toIdx, 0, next.splice(fromIdx, 1)[0]);
+      // Không cho "Lặp lại" lên trước "Bắt đầu lặp", "Hết Nếu" lên trước "Nếu"
+      if (!pairsOk(next)) {
+        if (window.SFX) window.SFX.buzz();
+        return false;
+      }
+      this.blocks = next;
       if (window.SFX) window.SFX.click();
       this.render();
       this.notifyChange();
+      return true;
+    }
+
+    // Các mức của khối Chờ: 1–5 giây, thêm mức lẻ có trong mẫu của bài (0,5 s, 0,2 s…) để học sinh tự ghép được đúng mẫu
+    waitSteps() {
+      const extra = [...(this.opts.waits || []), ...this.sampleProgram().filter(b => b.type === 'wait').map(b => b.duration)];
+      return [...new Set([1, 2, 3, 4, 5, ...extra])].filter(v => v > 0).sort((a, b) => a - b);
     }
 
     cycleParam(index) {
@@ -203,9 +216,9 @@
       if (!b) return;
 
       if (b.type === 'wait') {
-        const options = [1, 2, 3, 4, 5];
+        const options = this.waitSteps();
         const curIdx = options.indexOf(b.duration);
-        b.duration = options[(curIdx + 1) % options.length];
+        b.duration = curIdx === -1 ? options.find(v => v > b.duration) || options[0] : options[(curIdx + 1) % options.length];
       } else if (b.type === 'melody') {
         b.tune = b.tune === 'A' ? 'B' : 'A';
         b.name = 'Melody ' + b.tune;
@@ -309,10 +322,10 @@
           ${b.type !== 'start' && b.type !== 'repeatStart' && b.type !== 'repeatEnd' && b.type !== 'if_end' ? `
             <button type="button" class="zb-del-btn" title="Xóa khối này" aria-label="Xóa khối ${b.name}">×</button>
           ` : ''}
-          ${i > 1 && i < this.blocks.length - 1 ? `
+          ${i >= 1 && this.blocks.length > 2 ? `
             <div class="zb-move-btns">
-              <button type="button" class="zb-mv-btn zb-mv-l" title="Dịch sang trái" aria-label="Dịch sang trái">◀</button>
-              <button type="button" class="zb-mv-btn zb-mv-r" title="Dịch sang phải" aria-label="Dịch sang phải">▶</button>
+              ${i > 1 ? '<button type="button" class="zb-mv-btn zb-mv-l" title="Dịch sang trái" aria-label="Dịch sang trái">◀</button>' : ''}
+              ${i < this.blocks.length - 1 ? '<button type="button" class="zb-mv-btn zb-mv-r" title="Dịch sang phải" aria-label="Dịch sang phải">▶</button>' : ''}
             </div>
           ` : ''}
         `;
@@ -349,16 +362,20 @@
         if (mvL) {
           mvL.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (i - 1 >= 1) this.selected = i - 1;
-            this.moveBlock(i, i - 1);
+            if (this.moveBlock(i, i - 1)) {
+              this.selected = i - 1;
+              this.render();
+            }
           });
         }
         const mvR = el.querySelector('.zb-mv-r');
         if (mvR) {
           mvR.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (i + 1 < this.blocks.length) this.selected = i + 1;
-            this.moveBlock(i, i + 1);
+            if (this.moveBlock(i, i + 1)) {
+              this.selected = i + 1;
+              this.render();
+            }
           });
         }
 
@@ -432,6 +449,17 @@
       }
     }
     return -1;
+  }
+  // Khối đóng không đứng trước khối mở của nó: Lặp lại sau Bắt đầu lặp, Hết Nếu sau Nếu
+  function pairsOk(blocks) {
+    let loop = 0, cond = 0;
+    for (const b of blocks) {
+      if (b.type === 'repeatStart') loop++;
+      else if (b.type === 'repeatEnd' && --loop < 0) return false;
+      else if (b.type === 'if_see') cond++;
+      else if (b.type === 'if_end' && --cond < 0) return false;
+    }
+    return true;
   }
   // ['wait', { duration: 3 }] hoặc 'start' → khối mới từ mẫu
   function makeBlocks(list) {

@@ -5,11 +5,11 @@
 // Bước theo sách: scripts/lop3-bai08-plan.js; mã/tên/màu: scripts/lop3-bai08-parts.js.
 'use strict';
 const path = require('node:path');
-const cad = require('./lib/cad-lesson');
-const plan = require('./lop3-bai08-plan');
-const table = require('./lop3-bai08-parts');
+const cad = require('../lib/cad-lesson');
+const plan = require('../lop3-bai08-plan');
+const table = require('../lop3-bai08-parts');
 
-const ROOT = path.join(__dirname, '..');
+const ROOT = path.join(__dirname, '..', '..');
 const source = path.join(ROOT, 'references', 'lop3', 'bai08', 'x', 'io', 'model2.ldr');
 
 const sections = cad.readSections(source);

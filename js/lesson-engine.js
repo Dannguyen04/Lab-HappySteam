@@ -18,6 +18,17 @@
   // Mức chuẩn cho mọi bài (theo Bài 9 – KHGD chỉ ghi chậm/vừa/nhanh, Motor Power mặc định 8)
   const LEVEL = { low: 4, medium: 6, high: 8 };
   const TIMED = new Set(['wait', 'melody', 'sensor_touch', 'sensor_obstacle']);
+  function loopStart(prog, end) {
+    let depth = 0;
+    for (let j = end - 1; j >= 0; j--) {
+      if (prog[j].type === 'repeatEnd') depth++;
+      else if (prog[j].type === 'repeatStart') {
+        if (!depth) return j;
+        depth--;
+      }
+    }
+    return -1;
+  }
   const sig = b => (b.type === 'motor' ? 'motor:' + b.speed : b.type === 'wait' ? 'wait:' + b.duration : b.type === 'drive' ? 'drive:' + b.move : b.type);
 
   class LessonEngine {
@@ -159,11 +170,12 @@
           continue;
         }
         if (b.type === 'repeatEnd') {
-          const r = this.prog.findIndex(x => x.type === 'repeatStart');
+          const end = this.pc;
+          const r = this.loopStartOf(end);
           this.pc = r < 0 ? (this.opts.orphanEnd === 'stop' ? this.prog.length : this.pc + 1) : r + 1;
           this.onLoopEnd();
-          // vòng lặp không có khối nào tốn thời gian: nhường khung hình sau
-          if (r >= 0 && !this.prog.slice(r + 1).some(x => TIMED.has(x.type) || this.touchTypes.has(x.type))) break;
+          // thân vòng lặp không có khối nào tốn thời gian: nhường khung hình sau
+          if (r >= 0 && !this.prog.slice(r + 1, end).some(x => TIMED.has(x.type) || this.touchTypes.has(x.type))) break;
           continue;
         }
         if (b.type === 'motor' || b.type === 'motor_power') {
@@ -228,6 +240,10 @@
         this.pc++;
       }
       if (budget > 0 && this.running) this.integrate(budget);
+    }
+    // Khối "Bắt đầu lặp" ghép cặp với khối "Lặp lại" ở vị trí end (tính cả lặp lồng nhau); -1 nếu không có
+    loopStartOf(end) {
+      return loopStart(this.prog, end);
     }
     // Vào một khối có thời lượng: trả về số giây khối chiếm
     enterBlock(b) {
@@ -305,5 +321,6 @@
 
   LessonEngine.LEVEL = LEVEL;
   LessonEngine.sig = sig;
+  LessonEngine.loopStart = loopStart;
   window.LessonEngine = LessonEngine;
 })();

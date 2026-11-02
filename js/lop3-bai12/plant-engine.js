@@ -196,7 +196,7 @@
         if (b.type === 'repeatEnd') {
           this.onLoopEnd();
           if (!this.running) break;
-          const r = this.prog.findIndex(v => v.type === 'repeatStart');
+          const r = this.loopStartOf(this.pc);
           this.pc = r < 0 ? this.pc + 1 : r + 1;
           if (budget <= 0) break;
           continue;

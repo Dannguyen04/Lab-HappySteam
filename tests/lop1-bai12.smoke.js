@@ -85,7 +85,7 @@ async function checkPaintedScene(page) {
         await page.click(`#block-toolbox button[data-key="${key}"]`);
       }
       const wait = page.locator('#program-canvas-chain .zb-block').nth(4);
-      for (let i = 0; i < 3; i++) await wait.click(); // 3s → 4s → 5s → 1s
+      for (let i = 0; i < 4; i++) await wait.click(); // 3s → 4s → 5s → 0,5s (mức lẻ của mẫu) → 1s
       assert.match(await wait.innerText(), /1s/);
       await page.click('#program-canvas-chain .zb-block-start');
       await page.waitForFunction(() => window.simEngine.waitingTouch, null, { timeout: 5000 });
