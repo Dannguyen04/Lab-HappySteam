@@ -2020,3 +2020,272 @@ dialog.cl-editor {
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   RoboSim – làm lại theo ảnh sổ tay chính thức (references/robosim):
+   thanh xanh nút vuông biểu tượng, trang chủ nền vũ trụ, chọn sa bàn theo chủ đề, sân 3D toàn màn
+   ========================================================================== */
+:root {
+  --rs-bar: #0a62a6;
+  --rs-btn: #35a9f4;
+  --rs-btn-hi: #5bbcf8;
+  --rs-on: #0b3b66;
+  --rs-tile: #0e2f5b;
+  --rs-tile-head: #081f3d;
+}
+
+/* ---- Thanh trên ---- */
+.cl-top.rs-bar {
+  background: var(--rs-bar) !important;
+  border: 0;
+  padding: 7px 10px;
+  gap: 10px;
+  min-height: 60px;
+  position: relative;
+}
+.rs-bar-nav, .rs-bar-run, .rs-bar-right { display: flex; align-items: center; gap: 6px; }
+.rs-gap { width: 14px; }
+.rs-ibtn,
+.rs-bar .rs-ibtn.cl-nav-tab {
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 4px;
+  background: var(--rs-btn);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: none;
+}
+.rs-ibtn svg { width: 28px; height: 28px; fill: #fff; }
+.rs-ibtn:hover,
+.rs-bar .rs-ibtn.cl-nav-tab:hover { background: var(--rs-btn-hi); }
+.rs-bar .rs-ibtn.cl-nav-tab.is-active { background: var(--rs-on); }
+.rs-bar-run { margin-left: 10px; }
+.rs-ibtn.rs-run.is-stop { background: #e5484d; }
+body:not([data-screen="sim"]) .rs-bar-run { display: none; }
+
+.rs-bar-title { flex: 1; display: flex; justify-content: center; min-width: 0; }
+.rs-home-title { color: #fff; font: 700 19px/1 var(--f-display, system-ui); letter-spacing: .04em; }
+body:not([data-screen="home"]):not([data-screen="maps"]) .rs-home-title { display: none; }
+body[data-screen="home"] .rs-map-chip, body[data-screen="maps"] .rs-map-chip { display: none; }
+.rs-bar .rs-map-chip {
+  background: rgba(255, 255, 255, .14);
+  border: 1px solid rgba(255, 255, 255, .25);
+  color: #fff;
+  border-radius: 4px;
+  padding: 8px 12px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rs-bar .rs-map-chip .cl-map-label { color: #cfe6fb; }
+
+.rs-meter {
+  height: 46px;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 14px;
+  border-radius: 4px;
+  background: var(--rs-btn);
+  color: #fff;
+}
+.rs-meter b { font: 700 24px/1 var(--f-mono, ui-monospace, monospace); letter-spacing: .04em; }
+.rs-meter-ic { font-size: 24px; }
+body[data-screen="home"] .rs-meter, body[data-screen="maps"] .rs-meter { display: none; }
+.rs-menu-btn { background: transparent; }
+.rs-menu-btn:hover { background: rgba(255, 255, 255, .15); }
+.rs-bar .cl-menu { top: 58px; right: 6px; color: var(--ink); }
+.rs-bar .cl-menu a {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+}
+.rs-bar .cl-menu a:hover { background: var(--sunk); }
+
+/* ---- Nền vũ trụ (trang chủ, chọn sa bàn) ---- */
+.cl-screen.rs-space {
+  padding: 0;
+  background:
+    radial-gradient(circle at 12% 30%, rgba(98, 76, 255, .55) 0 14%, transparent 34%),
+    radial-gradient(circle at 88% 14%, rgba(196, 70, 200, .45) 0 10%, transparent 30%),
+    radial-gradient(circle at 52% 9%, #2c4d6e 0 2.6%, transparent 2.8%),
+    radial-gradient(1px 1px at 20px 30px, #fff 50%, transparent 52%) 0 0 / 120px 120px,
+    radial-gradient(1px 1px at 80px 90px, #cfd8ff 50%, transparent 52%) 0 0 / 170px 170px,
+    radial-gradient(1.5px 1.5px at 50px 140px, #fff 50%, transparent 52%) 0 0 / 230px 230px,
+    linear-gradient(160deg, #1b1446 0%, #2a1a5e 45%, #120d33 100%);
+  color: #fff;
+}
+.rs-home {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) 1fr minmax(220px, 300px);
+  gap: 20px;
+  padding: 24px;
+  min-height: calc(100vh - 60px);
+}
+.rs-home-col { display: flex; flex-direction: column; gap: 20px; justify-content: center; }
+.rs-tile {
+  display: flex;
+  flex-direction: column;
+  border: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--rs-tile);
+  color: #fff;
+  cursor: pointer;
+  min-height: 140px;
+  text-align: left;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .35);
+  transition: transform .15s;
+}
+.rs-tile:hover { transform: translateY(-2px); outline: 2px solid var(--rs-btn); }
+.rs-tile-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--rs-tile-head);
+  font-weight: 700;
+  font-size: 16px;
+}
+.rs-tile-head i { font-style: normal; font-weight: 800; letter-spacing: -2px; color: #9cc9ef; }
+.rs-tile-ic {
+  flex: 1;
+  display: grid;
+  place-items: center;
+}
+.rs-tile-ic svg { width: 64px; height: 64px; }
+.rs-home-robot { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; }
+.rs-robot3d { width: 100%; height: min(62vh, 560px); }
+.rs-robot3d.is-flat { background: radial-gradient(circle, rgba(53, 169, 244, .35), transparent 60%); }
+.rs-robot-name { margin: 6px 0 0; font-weight: 700; letter-spacing: .06em; color: #cfe6fb; }
+
+/* ---- Luyện theo chủ đề ---- */
+.rs-panel {
+  flex: 1;
+  margin: 18px;
+  padding: 18px 20px;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  min-height: 0;
+}
+.rs-panel-title { margin: 0 0 12px; font-size: 17px; }
+.rs-theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+.rs-theme {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 0 10px;
+  border: 1px solid #b7d7f1;
+  border-radius: 6px;
+  background: #eef6fd;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: center;
+  color: var(--ink);
+}
+.rs-theme:hover { border-color: var(--rs-btn); box-shadow: 0 0 0 2px var(--rs-btn); }
+.rs-theme canvas { width: 100%; height: auto; display: block; background: #dce5ec; }
+.rs-theme strong { font-size: 15px; }
+.rs-theme span { font-size: 12.5px; color: var(--muted); }
+.rs-detail { display: grid; grid-template-columns: 1fr minmax(240px, 32%); gap: 20px; height: 100%; }
+.rs-detail-main { position: relative; min-width: 0; }
+.rs-back-sm { position: absolute; top: 8px; left: 8px; z-index: 12; width: 38px; height: 38px; background: var(--rs-bar); }
+.rs-preview { height: min(52vh, 480px); border-radius: 6px; overflow: hidden; background: #dce5ec; position: relative; }
+.rs-preview canvas { width: 100%; height: 100%; object-fit: contain; }
+.rs-detail h3 { margin: 14px 0 4px; font-size: 15px; }
+.rs-detail p { margin: 0 0 8px; color: var(--muted); }
+.rs-detail-side { display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+.rs-map-list { display: flex; flex-direction: column; gap: 8px; overflow: auto; }
+.rs-map-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 3px;
+  background: var(--rs-bar);
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  text-align: left;
+}
+.rs-map-item small { color: #ffd76a; letter-spacing: 1px; }
+.rs-map-item:hover { background: #0d72c0; }
+.rs-map-item.is-on { background: var(--rs-btn); box-shadow: inset 4px 0 0 #fff; }
+.rs-start {
+  margin-top: auto;
+  min-height: 52px;
+  border: 0;
+  border-radius: 6px;
+  background: #19a35b;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+}
+.rs-start:hover { background: #148a4c; }
+
+/* ---- Mô phỏng: sân 3D toàn màn, thông tin nổi ---- */
+.cl-screen.rs-sim { padding: 0; }
+.rs-stage {
+  flex: 1;
+  min-height: calc(100vh - 60px);
+  background: #b3bdcc;
+  display: block;
+}
+.rs-stage #world { width: 100%; height: 100%; max-height: none; position: absolute; inset: 0; }
+.rs-float {
+  position: absolute;
+  z-index: 8;
+  background: rgba(255, 255, 255, .94);
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(15, 30, 50, .18);
+  padding: 8px 12px;
+}
+.rs-mission.cl-mission { top: 10px; left: 10px; max-width: min(460px, 46%); display: block; border: 0; margin: 0; }
+.rs-mission .cl-goals { margin-top: 6px; }
+.rs-mission .cl-msg:empty { display: none; }
+.rs-mission .cl-msg { display: block; margin-top: 6px; }
+.rs-simtools { left: 10px; bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.rs-sensors.cl-sim-aside {
+  top: 56px;
+  right: 10px;
+  width: 270px;
+  max-height: calc(100% - 70px);
+  overflow: auto;
+  border: 0;
+}
+.rs-sensors h2 { font-size: 13px; margin: 4px 0 6px; }
+.rs-sensors .cl-sensors { grid-template-columns: 1fr 1fr; gap: 4px; }
+.rs-sensors .cl-sensors > div { padding: 4px 6px; }
+.rs-stage .cl-result { z-index: 20; }
+
+/* ---- Màn khối và lắp robot: nền xám như vùng làm việc RoboSim ---- */
+#screen-code, #screen-robot { background: #ececec; }
+
+@media (max-width: 1100px) {
+  .rs-meter { min-width: 0; padding: 0 8px; }
+  .rs-meter b { font-size: 18px; }
+  .rs-home-title { font-size: 15px; }
+  .rs-home { grid-template-columns: 1fr 1fr; }
+  .rs-home-robot { grid-column: 1 / -1; order: -1; }
+  .rs-robot3d { height: 34vh; }
+  .rs-tile { min-height: 96px; }
+  .rs-tile-ic svg { width: 44px; height: 44px; }
+  .rs-detail { grid-template-columns: 1fr; }
+  .rs-preview { height: 36vh; }
+}

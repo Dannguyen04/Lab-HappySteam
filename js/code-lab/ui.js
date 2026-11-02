@@ -149,7 +149,7 @@
     selected: -1,
     speed: 1,
     sensors: store.get('robot_sensors', DEFAULT_SENSORS),
-    viewMode: '2d' // '2d' | '3d'
+    viewMode: store.get('viewMode', '3d') // '3d' như RoboSim; '2d' khi máy không có WebGL hoặc tự chọn
   };
 
   const allMaps = () => [...CL.MAPS, ...store.get('maps', [])];
@@ -226,6 +226,9 @@
 
     if (screenName === 'home') {
       renderHomeScreen();
+    } else if (screenName === 'maps') {
+      if (!$('theme-detail').hidden && previewId) previewMap(previewId);
+      else renderThemes();
     } else if (screenName === 'robot') {
       renderRobotScreen();
     } else if (screenName === 'code') {
@@ -236,57 +239,96 @@
   }
 
   // ---------- MÀN 1: TRANG CHỦ ----------
-  let homeFilter = 'all';
-
+  // Xe Alpha 330 xoay giữa trang chủ (như robot 3D ở màn chính RoboSim)
+  let homeRobot = null;
+  const showcaseSim = { map: { id: 'showcase', size: [60, 40], items: [] }, robot: { x: 30, y: 20, th: 0, vl: 0, vr: 0, led: 'green' },
+    flags: [], trail: [], touching: false,
+    sensors: () => ({ dist: null, lineL: false, lineR: false }) };
   function renderHomeScreen() {
-    const grid = $('home-map-grid');
-    if (!grid) return;
+    if (homeRobot || state.screen !== 'home' || !window.CodeLabView3D) return;
+    try {
+      homeRobot = window.CodeLabView3D.create($('home-robot3d'), { hud: false, transparent: true, showcase: true, spin: 0.35, radius: 42, theta: 0.42 });
+      homeRobot.render(showcaseSim);
+    } catch {
+      $('home-robot3d').classList.add('is-flat'); // không có WebGL
+    }
+  }
+
+  // ---------- LUYỆN THEO CHỦ ĐỀ: chủ đề → sa bàn (ảnh 3D lớn + danh sách) ----------
+  const THEMES = [
+    { key: 'kid', name: 'Cơ bản · Bé', pick: m => m.level === 'kid' && !m.custom },
+    { key: 'pro', name: 'Nâng cao · Lớp 3+', pick: m => m.level === 'pro' && !m.rules.free && !m.custom },
+    { key: 'class', name: 'Sa bàn của lớp', pick: m => !!m.custom },
+    { key: 'free', name: 'Sân tự do', pick: m => !!m.rules.free && !m.custom }
+  ];
+  let previewView = null, previewId = null;
+  function goalsHTML(m) {
+    const r = m.rules, best = store.get('best.' + m.id, 0);
+    if (r.free) return '<span class="cl-goal">Sân tự do – không chấm</span>';
+    return [`Về đích${m.items.some(i => i.k === 'flag') ? ' (qua đủ cờ)' : ''}`, `Dưới ${r.time} giây`,
+      r.star3 === 'noCrash' ? 'Không va chạm' : `Tối đa ${r.blocks} khối`]
+      .map((g, i) => `<span class="cl-goal${best > i ? ' is-done' : ''}">★ ${g}</span>`).join('');
+  }
+  function renderThemes() {
+    $('theme-list').hidden = false;
+    $('theme-detail').hidden = true;
+    const grid = $('theme-grid');
     grid.innerHTML = '';
-
-    const inFilter = (m, f) => f === 'all' || m.level === f;
-    const maps = allMaps().filter(m => inFilter(m, homeFilter));
-    // số trên nút lọc đếm theo danh sách thật (sa bàn có sẵn + sa bàn lớp tự vẽ)
-    document.querySelectorAll('[data-home-filter]').forEach(b => {
-      b.textContent = b.textContent.replace(/\s*\(\d+\)$/, '') + ` (${allMaps().filter(m => inFilter(m, b.dataset.homeFilter)).length})`;
-    });
-
-    maps.forEach(m => {
-      const card = document.createElement('div');
-      card.className = 'cl-home-card' + (m.id === state.mapId ? ' is-current' : '');
-
-      const thumb = document.createElement('canvas');
-      thumb.width = 280;
-      thumb.height = 175;
-      thumb.className = 'cl-home-card-thumb';
-      V.drawMap(thumb.getContext('2d'), m, V.fit(thumb, m));
-
-      const best = store.get('best.' + m.id, 0);
-      const isPro = m.level === 'pro';
-
-      card.appendChild(thumb);
-
-      const info = document.createElement('div');
-      info.className = 'cl-home-card-info';
-      info.innerHTML = `
-        <div class="cl-home-card-top">
-          <span class="cl-level-badge ${isPro ? 'is-pro' : 'is-kid'}">${isPro ? 'Lớp 3+ · Nâng cao' : 'Bé · Cơ bản'}</span>
-          ${m.rules.free ? '' : `<span class="cl-home-card-stars" title="${best} sao">${'★'.repeat(best)}${'☆'.repeat(3 - best)}</span>`}
-        </div>
-        <h3 class="cl-home-card-title">${m.name}${m.custom ? ' <small>(tự vẽ)</small>' : ''}</h3>
-        <p class="cl-home-card-about">${m.about || 'Nhiệm vụ điều khiển robot Alpha 330.'}</p>
-        <div class="cl-home-card-foot">
-          <button type="button" class="cl-btn cl-btn-primary cl-card-act">Luyện tập sa bàn →</button>
-        </div>
-      `;
-
-      card.appendChild(info);
-      card.addEventListener('click', () => {
-        selectMap(m.id);
-        setScreen('code');
-      });
-
+    for (const t of THEMES) {
+      const maps = allMaps().filter(t.pick);
+      if (!maps.length) continue;
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'rs-theme';
+      card.dataset.theme = t.key;
+      const c = document.createElement('canvas');
+      c.width = 320;
+      c.height = 180;
+      V.drawMap(c.getContext('2d'), maps[0], V.fit(c, maps[0]));
+      card.appendChild(c);
+      card.insertAdjacentHTML('beforeend', `<strong>${t.name}</strong><span>${maps.length} sa bàn</span>`);
+      card.addEventListener('click', () => openTheme(t.key));
       grid.appendChild(card);
-    });
+    }
+  }
+  function openTheme(key, mapId) {
+    const t = THEMES.find(x => x.key === key) || THEMES[0];
+    const maps = allMaps().filter(t.pick);
+    $('theme-list').hidden = true;
+    $('theme-detail').hidden = false;
+    const list = $('theme-map-list');
+    list.innerHTML = '';
+    for (const m of maps) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'rs-map-item';
+      b.dataset.map = m.id;
+      const best = store.get('best.' + m.id, 0);
+      b.innerHTML = `<span>${m.name}</span><small>${m.rules.free ? '' : '★'.repeat(best) + '☆'.repeat(3 - best)}</small>`;
+      b.addEventListener('click', () => previewMap(m.id));
+      list.appendChild(b);
+    }
+    previewMap(mapId && maps.some(m => m.id === mapId) ? mapId : maps[0].id);
+  }
+  function previewMap(id) {
+    previewId = id;
+    const m = mapById(id);
+    document.querySelectorAll('.rs-map-item').forEach(b => b.classList.toggle('is-on', b.dataset.map === id));
+    $('detail-about').textContent = m.about || 'Nhiệm vụ điều khiển robot Alpha 330.';
+    $('detail-goals').innerHTML = goalsHTML(m);
+    const box = $('map-preview');
+    if (!previewView && window.CodeLabView3D) {
+      try { previewView = window.CodeLabView3D.create(box, { hud: false, follow: false, spin: 0.12 }); } catch { previewView = null; }
+    }
+    if (previewView) previewView.render(new CL.Sim(m));
+    else {
+      box.innerHTML = '';
+      const c = document.createElement('canvas');
+      c.width = 640;
+      c.height = 360;
+      V.drawMap(c.getContext('2d'), m, V.fit(c, m));
+      box.appendChild(c);
+    }
   }
 
   // ---------- MÀN 2: LẮP ROBOT ----------
@@ -487,10 +529,10 @@
   // ---------- MÀN 4: MÔ PHỎNG ----------
   function renderSimScreen() {
     T = V.fit(canvas, sim.map);
-    if (state.viewMode === '3d' && view3dInstance) view3dInstance.resize();
+    check3DAvailability();
+    set3D(state.viewMode === '3d');
     draw();
     renderMission();
-    check3DAvailability();
   }
 
   function check3DAvailability() {
@@ -498,19 +540,13 @@
     if (!btn) return;
     const has3D = typeof window.CodeLabView3D !== 'undefined';
     btn.hidden = !has3D;
-    if (has3D) {
-      btn.textContent = state.viewMode === '3d' ? 'Góc nhìn: 3D (Đang bật)' : 'Góc nhìn: 2D (Chuyển 3D)';
-    }
+    if (!has3D) state.viewMode = '2d';
   }
 
-  function toggle3DView() {
-    if (!window.CodeLabView3D) return;
-    const btn = $('btn-view3d');
-    const container3d = $('world-3d');
-    const canvas2d = $('world');
-
-    if (state.viewMode === '2d') {
-      if (!container3d) return;
+  // Bật/tắt sân 3D (mặc định bật như RoboSim; máy không có WebGL thì giữ 2D)
+  function set3D(on) {
+    const container3d = $('world-3d'), btn = $('btn-view3d');
+    if (on && window.CodeLabView3D) {
       container3d.hidden = false;
       try {
         if (!view3dInstance) {
@@ -520,21 +556,20 @@
         view3dInstance.resize();
         state.viewMode = '3d';
         view3dInstance.render(sim);
-        if (canvas2d) canvas2d.style.opacity = '0.1';
-        if (btn) btn.textContent = 'Góc nhìn: 3D (Đang bật)';
-      } catch (err) {
+      } catch {
         container3d.hidden = true;
         state.viewMode = '2d';
         toast('Máy này chưa hỗ trợ hiển thị 3D.');
       }
     } else {
       state.viewMode = '2d';
-      if (container3d) container3d.hidden = true;
-      if (canvas2d) canvas2d.style.opacity = '1';
-      if (btn) btn.textContent = 'Góc nhìn: 2D (Chuyển 3D)';
+      container3d.hidden = true;
       draw();
     }
+    store.set('viewMode', state.viewMode);
+    if (btn) btn.textContent = state.viewMode === '3d' ? 'Xem 2D' : 'Xem 3D';
   }
+  function toggle3DView() { set3D(state.viewMode !== '3d'); }
 
   // ---------- Dải chương trình ngang (Chế độ Bé) ----------
   function depths(blocks) {
@@ -794,12 +829,8 @@
     if (ma) ma.textContent = m.about || '';
     const best = store.get('best.' + m.id, 0);
     const mg = $('mission-goals');
-    if (mg) {
-      mg.innerHTML = r.free ? '<span class="cl-goal">Sân tự do – không chấm</span>' :
-        [`Về đích${m.items.some(i => i.k === 'flag') ? ' (qua đủ cờ)' : ''}`, `Dưới ${r.time} giây`,
-          r.star3 === 'noCrash' ? 'Không va chạm' : `Tối đa ${r.blocks} khối`]
-          .map((g, i) => `<span class="cl-goal${best > i ? ' is-done' : ''}">★ ${g}</span>`).join('');
-    }
+    if (mg) mg.innerHTML = goalsHTML(m);
+    $('bar-score').textContent = r.free ? '–' : '★'.repeat(best) + '☆'.repeat(3 - best);
   }
 
   function selectMap(id) {
@@ -972,7 +1003,10 @@
     const b = $('btn-run');
     if (!b) return;
     const going = sim.running && !sim.paused;
-    b.textContent = going ? '■ Dừng' : sim.running ? '▶ Chạy tiếp' : '▶ Chạy';
+    const label = going ? 'Dừng' : sim.running ? 'Chạy tiếp' : 'Chạy';
+    b.title = label;
+    b.setAttribute('aria-label', label);
+    b.innerHTML = going ? '<svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>' : '<svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg>';
     b.classList.toggle('is-stop', going);
   }
 
@@ -997,6 +1031,7 @@
     $('s-vars').textContent = sim.shown.length
       ? sim.shown.map(name => `${name}: ${sim.vars[name] ?? 0}`).join(' · ') : 'Chưa có';
     $('s-time').textContent = num(sim.t.toFixed(1)) + ' s';
+    $('bar-timer').textContent = sim.t.toFixed(2);
     $('s-bumps').textContent = sim.bumps;
   }
 
@@ -1097,17 +1132,12 @@
     b.addEventListener('click', () => setBlockMode(b.dataset.blockMode));
   });
 
-  // 3. Bộ lọc trang chủ
-  document.querySelectorAll('[data-home-filter]').forEach(b => {
-    b.addEventListener('click', () => {
-      homeFilter = b.dataset.homeFilter;
-      document.querySelectorAll('[data-home-filter]').forEach(x => x.classList.toggle('is-on', x === b));
-      renderHomeScreen();
-    });
-  });
-
   // Nút hành động nhanh trang chủ
-  $('home-btn-quickstart').addEventListener('click', () => setScreen('code'));
+  $('home-btn-quickstart').addEventListener('click', () => setScreen('maps'));
+  document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => setScreen(b.dataset.go)));
+  $('theme-back').addEventListener('click', renderThemes);
+  $('detail-start').addEventListener('click', () => { selectMap(previewId); setScreen('code'); });
+  $('btn-stats').addEventListener('click', () => { $('sensor-panel').hidden = !$('sensor-panel').hidden; });
   $('home-btn-free').addEventListener('click', () => { selectMap('san-tu-do'); setScreen('code'); });
   $('home-btn-editor').addEventListener('click', () => $('btn-editor').click());
   $('home-btn-sent').addEventListener('click', () => showSentDialog());

@@ -35,20 +35,28 @@ const { pageUrl } = require('./helpers/page-url');
       assert.ok(o <= 1, `${where}: tràn ngang ${o}px ở 1024×768`);
     };
 
-    // 1. Bốn màn chuyển qua lại bằng thanh trên
+    // 1. Các màn chuyển qua lại bằng nút vuông trên thanh (kiểu RoboSim)
     for (const screen of ['home', 'robot', 'code', 'sim', 'home']) {
       await page.locator(`.cl-nav-tab[data-screen="${screen}"]`).click();
       assert.equal(await page.locator(`#screen-${screen}`).isVisible(), true, `Màn ${screen} phải hiện`);
       assert.equal(await page.locator('.cl-nav-tab.is-active').getAttribute('data-screen'), screen);
       await noOverflow('Màn ' + screen);
     }
-    const mapCount = await page.evaluate(() => CodeLab.MAPS.length);
-    assert.equal(await page.locator('#home-map-grid .cl-home-card').count(), mapCount, 'Trang chủ phải có đủ thẻ sa bàn');
-    assert.match(await page.locator('[data-home-filter="all"]').innerText(), new RegExp(`\\(${mapCount}\\)`));
+    assert.equal(await page.locator('#home-robot3d canvas').isVisible(), true, 'Trang chủ phải có xe 3D ở giữa');
+    assert.equal(await page.locator('#screen-home .rs-tile').count(), 6, 'Trang chủ có 6 ô như RoboSim');
 
-    // 2. Chọn thẻ "Đếm vạch" → màn Viết chương trình, nạp gợi ý → khối dọc + mã Python đúng
-    await page.locator('#home-map-grid .cl-home-card').filter({ hasText: 'Đếm vạch' }).click();
+    // 2. Luyện theo chủ đề → Nâng cao → "Đếm vạch" (ảnh 3D lớn + danh sách) → Bắt đầu → nạp gợi ý
+    await page.locator('#home-btn-quickstart').click();
+    assert.equal(await page.locator('#screen-maps').isVisible(), true);
+    assert.ok(await page.locator('#theme-grid .rs-theme').count() >= 3, 'Phải có các chủ đề Cơ bản/Nâng cao/Sân tự do');
+    await page.locator('.rs-theme[data-theme="pro"]').click();
+    await page.locator('.rs-map-item').filter({ hasText: 'Đếm vạch' }).click();
+    assert.equal(await page.locator('#map-preview canvas').isVisible(), true, 'Phải có ảnh xem trước sa bàn');
+    assert.match(await page.locator('#detail-about').innerText(), /vạch/);
+    await noOverflow('Chọn sa bàn');
+    await page.locator('#detail-start').click();
     assert.equal(await page.locator('#screen-code').isVisible(), true);
+    assert.match(await page.locator('#map-name').innerText(), /Đếm vạch/);
     await page.locator('#btn-hint').click();
     const hintTypes = await page.evaluate(() => codeLab.state.blocks.map(b => b.t));
     assert.ok(hintTypes.includes('setVar') && hintTypes.includes('forever'), 'Gợi ý Đếm vạch dùng biến và lặp mãi');
@@ -79,12 +87,15 @@ const { pageUrl } = require('./helpers/page-url');
     // khối tức thì xong trong một khung hình nên chỉ chắc thấy các khối có thời gian (Chờ đến khi…)
     assert.ok(await page.evaluate(() => [...window.__lit].some(id => CodeLabBlocksVertical.workspace.getBlockById(id))),
       'Phải tô sáng khối Blockly khi chạy');
+    await page.locator('#btn-stats').click();
+    assert.equal(await page.locator('#sensor-panel').isVisible(), true, 'Nút bảng cảm biến phải mở bảng');
     assert.match(await page.locator('#s-vars').innerText(), /dem: \d+/);
+    assert.ok(parseFloat(await page.locator('#bar-timer').innerText()) > 1, 'Đồng hồ trên thanh phải chạy');
+    assert.match(await page.locator('#bar-score').innerText(), /★/, 'Cúp trên thanh phải hiện sao đạt được');
     assert.match(await page.locator('#s-timer').innerText(), /\d+ ms/);
     await noOverflow('Mô phỏng');
 
-    // 4. 3D bật/tắt không lỗi, chạy được khi đang 3D
-    await page.locator('#btn-view3d').click();
+    // 4. Sân 3D là mặc định, phủ đúng khung; chuyển 2D rồi về 3D không lỗi
     await page.locator('#world-3d canvas').waitFor({ state: 'visible', timeout: 10000 });
     assert.equal(await page.evaluate(() => codeLab.state.viewMode), '3d');
     const [box3d, wrap] = [await page.locator('#world-3d').boundingBox(), await page.locator('#canvas-wrap').boundingBox()];
@@ -95,6 +106,8 @@ const { pageUrl } = require('./helpers/page-url');
     await page.locator('#btn-view3d').click();
     assert.equal(await page.locator('#world-3d').isHidden(), true);
     assert.equal(await page.evaluate(() => codeLab.state.viewMode), '2d');
+    await page.locator('#btn-view3d').click();
+    assert.equal(await page.evaluate(() => codeLab.state.viewMode), '3d');
 
     // 5. Gỡ cảm biến Dò vạch ở Lắp robot → khối dò vạch mờ trong khay, chạy bị chặn với lời nhắc
     await page.locator('.cl-nav-tab[data-screen="robot"]').click();
@@ -133,7 +146,7 @@ const { pageUrl } = require('./helpers/page-url');
     await page.locator('[data-block-mode="vertical"]').click();
 
     assert.deepEqual(errors, [], 'Không được có lỗi console/mạng');
-    console.log('PASS: Phòng lập trình – 4 màn, khối dọc ↔ Python, chạy + tô sáng + sao, 3D bật/tắt, gỡ cảm biến, đổi sa bàn, khối ngang, không tràn 1024×768.');
+    console.log('PASS: Phòng lập trình – trang chủ xe 3D + 6 ô, chọn sa bàn theo chủ đề, khối dọc ↔ Python, chạy + tô sáng + sao, 3D bật/tắt, gỡ cảm biến, đổi sa bàn, khối ngang, không tràn 1024×768.');
   } finally {
     await browser.close();
   }

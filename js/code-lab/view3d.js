@@ -270,14 +270,15 @@ function buildAlpha330Robot(materials) {
   };
 }
 
-function createView3D(container) {
+// opts: { hud=true, follow=true, transparent=false, spin=0 (rad/giây quay quanh), showcase=false (chỉ hiện xe), radius, theta }
+function createView3D(container, opts = {}) {
   if (!container) throw new Error('CodeLabView3D.create: container không hợp lệ.');
 
   // 1. Cài đặt Renderer & Scene
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xdce5ec); // Tone xám xanh RoboSim
+  scene.background = opts.transparent ? null : new THREE.Color(0xdce5ec); // Tone xám xanh RoboSim
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: !!opts.transparent, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.setSize(container.clientWidth || 800, container.clientHeight || 540);
   renderer.shadowMap.enabled = true;
@@ -301,13 +302,13 @@ function createView3D(container) {
   const camState = {
     target: new THREE.Vector3(100, 4, 60),
     currentCamTarget: new THREE.Vector3(100, 4, 60),
-    radius: 240,
-    currentRadius: 240,
-    theta: 0.65, // ~37 độ góc nghiêng
-    currentTheta: 0.65,
+    radius: opts.radius || 240,
+    currentRadius: opts.radius || 240,
+    theta: opts.theta || 0.65, // ~37 độ góc nghiêng
+    currentTheta: opts.theta || 0.65,
     phi: -0.85,  // góc xoay ngang
     currentPhi: -0.85,
-    followRobot: true,
+    followRobot: opts.follow !== false,
     isTopDown: false
   };
 
@@ -844,6 +845,7 @@ function createView3D(container) {
     ">⛶ Toàn cảnh</button>
   `;
   container.appendChild(hud);
+  if (opts.hud === false) hud.style.display = 'none';
 
   const btnFollow = hud.querySelector('.btn-follow');
   const btnView = hud.querySelector('.btn-view');
@@ -899,6 +901,7 @@ function createView3D(container) {
     animId = requestAnimationFrame(tickLoop);
     const dt = Math.min((now - lastTime) / 1000, 0.1);
     lastTime = now;
+    if (container.offsetParent === null) return; // màn đang ẩn: không vẽ (trang có tới 3 cảnh 3D)
 
     // Cập nhật vị trí bám theo xe mượt mà (Lerp)
     if (lastSim && lastSim.robot) {
@@ -914,6 +917,8 @@ function createView3D(container) {
       robot.leftWheel.rotation.z -= (r.vl / wheelCircumference) * dt;
       robot.rightWheel.rotation.z -= (r.vr / wheelCircumference) * dt;
     }
+
+    if (opts.spin) camState.phi += dt * opts.spin;
 
     // Xoay nhẹ biểu tượng đích
     for (const gm of goalMarkers) {
@@ -966,6 +971,11 @@ function createView3D(container) {
       buildMap(map);
     }
 
+    if (opts.showcase) {
+      mapGroup.visible = false;
+      robot.sonarRay.visible = robot.sonarCone.visible = false;
+    }
+
     // Đồng bộ vị trí và góc quay của robot Alpha 330
     const r = sim.robot;
     robot.group.position.set(r.x, 0, r.y);
@@ -1013,7 +1023,7 @@ function createView3D(container) {
     robot.sonarCone.position.x = 0;
 
     // Vòng phản xạ sóng tại điểm gặp chướng ngại
-    if (sensors.dist !== null) {
+    if (sensors.dist !== null && !opts.showcase) {
       robot.hitRing.visible = true;
       robot.hitRing.position.set(dist, 0, 0);
     } else {
