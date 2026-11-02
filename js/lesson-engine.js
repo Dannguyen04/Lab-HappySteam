@@ -7,8 +7,20 @@
 //   onStopBlock(wasOn)  – sau khi chạy khối Dừng
 //   onInstant(b)        – khối tức thì của bài (Màn hình…); trả về true nếu đã xử lý
 //   onBlock(b)          – khối riêng của bài có thời lượng; trả về số giây khối chiếm (mặc định 0)
+//   beforeAdvance(dt)   – cập nhật cảm biến/hạn giờ trước mỗi khung; trả về quỹ thời gian của khung
+//   onProgramEnd()      – xử lý khi hết khối; mặc định finish(), có thể tiếp tục vật lý
+//   loopNext(r, end)    – vị trí sau Lặp lại; shouldYieldLoop(r, end, budget) – có nhường khung hình không
+//   opts.loopEndBeforeJump – gọi onLoopEnd trước khi đổi pc (cho bài có thể finish ngay tại cuối vòng)
+//   onMotorBefore(b)    – trước khi lớp gốc đặt motorOn; dùng khi cần biết trạng thái động cơ cũ
+//   onReverse()         – sau Đổi chiều; onTimedEnter/Exit(b) – lúc vào/ra khối có thời lượng
+//   shouldYieldAfterTimed(b, budget) – có nhường khung sau khối thời lượng không
+//   opts.stopTimedOnFinish – không chuyển pc nếu vật lý kết thúc lượt ngay trong khối thời lượng
+//   opts.advanceGuard   – số khối tối đa xử lý trong một khung hình (mặc định 40)
+//   isConditionWait(b), waitDone(b), onWaitEnter/Exit(b) – khối chờ điều kiện
+//   waitStep(b, budget), waitCheckAfterStep(b) – bước vật lý và thời điểm hỏi lại điều kiện
 //   opts.levels         – mức động cơ của khối chậm/vừa/nhanh (mặc định 4/6/8); opts.sig – cách so chương trình mẫu
 //   opts.orphanEnd      – 'stop': gặp Lặp lại mà không có Bắt đầu lặp thì kết thúc chương trình
+//   opts.logTime(engine), opts.logText(text) – định dạng giờ và nội dung nhật ký riêng của bài
 //   missionExtra()      – dữ liệu thêm gửi kèm nhiệm vụ (best, upgrades…)
 //   updateUI()          – gọi super.updateUI() rồi điền các ô số đo
 // Cùng giao diện với SimulationEngine của Bài 9 để js/app.js dùng chung.
@@ -73,7 +85,8 @@
       if (this.onEvent) this.onEvent(type, data);
     }
     log(kind, text) {
-      this.logs.unshift({ time: this.runT.toFixed(1) + 's', kind, text });
+      const time = this.opts.logTime ? this.opts.logTime(this) : this.runT.toFixed(1) + 's';
+      this.logs.unshift({ time, kind, text: this.opts.logText ? this.opts.logText(text) : text });
       if (this.logs.length > (this.opts.logLimit || 8)) this.logs.length = this.opts.logLimit || 8;
       const el = document.getElementById('sim-log-list');
       if (el)
@@ -157,11 +170,11 @@
     advance(dt) {
       if (this.pressed && (this.pressT -= dt) <= 0) this.pressed = false;
       if (!this.running) return;
-      let budget = dt,
+      let budget = this.beforeAdvance(dt),
         guard = 0;
-      while (this.running && guard++ < 40) {
+      while (this.running && guard++ < (this.opts.advanceGuard || 40)) {
         if (this.pc >= this.prog.length) {
-          this.finish();
+          this.onProgramEnd();
           break;
         }
         const b = this.prog[this.pc];
@@ -172,13 +185,18 @@
         if (b.type === 'repeatEnd') {
           const end = this.pc;
           const r = this.loopStartOf(end);
-          this.pc = r < 0 ? (this.opts.orphanEnd === 'stop' ? this.prog.length : this.pc + 1) : r + 1;
-          this.onLoopEnd();
+          if (this.opts.loopEndBeforeJump) {
+            this.onLoopEnd();
+            if (!this.running) break;
+          }
+          this.pc = this.loopNext(r, end);
+          if (!this.opts.loopEndBeforeJump) this.onLoopEnd();
           // thân vòng lặp không có khối nào tốn thời gian: nhường khung hình sau
-          if (r >= 0 && !this.prog.slice(r + 1, end).some(x => TIMED.has(x.type) || this.touchTypes.has(x.type))) break;
+          if (this.shouldYieldLoop(r, end, budget)) break;
           continue;
         }
         if (b.type === 'motor' || b.type === 'motor_power') {
+          this.onMotorBefore(b);
           this.power = b.type === 'motor_power' ? Math.max(1, Math.min(8, b.power || 8)) : (this.opts.levels || LEVEL)[b.speed] || 8;
           this.motorOn = true;
           this.onMotor(b);
@@ -187,6 +205,7 @@
         }
         if (b.type === 'motor_reverse') {
           this.dir = -this.dir;
+          this.onReverse();
           this.pc++;
           continue;
         }
@@ -215,6 +234,27 @@
           budget = 0;
           break;
         }
+        if (this.isConditionWait(b)) {
+          if (!this.entered) {
+            this.entered = true;
+            this.blkT = 0;
+            if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
+            this.onWaitEnter(b);
+          }
+          let ready = this.waitDone(b);
+          while (!ready && budget > 1e-9 && this.running) {
+            const step = this.waitStep(b, budget);
+            this.integrate(step);
+            this.blkT += step;
+            budget -= step;
+            if (this.waitCheckAfterStep(b)) ready = this.waitDone(b);
+          }
+          if (!this.running || !ready) break;
+          this.onWaitExit(b);
+          this.entered = false;
+          this.pc++;
+          continue;
+        }
         // Khối tức thì của bài (Màn hình, bật đèn…): onInstant(b) trả về true thì đi tiếp ngay, không đánh dấu khối
         if (!this.entered && this.onInstant(b)) {
           this.pc++;
@@ -225,6 +265,7 @@
           this.entered = true;
           this.blkT = 0;
           if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
+          this.onTimedEnter(b);
           this.blkDur = this.enterBlock(b);
         }
         const need = this.blkDur - this.blkT;
@@ -236,11 +277,31 @@
         }
         this.integrate(need);
         budget -= need;
+        if (!this.running && this.opts.stopTimedOnFinish) break;
+        this.onTimedExit(b);
         this.entered = false;
         this.pc++;
+        if (this.shouldYieldAfterTimed(b, budget)) break;
       }
       if (budget > 0 && this.running) this.integrate(budget);
     }
+    beforeAdvance(dt) { return dt; }
+    onProgramEnd() { this.finish(); }
+    loopNext(r, end) { return r < 0 ? (this.opts.orphanEnd === 'stop' ? this.prog.length : end + 1) : r + 1; }
+    shouldYieldLoop(r, end) {
+      return r >= 0 && !this.prog.slice(r + 1, end).some(x => TIMED.has(x.type) || this.touchTypes.has(x.type));
+    }
+    onReverse() {}
+    onMotorBefore() {}
+    onTimedEnter() {}
+    onTimedExit() {}
+    shouldYieldAfterTimed() { return false; }
+    isConditionWait() { return false; }
+    waitDone() { return false; }
+    onWaitEnter() {}
+    onWaitExit() {}
+    waitStep(b, budget) { return budget; }
+    waitCheckAfterStep() { return true; }
     // Khối "Bắt đầu lặp" ghép cặp với khối "Lặp lại" ở vị trí end (tính cả lặp lồng nhau); -1 nếu không có
     loopStartOf(end) {
       return loopStart(this.prog, end);

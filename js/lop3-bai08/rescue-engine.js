@@ -8,7 +8,6 @@
 (function () {
   'use strict';
 
-  const LEVEL = { low: 4, medium: 6, high: 8 }; // mức chuẩn chung (js/lesson-engine.js)
   const NAME = { 4: 'chậm', 6: 'vừa', 8: 'nhanh' };
   const ARM_RPM = 32; // vòng/phút của máy bay trên cảnh ở mức 8
   const MOTOR_RPM = 150; // động cơ mức 8
@@ -39,102 +38,40 @@
   const TAU = Math.PI * 2;
   const wrap = a => ((a % TAU) + TAU) % TAU;
 
-  class RescueEngine {
+  class RescueEngine extends window.LessonEngine {
     constructor() {
-      this.prog = [];
-      this.logs = [];
-      this.t = 0;
-      this.upgrades = new Set();
-      this.advanced = false;
-      this.assemblyDone = false;
+      super({
+        sample: SAMPLE, sig, touch: [],
+        labels: { radar: 'Radar', light: 'Đèn pha', wings: 'Cánh dài' },
+        baseLabel: 'Máy bay cơ bản'
+      });
       this.done = { m2: false, m3: false, m5: false };
-      this.best = null; // lần cứu đủ gần nhất { secs }
-      this.rafId = null;
-      this.loopActive = true;
-      this.reset();
+      // Các cờ dành cho động cơ một cổng và nút nhấn không thuộc trạng thái công khai của bài.
+      for (const key of ['motorOn', 'power', 'dir', 'pressed', 'pressT', 'waitingPress', 'blkDur'])
+        Object.defineProperty(this, key, { enumerable: false, writable: true, configurable: true, value: this[key] });
     }
-    init() {
-      this.startLoop();
-    }
-    resizeCanvas() {}
-    reset() {
-      this.running = false;
-      this.pc = 0;
-      this.entered = false;
-      this.blkT = 0;
+    resetState() {
+      const firstReset = !Object.prototype.hasOwnProperty.call(this, 'angle');
+      if (firstReset) delete this.runT;
       this.m = { M1: { on: false, power: 0, dir: 1 }, M2: { on: false, power: 0, dir: 1 } };
       this.angle = 0; // góc máy bay trên vòng bay (rad)
       this.crank = Math.PI; // tay quay: bắt đầu ở độ cao cao nhất
-      this.runT = 0;
+      if (firstReset) this.runT = 0;
       this.victims = VICTIMS.map(v => ({ ...v, seen: false, saved: false, ladder: 0 }));
       this.loops = 0; // số lần chạy hết vòng lặp (NV2)
       this.belowT = 0;
       this.crashed = false;
       this.stormSeen = false;
       this.hint = { high: -10, fast: -10 };
-      if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
     }
-    emit(type, data) {
-      if (this.onEvent) this.onEvent(type, data);
-    }
-    log(kind, text) {
-      this.logs.unshift({ time: this.runT.toFixed(1) + 's', kind, text });
-      if (this.logs.length > 8) this.logs.length = 8;
-      const el = document.getElementById('sim-log-list');
-      if (el)
-        el.innerHTML = this.logs
-          .map(e => `<li class="log-item" data-kind="${e.kind}"><time class="log-time">${e.time}</time><span class="log-dot"></span><span class="log-text">${e.text}</span></li>`)
-          .join('');
-    }
-
-    setProgram(blocks) {
-      this.prog = blocks || [];
-      this.stop(true);
-      this.reset();
-    }
-    start() {
-      this.reset();
-      this.running = true;
-      if (window.SFX) window.SFX.init();
-      this.log('info', 'Bắt đầu chạy chương trình.');
-      this.emit('start');
+    onStart() {
       this.emit('weather', this.weather());
     }
     stop(silent) {
-      const was = this.running;
-      this.running = false;
       this.m.M1.on = this.m.M2.on = false;
-      if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
-      if (was && !silent) {
-        this.log('info', 'Đã dừng chương trình.');
-        this.emit('stop');
-      }
+      super.stop(silent);
     }
     press() {}
-    setAssemblyDone(done) {
-      if (this.assemblyDone === !!done) return;
-      this.assemblyDone = !!done;
-      this.checkMissions();
-    }
-    setUpgrades(list) {
-      this.upgrades = new Set(list || []);
-      this.upgradeRun = false;
-      const labels = { radar: 'Radar', light: 'Đèn pha', wings: 'Cánh dài' };
-      const badge = document.getElementById('sim-active-upgrade-badge');
-      if (badge) badge.textContent = this.upgrades.size ? [...this.upgrades].map(t => labels[t]).join(' · ') : 'Máy bay cơ bản';
-      this.log('ok', this.upgrades.size ? 'Đã gắn: ' + [...this.upgrades].map(t => labels[t]).join(', ') : 'Máy bay cơ bản');
-    }
-    has(t) {
-      return this.upgrades.has(t);
-    }
-    setAdvanced(on) {
-      on = !!on;
-      if (this.advanced === on) return;
-      this.advanced = on;
-      this.stop(true);
-      this.reset();
-      this.checkMissions();
-    }
     // Thời tiết hiện tại: { kind, next } – chế độ Bé luôn trời quang
     weather(t = this.runT) {
       if (!this.advanced) return { kind: 'clear', next: Infinity };
@@ -164,90 +101,35 @@
     saved() {
       return this.victims.filter(v => v.saved).length;
     }
-    matchesSample() {
-      return this.prog.length === SAMPLE.length && this.prog.every((b, i) => sig(b) === SAMPLE[i]);
-    }
     // Tư thế cho sa bàn 3D: 'output' = cần quay (M1), 'tilt' = cụm trên nghiêng (M2, phóng đại ±8° cho dễ thấy)
     pose3d() {
       return { output: this.angle, tilt: (this.altitude() - 0.5) * 0.28 };
     }
 
-    advance(dt) {
-      if (!this.running) return;
-      let budget = dt,
-        guard = 0;
-      while (this.running && guard++ < 40) {
-        if (this.pc >= this.prog.length) {
-          this.finish();
-          break;
-        }
-        const b = this.prog[this.pc];
-        if (b.type === 'start' || b.type === 'repeatStart') {
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'repeatEnd') {
-          this.loops++;
-          if (this.loops === 1 && this.matchesSample() && !this.done.m2) {
-            this.done.m2 = true;
-            this.log('ok', 'Đúng chương trình mẫu: máy bay bay chậm, nhanh, rồi đổi chiều – và lên xuống theo M2.');
-            this.emit('sampleDone');
-            this.checkMissions();
-          }
-          const r = window.LessonEngine.loopStart(this.prog, this.pc);
-          this.pc = r < 0 ? this.pc + 1 : r + 1;
-          continue;
-        }
-        if (b.type === 'motor' || b.type === 'motor_power') {
-          const port = b.port || 'M1',
-            mo = this.m[port];
-          mo.power = b.type === 'motor_power' ? Math.max(1, Math.min(8, b.power || 8)) : LEVEL[b.speed] || 8;
-          mo.dir = b.dir === 'ccw' ? -1 : 1;
-          mo.on = true;
-          this.log('info', port === 'M1'
-            ? `M1: máy bay bay ${NAME[mo.power] || 'mức ' + mo.power}${mo.dir < 0 ? ', ngược chiều' : ''}.`
-            : `M2: trục vít quay ${NAME[mo.power] || 'mức ' + mo.power}${mo.dir < 0 ? ' ngược' : ''} – máy bay đổi độ cao.`);
-          if (this.upgrades.size && !this.upgradeRun) {
-            this.upgradeRun = true;
-            this.checkMissions();
-          }
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'motor_reverse') {
-          this.m.M1.dir = -this.m.M1.dir;
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'stop') {
-          if (this.m.M1.on || this.m.M2.on) this.log('info', 'Hai động cơ dừng – trục vít giữ máy bay ở độ cao này.');
-          this.m.M1.on = this.m.M2.on = false;
-          this.pc++;
-          continue;
-        }
-        if (!this.entered) {
-          this.entered = true;
-          this.blkT = 0;
-          if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
-          if (b.type === 'melody') {
-            if (window.SFX) window.SFX.melody(b.tune);
-            this.emit('melody', b.tune);
-          }
-        }
-        const dur = b.type === 'melody' ? 1 : b.type === 'wait' ? b.duration || 3 : 0;
-        const need = dur - this.blkT;
-        if (budget < need) {
-          this.blkT += budget;
-          this.integrate(budget);
-          budget = 0;
-          break;
-        }
-        this.integrate(need);
-        budget -= need;
-        this.entered = false;
-        this.pc++;
+    onLoopEnd() {
+      this.loops++;
+      if (this.loops === 1 && this.matchesSample() && !this.done.m2) {
+        this.done.m2 = true;
+        this.log('ok', 'Đúng chương trình mẫu: máy bay bay chậm, nhanh, rồi đổi chiều – và lên xuống theo M2.');
+        this.emit('sampleDone');
+        this.checkMissions();
       }
-      if (budget > 0 && this.running) this.integrate(budget);
+    }
+    shouldYieldLoop() { return false; }
+    onMotor(b) {
+      const port = b.port || 'M1', mo = this.m[port];
+      mo.power = this.power;
+      mo.dir = b.dir === 'ccw' ? -1 : 1;
+      mo.on = true;
+      this.log('info', port === 'M1'
+        ? `M1: máy bay bay ${NAME[mo.power] || 'mức ' + mo.power}${mo.dir < 0 ? ', ngược chiều' : ''}.`
+        : `M2: trục vít quay ${NAME[mo.power] || 'mức ' + mo.power}${mo.dir < 0 ? ' ngược' : ''} – máy bay đổi độ cao.`);
+      this.noteUpgradeRun();
+    }
+    onReverse() { this.m.M1.dir = -this.m.M1.dir; }
+    onStopBlock() {
+      if (this.m.M1.on || this.m.M2.on) this.log('info', 'Hai động cơ dừng – trục vít giữ máy bay ở độ cao này.');
+      this.m.M1.on = this.m.M2.on = false;
     }
 
     integrate(dt) {
@@ -324,22 +206,8 @@
     }
 
     finish() {
-      this.running = false;
       this.m.M1.on = this.m.M2.on = false;
-      if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
-      this.emit('end');
-      this.checkMissions();
-    }
-
-    checkMissions() {
-      const m1 = this.assemblyDone;
-      const m4 = this.upgrades.size > 0 && !!this.upgradeRun;
-      if (this.onMissionUpdate)
-        this.onMissionUpdate({
-          m1, m2: this.done.m2, m3: this.done.m3, m4, m5: this.done.m5,
-          allDone: m1 && this.done.m2 && this.done.m3 && m4,
-          upgrades: [...this.upgrades], best: this.best
-        });
+      super.finish();
     }
 
     updateUI() {
@@ -374,29 +242,6 @@
       if (c2) c2.textContent = this.advanced
         ? `Bão theo giờ: quang 0–9 giây, bão 9–17, quang 17–29, bão 29–37. Trong bão phải ở độ cao ≥ ${CLOUD * 100}% (dưới mây quá ${this.stormLimit()} giây sẽ rơi).`
         : `Thả thang được khi độ cao ≤ ${LOW * 100}% và M1 quay chậm (Low).`;
-    }
-
-    startLoop() {
-      cancelAnimationFrame(this.rafId);
-      this.loopActive = true;
-      let last = performance.now();
-      const loop = now => {
-        if (!this.loopActive) return;
-        const dt = Math.min(0.05, (now - last) / 1000);
-        last = now;
-        this.t += dt;
-        this.advance(dt);
-        this.updateUI();
-        this.rafId = requestAnimationFrame(loop);
-      };
-      this.rafId = requestAnimationFrame(loop);
-    }
-    pauseLoop() {
-      this.loopActive = false;
-      cancelAnimationFrame(this.rafId);
-    }
-    resumeLoop() {
-      if (!this.loopActive) this.startLoop();
     }
   }
 

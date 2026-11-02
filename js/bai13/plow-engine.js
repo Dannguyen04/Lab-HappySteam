@@ -18,13 +18,47 @@
   const speedOf = p => 2 * Math.PI * R * RPM * p / 8 / 60;
 
   class PlowEngine extends window.LessonEngine {
+    #frameDt = 0;
+    #lastIntegratedDt = 0;
+    #lastGoodBlkT = 0;
+    #snapTimed = false;
+    #dropResidual = false;
     constructor() {
       super({ sample: SAMPLE, sig, core: ['m1', 'm2', 'm3', 'm4'],
         labels: { blade: 'Lưỡi gạt tuyết', beacon: 'Đèn cảnh báo', salt: 'Thùng rải muối', chain: 'Xích bánh xe' },
-        baseLabel: 'Xe cơ bản' });
+        baseLabel: 'Xe cơ bản', loopEndBeforeJump: true, stopTimedOnFinish: true });
       this.done = { m2: false, m3: false, m5: false };
       this.upgradeRun = false;
       this.lastRun = null;
+      // Bài này dùng bàn tay riêng; cờ nút đỏ của lớp gốc chỉ còn để giữ trạng thái công khai cũ.
+      let pressTime = this.pressT, blockTime = this.blkT, blockDuration = 0;
+      Object.defineProperty(this, 'pressT', {
+        enumerable: true, configurable: true,
+        get: () => pressTime,
+        set: value => { if (!this.pressed || value >= pressTime) pressTime = value; }
+      });
+      // Giữ cách vòng chạy cũ tiêu thụ trọn khung ở ranh giới thời lượng lệch vài bit số thực.
+      Object.defineProperty(this, 'blkDur', {
+        enumerable: false, configurable: true,
+        get: () => {
+          const remaining = blockDuration - this.blkT;
+          if (remaining > this.#frameDt && remaining - this.#frameDt < 1e-8) {
+            this.#snapTimed = true;
+            return this.blkT + this.#frameDt;
+          }
+          return blockDuration;
+        },
+        set: value => { blockDuration = value; }
+      });
+      Object.defineProperty(this, 'blkT', {
+        enumerable: true, configurable: true,
+        get: () => blockTime,
+        set: value => {
+          if (!(this.entered && this.prog[this.pc]?.type === 'sensor_obstacle') &&
+              !(this.#dropResidual && value > 0 && value < 1e-9))
+            blockTime = value;
+        }
+      });
     }
     mode() { return this.advanced ? MODES.pro : MODES.kid; }
     trackEnd() { return this.mode().end; }
@@ -91,6 +125,11 @@
     }
     onMotor(b) { this.wheels('forward', this.power); }
     onStopBlock() { this.wheels('stop', this.power); }
+    onInstant(b) {
+      if (b.type !== 'drive') return false;
+      this.wheels(b.move === 'left' ? 'left' : 'forward', ({ low: 4, medium: 6, high: 8 }[b.speed] || 8));
+      return true;
+    }
     // Chỉ các vật cản nằm trước đầu xe, trong nón quan sát +/- 28 độ, mới được phát hiện.
     seesObstacle() {
       if (this.hand) return true; // nút ✋ đặt bàn tay ngay phía trước cảm biến
@@ -108,81 +147,78 @@
         motor: 0, wheelLeft: -this.wheelLeft * 2 * Math.PI, wheelRight: -this.wheelRight * 2 * Math.PI,
         heading: this.theta, offset: [this.x * 0.002, 0, -this.y * 0.002] };
     }
-    // Lớp gốc chưa hiểu drive và sensor_obstacle; xử lý riêng tại lớp con.
-    advance(dt) {
+    beforeAdvance(dt) {
       if (this.hand && (this.handT -= dt) <= 0) this.hand = false;
-      if (!this.running) return;
-      if (this.runT >= MAX_TIME) {
+      this.#frameDt = dt;
+      this.#dropResidual = false;
+      if (this.running && this.runT >= MAX_TIME) {
         this.log('warn', 'Cảm biến chờ vật cản quá lâu.');
         this.emit('timeout');
         this.finish();
-        return;
+        return 0;
       }
-      let budget = Math.max(0, Math.min(dt, MAX_TIME - this.runT));
-      let guard = 0;
-      while (this.running && guard++ < 40) {
-        if (this.pc >= this.prog.length) { this.finish(); break; }
-        const b = this.prog[this.pc];
-        if (b.type === 'start' || b.type === 'repeatStart') { this.pc++; continue; }
-        if (b.type === 'repeatEnd') {
-          if (this.matchesSample() && this.cycles >= 1 && this.completedTurns >= 1 && !this.crashed && !this.stuck) {
-            this.done.m2 = true;
-            this.checkMissions();
-          }
-          const i = this.loopStartOf(this.pc);
-          if (i < 0) this.pc++;
-          else if (!this.prog.slice(i + 1, this.pc).some(v => v.type === 'wait' || v.type === 'sensor_obstacle' || v.type === 'melody')) this.pc = this.prog.length;
-          else this.pc = i + 1;
-          continue;
-        }
-        if (b.type === 'drive' || b.type === 'motor' || b.type === 'motor_power') {
-          const p = b.type === 'motor_power' ? b.power : b.type === 'motor' ? ({ low: 4, medium: 6, high: 8 }[b.speed] || 8) : ({ low: 4, medium: 6, high: 8 }[b.speed] || 8);
-          this.wheels(b.type === 'drive' && b.move === 'left' ? 'left' : 'forward', p);
-          this.pc++; continue;
-        }
-        if (b.type === 'motor_reverse') { this.dir *= -1; this.pc++; continue; }
-        if (b.type === 'stop') { this.wheels('stop', this.power); this.pc++; continue; }
-        if (b.type === 'sensor_obstacle') {
-          if (!this.entered) { this.entered = true; this.onActiveBlockUpdate?.(this.pc); }
-          if (this.seesObstacle()) {
-            if (this.hand) this.handUsed = true;
-            this.waitingHand = false;
-            this.entered = false;
-            this.seen = true;
-            this.log('ok', this.hand ? 'Cảm biến thấy bàn tay.' : 'Cảm biến thấy vật cản phía trước.');
-            this.emit('seen');
-            this.pc++; continue;
-          }
-          if (!this.waitingHand) { this.waitingHand = true; this.log('warn', 'Chờ vật cản trước đầu xe – em có thể bấm ✋.'); this.emit('waitHand'); }
-          this.integrate(budget);
-          budget = 0; break;
-        }
-        if (!this.entered) {
-          this.entered = true;
-          this.blkT = 0;
-          this.onActiveBlockUpdate?.(this.pc);
-          if (b.type === 'wait' && this.motion === 'forward') this.cycles++;
-          if (b.type === 'melody') { window.SFX?.melody(b.tune); this.emit('melody', b.tune); }
-        }
-        const dur = b.type === 'wait' ? (Number(b.duration) || 3) : b.type === 'melody' ? 1 : 0;
-        const left = Math.max(0, dur - this.blkT);
-        const used = Math.min(budget, left);
-        this.integrate(used);
-        if (!this.running) break;
-        this.blkT += used;
-        budget -= used;
-        if (this.blkT + 1e-8 < dur) break;
-        if (b.type === 'wait' && this.motion === 'left') this.completedTurns++;
-        this.entered = false;
-        this.pc++;
-        if (budget <= 1e-9 && this.prog[this.pc]?.type !== 'repeatEnd') break;
+      return Math.max(0, Math.min(dt, MAX_TIME - this.runT));
+    }
+    onLoopEnd() {
+      if (this.matchesSample() && this.cycles >= 1 && this.completedTurns >= 1 && !this.crashed && !this.stuck) {
+        this.done.m2 = true;
+        this.checkMissions();
       }
-      if (budget > 0 && this.running) this.integrate(budget);
+    }
+    loopNext(r, end) {
+      if (r < 0) return end + 1;
+      return this.prog.slice(r + 1, end).some(b => b.type === 'wait' || b.type === 'sensor_obstacle' || b.type === 'melody')
+        ? r + 1 : this.prog.length;
+    }
+    shouldYieldLoop() { return false; }
+    isConditionWait(b) { return b.type === 'sensor_obstacle'; }
+    waitDone() {
+      if (this.seesObstacle()) return true;
+      if (!this.waitingHand) {
+        this.waitingHand = true;
+        this.log('warn', 'Chờ vật cản trước đầu xe – em có thể bấm ✋.');
+        this.emit('waitHand');
+      }
+      return false;
+    }
+    waitCheckAfterStep() { return false; }
+    onWaitExit() {
+      if (this.hand) this.handUsed = true;
+      this.waitingHand = false;
+      this.seen = true;
+      this.log('ok', this.hand ? 'Cảm biến thấy bàn tay.' : 'Cảm biến thấy vật cản phía trước.');
+      this.emit('seen');
+    }
+    onTimedEnter(b) {
+      this.#lastGoodBlkT = 0;
+      this.#lastIntegratedDt = 0;
+      if (b.type === 'wait' && this.motion === 'forward') this.cycles++;
+    }
+    enterBlock(b) {
+      return b.type === 'wait' ? (Number(b.duration) || 3) : super.enterBlock(b);
+    }
+    onTimedExit(b) {
+      this.blkT += this.#lastIntegratedDt;
+      this.#lastGoodBlkT = this.blkT;
+      if (b.type === 'wait' && this.motion === 'left') this.completedTurns++;
+    }
+    shouldYieldAfterTimed(b, budget) {
+      return budget <= 1e-9 && this.prog[this.pc]?.type !== 'repeatEnd';
     }
     integrate(dt) {
-      if (!this.running || dt <= 0) return;
+      if (!this.running || (this.#dropResidual && dt > 0 && dt < 1e-9)) return;
+      if (this.#snapTimed) {
+        dt = this.#frameDt;
+        this.#snapTimed = false;
+        this.#dropResidual = true;
+      }
+      if (dt <= 0) return;
+      this.#lastIntegratedDt = dt;
       this.runT += dt;
-      if (!this.motorOn || this.crashed || this.stuck) return;
+      if (!this.motorOn || this.crashed || this.stuck) {
+        if (this.entered) this.#lastGoodBlkT = this.blkT;
+        return;
+      }
       const oldX = this.x, oldY = this.y;
       const v = this.speed(), omega = (this.rightMotor - this.leftMotor) / BASE;
       const mid = this.theta + omega * dt / 2;
@@ -197,7 +233,10 @@
         this.crashed = true;
         this.log('warn', 'Xe chạm mép sân!'); this.emit('crash'); this.finish(); return;
       }
-      if (this.motion !== 'forward' || v <= 0) return;
+      if (this.motion !== 'forward' || v <= 0) {
+        if (this.entered) this.#lastGoodBlkT = this.blkT;
+        return;
+      }
       for (const p of this.piles) {
         if (p.cleared) continue;
         // Lưỡi gạt có bề rộng 26 cm: tâm đống tuyết phải nằm trên đường xe đi.
@@ -214,9 +253,12 @@
         this.emit('push', { x: p.x, y: p.y, left: this.left() });
       }
       if (this.left() === 0 && this.prog.some(b => b.type === 'repeatStart')) this.finish();
+      if (this.entered && this.running) this.#lastGoodBlkT = this.blkT;
     }
     finish() {
       if (!this.running) return;
+      if (this.entered && ['wait', 'melody'].includes(this.prog[this.pc]?.type) && this.blkT > this.#lastGoodBlkT)
+        this.blkT = this.#lastGoodBlkT;
       this.running = false;
       this.motorOn = false;
       this.leftMotor = this.rightMotor = 0;

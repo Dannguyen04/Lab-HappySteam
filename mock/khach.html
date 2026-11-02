@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Khách chấm trưng bày (S-16) · Lớp 1A2 · Happy STEAM</title>
+  <link rel="stylesheet" href="../css/lab.css">
+  <link rel="stylesheet" href="trung-bay.css">
+</head>
+<body class="guest-body">
+
+<!-- Dải cố định báo dữ liệu mẫu và quay về danh sách màn hình -->
+<div class="mock-banner" role="region" aria-label="Thanh công cụ bản mẫu">
+  <div class="mock-banner-left">
+    <a class="mock-back" href="index.html">← Danh sách màn hình</a>
+    <span class="mock-badge">DỮ LIỆU MẪU – chưa lưu thật</span>
+  </div>
+  <div class="mock-banner-right">
+    <a class="mock-back" href="trung-bay.html">Màn hình Giáo viên &amp; Màn chiếu</a>
+    <button type="button" class="mock-reset-btn" id="btn-toggle-theme">Giao diện tối</button>
+  </div>
+</div>
+
+<main class="guest-shell">
+
+  <!-- Đầu trang trên điện thoại khách -->
+  <header class="guest-header">
+    <div class="row">
+      <span class="eyebrow">Lớp 1A2 · Buổi trưng bày Học kì I</span>
+      <span class="status-badge" id="guest-session-badge" data-state="DANG_MO">ĐANG MỞ</span>
+    </div>
+    <h1>Chấm sao các nhóm dự án</h1>
+    <p class="hint">
+      Quý khách không cần đăng nhập. Để bảo vệ dữ liệu trẻ em (GD-14), trang này chỉ hiện tên nhóm và mô hình, không hiện tên học sinh.
+    </p>
+    <div class="guest-ticket-bar">
+      <label for="guest-ticket-select"><strong>Phiếu QR đang cầm:</strong></label>
+      <select id="guest-ticket-select" aria-label="Chọn mã phiếu khách"></select>
+    </div>
+  </header>
+
+  <!-- Thanh thông báo phản hồi -->
+  <div class="tb-toast" id="guest-toast" role="status" aria-live="polite" hidden>
+    <span id="guest-toast-text"></span>
+    <button type="button" class="btn" id="guest-toast-close">Đóng</button>
+  </div>
+
+  <!-- Bước 1: Danh sách các nhóm đã nộp -->
+  <section id="guest-list-section" aria-label="Danh sách nhóm trưng bày">
+    <div class="row" style="margin-bottom: 8px;">
+      <strong style="font: 700 15px/1.2 var(--f-display);">Chọn nhóm để chấm sao</strong>
+      <small class="hint" id="guest-done-summary">Đã chấm 0/6 nhóm</small>
+    </div>
+    <div class="guest-group-list" id="guest-group-list"></div>
+  </section>
+
+  <!-- Bước 2: Màn hình chấm một nhóm -->
+  <section id="guest-rate-section" class="guest-rate-card" aria-label="Chấm sao nhóm đang chọn" hidden>
+    <div class="row">
+      <button type="button" class="btn" id="guest-back-list">← Danh sách nhóm</button>
+      <span class="s15-tag" id="guest-current-group-tag">Chưa chấm</span>
+    </div>
+
+    <div style="display: grid; gap: 8px;">
+      <div class="rate-poster-visual">
+        <img id="guest-group-img" src="../assets/covers/lop1-bai11.jpg" alt="Ảnh mô hình nhóm">
+      </div>
+      <div>
+        <h2 id="guest-group-name" style="margin: 0; font: 700 20px/1.2 var(--f-display);">Nhóm Tàu Lá</h2>
+        <p id="guest-group-project" style="margin: 3px 0 0; font-weight: 600; font-size: 14px;"></p>
+        <p id="guest-group-idea" class="hint" style="margin-top: 2px;"></p>
+      </div>
+    </div>
+
+    <div>
+      <strong style="display: block; margin-bottom: 8px; font: 700 15px/1.2 var(--f-display);">1. Chấm sao theo tiêu chí (bắt buộc):</strong>
+      <div id="guest-crit-list" style="display: grid; gap: 10px;"></div>
+    </div>
+
+    <div>
+      <div class="row" style="margin-bottom: 6px;">
+        <strong style="font: 700 15px/1.2 var(--f-display);">2. Chọn câu nhận xét nhanh (tối đa 2):</strong>
+        <small class="hint" id="guest-preset-counter">0/2 câu</small>
+      </div>
+      <div class="guest-preset-list" id="guest-preset-list"></div>
+    </div>
+
+    <div>
+      <label class="field" for="guest-free-text">
+        <span>3. Lời nhắn gửi thêm cho nhóm (tối đa 200 ký tự, hiện sau khi giáo viên duyệt):</span>
+        <textarea id="guest-free-text" rows="3" maxlength="200" placeholder="Ví dụ: Mô hình chạy ổn định, các con trình bày rõ ràng." style="width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--sunk);"></textarea>
+      </label>
+      <div class="row" style="margin-top: 4px;">
+        <small class="hint">Sẽ qua hộp duyệt của giáo viên (GD-19)</small>
+        <small class="hint" id="guest-char-count">0/200 ký tự</small>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Nút Gửi luôn cố định ở đáy màn hình điện thoại (BRD mục 10) -->
+<div class="guest-sticky-bottom" id="guest-sticky-bar">
+  <div class="guest-sticky-inner">
+    <button type="button" class="rate-submit-btn" id="guest-submit-btn">Gửi đánh giá cho nhóm</button>
+  </div>
+</div>
+
+<script src="trung-bay.js" defer></script>
+</body>
+</html>

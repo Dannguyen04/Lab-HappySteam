@@ -7,7 +7,7 @@ module.exports = async () => {
     build: {
       rollupOptions: {
         input: Object.fromEntries(
-          ['index', 'bai', 'lop1-du-an', 'lop1-trung-bay', 'giao-vien', 'vao-hoc']
+          ['index', 'bai', 'lop1-du-an', 'lop1-trung-bay', 'giao-vien', 'vao-hoc', 'code-lab']
             .map(name => [name, path.resolve(__dirname, `${name}.html`)])
         )
       }
@@ -18,6 +18,7 @@ module.exports = async () => {
         { src: 'js', dest: '.' },
         { src: 'content', dest: '.' },
         { src: 'css', dest: '.' },
+        { src: 'mock', dest: '.' }, // màn hình mẫu (dữ liệu giả) – docs/giao-viec/73
         { src: 'assets', dest: '.' },
         { src: 'references/official', dest: 'references' },
         { src: '.nojekyll', dest: '.' }

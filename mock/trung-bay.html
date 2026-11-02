@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Trưng bày dự án (S-14, S-15, S-17) · Lớp 1A2 · Happy STEAM</title>
+  <link rel="stylesheet" href="../css/lab.css">
+  <link rel="stylesheet" href="trung-bay.css">
+</head>
+<body>
+
+<!-- Dải cố định báo dữ liệu mẫu và quay về danh sách màn hình -->
+<div class="mock-banner" role="region" aria-label="Thanh công cụ bản mẫu">
+  <div class="mock-banner-left">
+    <a class="mock-back" href="index.html">← Danh sách màn hình</a>
+    <span class="mock-badge">DỮ LIỆU MẪU – chưa lưu thật</span>
+    <span>Phiếu 73c · Lớp 1A2 (28 học sinh · 7 nhóm dự án)</span>
+  </div>
+  <div class="mock-banner-right">
+    <button type="button" class="mock-reset-btn" id="btn-reset-mock">Khôi phục dữ liệu mẫu gốc</button>
+    <button type="button" class="mock-reset-btn" id="btn-toggle-theme">Giao diện tối</button>
+  </div>
+</div>
+
+<div class="tb-wrap">
+
+  <!-- Thanh chuyển đổi màn hình trong luồng Trưng bày -->
+  <nav class="role-switcher" role="tablist" aria-label="Chuyển đổi màn hình trưng bày">
+    <button type="button" role="tab" class="role-tab" id="tab-s14" data-tab="s14" aria-selected="true" aria-controls="pane-s14">
+      <span class="role-tab-code">S-14 · Giáo viên (1366 px)</span>
+      <span class="role-tab-title">Chuẩn bị &amp; Hộp duyệt</span>
+      <span class="role-tab-sub">Tiêu chí, phiếu QR, duyệt chữ, chấm nhóm</span>
+    </button>
+    <button type="button" role="tab" class="role-tab" id="tab-projector" data-tab="projector" aria-selected="false" aria-controls="pane-projector">
+      <span class="role-tab-code">Màn chiếu · BRD 6.6</span>
+      <span class="role-tab-title">Trình chiếu &amp; Xếp hạng</span>
+      <span class="role-tab-sub">Poster các nhóm, bật/tắt bảng hạng</span>
+    </button>
+    <button type="button" role="tab" class="role-tab" id="tab-s15" data-tab="s15" aria-selected="false" aria-controls="pane-s15">
+      <span class="role-tab-code">S-15 · Học sinh (1024×768)</span>
+      <span class="role-tab-title">Bạn trong lớp chấm sao</span>
+      <span class="role-tab-sub">Chạm sao lớn ≥ 48 px, nghe câu mẫu</span>
+    </button>
+    <button type="button" role="tab" class="role-tab" id="tab-s17" data-tab="s17" aria-selected="false" aria-controls="pane-s17">
+      <span class="role-tab-code">S-17 · Sổ dự án chặng 4</span>
+      <span class="role-tab-title">Mọi người nói gì</span>
+      <span class="role-tab-sub">Sao 3 nguồn (6.4) &amp; lời khen đã duyệt</span>
+    </button>
+    <a class="role-tab" href="khach.html">
+      <span class="role-tab-code">S-16 · Khách (375 px) ↗</span>
+      <span class="role-tab-title">Màn hình điện thoại khách</span>
+      <span class="role-tab-sub">Quét phiếu QR, không hiện tên học sinh</span>
+    </a>
+  </nav>
+
+  <!-- Thanh phản hồi thao tác -->
+  <div class="tb-toast" id="tb-toast" role="status" aria-live="polite" hidden>
+    <span id="tb-toast-text"></span>
+    <button type="button" class="btn" id="tb-toast-close">Đóng</button>
+  </div>
+
+  <!-- Đầu trang: thông tin buổi trưng bày -->
+  <header class="session-banner">
+    <div class="session-meta">
+      <div class="eyebrow">Lớp 1A2 · Cô Nguyễn Thị Lan · Học kì I · Tuần 18 (Kèm mô hình Bài 9: Thông tin liên lạc vũ trụ)</div>
+      <h1>Buổi trưng bày dự án: Hành trình dòng nước &amp; Trạm liên lạc</h1>
+      <p class="lede" id="session-summary-line">6 nhóm đã nộp poster · 1 nhóm đang làm · Đánh giá từ 3 nguồn: Giáo viên, Bạn trong lớp, Khách quét QR.</p>
+    </div>
+    <div class="session-status-bar">
+      <span class="status-badge" id="session-state-badge" data-state="DANG_MO">ĐANG MỞ</span>
+      <span class="hint" id="session-timer-text">Tự đóng sau 23 giờ 15 phút</span>
+      <button type="button" class="btn btn-primary" id="btn-toggle-session">Đóng buổi trưng bày</button>
+      <button type="button" class="btn" id="btn-open-print-modal">In phiếu khách A4</button>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       PANE 1: S-14 GIÁO VIÊN CHUẨN BỊ, IN PHIẾU, MỞ/ĐÓNG, HỘP DUYỆT, CHẤM NHÓM
+       ===================================================================== -->
+  <section id="pane-s14" role="tabpanel" aria-labelledby="tab-s14">
+    <div class="s14-grid">
+
+      <!-- Cột trái: Tiêu chí & Phiếu khách -->
+      <div class="col">
+        <article class="tb-card">
+          <div class="tb-card-h">
+            <h2>1. Bộ tiêu chí chấm sao (1–5 tiêu chí, thang 1–3 sao)</h2>
+            <small id="criteria-lock-note">BR-TB-07: Đã có lượt chấm</small>
+          </div>
+          <p class="hint" id="criteria-rule-explain">
+            Bộ tiêu chí dùng chung cho Giáo viên, Bạn trong lớp và Khách (GD-18). Theo luật <b>BR-TB-07</b>, chỉ sửa được tiêu chí khi buổi chưa có lượt chấm nào.
+          </p>
+          <ul class="criteria-list" id="criteria-list" aria-label="Danh sách tiêu chí"></ul>
+          <form class="inline-form" id="form-add-criterion" novalidate>
+            <label for="input-new-criterion" class="hint">Tiêu chí mới (1–30 ký tự):</label>
+            <input type="text" id="input-new-criterion" maxlength="30" placeholder="Ví dụ: Hợp tác nhóm">
+            <button type="submit" class="btn" id="btn-add-criterion">+ Thêm tiêu chí</button>
+          </form>
+          <div class="row">
+            <button type="button" class="link-btn" id="btn-demo-unlock-criteria">Thử nghiệm: Xóa tạm lượt chấm để mở khóa sửa tiêu chí</button>
+            <button type="button" class="link-btn" id="btn-restore-default-criteria">Đặt lại 3 tiêu chí mẫu</button>
+          </div>
+        </article>
+
+        <article class="tb-card">
+          <div class="tb-card-h">
+            <h2>2. Phiếu khách QR (GD-17, BR-TB-03)</h2>
+            <small id="ticket-stats-label">0 phiếu</small>
+          </div>
+          <p class="hint">
+            Khách không cần đăng nhập và không để lại tên. Mỗi tờ phiếu có mã 8 ký tự riêng (bỏ 0/O, 1/I/l). Thu hồi phiếu sẽ ẩn ngay các lượt chấm của phiếu đó khỏi điểm trung bình (6.4) và bảng xếp hạng (6.6).
+          </p>
+          <div class="inline-form">
+            <label for="input-ticket-batch">Số phiếu cần tạo thêm (1–200):</label>
+            <input type="number" id="input-ticket-batch" min="1" max="200" value="6" style="width: 88px;">
+            <button type="button" class="btn" id="btn-create-tickets">+ Tạo thêm phiếu</button>
+            <button type="button" class="btn btn-primary" id="btn-preview-print">Xem &amp; In tờ A4 (30 ô)</button>
+          </div>
+          <div class="ticket-pills" id="ticket-list" aria-label="Danh sách phiếu khách đã phát"></div>
+        </article>
+      </div>
+
+      <!-- Cột phải: Hộp duyệt nhận xét & Chấm nhóm -->
+      <div class="col">
+        <article class="tb-card">
+          <div class="tb-card-h">
+            <h2>3. Hộp duyệt nhận xét chữ tự gõ (F-14, BR-TB-09)</h2>
+            <small id="mod-pending-badge">0 chờ duyệt</small>
+          </div>
+          <p class="hint">
+            Sao và câu mẫu hiện ngay cho nhóm. Chữ do khách tự gõ (tối đa 200 ký tự) phải được giáo viên duyệt mới hiện ở mục "Mọi người nói gì" của nhóm và phụ huynh.
+          </p>
+          <div class="mod-filter-bar">
+            <div class="tools" role="group" aria-label="Lọc nhận xét theo trạng thái">
+              <button type="button" class="tool active" data-mod-filter="ALL">Tất cả</button>
+              <button type="button" class="tool" data-mod-filter="CHO_DUYET">Chờ duyệt</button>
+              <button type="button" class="tool" data-mod-filter="DA_DUYET">Đã duyệt</button>
+              <button type="button" class="tool" data-mod-filter="DA_AN">Đã ẩn</button>
+            </div>
+            <button type="button" class="btn btn-primary" id="btn-approve-all">Duyệt tất cả chờ duyệt</button>
+          </div>
+          <ul class="mod-list" id="mod-list" aria-label="Danh sách nhận xét cần duyệt"></ul>
+        </article>
+
+        <article class="tb-card">
+          <div class="tb-card-h">
+            <h2>4. Tổng hợp sao 3 nguồn &amp; Chấm dự án nhóm (BRD 6.4, GD-16, GD-21)</h2>
+            <small>7 nhóm × 4 học sinh = 28 em Lớp 1A2</small>
+          </div>
+          <p class="hint">
+            Sao của các bạn và khách chỉ để tham khảo, không gộp chung 3 nguồn. Khi lưu đánh giá nhóm, hệ thống chép mức (HTT / HT / CHT) và nhận xét cho 4 thành viên trong nhóm.
+          </p>
+          <div class="teacher-group-table-wrap">
+            <table class="tb-table" aria-label="Bảng tổng hợp sao và chấm dự án nhóm">
+              <thead>
+                <tr>
+                  <th>Nhóm &amp; Thành viên</th>
+                  <th>Trạng thái</th>
+                  <th class="num">TB Bạn (6.4)</th>
+                  <th class="num">TB Khách (6.4)</th>
+                  <th>Sao GV (GD-21)</th>
+                  <th>Đánh giá chính thức (F-06)</th>
+                </tr>
+              </thead>
+              <tbody id="teacher-groups-tbody"></tbody>
+            </table>
+          </div>
+        </article>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       PANE 2: MÀN CHIẾU & BẢNG XẾP HẠNG (BRD 6.6 / GD-22)
+       ===================================================================== -->
+  <section id="pane-projector" role="tabpanel" aria-labelledby="tab-projector" hidden>
+    <div class="projector-shell">
+      <div class="projector-top">
+        <div>
+          <div class="eyebrow" style="color: #7ad3f7;">Màn hình máy chiếu lớp 1A2 · Độ phân giải chuẩn 1366 px</div>
+          <h2>Trưng bày dự án Học kì I · Hành trình dòng nước</h2>
+        </div>
+        <div class="inline-form">
+          <label class="switch" style="color: #e8f0f7;">
+            <input type="checkbox" id="toggle-leaderboard" checked>
+            <span>Hiện bảng xếp hạng (GD-22)</span>
+          </label>
+          <a class="btn btn-primary" href="khach.html" style="text-decoration: none;">Mở màn hình Khách QR (S-16)</a>
+        </div>
+      </div>
+
+      <div class="projector-layout" id="projector-layout">
+        <div>
+          <div class="row" style="margin-bottom: 10px;">
+            <strong style="font-family: var(--f-display); font-size: 17px;">Poster các nhóm đã nộp (chạm để phóng to trên bảng)</strong>
+            <span class="hint" style="color: #9bb0c3;" id="proj-submitted-count">6 nhóm</span>
+          </div>
+          <div class="proj-posters-grid" id="proj-posters-grid"></div>
+        </div>
+
+        <aside class="leaderboard-panel" id="leaderboard-panel" aria-label="Bảng xếp hạng trưng bày">
+          <div class="row">
+            <h3>Bảng xếp hạng (BRD 6.6)</h3>
+            <span class="pill" data-k="info">Bạn + Khách</span>
+          </div>
+          <p class="hint" style="color: #9bb0c3;">
+            Tính từ các lượt chấm của <b>Bạn + Khách</b> (không tính Giáo viên, không tính phiếu đã thu hồi). Bằng điểm thì nhóm nhiều lượt hơn xếp trên. Dưới 3 lượt ghi <b>Chưa xếp hạng</b>.
+          </p>
+          <ol class="leaderboard-list" id="leaderboard-list"></ol>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       PANE 3: S-15 HỌC SINH CHẤM NHÓM BẠN (MÁY TÍNH BẢNG 1024×768, NÚT ≥ 48 PX)
+       ===================================================================== -->
+  <section id="pane-s15" role="tabpanel" aria-labelledby="tab-s15" hidden>
+    <div class="s15-bar">
+      <div class="s15-student-picker">
+        <label for="s15-student-select"><strong>Em đang cầm máy tính bảng:</strong></label>
+        <select id="s15-student-select" aria-label="Chọn học sinh đang dùng máy tính bảng"></select>
+      </div>
+      <span class="hint" id="s15-student-progress">Chọn một nhóm bạn để chấm sao và gửi lời khen nhé!</span>
+    </div>
+
+    <!-- Bước 1: Lưới các nhóm đã nộp -->
+    <div id="s15-grid-view">
+      <div class="s15-grid" id="s15-groups-grid" aria-label="Danh sách nhóm dự án"></div>
+    </div>
+
+    <!-- Bước 2: Màn hình chấm sao + chọn câu mẫu cho 1 nhóm -->
+    <div id="s15-rate-view" class="rate-sheet" hidden>
+      <div class="rate-sheet-head">
+        <button type="button" class="rate-back-btn" id="s15-back-btn">← Chọn nhóm khác</button>
+        <div>
+          <span class="eyebrow">Chấm sao cho nhóm bạn</span>
+          <h2 id="s15-rate-title" style="margin: 2px 0 0; font: 700 24px/1.2 var(--f-display);">Nhóm</h2>
+        </div>
+        <span class="s15-tag" id="s15-rate-status-tag">Chưa chấm</span>
+      </div>
+
+      <div class="rate-poster-box">
+        <div class="rate-poster-visual">
+          <img id="s15-rate-img" src="../assets/covers/lop1-bai09.jpg" alt="Ảnh mô hình của nhóm">
+        </div>
+        <div style="display: grid; gap: 6px;">
+          <strong id="s15-rate-project-name" style="font: 700 19px/1.25 var(--f-display);">Tên dự án</strong>
+          <p id="s15-rate-idea" style="margin: 0; font-size: 15px; color: var(--muted);"></p>
+          <p class="hint" id="s15-rate-members"></p>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="margin: 0 0 8px; font: 700 17px/1.2 var(--f-display);">① Em chạm số sao cho từng mục nhé (1 đến 3 sao):</h3>
+        <div class="crit-rate-list" id="s15-crit-list"></div>
+      </div>
+
+      <div>
+        <div class="row" style="margin-bottom: 8px;">
+          <h3 style="margin: 0; font: 700 17px/1.2 var(--f-display);">② Em chọn tối đa 2 câu gửi tặng nhóm bạn (bấm Nghe để đọc to):</h3>
+          <span class="pill" id="s15-preset-count">Đã chọn 0/2 câu</span>
+        </div>
+        <div class="preset-grid" id="s15-preset-grid"></div>
+      </div>
+
+      <button type="button" class="rate-submit-btn" id="s15-submit-btn">Gửi sao và lời khen cho nhóm bạn</button>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       PANE 4: S-17 NHÓM XEM "MỌI NGƯỜI NÓI GÌ" (SỔ DỰ ÁN CHẶNG 4)
+       ===================================================================== -->
+  <section id="pane-s17" role="tabpanel" aria-labelledby="tab-s17" hidden>
+    <article class="tb-card">
+      <div class="tb-card-h">
+        <div>
+          <div class="eyebrow">Sổ dự án nhóm · Chặng ④ Chia sẻ · Mục "Mọi người nói gì" (S-17)</div>
+          <h2 style="margin-top: 4px;">Tổng hợp sao và lời nhận xét dành cho nhóm</h2>
+        </div>
+        <div class="inline-form">
+          <label for="s17-group-select"><strong>Xem Sổ dự án của:</strong></label>
+          <select id="s17-group-select" aria-label="Chọn nhóm để xem mục Mọi người nói gì"></select>
+        </div>
+      </div>
+
+      <div class="rate-poster-box" id="s17-group-banner">
+        <div class="rate-poster-visual">
+          <img id="s17-group-img" src="../assets/covers/lop1-bai11.jpg" alt="Mô hình của nhóm">
+        </div>
+        <div style="display: grid; gap: 6px;">
+          <div class="row">
+            <strong id="s17-group-title" style="font: 700 20px/1.2 var(--f-display);">Nhóm Tàu Lá</strong>
+            <span class="pill" id="s17-teacher-grade-pill" data-k="ok">Đánh giá GV: HTT</span>
+          </div>
+          <p id="s17-group-desc" style="margin: 0; color: var(--muted);"></p>
+          <p id="s17-group-members" class="hint"></p>
+          <p id="s17-teacher-comment" style="margin: 4px 0 0; padding: 8px 10px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); font-size: 13.5px;"></p>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="margin: 0 0 10px; font: 700 16px/1.2 var(--f-display);">Sao trung bình theo từng nguồn (BRD 6.4 – Không gộp chung 3 nguồn)</h3>
+        <div class="s17-sources-grid" id="s17-sources-grid"></div>
+      </div>
+
+      <div>
+        <div class="row" style="margin-bottom: 10px;">
+          <h3 style="margin: 0; font: 700 16px/1.2 var(--f-display);">Lời khen và góp ý mọi người gửi cho nhóm (GD-19, GD-20, BR-TB-09)</h3>
+          <small class="hint" id="s17-hidden-note">Chỉ hiện câu mẫu và chữ tự gõ ĐÃ DUYỆT; ẩn danh người chấm</small>
+        </div>
+        <ul class="feedback-feed" id="s17-feedback-list" aria-label="Danh sách lời nhận xét đã duyệt"></ul>
+      </div>
+    </article>
+  </section>
+
+</div>
+
+<!-- Hộp thoại cảnh báo đóng buổi khi còn nhận xét chờ duyệt (BR-TB-11) -->
+<div class="modal" id="close-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="close-modal-title">
+  <div class="panel modal-card">
+    <h2 id="close-modal-title">Cảnh báo chưa duyệt hết nhận xét (BR-TB-11)</h2>
+    <p id="close-modal-msg" style="margin: 0;">Còn nhận xét của khách đang ở trạng thái Chờ duyệt. Nếu đóng buổi ngay, các nhận xét này vẫn chưa hiển thị cho học sinh và phụ huynh.</p>
+    <div class="actions">
+      <button type="button" class="btn" id="btn-cancel-close">Quay lại duyệt</button>
+      <button type="button" class="btn btn-primary" id="btn-confirm-close">Vẫn đóng buổi</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hộp thoại phóng to Poster trên màn chiếu -->
+<div class="modal" id="poster-zoom-modal" role="dialog" aria-modal="true" aria-labelledby="zoom-modal-title">
+  <div class="panel modal-card" style="width: min(760px, 100%);">
+    <div class="row">
+      <h2 id="zoom-modal-title">Poster nhóm</h2>
+      <button type="button" class="btn" id="btn-close-zoom">Đóng</button>
+    </div>
+    <div id="zoom-modal-body" style="display: grid; gap: 12px;"></div>
+  </div>
+</div>
+
+<!-- Hộp thoại xem và in tờ A4 Phiếu khách QR -->
+<div class="modal" id="print-tickets-modal" role="dialog" aria-modal="true" aria-labelledby="print-modal-title">
+  <div class="panel modal-card" style="width: min(920px, 100%); max-height: 90vh; overflow-y: auto;">
+    <div class="row no-print">
+      <div>
+        <h2 id="print-modal-title">Tờ in A4 Phiếu khách chấm trưng bày (S-14)</h2>
+        <small class="hint">Cắt rời từng ô phát cho khách ở cửa lớp. Mỗi phiếu chấm mỗi nhóm 1 lần (chấm lại ghi đè).</small>
+      </div>
+      <div class="inline-form">
+        <button type="button" class="btn btn-primary" id="btn-trigger-print">In tờ A4 (Ctrl+P)</button>
+        <button type="button" class="btn" id="btn-close-print-modal">Đóng</button>
+      </div>
+    </div>
+    <div class="print-sheets-preview">
+      <div style="margin-bottom: 8px; display: flex; justify-content: space-between; font-size: 12px; border-bottom: 1px solid #ccc; padding-bottom: 4px;">
+        <strong>Happy STEAM Lab · Lớp 1A2 · Phiếu khách chấm trưng bày Học kì I</strong>
+        <span>Mỗi phiếu có mã QR riêng · Quét để mở trang S-16</span>
+      </div>
+      <div class="qr-sheet-grid" id="qr-sheet-grid"></div>
+    </div>
+  </div>
+</div>
+
+<script src="trung-bay.js" defer></script>
+</body>
+</html>

@@ -37,11 +37,11 @@
       super({
         sample: SAMPLE, sig,
         labels: { dish: 'Ăng-ten', lamp: 'Đèn pha', wheels: 'Bánh gai' },
-        baseLabel: 'Robot cơ bản'
+        baseLabel: 'Robot cơ bản', loopEndBeforeJump: true
       });
       this.done = { m2: false, m3: false, m5: false };
       // Các cờ cảm biến chạm của lớp gốc không thuộc trạng thái công khai của xe.
-      for (const key of ['motorOn', 'power', 'dir', 'pressed', 'pressT', 'waitingPress'])
+      for (const key of ['motorOn', 'power', 'dir', 'pressed', 'pressT', 'waitingPress', 'blkDur'])
         Object.defineProperty(this, key, { enumerable: false, writable: true, configurable: true, value: this[key] });
     }
     resetState() {
@@ -131,83 +131,16 @@
       if (wasOn) this.log('info', 'Động cơ dừng – xe trượt thêm một đoạn rồi đứng yên.');
       this.motor.on = false;
     }
-    // Cần hook chung cho cảm biến đo khoảng cách và vòng lặp không thời lượng.
-    // Trong lúc chờ cảm biến, điều kiện thoát thay đổi sau từng bước vật lý.
-    advance(dt) {
-      if (!this.running) return;
-      let budget = dt,
-        guard = 0;
-      while (this.running && guard++ < 40) {
-        if (this.pc >= this.prog.length) {
-          this.finish();
-          break;
-        }
-        const b = this.prog[this.pc];
-        if (b.type === 'start' || b.type === 'repeatStart') {
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'repeatEnd') {
-          this.onLoopEnd();
-          const r = this.loopStartOf(this.pc);
-          this.pc = r < 0 ? this.pc + 1 : r + 1;
-          continue;
-        }
-        if (b.type === 'motor' || b.type === 'motor_power') {
-          this.onMotor(b);
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'motor_reverse') {
-          this.motor.dir = -this.motor.dir;
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'stop') {
-          this.onStopBlock(this.motor.on);
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'sensor_obstacle') {
-          if (!this.entered) {
-            this.entered = true;
-            this.blkT = 0;
-            if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
-            this.log('info', `Cảm biến siêu âm đang dò: chờ đá trong tầm ${this.reach()} cm.`);
-          }
-          const d = this.reading();
-          if (d !== null) {
-            this.log('warn', `Cảm biến thấy đá cách ${d.toFixed(0)} cm phía trước!`);
-            this.emit('seen', this.nextRock());
-            this.entered = false;
-            this.pc++;
-            continue;
-          }
-          this.blkT += budget;
-          this.integrate(budget);
-          budget = 0;
-          break;
-        }
-        if (!this.entered) {
-          this.entered = true;
-          this.blkT = 0;
-          if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
-          if (b.type === 'melody') this.enterBlock(b);
-        }
-        const dur = b.type === 'melody' ? 1 : b.type === 'wait' ? b.duration || 3 : 0;
-        const need = dur - this.blkT;
-        if (budget < need) {
-          this.blkT += budget;
-          this.integrate(budget);
-          budget = 0;
-          break;
-        }
-        this.integrate(need);
-        budget -= need;
-        this.entered = false;
-        this.pc++;
-      }
-      if (budget > 0 && this.running) this.integrate(budget);
+    onReverse() { this.motor.dir = -this.motor.dir; }
+    shouldYieldLoop() { return false; }
+    isConditionWait(b) { return b.type === 'sensor_obstacle'; }
+    onWaitEnter() { this.log('info', `Cảm biến siêu âm đang dò: chờ đá trong tầm ${this.reach()} cm.`); }
+    waitDone() { return this.reading() !== null; }
+    waitCheckAfterStep() { return false; }
+    onWaitExit() {
+      const d = this.reading();
+      this.log('warn', `Cảm biến thấy đá cách ${d.toFixed(0)} cm phía trước!`);
+      this.emit('seen', this.nextRock());
     }
 
     integrate(dt) {

@@ -6,7 +6,7 @@
   const RADIUS = 2.5, RPM = 150, SENSOR = 10, GRIP_REACH = 11.5, BED_TOL = 8;
   const POT_KID = [88, 91, 90], POT_PRO = [88, 94, 82];
   const STORM_SECONDS = [1.3, 1.9, 1.5];
-  const LEVELS = { low: 4, medium: 6, high: 8 };
+  const timedDurations = new WeakMap();
   const SPEED = p => (2 * Math.PI * RADIUS * RPM * p) / (8 * 60);
   const SAMPLE = [
     'start', 'repeatStart', 'motor:M1:low:cw', 'sensor_obstacle', 'stop',
@@ -19,10 +19,13 @@
       : b.type === 'wait' ? `wait:${Number(b.duration || 3)}` : b.type;
 
   class PlantEngine extends window.LessonEngine {
+    get blkDur() { return timedDurations.get(this) || 0; }
+    set blkDur(value) { timedDurations.set(this, value); }
     constructor() {
       super({ sample: SAMPLE, sig, labels: {
         wideArm: 'Khung gắp rộng', watering: 'Bình tưới', lamp: 'Đèn chiếu cây', solar: 'Pin mặt trời'
-      }, baseLabel: 'Robot trồng cây cơ bản' });
+      }, baseLabel: 'Robot trồng cây cơ bản', touch: [], advanceGuard: 65,
+      loopEndBeforeJump: true, stopTimedOnFinish: true });
       this.done = { m2: false, m3: false, m5: false };
     }
 
@@ -183,76 +186,38 @@
         const rate = (this.has('watering') ? 0.65 : 0.2) + (this.has('lamp') ? 0.35 : 0);
         for (const p of this.pots) if (p.state === 'planted') p.grow = Math.min(1, p.grow + d * rate);
       }
+      // Vòng cũ coi khối đủ thời lượng trong sai số 1e-8, không chạy thêm bước cực nhỏ.
+      if (this.entered && ['wait', 'melody'].includes(this.prog[this.pc]?.type)) {
+        if (this.running && this.blkDur - this.blkT > 0 && this.blkDur - this.blkT < 1e-8) this.blkT = this.blkDur;
+        // Khi vật lý kết thúc đúng bước cuối, vòng cũ vẫn cộng bước đó vào blkT.
+        if (!this.running && Math.abs(this.blkT + dt - this.blkDur) < 1e-8) this.blkT = this.blkDur;
+      }
     }
 
-    // Cảm biến cần chia nhỏ thời gian trong lúc xe chạy, nếu không sẽ bỏ qua ngưỡng 10 cm.
-    advance(dt) {
-      if (!this.running) return;
-      let budget = Math.max(0, dt), guard = 0;
-      while (this.running && guard++ < 65) {
-        if (this.pc >= this.prog.length) { this.finish(); break; }
-        const b = this.prog[this.pc];
-        if (b.type === 'start' || b.type === 'repeatStart') { this.pc++; continue; }
-        if (b.type === 'repeatEnd') {
-          this.onLoopEnd();
-          if (!this.running) break;
-          const r = this.loopStartOf(this.pc);
-          this.pc = r < 0 ? this.pc + 1 : r + 1;
-          if (budget <= 0) break;
-          continue;
-        }
-        if (b.type === 'motor' || b.type === 'motor_power') {
-          this.power = b.type === 'motor_power' ? Math.min(8, Math.max(1, b.power || 8)) : LEVELS[b.speed] || 8;
-          this.onMotor(b);
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'motor_reverse') { this.dir = -this.dir; this.pc++; continue; }
-        if (b.type === 'stop') { this.onStopBlock(); this.pc++; continue; }
-        if (b.type === 'sensor_obstacle' || b.type === 'wait_clear') {
-          if (!this.entered) {
-            this.entered = true;
-            if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
-          }
-          let ready = b.type === 'wait_clear' ? this.stormT <= 0 : !!this.seen();
-          while (!ready && budget > 1e-9 && this.running) {
-            const d = Math.min(0.02, budget);
-            this.integrate(d);
-            budget -= d;
-            ready = b.type === 'wait_clear' ? this.stormT <= 0 : !!this.seen();
-          }
-          if (!this.running || !ready) break;
-          if (b.type === 'sensor_obstacle') {
-            const pot = this.seen();
-            this.emit('found', { pot, distance: pot.a - this.x });
-          }
-          this.entered = false;
-          this.pc++;
-          continue;
-        }
-        if (!this.entered) {
-          this.entered = true;
-          this.blkT = 0;
-          if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
-          if (b.type === 'melody') {
-            this.melodies++;
-            if (window.SFX?.melody) window.SFX.melody(b.tune);
-            this.emit('melody', b.tune);
-          }
-        }
-        const dur = b.type === 'melody' ? 1 : b.type === 'wait' ? Number(b.duration || 3) : 0;
-        const need = Math.max(0, dur - this.blkT);
-        const consume = Math.min(need, budget);
-        if (consume > 0) {
-          this.integrate(consume);
-          this.blkT += consume;
-          budget -= consume;
-        }
-        if (!this.running || this.blkT < dur - 1e-8) break;
-        this.entered = false;
-        this.pc++;
+    beforeAdvance(dt) { return Math.max(0, dt); }
+    shouldYieldLoop(r, end, budget) { return budget <= 0; }
+    isConditionWait(b) { return b.type === 'sensor_obstacle' || b.type === 'wait_clear'; }
+    waitDone(b) { return b.type === 'wait_clear' ? this.stormT <= 0 : !!this.seen(); }
+    // Chia nhỏ bước chạy để xe không vượt qua ngưỡng cảm biến 10 cm.
+    waitStep(b, budget) { return Math.min(0.02, budget); }
+    onWaitExit(b) {
+      if (b.type === 'sensor_obstacle') {
+        const pot = this.seen();
+        this.emit('found', { pot, distance: pot.a - this.x });
       }
-      if (budget > 0 && this.running) this.integrate(budget);
+    }
+    onTimedEnter(b) {
+      if (b.type === 'melody') {
+        this.melodies++;
+        if (window.SFX?.melody) window.SFX.melody(b.tune);
+        this.emit('melody', b.tune);
+      }
+    }
+    onTimedExit() { this.blkT = this.blkDur; }
+    enterBlock(b) {
+      if (b.type === 'melody') return 1;
+      if (b.type === 'wait') return Number(b.duration || 3);
+      return super.enterBlock(b);
     }
 
     updateUI() {

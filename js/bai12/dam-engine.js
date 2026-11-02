@@ -25,7 +25,7 @@
 
   class DamEngine extends window.LessonEngine {
     constructor() {
-      super({ sample: SAMPLE, sig, levels: { low: 4, medium: 6, high: 8 } });
+      super({ sample: SAMPLE, sig, levels: { low: 4, medium: 6, high: 8 }, touch: [], advanceGuard: 30 });
       this.done = { m2: false, m3: false };
       this.wins = 0; // số lượt bảo vệ làng thành công
       this.winSigs = []; // chữ ký chương trình của các lượt thắng (NV4: lượt 2 phải khác lượt 1)
@@ -57,6 +57,8 @@
       this.touchT = 0;
       this.waitingTouch = false;
       this.progDone = false;
+      this._damWait = { priorBlkT: 0, step: 0 };
+      delete this.blkDur;
       this.flooded = false; // nước tràn qua đê
       this.tooHigh = false; // Nâng cao: đê cao quá, thuyền cứu hộ không qua
       this.sawUp = false; // vòng nâng – hạ cho NV2
@@ -148,94 +150,47 @@
       return { output: a, motor: a };
     }
 
-    // ---------- chạy chương trình ----------
-    advance(dt) {
+    // Giữ thời hạn của cú chạm sớm trong lúc chương trình chạy.
+    beforeAdvance(dt) {
       if (this.touch && (this.touchT -= dt) <= 0) this.touch = false;
-      if (!this.running) return;
-      let budget = dt,
-        guard = 0;
-      while (this.running && !this.progDone && guard++ < 30) {
-        if (this.pc >= this.prog.length) {
-          this.progDone = true;
-          this.motorOn = false;
-          this.log('info', 'Chương trình đã chạy hết.');
-          break;
-        }
-        const b = this.prog[this.pc];
-        if (b.type === 'start' || b.type === 'repeatStart') {
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'repeatEnd') {
-          const r = this.loopStartOf(this.pc);
-          this.pc = r < 0 ? this.pc + 1 : r + 1;
-          continue;
-        }
-        if (b.type === 'motor' || b.type === 'motor_power') {
-          this.power = b.type === 'motor_power' ? Math.max(1, Math.min(8, b.power || 8)) : b.speed === 'high' ? 8 : b.speed === 'medium' ? 6 : 4;
-          this.dir = this.revNext ? -1 : 1;
-          this.revNext = false;
-          this.motorOn = true;
-          this.maxPower = Math.max(this.maxPower, this.power);
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'motor_reverse') {
-          this.revNext = true;
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'stop') {
-          this.motorOn = false;
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'sensor_touch') {
-          if (!this.entered) {
-            this.entered = true;
-            this.waitingTouch = true;
-            if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
-            this.log('warn', 'Cảm biến chạm đang chờ – hãy nhấn nút.');
-            this.emit('waitTouch');
-          }
-          if (this.touch) {
-            this.touch = false;
-            this.waitingTouch = false;
-            this.entered = false;
-            this.log('ok', 'Cảm biến chạm được nhấn!');
-            this.emit('pressed');
-            this.pc++;
-            continue;
-          }
-          this.integrate(budget);
-          budget = 0;
-          break;
-        }
-        // Khối tốn thời gian: wait, melody
-        if (!this.entered) {
-          this.entered = true;
-          this.blkT = 0;
-          if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
-          if (b.type === 'melody') {
-            if (window.SFX) window.SFX.melody(b.tune);
-            this.emit('melody', b.tune);
-          }
-        }
-        const dur = b.type === 'melody' ? 1 : b.type === 'wait' ? b.duration || 3 : 0;
-        const need = dur - this.blkT;
-        if (budget < need) {
-          this.blkT += budget;
-          this.integrate(budget);
-          budget = 0;
-          break;
-        }
-        this.integrate(need);
-        budget -= need;
-        this.entered = false;
-        this.pc++;
-      }
-      if (budget > 0 && this.running) this.integrate(budget);
+      return dt;
     }
+    onProgramEnd() {
+      if (this.progDone) return;
+      this.progDone = true;
+      this.motorOn = false;
+      this.log('info', 'Chương trình đã chạy hết.');
+    }
+    shouldYieldLoop() { return false; }
+    onMotor() {
+      this.dir = this.revNext ? -1 : 1;
+      this.revNext = false;
+      this.maxPower = Math.max(this.maxPower, this.power);
+    }
+    onReverse() {
+      this.dir = -this.dir; // bỏ lần đảo trực tiếp của lớp gốc
+      this.revNext = true;
+    }
+    isConditionWait(b) { return b.type === 'sensor_touch'; }
+    onWaitEnter() {
+      this.waitingTouch = true;
+      this.log('warn', 'Cảm biến chạm đang chờ – hãy nhấn nút.');
+      this.emit('waitTouch');
+    }
+    waitDone() { return this.touch; }
+    waitStep(b, budget) {
+      this._damWait.step = budget;
+      return budget;
+    }
+    waitCheckAfterStep() { return false; }
+    onWaitExit() {
+      this.touch = false;
+      this.waitingTouch = false;
+      this.blkT = this._damWait.priorBlkT;
+      this.log('ok', 'Cảm biến chạm được nhấn!');
+      this.emit('pressed');
+    }
+    onTimedExit() { this._damWait.priorBlkT = this.blkT; }
 
     // Cho thời gian trôi dt giây: cửa đê quay theo động cơ, đợt lũ diễn ra
     integrate(dt) {
@@ -285,6 +240,9 @@
 
     // Hết đợt lũ: chấm kết quả
     finish() {
+      if (this.entered && this.prog[this.pc]?.type === 'sensor_touch')
+        this.blkT = this._damWait.priorBlkT - this._damWait.step;
+      delete this.blkDur;
       this.running = false;
       this.motorOn = false;
       this.waitingTouch = false;

@@ -29,9 +29,12 @@
         sample: SAMPLE,
         sig,
         labels: { tank: 'Bồn chứa nước', pump: 'Máy bơm mạnh', solar: 'Pin mặt trời' },
-        baseLabel: 'Robot cơ bản'
+        baseLabel: 'Robot cơ bản',
+        touch: [], loopEndBeforeJump: true, advanceGuard: 60
       });
       this.done = { m2: false, m3: false, m5: false };
+      // Thuộc tính nội bộ của lớp gốc, không có trong trạng thái công khai trước đây.
+      Object.defineProperty(this, 'blkDur', { enumerable: false, writable: true, configurable: true, value: this.blkDur });
     }
     course() {
       return this.advanced ? PRO : KID;
@@ -92,92 +95,20 @@
       return { output: -this.rev * Math.PI * 2, motor: 0, offset: [this.x * 0.0015, 0, 0] };
     }
 
-    advance(dt) {
-      if (!this.running) return;
-      let budget = dt,
-        guard = 0;
-      while (this.running && guard++ < 60) {
-        if (this.pc >= this.prog.length) {
-          this.finish();
-          break;
-        }
-        const b = this.prog[this.pc];
-        if (b.type === 'start' || b.type === 'repeatStart') {
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'repeatEnd') {
-          this.onLoopEnd();
-          const r = this.loopStartOf(this.pc);
-          this.pc = r < 0 ? this.pc + 1 : r + 1;
-          if (budget <= 0) break;
-          continue;
-        }
-        if (b.type === 'motor' || b.type === 'motor_power') {
-          this.power = b.type === 'motor_power' ? Math.max(1, Math.min(8, b.power || 8)) : window.LessonEngine.LEVEL[b.speed] || 8;
-          this.dir = b.dir === 'ccw' ? -1 : 1;
-          this.setMotor(true);
-          this.onMotor(b);
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'motor_reverse') {
-          this.dir = -this.dir;
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'stop') {
-          this.onStopBlock();
-          this.pc++;
-          continue;
-        }
-        if (b.type === 'sensor_obstacle') {
-          if (!this.entered) {
-            this.entered = true;
-            this.idleT = 0;
-            if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
-          }
-          // Vừa chạy vừa hỏi cảm biến sau từng bước nhỏ để dừng đúng lúc
-          let found = this.seen();
-          while (!found && budget > 1e-9 && this.running) {
-            const s = Math.min(0.02, budget);
-            this.integrate(s);
-            budget -= s;
-            found = this.seen();
-          }
-          if (!this.running) break;
-          if (!found) break;
-          this.entered = false;
-          found.seen = true;
-          this.log('ok', `Cảm biến thấy mỏm băng cách ${(found.a - this.x).toFixed(0)} cm!`);
-          this.emit('found', found);
-          this.pc++;
-          continue;
-        }
-        // Khối tốn thời gian: wait, melody
-        if (!this.entered) {
-          this.entered = true;
-          this.blkT = 0;
-          if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
-          if (b.type === 'melody') {
-            if (window.SFX) window.SFX.melody(b.tune);
-            this.emit('melody', b.tune);
-          }
-        }
-        const dur = b.type === 'melody' ? 1 : b.type === 'wait' ? b.duration || 3 : 0;
-        const need = dur - this.blkT;
-        if (budget < need) {
-          this.blkT += budget;
-          this.integrate(budget);
-          budget = 0;
-          break;
-        }
-        this.integrate(need);
-        budget -= need;
-        this.entered = false;
-        this.pc++;
-      }
-      if (budget > 0 && this.running) this.integrate(budget);
+    shouldYieldLoop(r, end, budget) { return budget <= 0; }
+    onMotorBefore(b) {
+      this.dir = b.dir === 'ccw' ? -1 : 1;
+      this.setMotor(true);
+    }
+    isConditionWait(b) { return b.type === 'sensor_obstacle'; }
+    onWaitEnter() { this.idleT = 0; }
+    waitDone() { return this.seen() !== null; }
+    waitStep(b, budget) { return Math.min(0.02, budget); }
+    onWaitExit() {
+      const found = this.seen();
+      found.seen = true;
+      this.log('ok', `Cảm biến thấy mỏm băng cách ${(found.a - this.x).toFixed(0)} cm!`);
+      this.emit('found', found);
     }
 
     onLoopEnd() {

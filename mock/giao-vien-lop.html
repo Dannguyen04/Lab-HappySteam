@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Giáo viên · Lớp 1A2 · Bảng lớp, Nhóm dự án &amp; Xuất CSV · Happy STEAM</title>
+  <link rel="stylesheet" href="../css/lab.css">
+  <link rel="stylesheet" href="giao-vien-lop.css">
+</head>
+<body class="mock-page">
+
+  <!-- Dải cố định góc trên theo quy chuẩn -->
+  <aside class="mock-banner" aria-label="Thông báo dữ liệu mẫu">
+    <div class="mock-banner-left">
+      <a class="mock-back-btn" href="index.html">← Danh sách màn hình</a>
+      <span class="mock-badge-sample">DỮ LIỆU MẪU – chưa lưu thật</span>
+      <span class="mock-banner-meta">Phiếu 73a · Giáo viên (1366 px) · Lưu tạm vào localStorage (mock.*)</span>
+    </div>
+    <div class="mock-banner-right">
+      <button type="button" class="mock-reset-btn" id="btn-reset-mock">Đặt lại dữ liệu mẫu</button>
+    </div>
+  </aside>
+
+  <main class="gv-shell">
+
+    <!-- Đầu trang Giáo viên -->
+    <header class="gv-header">
+      <div class="gv-header-title">
+        <div class="eyebrow">Happy STEAM Lab · Quản lý &amp; Đánh giá Lớp học</div>
+        <h1>Lớp 1A2 · Năm học 2026–2027</h1>
+        <p class="gv-header-sub">
+          Giáo viên chủ lớp: Cô Nguyễn Thu Hà · Tuần học hiện tại: Tuần 9 (Bài 9: Thông tin liên lạc vũ trụ · NV1–NV5).
+        </p>
+      </div>
+      <div class="gv-kpis" aria-label="Chỉ số tổng quan lớp 1A2">
+        <div class="gv-kpi">
+          <span>Sĩ số lớp 1A2</span>
+          <strong id="kpi-total-students">28 em</strong>
+        </div>
+        <div class="gv-kpi" data-tone="accent">
+          <span>Xong cơ bản Bài 9</span>
+          <strong id="kpi-b9-done">0/28 em</strong>
+        </div>
+        <div class="gv-kpi" data-tone="ok">
+          <span>Ô đã chấm</span>
+          <strong id="kpi-graded-cells">0/280</strong>
+        </div>
+        <div class="gv-kpi" data-tone="warn">
+          <span>Nhóm dự án</span>
+          <strong id="kpi-groups-count">7 nhóm</strong>
+        </div>
+      </div>
+    </header>
+
+    <!-- Thanh chuyển 3 màn hình của Phiếu 73a: S-07, S-08, S-13 -->
+    <nav class="gv-tabs" role="tablist" aria-label="Chức năng giáo viên">
+      <button type="button" role="tab" class="gv-tab" id="tab-s07" data-tab="s07" aria-selected="true" aria-controls="pane-s07">
+        <span class="gv-tab-code">S-07</span>
+        <span class="gv-tab-text">
+          <b>Bảng lớp &amp; Chấm bài</b>
+          <small>Lưới 28 em × bài, tiến độ NV1–NV5, gợi ý BRD 6.2, chấm HTT/HT/CHT</small>
+        </span>
+      </button>
+      <button type="button" role="tab" class="gv-tab" id="tab-s08" data-tab="s08" aria-selected="false" aria-controls="pane-s08">
+        <span class="gv-tab-code">S-08</span>
+        <span class="gv-tab-text">
+          <b>Nhóm dự án (4 em/nhóm)</b>
+          <small>Kéo thả hoặc chạm để xếp học sinh vào nhóm dự án Học kì I</small>
+        </span>
+      </button>
+      <button type="button" role="tab" class="gv-tab" id="tab-s13" data-tab="s13" aria-selected="false" aria-controls="pane-s13">
+        <span class="gv-tab-code">S-13</span>
+        <span class="gv-tab-text">
+          <b>Xuất bảng tính (CSV)</b>
+          <small>Tải file CSV thật có BOM UTF-8 để mở đúng tiếng Việt trên Excel</small>
+        </span>
+      </button>
+    </nav>
+
+    <!-- =====================================================================
+         MÀN HÌNH S-07: BẢNG LỚP & CHẤM BÀI
+         ===================================================================== -->
+    <section id="pane-s07" role="tabpanel" aria-labelledby="tab-s07" style="display:grid; gap:14px;">
+
+      <!-- Thanh công cụ lọc & tác vụ -->
+      <div class="gv-toolbar">
+        <div class="gv-toolbar-group">
+          <label class="gv-field-inline" for="sel-class">
+            <span>Lớp:</span>
+            <select id="sel-class" class="gv-select">
+              <option value="1A2">Lớp 1A2 (2026–2027) — 28 em</option>
+              <option value="1A1" disabled>Lớp 1A1 (2026–2027) — 26 em</option>
+            </select>
+          </label>
+
+          <label class="gv-field-inline" for="sel-lesson-scope">
+            <span>Hiển thị:</span>
+            <select id="sel-lesson-scope" class="gv-select">
+              <option value="all">Học kì I (Bài 1 → Bài 9, Dự án)</option>
+              <option value="b9">Tập trung Bài 9: Thông tin liên lạc vũ trụ</option>
+            </select>
+          </label>
+
+          <label class="gv-check-pill" id="pill-filter-unfinished">
+            <input type="checkbox" id="filter-unfinished">
+            <span>Lọc em chưa xong Bài 9 (&lt; 4/4 NV)</span>
+          </label>
+
+          <label class="gv-check-pill" id="pill-filter-ungraded">
+            <input type="checkbox" id="filter-ungraded">
+            <span>Chỉ nổi bật ô chưa chấm</span>
+          </label>
+        </div>
+
+        <div class="gv-toolbar-group">
+          <input type="search" id="search-student" class="gv-input" placeholder="Tìm tên em hoặc con vật..." aria-label="Tìm tên học sinh hoặc con vật">
+          <button type="button" class="btn" id="btn-select-b9-ungraded">Chọn ô Bài 9 chưa chấm</button>
+          <button type="button" class="btn btn-primary" id="btn-quick-csv">Xuất CSV (S-13)</button>
+        </div>
+      </div>
+
+      <!-- Thanh chấm nhanh khi chọn nhiều ô (F-06 bước 3) -->
+      <div class="gv-batch-bar" id="batch-bar" hidden>
+        <div class="gv-batch-left">
+          <span>Đã đánh dấu: <strong id="batch-count">0</strong> ô bài làm</span>
+          <button type="button" class="btn-dark-sub" id="btn-select-all-ungraded">Chọn toàn bộ ô chưa chấm</button>
+        </div>
+        <div class="gv-batch-right">
+          <button type="button" class="btn-ok-solid" id="btn-batch-accept">
+            Chấp nhận mức gợi ý (<span id="batch-btn-count">0</span> ô)
+          </button>
+          <button type="button" class="btn-dark-sub" id="btn-batch-clear">Bỏ chọn</button>
+        </div>
+      </div>
+
+      <!-- Bảng ma trận học sinh × bài -->
+      <div class="gv-matrix-card">
+        <div class="gv-matrix-legend">
+          <div class="gv-legend-items">
+            <span class="gv-legend-item"><span class="gv-grade-pill" data-g="HTT">HTT</span> Hoàn thành tốt (X = C)</span>
+            <span class="gv-legend-item"><span class="gv-grade-pill" data-g="HT">HT</span> Hoàn thành (X ≥ ⌈C/2⌉)</span>
+            <span class="gv-legend-item"><span class="gv-grade-pill" data-g="CHT">CHT</span> Chưa hoàn thành (X &lt; ⌈C/2⌉)</span>
+            <span class="gv-legend-item"><span class="gv-dot-new"></span> Có tiến bộ mới sau khi chấm</span>
+            <span class="gv-legend-item"><span class="st-consent-tag">Chờ PH</span> Chưa có đồng ý PH (BR-DY-02: khoá nhận xét)</span>
+          </div>
+          <div>
+            <button type="button" class="link-btn" id="btn-open-sample-b9">Bấm vào bất kỳ ô nào để chấm · Mở nhanh Bài 9 của Nam B.</button>
+          </div>
+        </div>
+
+        <div class="gv-matrix-scroll" id="matrix-scroll">
+          <table class="gv-matrix-table" id="matrix-table" aria-label="Bảng tiến độ và chấm điểm Lớp 1A2">
+            <thead id="matrix-thead"></thead>
+            <tbody id="matrix-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- =====================================================================
+         MÀN HÌNH S-08: NHÓM DỰ ÁN (KÉO THẢ HOẶC CHẠM ĐỂ XẾP NHÓM)
+         ===================================================================== -->
+    <section id="pane-s08" role="tabpanel" aria-labelledby="tab-s08" hidden style="display:grid; gap:14px;">
+
+      <div class="gv-toolbar">
+        <div class="gv-toolbar-group">
+          <div>
+            <strong>Đợt dự án Học kì I (Tuần 14–17): "Hành trình dòng nước"</strong>
+            <div class="hint">Kéo thả thẻ học sinh vào nhóm, hoặc chạm vào tên học sinh rồi chạm vào nhóm muốn xếp vào (BR-DA-01: mỗi em chỉ ở 1 nhóm).</div>
+          </div>
+        </div>
+        <div class="gv-toolbar-group">
+          <button type="button" class="btn" id="btn-demo-unassign">Tách 2 em ra khay chờ để thử</button>
+          <button type="button" class="btn" id="btn-auto-group">Xếp tự động 4 em/nhóm</button>
+          <button type="button" class="btn btn-primary" id="btn-add-group">+ Tạo nhóm mới</button>
+        </div>
+      </div>
+
+      <!-- Thanh hướng dẫn khi đang chạm chọn 1 học sinh -->
+      <div class="s08-touch-banner" id="s08-touch-banner" hidden>
+        <div>
+          Đang chọn học sinh: <strong id="s08-picked-name"></strong> — Hãy chạm nút <strong>"Chuyển vào nhóm này"</strong> ở nhóm đích hoặc đưa về khay chờ.
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn" id="btn-move-to-unassigned">Đưa về Chưa xếp nhóm</button>
+          <button type="button" class="btn" id="btn-cancel-pick">Bỏ chọn</button>
+        </div>
+      </div>
+
+      <div class="s08-layout">
+        <!-- Cột trái: Học sinh chưa có nhóm -->
+        <aside class="s08-unassigned-panel" aria-label="Danh sách học sinh chưa xếp nhóm">
+          <div class="row">
+            <h2 style="margin:0; font:700 16px/1.2 var(--f-display);">Chưa xếp nhóm (<span id="unassigned-count">0</span>)</h2>
+            <span class="pill" id="unassigned-badge">Khay chờ</span>
+          </div>
+          <p class="hint">Kéo học sinh từ đây sang nhóm bên phải, hoặc chạm vào tên em để chọn.</p>
+          <div class="s08-student-list" id="unassigned-list" data-drop-group="NONE"></div>
+        </aside>
+
+        <!-- Cột phải: Lưới các nhóm dự án -->
+        <div class="s08-groups-grid" id="groups-grid" aria-label="Danh sách nhóm dự án Lớp 1A2"></div>
+      </div>
+
+    </section>
+
+    <!-- =====================================================================
+         MÀN HÌNH S-13: XUẤT BẢNG TÍNH CSV (CÓ BOM UTF-8 CHO EXCEL)
+         ===================================================================== -->
+    <section id="pane-s13" role="tabpanel" aria-labelledby="tab-s13" hidden style="display:grid; gap:14px;">
+
+      <div class="s13-grid">
+        <aside class="s13-config-card" aria-label="Cấu hình xuất bảng tính">
+          <div>
+            <div class="eyebrow">Màn hình S-13 · Luồng F-07</div>
+            <h2 style="margin:4px 0 4px; font:700 20px/1.2 var(--f-display);">Xuất bảng tính kết quả lớp</h2>
+            <p class="hint">Sinh tệp CSV trực tiếp từ dữ liệu hiện tại của Lớp 1A2, đính kèm ký tự BOM UTF-8 (<code>\uFEFF</code>) ở đầu tệp để Microsoft Excel trên Windows và macOS hiển thị đúng tiếng Việt có dấu.</p>
+          </div>
+
+          <label class="field">
+            <span>Lớp học</span>
+            <select id="s13-class" class="gv-select">
+              <option value="1A2">Lớp 1A2 · Năm học 2026–2027 (28 học sinh)</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Học kì</span>
+            <select id="s13-term" class="gv-select">
+              <option value="HK1">Học kì I (Bài 1 → Bài 9 &amp; Dự án HK I)</option>
+              <option value="ALL">Cả năm học (Học kì I &amp; II)</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Mẫu bảng xuất</span>
+            <select id="s13-mode" class="gv-select">
+              <option value="full">Đầy đủ: Mức đánh giá các bài + Chi tiết Bài 9 + Nhận xét</option>
+              <option value="grades">Trang 1 (F-07): Ma trận Mức đánh giá (HTT / HT / CHT)</option>
+              <option value="comments">Trang 2 (F-07): Nhận xét giáo viên (ẩn em chưa có đồng ý PH)</option>
+            </select>
+          </label>
+
+          <div class="gv-alert is-info">
+            <strong>Quy tắc bảo vệ dữ liệu trẻ em (GD-14 &amp; BR-DY-02):</strong>
+            5 học sinh chưa có đồng ý của phụ huynh chỉ xuất tên gọi ngắn và mức đánh giá (HTT/HT/CHT); cột Họ tên đầy đủ và Nhận xét tự động để trống.
+          </div>
+
+          <button type="button" class="btn btn-primary btn-block" id="btn-download-csv">
+            Tải file CSV (UTF-8 BOM cho Excel)
+          </button>
+
+          <div class="gv-alert" id="s13-export-status" hidden></div>
+        </aside>
+
+        <div class="s13-preview-card" aria-label="Xem trước nội dung bảng tính">
+          <div class="row">
+            <div>
+              <h3 style="margin:0; font:700 16px/1.2 var(--f-display);">Xem trước dữ liệu xuất (28 học sinh Lớp 1A2)</h3>
+              <p class="hint" id="s13-preview-subtitle">Mọi thay đổi chấm điểm ở S-07 và nhóm dự án ở S-08 được cập nhật tức thì vào bảng này.</p>
+            </div>
+            <span class="pill" data-k="ok">UTF-8 BOM (\uFEFF)</span>
+          </div>
+
+          <div class="s13-preview-scroll">
+            <table class="s13-table" id="s13-preview-table" aria-label="Bảng xem trước CSV">
+              <thead id="s13-preview-thead"></thead>
+              <tbody id="s13-preview-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- =====================================================================
+       NGĂN KÉO CHẤM BÀI BÊN PHẢI (S-07 RIGHT DRAWER)
+       ===================================================================== -->
+  <div class="gv-drawer-backdrop" id="drawer-backdrop" hidden></div>
+  <aside class="gv-drawer" id="grading-drawer" role="dialog" aria-modal="true" aria-labelledby="dw-student-name" hidden>
+    <div class="gv-drawer-head">
+      <div class="gv-drawer-student">
+        <span class="st-avatar-badge" id="dw-avatar" aria-hidden="true"></span>
+        <div>
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <strong style="font:700 17px/1.2 var(--f-display);" id="dw-student-name">Nam B.</strong>
+            <span class="pill" id="dw-animal-tag">Sư tử</span>
+            <span class="st-consent-tag" id="dw-consent-badge" hidden>Chờ PH đồng ý</span>
+          </div>
+          <div style="font-size:12.5px; color:var(--muted); margin-top:3px;" id="dw-lesson-title">
+            Bài 9: Thông tin liên lạc vũ trụ
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn" id="btn-close-drawer" aria-label="Đóng ngăn chấm bài">Đóng</button>
+    </div>
+
+    <div class="gv-drawer-body">
+      <!-- 1. Tiến độ nhiệm vụ (NV1-NV5) -->
+      <section>
+        <h3 class="gv-sec-title">1. Tiến độ nhiệm vụ (bấm để gỡ nếu em chọn nhầm tên - BR-BL-03)</h3>
+        <div style="font-size:12px; font-weight:600; margin-bottom:5px;">
+          Nhiệm vụ cơ bản (tính vào mức gợi ý BRD 6.2):
+        </div>
+        <div class="gv-mission-list" id="dw-core-missions"></div>
+
+        <div style="font-size:12px; font-weight:600; color:var(--muted); margin:10px 0 5px;">
+          Nhiệm vụ nâng cao (GD-06: chỉ tham khảo, không tính vào mức gợi ý):
+        </div>
+        <div class="gv-mission-list" id="dw-adv-missions"></div>
+      </section>
+
+      <!-- 2. Chương trình khối lệnh / Thông tin nhóm dự án -->
+      <section id="dw-program-section">
+        <h3 class="gv-sec-title" id="dw-prog-heading">2. Chương trình khối lệnh &amp; Gói sáng tạo gần nhất</h3>
+        <div class="gv-code-box" id="dw-code-box"></div>
+      </section>
+
+      <!-- 3. Mức máy gợi ý theo công thức BRD 6.2 -->
+      <section>
+        <h3 class="gv-sec-title">3. Mức máy gợi ý (Công thức BRD 6.2)</h3>
+        <div class="gv-suggest-card">
+          <div>
+            <div style="font-weight:700; font-size:14px;" id="dw-suggest-label">Máy gợi ý: HTT (Hoàn thành tốt)</div>
+            <div class="hint" id="dw-suggest-math">C = 4 cơ bản, em đã xong X = 4 (X = C → HTT).</div>
+          </div>
+          <span class="gv-grade-pill" data-g="HTT" id="dw-suggest-pill">GỢI Ý: HTT</span>
+        </div>
+      </section>
+
+      <!-- 4. Chọn mức đánh giá HTT / HT / CHT -->
+      <section>
+        <h3 class="gv-sec-title">4. Quyết định mức đánh giá của giáo viên</h3>
+        <div class="gv-grade-picker" role="radiogroup" aria-label="Chọn mức đánh giá">
+          <button type="button" class="gv-grade-btn" data-grade="HTT">
+            <span class="gv-grade-pill" data-g="HTT">HTT</span>
+            <small>Hoàn thành tốt</small>
+          </button>
+          <button type="button" class="gv-grade-btn" data-grade="HT">
+            <span class="gv-grade-pill" data-g="HT">HT</span>
+            <small>Hoàn thành</small>
+          </button>
+          <button type="button" class="gv-grade-btn" data-grade="CHT">
+            <span class="gv-grade-pill" data-g="CHT">CHT</span>
+            <small>Chưa hoàn thành</small>
+          </button>
+        </div>
+
+        <!-- Cảnh báo vàng BR-DG-01 khi chọn khác mức gợi ý -->
+        <div class="gv-alert is-warn" id="dw-warn-diff" hidden style="margin-top:10px;">
+          <strong>Cảnh báo (BR-DG-01):</strong> Mức thầy cô chọn khác với mức máy gợi ý (<span id="dw-diff-expected">HT</span>). Hệ thống vẫn lưu theo đánh giá chuyên môn của thầy cô.
+        </div>
+
+        <!-- Tuỳ chọn chép cho cả nhóm khi chấm bài Dự án (F-06 bước 4) -->
+        <label class="gv-check-pill" id="dw-group-apply-wrap" hidden style="margin-top:10px; width:100%; justify-content:flex-start;">
+          <input type="checkbox" id="dw-apply-to-group" checked>
+          <span id="dw-apply-group-text">Áp dụng mức &amp; nhận xét này cho cả nhóm (F-06 bước 4)</span>
+        </label>
+      </section>
+
+      <!-- 5. Nhận xét của giáo viên (khoá nếu chưa có đồng ý PH - BR-DY-02) -->
+      <section>
+        <div class="row" style="margin-bottom:6px;">
+          <h3 class="gv-sec-title" style="margin:0;">5. Nhận xét của giáo viên (Tối đa 500 ký tự)</h3>
+          <span class="hint" id="dw-char-count">0 / 500</span>
+        </div>
+
+        <div class="gv-quick-comments" id="dw-quick-comments">
+          <button type="button" class="gv-quick-chip" data-sample="Lắp vệ tinh chắc chắn, ghép đúng chuỗi khối lệnh tránh thiên thạch.">+ Khen lắp &amp; lập trình</button>
+          <button type="button" class="gv-quick-chip" data-sample="Hoàn thành cả nhiệm vụ nâng cao NV5 với cảm biến rất sáng tạo.">+ Khen làm thêm NV5</button>
+          <button type="button" class="gv-quick-chip" data-sample="Cần kiểm tra lại bước lắp cánh pin và thử thêm khối dừng động cơ.">+ Góp ý hoàn thiện</button>
+        </div>
+
+        <textarea id="dw-comment" class="gv-textarea" maxlength="500" placeholder="Ghi nhận xét cụ thể cho em..."></textarea>
+
+        <div class="gv-alert is-warn" id="dw-consent-lock" hidden style="margin-top:8px;">
+          <strong>Chờ phụ huynh đồng ý (BR-DY-02 &amp; GD-14):</strong> Học sinh chưa có phụ huynh xác nhận đồng ý lưu dữ liệu định danh. Ô nhận xét bị khoá, hệ thống chỉ lưu mức đánh giá (HTT/HT/CHT).
+        </div>
+      </section>
+    </div>
+
+    <div class="gv-drawer-foot">
+      <button type="button" class="btn" id="btn-save-next">Lưu &amp; Chấm em tiếp theo</button>
+      <button type="button" class="btn btn-primary" id="btn-save-grade">Lưu đánh giá</button>
+    </div>
+  </aside>
+
+  <!-- Toast phản hồi -->
+  <div class="gv-toast" id="gv-toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="giao-vien-lop.js"></script>
+</body>
+</html>

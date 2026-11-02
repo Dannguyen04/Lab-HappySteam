@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phòng lập trình · Happy STEAM</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/code-lab.css">
+</head>
+<body>
+  <header class="cl-top">
+    <a class="cl-back" href="index.html">← Chọn bài</a>
+    <div class="cl-title">
+      <div class="cl-eyebrow">Happy STEAM · Robot Alpha 330</div>
+      <h1>Phòng lập trình</h1>
+    </div>
+    <button type="button" class="cl-map-btn" id="btn-maps" aria-haspopup="dialog">
+      <span class="cl-map-label">Sa bàn</span> <strong id="map-name">–</strong> ▾
+    </button>
+    <div class="cl-seg" role="group" aria-label="Cấp khối lệnh">
+      <button type="button" data-level="kid" class="is-on">Bé</button>
+      <button type="button" data-level="pro">Lớp 3+</button>
+    </div>
+    <div class="cl-top-tools">
+      <button type="button" class="cl-btn" id="btn-editor">Vẽ sa bàn</button>
+      <button type="button" class="cl-btn" id="btn-file" aria-haspopup="menu">Lưu / chia sẻ ▾</button>
+      <div class="cl-menu" id="file-menu" role="menu" hidden>
+        <button type="button" role="menuitem" data-act="export">Tải chương trình về máy (.json)</button>
+        <button type="button" role="menuitem" data-act="import">Mở chương trình từ máy…</button>
+        <button type="button" role="menuitem" data-act="send">Gửi cho lớp</button>
+        <button type="button" role="menuitem" data-act="sent">Bài đã gửi (giáo viên xem)</button>
+      </div>
+      <input type="file" id="file-input" accept=".json,application/json" hidden>
+    </div>
+  </header>
+
+  <main class="cl-main">
+    <section class="cl-stage" aria-label="Sa bàn">
+      <div class="cl-mission">
+        <div class="cl-mission-text">
+          <strong id="mission-name"></strong>
+          <span id="mission-about"></span>
+        </div>
+        <div class="cl-goals" id="mission-goals"></div>
+      </div>
+      <div class="cl-canvas-wrap">
+        <canvas id="world" width="900" height="560" aria-label="Sa bàn nhìn từ trên xuống"></canvas>
+        <div class="cl-result" id="result" hidden>
+          <div class="cl-stars" id="result-stars"></div>
+          <p id="result-text"></p>
+          <p class="cl-result-sub" id="result-sub"></p>
+          <div class="cl-result-btns">
+            <button type="button" class="cl-btn" id="btn-again">Thử lại</button>
+            <button type="button" class="cl-btn cl-primary" id="btn-next-map">Sa bàn tiếp →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="cl-side">
+      <h2>Cảm biến &amp; động cơ</h2>
+      <dl class="cl-sensors" id="sensors">
+        <div><dt>Động cơ M1 (trái)</dt><dd id="s-m1">0</dd></div>
+        <div><dt>Động cơ M2 (phải)</dt><dd id="s-m2">0</dd></div>
+        <div><dt>Sóng âm</dt><dd id="s-dist">–</dd></div>
+        <div><dt>Chạm</dt><dd id="s-touch">○</dd></div>
+        <div><dt>Mắt dò vạch trái · phải</dt><dd id="s-line">○ ○</dd></div>
+        <div><dt>Màu dưới xe</dt><dd id="s-color">trắng</dd></div>
+        <div><dt>Thời gian</dt><dd id="s-time">0,0 s</dd></div>
+        <div><dt>Va chạm</dt><dd id="s-bumps">0</dd></div>
+      </dl>
+      <h2>Nhật ký</h2>
+      <ol class="cl-log" id="log"></ol>
+    </aside>
+
+    <section class="cl-code" aria-label="Chương trình">
+      <div class="cl-runbar">
+        <button type="button" class="cl-run" id="btn-run">▶ Chạy</button>
+        <button type="button" class="cl-btn" id="btn-step" title="Chạy một khối rồi dừng">⏯ Từng khối</button>
+        <button type="button" class="cl-btn" id="btn-reset">⟲ Đặt lại</button>
+        <div class="cl-seg cl-speed" role="group" aria-label="Tốc độ mô phỏng">
+          <button type="button" data-speed="0.25">0,25×</button>
+          <button type="button" data-speed="1" class="is-on">1×</button>
+          <button type="button" data-speed="2">2×</button>
+        </div>
+        <span class="cl-msg" id="msg" role="status"></span>
+        <span class="cl-spacer"></span>
+        <button type="button" class="cl-btn" id="btn-hint">Gợi ý</button>
+        <button type="button" class="cl-btn" id="btn-clear">Xóa hết</button>
+      </div>
+      <div class="cl-program" id="program" aria-label="Chuỗi khối lệnh"></div>
+      <div class="cl-inspector" id="inspector" hidden></div>
+      <div class="cl-toolbox" id="toolbox" aria-label="Khay khối lệnh"></div>
+    </section>
+  </main>
+
+  <dialog class="cl-dialog" id="maps-dialog">
+    <h2>Chọn sa bàn</h2>
+    <div class="cl-map-grid" id="map-grid"></div>
+    <form method="dialog"><button class="cl-btn">Đóng</button></form>
+  </dialog>
+  <dialog class="cl-dialog" id="sent-dialog">
+    <h2>Bài đã gửi <small class="cl-mock">DỮ LIỆU MẪU – chưa lưu lên máy chủ</small></h2>
+    <table class="cl-table"><thead><tr><th>Học sinh</th><th>Sa bàn</th><th>Sao</th><th>Thời gian</th><th>Số khối</th><th>Lúc gửi</th></tr></thead>
+      <tbody id="sent-rows"></tbody></table>
+    <form method="dialog"><button class="cl-btn">Đóng</button></form>
+  </dialog>
+  <dialog class="cl-dialog cl-editor" id="editor-dialog">
+    <div class="cl-ed-head">
+      <h2>Vẽ sa bàn</h2>
+      <label>Tên <input id="ed-name" maxlength="40" value="Sa bàn của lớp"></label>
+      <label>Cỡ <select id="ed-size"><option value="200x120">Nhỏ 200×120 cm</option><option value="240x160" selected>Vừa 240×160 cm</option><option value="300x200">Lớn 300×200 cm</option></select></label>
+      <label>Sao 2 khi về đích dưới <input id="ed-time" type="number" min="3" max="120" value="15"> giây</label>
+    </div>
+    <div class="cl-ed-tools" id="ed-tools" role="toolbar" aria-label="Công cụ vẽ"></div>
+    <canvas id="ed-canvas" width="900" height="520"></canvas>
+    <p class="cl-ed-tip" id="ed-tip"></p>
+    <div class="cl-ed-foot">
+      <label class="cl-ed-about">Mô tả nhiệm vụ <input id="ed-about" maxlength="140" value="Đưa xe tới ô đích."></label>
+      <button type="button" class="cl-btn" id="ed-clear">Xóa hết</button>
+      <button type="button" class="cl-btn" id="ed-cancel">Đóng</button>
+      <button type="button" class="cl-btn cl-primary" id="ed-save">Lưu và chơi thử</button>
+    </div>
+  </dialog>
+  <div class="cl-toast" id="toast" role="status" hidden></div>
+
+  <script src="js/audio-sfx.js"></script>
+  <script src="js/code-lab/core.js"></script>
+  <script src="js/code-lab/view.js"></script>
+  <script src="js/code-lab/map-editor.js"></script>
+  <script src="js/code-lab/ui.js"></script>
+</body>
+</html>

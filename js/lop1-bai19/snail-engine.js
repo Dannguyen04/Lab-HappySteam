@@ -22,7 +22,8 @@
 
   class SnailEngine extends window.LessonEngine {
     constructor() {
-      super({ sample: SAMPLE, sig, core: ['m1', 'm2', 'm3', 'm4'],
+      super({ sample: SAMPLE, sig, core: ['m1', 'm2', 'm3', 'm4'], touch: [],
+        loopEndBeforeJump: true, stopTimedOnFinish: true,
         labels: { antenna: 'Râu kép dài', glow: 'Mai phát quang', grip: 'Vành bánh gai', eyes: 'Đèn mắt kép' },
         baseLabel: 'Ốc sên cơ bản' });
       this.done = { m2: false, m3: false, m5: false };
@@ -98,6 +99,11 @@
     }
     onMotor() { this.wheels('forward', this.power); }
     onStopBlock() { this.wheels('stop', this.power); }
+    onInstant(b) {
+      if (b.type !== 'drive') return false;
+      this.wheels(b.move === 'left' ? 'left' : 'forward', LEVELS[b.speed] || 8);
+      return true;
+    }
     // Cảm biến thấy đá hoặc rào cuối vườn trong nón +/- 28 độ phía trước đầu (lá rau không cản).
     seesObstacle() {
       if (this.hand) return true;
@@ -119,77 +125,84 @@
       return !!z && !this.has('grip') && this.x > z[0] && this.x < z[1];
     }
     advance(dt) {
+      // Bài này không dùng cảm biến chạm: press/pressT chỉ ghi nhận lần nhấn, không đếm ngược.
+      const pressed = this.pressed, pressT = this.pressT;
+      if (!this.running && this.hand && (this.handT -= dt) <= 0) this.hand = false;
+      super.advance(dt);
+      // Vòng cũ chốt khối khi còn sai số dưới 1e-8; cho lớp gốc xử lý các khối tức thì kế tiếp.
+      if (this.running && this.entered && this.prog[this.pc]?.type !== 'sensor_obstacle' &&
+          this.blkDur - this.blkT > 0 && this.blkDur - this.blkT <= 1e-8) {
+        this.blkT = this.blkDur;
+        super.advance(0);
+      }
+      if (Object.prototype.propertyIsEnumerable.call(this, 'blkDur'))
+        Object.defineProperty(this, 'blkDur', { enumerable: false });
+      this.pressed = pressed;
+      this.pressT = pressT;
+    }
+    beforeAdvance(dt) {
       if (this.hand && (this.handT -= dt) <= 0) this.hand = false;
-      if (!this.running) return;
       if (this.runT >= MAX_TIME) {
         this.log('warn', 'Cảm biến chờ vật cản quá lâu.');
         this.emit('timeout');
         this.finish();
-        return;
+        return 0;
       }
-      let budget = Math.max(0, Math.min(dt, MAX_TIME - this.runT));
-      let guard = 0;
-      while (this.running && guard++ < 40) {
-        if (this.pc >= this.prog.length) { this.finish(); break; }
-        const b = this.prog[this.pc];
-        if (b.type === 'start' || b.type === 'repeatStart') { this.pc++; continue; }
-        if (b.type === 'repeatEnd') {
-          if (this.matchesSample() && this.cycles >= 1 && this.completedTurns >= 1 && !this.crashed) {
-            if (!this.done.m2) this.emit('sampleDone');
-            this.done.m2 = true;
-            this.checkMissions();
-          }
-          const i = this.loopStartOf(this.pc);
-          if (i < 0) this.pc++;
-          else if (!this.prog.slice(i + 1, this.pc).some(v => v.type === 'wait' || v.type === 'sensor_obstacle' || v.type === 'melody')) this.pc = this.prog.length;
-          else this.pc = i + 1;
-          continue;
-        }
-        if (b.type === 'drive' || b.type === 'motor' || b.type === 'motor_power') {
-          const p = b.type === 'motor_power' ? b.power : (LEVELS[b.speed] || 8);
-          this.wheels(b.type === 'drive' && b.move === 'left' ? 'left' : 'forward', p);
-          this.pc++; continue;
-        }
-        if (b.type === 'motor_reverse') { this.dir *= -1; this.pc++; continue; }
-        if (b.type === 'stop') { this.wheels('stop', this.power); this.pc++; continue; }
-        if (b.type === 'sensor_obstacle') {
-          if (!this.entered) { this.entered = true; this.onActiveBlockUpdate?.(this.pc); }
-          if (this.seesObstacle()) {
-            if (this.hand) this.handUsed = true;
-            this.waitingHand = false;
-            this.entered = false;
-            this.seen = true;
-            this.log('ok', this.hand ? 'Cảm biến thấy bàn tay.' : 'Cảm biến thấy vật cản phía trước.');
-            this.emit('seen');
-            this.pc++; continue;
-          }
-          if (!this.waitingHand) { this.waitingHand = true; this.log('warn', 'Chờ vật cản trước đầu – em có thể bấm ✋.'); this.emit('waitHand'); }
-          this.integrate(budget);
-          budget = 0; break;
-        }
-        if (!this.entered) {
-          this.entered = true;
-          this.blkT = 0;
-          this.onActiveBlockUpdate?.(this.pc);
-          if (b.type === 'wait' && this.motion === 'forward') this.cycles++;
-          if (b.type === 'melody') { window.SFX?.melody(b.tune); this.emit('melody', b.tune); }
-        }
-        const dur = b.type === 'wait' ? (Number(b.duration) || 3) : b.type === 'melody' ? 1 : 0;
-        const left = Math.max(0, dur - this.blkT);
-        const used = Math.min(budget, left);
-        this.integrate(used);
-        if (!this.running) break;
-        this.blkT += used;
-        budget -= used;
-        if (this.blkT + 1e-8 < dur) break;
-        if (b.type === 'wait' && this.motion === 'left') { this.completedTurns++; this.turnTotal = 0; }
-        this.entered = false;
-        this.pc++;
-        if (budget <= 1e-9 && this.prog[this.pc]?.type !== 'repeatEnd') break;
+      return Math.max(0, Math.min(dt, MAX_TIME - this.runT));
+    }
+    onLoopEnd() {
+      if (this.matchesSample() && this.cycles >= 1 && this.completedTurns >= 1 && !this.crashed) {
+        if (!this.done.m2) this.emit('sampleDone');
+        this.done.m2 = true;
+        this.checkMissions();
       }
-      if (budget > 0 && this.running) this.integrate(budget);
+    }
+    loopNext(i) {
+      if (i < 0) return this.pc + 1;
+      return this.prog.slice(i + 1, this.pc).some(b => b.type === 'wait' || b.type === 'sensor_obstacle' || b.type === 'melody')
+        ? i + 1 : this.prog.length;
+    }
+    shouldYieldLoop() { return false; }
+    isConditionWait(b) { return b.type === 'sensor_obstacle'; }
+    waitDone() {
+      if (this.seesObstacle()) return true;
+      if (!this.waitingHand) {
+        this.waitingHand = true;
+        this.log('warn', 'Chờ vật cản trước đầu – em có thể bấm ✋.');
+        this.emit('waitHand');
+      }
+      return false;
+    }
+    waitCheckAfterStep() { return false; }
+    onWaitExit() {
+      if (this.hand) this.handUsed = true;
+      this.waitingHand = false;
+      this.seen = true;
+      this.log('ok', this.hand ? 'Cảm biến thấy bàn tay.' : 'Cảm biến thấy vật cản phía trước.');
+      this.emit('seen');
+    }
+    onTimedEnter(b) {
+      if (b.type === 'wait' && this.motion === 'forward') this.cycles++;
+    }
+    enterBlock(b) {
+      if (b.type === 'wait') return Math.max(0, Number(b.duration) || 3);
+      return super.enterBlock(b);
+    }
+    onTimedExit(b) {
+      this.blkT = this.blkDur;
+      if (b.type === 'wait' && this.motion === 'left') { this.completedTurns++; this.turnTotal = 0; }
+    }
+    shouldYieldAfterTimed(b, budget) {
+      return budget <= 1e-9 && this.prog[this.pc]?.type !== 'repeatEnd';
     }
     integrate(dt) {
+      const b = this.prog[this.pc];
+      this.integratePhysics(dt);
+      // Lớp gốc tăng blkT trước bước vật lý dở dang; bài gốc chỉ tăng nếu còn chạy.
+      if (!this.running && this.entered && b && b.type !== 'sensor_obstacle' &&
+          this.blkT + dt < this.blkDur - 1e-8) this.blkT -= dt;
+    }
+    integratePhysics(dt) {
       if (!this.running || dt <= 0) return;
       this.runT += dt;
       if (!this.motorOn || this.crashed) return;

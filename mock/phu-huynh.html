@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ebeff2">
+  <title>Phụ huynh · Liên kết & Kết quả của con (S-10, S-11) · Happy STEAM Lab</title>
+  <link rel="stylesheet" href="../css/lab.css">
+  <link rel="stylesheet" href="phu-huynh.css">
+</head>
+<body class="ph-page">
+
+  <!-- Dải nhỏ cố định theo quy chuẩn phiếu 73 -->
+  <header class="mock-banner" role="banner">
+    <a class="mock-banner-back" href="index.html">← Danh sách màn hình</a>
+    <span class="mock-banner-tag">DỮ LIỆU MẪU – chưa lưu thật</span>
+  </header>
+
+  <main class="ph-shell" id="ph-app-root">
+
+    <!-- Đầu trang ứng dụng Phụ huynh (chuẩn 375px điện thoại) -->
+    <section class="ph-topbar" aria-label="Thông tin tài khoản phụ huynh">
+      <div class="ph-brand">
+        <span class="ph-brand-eyebrow">Happy STEAM Lab · Phụ huynh</span>
+        <h1 class="ph-brand-title">Sổ liên lạc STEAM</h1>
+        <span style="font-size:12px; color:var(--muted);" id="ph-user-badge">Bùi Thanh Tâm (2 con)</span>
+      </div>
+      <a class="ph-btn ph-btn-sm" href="phieu-moi.html" title="Mở tờ phiếu mời A4 (S-09)">
+        Phiếu mời A4
+      </a>
+    </section>
+
+    <!-- Thanh chuyển 4 bước S-10 (Đăng nhập → Mã mời → Chọn con) & S-11 (Kết quả) -->
+    <nav class="ph-stepper" aria-label="Các bước màn hình Phụ huynh">
+      <button type="button" class="ph-step-btn" data-step="login">
+        <span class="step-num">S-10.1</span>
+        <span>Đăng nhập</span>
+      </button>
+      <button type="button" class="ph-step-btn" data-step="invite">
+        <span class="step-num">S-10.2</span>
+        <span>Mã mời</span>
+      </button>
+      <button type="button" class="ph-step-btn" data-step="children">
+        <span class="step-num">S-10.3</span>
+        <span>Chọn con</span>
+      </button>
+      <button type="button" class="ph-step-btn" data-step="s11" aria-current="step">
+        <span class="step-num">S-11</span>
+        <span>Kết quả</span>
+      </button>
+    </nav>
+
+    <!-- Hộp thông báo phản hồi tức thì -->
+    <div class="ph-toast" id="ph-toast" role="status" aria-live="polite" hidden>
+      <span id="ph-toast-text"></span>
+      <button type="button" class="ph-toast-close" id="ph-toast-close" aria-label="Đóng thông báo">×</button>
+    </div>
+
+    <!-- ==================== BƯỚC 1 (S-10): ĐĂNG NHẬP GIẢ ==================== -->
+    <section id="view-login" class="ph-card" hidden aria-labelledby="title-login">
+      <div class="ph-card-head">
+        <h2 class="ph-card-title" id="title-login">1. Đăng nhập Phụ huynh</h2>
+        <span class="grade-badge" data-grade="HT">S-10</span>
+      </div>
+      <p class="ph-card-sub">
+        Nhập email để nhận liên kết đăng nhập (không cần nhớ mật khẩu). Một tài khoản liên kết được nhiều con ở các lớp khác nhau.
+      </p>
+
+      <form id="ph-login-form" style="display:grid; gap:10px;" novalidate>
+        <div class="ph-field">
+          <label for="login-name">Họ và tên Phụ huynh</label>
+          <input id="login-name" type="text" maxlength="80" required value="Bùi Thanh Tâm" placeholder="Ví dụ: Bùi Thanh Tâm">
+        </div>
+        <div class="ph-field">
+          <label for="login-email">Email nhận liên kết đăng nhập</label>
+          <input id="login-email" type="email" required value="phu.huynh.nam@gmail.com" placeholder="ten@gmail.com">
+        </div>
+        <button type="submit" class="ph-btn ph-btn-primary ph-btn-block">
+          Đăng nhập &amp; Tiếp tục nhập mã mời →
+        </button>
+      </form>
+    </section>
+
+    <!-- ==================== BƯỚC 2 (S-10): NHẬP MÃ MỜI & ĐỒNG Ý DỮ LIỆU ==================== -->
+    <section id="view-invite" style="display:grid; gap:12px;" hidden aria-labelledby="title-invite">
+      <div class="ph-card">
+        <div class="ph-card-head">
+          <h2 class="ph-card-title" id="title-invite">2. Nhập mã mời trên phiếu</h2>
+          <span class="grade-badge" data-grade="HT">F-03</span>
+        </div>
+        <p class="ph-card-sub">
+          Nhập mã 8 ký tự trên tờ phiếu mời của cô giáo phát (tối đa 2 phụ huynh mỗi em – GD-12).
+        </p>
+
+        <form id="ph-invite-form" style="display:grid; gap:10px;" novalidate>
+          <div class="ph-field">
+            <label for="invite-code-input">Mã mời của con (8 ký tự, bỏ 0/O, 1/I/l)</label>
+            <input id="invite-code-input" class="ph-code-input" type="text" maxlength="8" value="K7M9P2X4" placeholder="K7M9P2X4" autocomplete="off">
+          </div>
+          <button type="submit" class="ph-btn ph-btn-primary ph-btn-block">
+            Kiểm tra mã mời
+          </button>
+        </form>
+
+        <div class="ph-presets">
+          <span class="ph-presets-title">Bấm thử các tình huống mã mời (BRD 7 &amp; 8)</span>
+          <div class="ph-preset-list">
+            <button type="button" class="ph-chip-btn" data-preset-code="K7M9P2X4">
+              K7M9P2X4 · Nam B. (Hợp lệ)
+            </button>
+            <button type="button" class="ph-chip-btn" data-preset-code="H3N8Q5R2">
+              H3N8Q5R2 · An P. (Chưa đồng ý)
+            </button>
+            <button type="button" class="ph-chip-btn" data-preset-code="D2G7J5K8">
+              D2G7J5K8 · Dũng V. (Thêm con mới)
+            </button>
+            <button type="button" class="ph-chip-btn" data-preset-code="F4T6W8Y9">
+              F4T6W8Y9 · Chi L. (Chặn: Đủ 2 PH)
+            </button>
+            <button type="button" class="ph-chip-btn" data-preset-code="R9X2C5V7">
+              R9X2C5V7 · Đạt N. (Chặn: Đã thu hồi)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Khung điều khoản lưu dữ liệu của con (GD-14, F-03.2) -->
+      <div class="ph-card" id="invite-consent-card" hidden>
+        <div class="ph-card-head">
+          <h3 class="ph-card-title">Xác nhận con &amp; Quyền dữ liệu (GD-14)</h3>
+          <span class="grade-badge" data-grade="HTT">Bắt buộc hỏi</span>
+        </div>
+
+        <div id="consent-student-summary"></div>
+
+        <div class="consent-box">
+          <h3>Điều khoản bảo vệ dữ liệu trẻ em</h3>
+          <ul class="consent-list">
+            <li><strong>Nếu bấm "Đồng ý":</strong> Hệ thống lưu họ tên đầy đủ, ngày sinh và hiển thị nhận xét bằng lời của giáo viên.</li>
+            <li><strong>Nếu bấm "Không đồng ý":</strong> Vẫn liên kết được để con học ở nhà; hệ thống chỉ lưu tên gọi ngắn, hình con vật, tiến độ và mức đánh giá (HTT/HT/CHT).</li>
+            <li>Trong buổi trưng bày dự án, khách chỉ thấy tên nhóm và poster, không thấy tên của con.</li>
+          </ul>
+        </div>
+
+        <div class="ph-field">
+          <label for="consent-fullname">Họ và tên đầy đủ của con (1–60 ký tự, cần khi Đồng ý)</label>
+          <input id="consent-fullname" type="text" maxlength="60" placeholder="Ví dụ: Bùi Hoàng Nam">
+        </div>
+
+        <div class="ph-field">
+          <label for="consent-dob">Ngày sinh của con (không bắt buộc)</label>
+          <input id="consent-dob" type="date">
+        </div>
+
+        <div style="display:grid; gap:8px;">
+          <button type="button" class="ph-btn ph-btn-ok ph-btn-block" id="btn-consent-agree">
+            Đồng ý &amp; Liên kết với con
+          </button>
+          <button type="button" class="ph-btn ph-btn-block" id="btn-consent-decline">
+            Không đồng ý (Vẫn liên kết ở chế độ ẩn danh)
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== BƯỚC 3 (S-10): CHỌN CON ==================== -->
+    <section id="view-children" style="display:grid; gap:12px;" hidden aria-labelledby="title-children">
+      <div class="ph-card">
+        <div class="ph-card-head">
+          <h2 class="ph-card-title" id="title-children">3. Chọn con của tôi</h2>
+          <button type="button" class="ph-btn ph-btn-sm" onclick="document.querySelector('[data-step=invite]').click()">
+            + Nhập mã thêm con
+          </button>
+        </div>
+        <p class="ph-card-sub">
+          Chọn <strong>Xem kết quả (S-11)</strong> để theo dõi tiến độ, hoặc bấm <strong>Cho con học ở nhà</strong> để mở chế độ trẻ em (F-03.4).
+        </p>
+
+        <div class="child-list" id="children-linked-list"></div>
+      </div>
+
+      <!-- Khung mô phỏng chế độ trẻ em ở nhà (F-03.4) -->
+      <div class="kid-mode-overlay" id="kid-home-overlay" hidden></div>
+    </section>
+
+    <!-- ==================== MÀN HÌNH S-11: KẾT QUẢ CỦA CON ==================== -->
+    <section id="view-s11" style="display:grid; gap:12px;" aria-labelledby="title-s11">
+
+      <!-- Chuyển nhanh giữa các con đã liên kết -->
+      <div class="child-switcher" id="s11-child-switcher" aria-label="Chuyển đổi giữa các con"></div>
+
+      <!-- Thẻ tổng quan của con đang chọn -->
+      <div class="ph-card" id="s11-student-header"></div>
+
+      <!-- 3 Tab trong S-11: Bài đã học | Dự án & Sao | Quyền dữ liệu -->
+      <div class="s11-tabs" role="tablist" aria-label="Các mục kết quả của con">
+        <button type="button" class="s11-tab" role="tab" data-s11-tab="lessons" aria-selected="true">
+          Bài học &amp; NV
+        </button>
+        <button type="button" class="s11-tab" role="tab" data-s11-tab="project" aria-selected="false">
+          Dự án (4 em)
+        </button>
+        <button type="button" class="s11-tab" role="tab" data-s11-tab="privacy" aria-selected="false">
+          Quyền dữ liệu
+        </button>
+      </div>
+
+      <!-- Nội dung Tab 1: Bài đã học (Bài 9 NV1-NV5, nhận xét GV, ảnh mô hình) -->
+      <div id="s11-panel-lessons" style="display:grid; gap:12px;"></div>
+
+      <!-- Nội dung Tab 2: Dự án nhóm 4 em & Sao buổi trưng bày -->
+      <div id="s11-panel-project" style="display:grid; gap:12px;" hidden></div>
+
+      <!-- Nội dung Tab 3: Cài đặt đồng ý dữ liệu (GD-14) -->
+      <div id="s11-panel-privacy" style="display:grid; gap:12px;" hidden></div>
+
+    </section>
+
+  </main>
+
+  <script src="phu-huynh.js"></script>
+</body>
+</html>
