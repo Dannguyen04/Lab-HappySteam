@@ -27,3 +27,6 @@ docs/giao-viec/logs/
 scratch/
 skills-lock.json
 *.log
+
+# Sổ tay RoboSim tiếng Việt: dùng ảnh của sổ tay ZMROBO, chỉ để trên máy
+docs/so-tay-robosim/
