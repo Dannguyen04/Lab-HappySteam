@@ -84,6 +84,18 @@
         'else', ['if', { cond: { s: 'lineR', op: 'is' } }], ['motors', { m1: 50, m2: 10 }], 'else', ['motors', { m1: 45, m2: 45 }], 'end', 'end', 'end']
     },
     {
+      id: 'dem-vach', name: 'Đếm vạch', level: 'pro', size: [260, 100],
+      about: 'Xe phải dừng ngay ở vạch thứ 3. Dùng biến đếm số vạch mắt dò đã đi qua, đủ 3 thì dừng.',
+      start: { x: 25, y: 50, dir: 0 },
+      items: [...frame(260, 100), ...[70, 120, 170, 220].map(x => ({ k: 'line', w: 3, pts: [[x, 12], [x, 88]] })),
+        { k: 'zone', x: 150, y: 25, w: 30, h: 50, color: 'green', goal: true }],
+      rules: { time: 14, star3: 'blocks', blocks: 9, limit: 40, stop: true },
+      hint: ['start', ['setVar', { name: 'dem', value: 0 }], ['show', { name: 'dem' }], ['motors', { m1: 40, m2: 40 }], 'forever',
+        ['waitUntil', { cond: { s: 'lineL', op: 'is' } }], ['changeVar', { name: 'dem', by: 1 }],
+        ['if', { cond: { op: '=', a: { v: 'dem' }, b: { n: 3 } } }], 'halt', 'end',
+        ['waitUntil', { cond: { s: 'lineL', op: 'not' } }], 'end']
+    },
+    {
       id: 'san-tu-do', name: 'Sân tự do', level: 'pro', size: [240, 180],
       about: 'Không có nhiệm vụ: thử mọi khối lệnh và xem bảng cảm biến thay đổi.',
       start: { x: 40, y: 90, dir: 0 },
@@ -111,8 +123,24 @@
     end: { t: 'end' },
     soundA: { t: 'sound', tune: 'A' },
     soundB: { t: 'sound', tune: 'B' },
-    led: { t: 'led', color: 'red' }
+    led: { t: 'led', color: 'red' },
+    // Bộ khối RoboSim (korv1x): tham số số có thể là biểu thức (xem Sim.val)
+    motor: { t: 'motor', port: 1, speed: 50 }, // Động cơ (M1) quay tốc độ (50), không chặn
+    moveDeg: { t: 'moveDeg', dir: 'fwd', speed: 50, deg: 360 }, // (Tiến) tốc độ (50) quay (360) độ bánh
+    lineFollow: { t: 'lineFollow', speed: 50, sec: 2 }, // Dò vạch tốc độ (50) trong (2) giây
+    turnUntilLine: { t: 'turnUntilLine', l: -40, r: 40, eye: 'L' }, // Rẽ trái (−40) phải (40) đến khi (mắt trái) gặp vạch
+    setVar: { t: 'setVar', name: 'dem', value: 0 },
+    changeVar: { t: 'changeVar', name: 'dem', by: 1 },
+    show: { t: 'show', name: 'dem' }, // Hiển thị biến lên bảng số liệu
+    timerReset: { t: 'timerReset' },
+    buzzer: { t: 'buzzer', on: true },
+    halt: { t: 'halt' } // Kết thúc chương trình
   };
+  // Biểu thức: số | { n } | { c: 'red' } | { s: 'dist'|'touch'|'lineL'|'lineR'|'light'|'color'|'timer'|'enc1'|'enc2' } | { v: 'tên biến' }
+  //            | { op: '+','-','*','/','<','>','=','!=','and','or', a, b } | { op: 'not', a }
+  const SENSOR_KEYS = ['dist', 'touch', 'lineL', 'lineR', 'light', 'color', 'timer', 'enc1', 'enc2'];
+  const LIGHT = { line: 300, green: 1800, red: 2200, blue: 1500, yellow: 3000, white: 3600 }; // giá trị quang 0–4095, càng tối càng nhỏ
+  const WHEEL_DEG_PER_CM = 360 / (Math.PI * 5); // bánh Ø5 cm
   const OPENERS = new Set(['repeat', 'forever', 'if']);
   const clone = o => JSON.parse(JSON.stringify(o));
   const make = k => (Array.isArray(k) ? { ...clone(BLOCKS[k[0]]), ...clone(k[1]) } : clone(BLOCKS[k]));
@@ -164,10 +192,11 @@
           const m = matchOf(blocks, i);
           if (b.t === 'repeat') {
             const slot = slots++;
-            emit({ op: 'loopInit', slot, n: Math.max(1, b.n | 0), src: i });
+            const init = emit({ op: 'loopInit', slot, n: b.n, src: i, to: -1 });
             const top = out.length;
             body(i + 1, m.end);
             emit({ op: 'loopNext', slot, to: top, src: m.end });
+            out[init].to = out.length; // lặp 0 lần: nhảy qua thân
           } else if (b.t === 'forever') {
             const top = out.length;
             body(i + 1, m.end);
@@ -250,7 +279,11 @@
         zone.x = x - 35;
       }
       const s = m.start;
-      this.robot = { x: s.x, y: s.y, th: s.dir || 0, vl: 0, vr: 0, led: null, odo: 0 };
+      this.robot = { x: s.x, y: s.y, th: s.dir || 0, vl: 0, vr: 0, led: null, odo: 0, e1: 0, e2: 0, buzzer: false };
+      this.vars = {};
+      this.shown = [];
+      this.timer0 = 0;
+      this.follow = null; // dò vạch tự động: { speed }
       this.flags = m.items.filter(i => i.k === 'flag').map(() => false);
       this.running = false;
       this.paused = false;
@@ -289,6 +322,7 @@
       if (!this.running) return;
       this.running = false;
       this.robot.vl = this.robot.vr = 0;
+      this.follow = null;
       this.active = -1;
       this.emit(reason);
     }
@@ -309,18 +343,59 @@
         return this.map.items.some(l => l.k === 'line' && l.pts.some((p, i) => i && distSeg(ex, ey, ...l.pts[i - 1], ...p) <= l.w / 2));
       };
       const zone = this.map.items.find(z => z.k === 'zone' && inRect(r.x, r.y, z));
+      const color = zone ? zone.color : 'white';
+      const under = this.map.items.some(l => l.k === 'line' && l.pts.some((p, i) => i && distSeg(r.x, r.y, ...l.pts[i - 1], ...p) <= l.w / 2));
       return {
-        dist: dist <= ROBOT.sonarMax ? Math.round(dist * 10) / 10 : null, // null: không thấy gì
+        dist: dist <= ROBOT.sonarMax ? Math.round(dist * 10) / 10 : null, // null: không thấy gì (khối số trả 888 như RoboSim)
         touch: this.touching,
         lineL: eye(-1),
         lineR: eye(1),
-        color: zone ? zone.color : 'white',
+        color,
+        light: under ? LIGHT.line : LIGHT[color] || LIGHT.white,
         m1: Math.round((r.vl / ROBOT.vmax) * 100),
         m2: Math.round((r.vr / ROBOT.vmax) * 100),
+        enc1: Math.round(r.e1),
+        enc2: Math.round(r.e2),
+        timer: Math.round((this.t - this.timer0) * 1000), // mili giây, như "Thời gian bộ điều khiển"
         t: this.t
       };
     }
+    // Giá trị của một biểu thức (số, cảm biến, biến, phép tính, so sánh)
+    val(e, v) {
+      if (e === null || e === undefined) return 0;
+      if (typeof e === 'number' || typeof e === 'string') return e;
+      if (typeof e === 'boolean') return e ? 1 : 0;
+      if ('n' in e) return +e.n || 0;
+      if ('c' in e) return e.c;
+      if ('v' in e) return +this.vars[e.v] || 0;
+      if ('s' in e && !('op' in e)) {
+        v = v || this.sensors();
+        if (e.s === 'dist') return v.dist === null ? 888 : v.dist;
+        if (e.s === 'touch' || e.s === 'lineL' || e.s === 'lineR') return v[e.s] ? 1 : 0;
+        return v[e.s] === undefined ? 0 : v[e.s];
+      }
+      const a = this.val(e.a, v), b = this.val(e.b, v);
+      switch (e.op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return b ? a / b : 0;
+        case '<': return a < b ? 1 : 0;
+        case '>': return a > b ? 1 : 0;
+        case '=': return a == b ? 1 : 0; // eslint-disable-line eqeqeq – so số với chuỗi màu
+        case '!=': return a != b ? 1 : 0; // eslint-disable-line eqeqeq
+        case 'and': return a && b ? 1 : 0;
+        case 'or': return a || b ? 1 : 0;
+        case 'not': return a ? 0 : 1;
+      }
+      return 0;
+    }
+    num(x) {
+      const n = Number(this.val(x));
+      return Number.isFinite(n) ? n : 0;
+    }
     test(cond) {
+      if (cond && 'a' in cond) return !!this.val(cond);
       const v = this.sensors();
       switch (cond.s) {
         case 'dist': {
@@ -341,7 +416,7 @@
       this.robot.vr = (ROBOT.vmax * Math.max(-100, Math.min(100, r))) / 100;
     }
     drive(b) {
-      const v = b.speed;
+      const v = this.num(b.speed);
       const w = { fwd: [v, v], back: [-v, -v], left: [-v, v], right: [v, -v] }[b.dir] || [0, 0];
       this.setWheels(...w);
     }
@@ -351,6 +426,13 @@
       while (left > 1e-9) {
         const h = Math.min(DT, left);
         left -= h;
+        if (this.follow) {
+          // dò vạch hai mắt: mắt nào thấy vạch thì lái về phía đó
+          const s = this.sensors(), sp = this.follow.speed;
+          this.setWheels(s.lineL && !s.lineR ? sp * 0.2 : sp, s.lineR && !s.lineL ? sp * 0.2 : sp);
+        }
+        r.e1 += r.vl * h * WHEEL_DEG_PER_CM;
+        r.e2 += r.vr * h * WHEEL_DEG_PER_CM;
         const v = (r.vl + r.vr) / 2, w = (r.vr - r.vl) / ROBOT.base;
         r.th -= w * h; // y hướng xuống: bánh phải nhanh hơn → xe quay sang trái trên màn hình
         r.x += Math.cos(r.th) * v * h;
@@ -409,8 +491,15 @@
         const ins = this.code[this.pc];
         this.active = ins.src;
         if (ins.op === 'loopInit') {
-          this.counters[ins.slot] = ins.n;
-          this.go(this.pc + 1);
+          const n = Math.floor(this.num(ins.n));
+          this.counters[ins.slot] = n;
+          this.go(n > 0 ? this.pc + 1 : ins.to);
+          continue;
+        }
+        if (ins.op === 'halt') {
+          this.setWheels(0, 0);
+          this.follow = null;
+          this.go(this.code.length);
           continue;
         }
         if (ins.op === 'loopNext' || ins.op === 'jmp') {
@@ -430,19 +519,33 @@
           this.go(this.test(ins.cond) ? this.pc + 1 : ins.to);
           continue;
         }
-        if (ins.op !== 'wait' && ins.op !== 'waitUntil' && !(ins.op === 'move' && ins.b.sec)) {
-          this.act(ins.b);
+        const b = ins.b;
+        const TIMED = ins.op === 'wait' || ins.op === 'waitUntil' || ins.op === 'moveDeg' || ins.op === 'lineFollow' ||
+          ins.op === 'turnUntilLine' || (ins.op === 'move' && this.num(b.sec));
+        if (!TIMED) {
+          this.act(b);
           this.go(this.pc + 1);
           continue;
         }
         if (!this.entered) {
           this.entered = true;
           this.blkT = 0;
-          if (ins.op === 'move') this.drive(ins.b);
+          this.blkDur = this.num(b.sec);
+          if (ins.op === 'move') this.drive(b);
+          else if (ins.op === 'lineFollow') this.follow = { speed: this.num(b.speed) };
+          else if (ins.op === 'turnUntilLine') this.setWheels(this.num(b.l), this.num(b.r));
+          else if (ins.op === 'moveDeg') {
+            // quay đủ số độ bánh: tốc độ không đổi nên đổi ra thời gian chính xác
+            this.drive(b);
+            const rate = Math.abs(this.robot.vl) * WHEEL_DEG_PER_CM;
+            this.blkDur = rate ? Math.abs(this.num(b.deg)) / rate : Infinity;
+          }
         }
         timed = true;
-        if (ins.op === 'waitUntil') {
-          if (this.test(ins.b.cond)) {
+        if (ins.op === 'waitUntil' || ins.op === 'turnUntilLine') {
+          const v = ins.op === 'turnUntilLine' ? this.sensors() : null;
+          if (v ? (b.eye === 'R' ? v.lineR : v.lineL) : this.test(b.cond)) {
+            if (v) this.setWheels(0, 0);
             this.entered = false;
             this.go(this.pc + 1);
             continue;
@@ -451,7 +554,7 @@
           budget = 0;
           break;
         }
-        const need = (ins.b.sec || 0) - this.blkT;
+        const need = this.blkDur - this.blkT;
         if (budget < need) {
           this.blkT += budget;
           this.spend(budget);
@@ -461,7 +564,8 @@
         this.spend(need);
         budget -= need;
         if (!this.running) break;
-        if (ins.op === 'move') this.setWheels(0, 0);
+        if (ins.op === 'move' || ins.op === 'moveDeg' || ins.op === 'lineFollow') this.setWheels(0, 0);
+        if (ins.op === 'lineFollow') this.follow = null;
         this.entered = false;
         this.go(this.pc + 1);
       }
@@ -469,9 +573,27 @@
     }
     // khối tức thì
     act(b) {
-      if (b.t === 'motors') this.setWheels(b.m1, b.m2);
-      else if (b.t === 'stop') this.setWheels(0, 0);
-      else if (b.t === 'move') this.drive(b);
+      const r = this.robot;
+      if (b.t === 'motors') this.setWheels(this.num(b.m1), this.num(b.m2));
+      else if (b.t === 'motor') {
+        const s = Math.max(-100, Math.min(100, this.num(b.speed)));
+        if (+b.port === 2) r.vr = (ROBOT.vmax * s) / 100;
+        else r.vl = (ROBOT.vmax * s) / 100;
+      } else if (b.t === 'stop') {
+        this.setWheels(0, 0);
+        this.follow = null;
+      } else if (b.t === 'move') this.drive(b);
+      else if (b.t === 'setVar' || b.t === 'changeVar') {
+        this.vars[b.name] = b.t === 'setVar' ? this.val(b.value) : (+this.vars[b.name] || 0) + this.num(b.by);
+        this.emit('var', { name: b.name, value: this.vars[b.name] });
+      } else if (b.t === 'show') {
+        if (!this.shown.includes(b.name)) this.shown.push(b.name);
+        this.emit('var', { name: b.name, value: this.vars[b.name] || 0 });
+      } else if (b.t === 'timerReset') this.timer0 = this.t;
+      else if (b.t === 'buzzer') {
+        r.buzzer = !!b.on;
+        this.emit('buzzer', r.buzzer);
+      }
       else if (b.t === 'led') {
         this.robot.led = b.color;
         this.emit('led', b.color);
@@ -540,12 +662,13 @@
       this.result = { ok, text, stars, t: Math.round(this.t * 10) / 10, bumps: this.bumps, blocks: countBlocks(this.blocks) };
       this.running = false;
       this.robot.vl = this.robot.vr = 0;
+      this.follow = null;
       this.active = -1;
       this.emit('finish', this.result);
     }
   }
 
-  const API = { ROBOT, MAPS, BLOCKS, OPENERS, make, check, matchOf, compile, countBlocks, Sim };
+  const API = { ROBOT, MAPS, BLOCKS, SENSOR_KEYS, LIGHT, OPENERS, make, check, matchOf, compile, countBlocks, Sim };
   if (typeof module !== 'undefined' && module.exports) module.exports = API;
   else root.CodeLab = API;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -1,10 +1,17 @@
-// Smoke Phòng lập trình – chạy từ tests/run-suite.js với BASE_URL HTTP.
+// Smoke Phòng lập trình (giao diện RoboSim) – chạy từ tests/run-suite.js với BASE_URL HTTP.
+// Trang nạp Blockly/three bằng import module nên cần Vite (npm run test:dist hoặc BASE_URL của vite dev/preview).
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const { chromium } = require('playwright');
 const { pageUrl } = require('./helpers/page-url');
 
 (async () => {
+  // Server tĩnh trả code-lab.html gốc: import 'blockly' không phân giải được → bỏ qua, kiểm ở test:dist
+  const html = await (await fetch(pageUrl('code-lab.html'))).text();
+  if (!/@vite\/client|assets\//.test(html)) {
+    console.log('SKIP: code-lab cần Vite (npm run test:dist hoặc BASE_URL của vite dev/preview).');
+    return;
+  }
   const executablePath = [process.env.ZM_CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe']
     .find(p => p && fs.existsSync(p));
   const browser = await chromium.launch({ headless: true, ...(executablePath ? { executablePath } : {}) });
@@ -15,74 +22,122 @@ const { pageUrl } = require('./helpers/page-url');
     page.on('console', m => { if (m.type() === 'error') errors.push(`${m.text()} (${m.location().url})`); });
     page.on('response', response => { if (response.status() >= 400) errors.push(`HTTP ${response.status()}: ${response.url()}`); });
     page.on('requestfailed', r => errors.push('Không tải được: ' + r.url()));
+    page.on('dialog', d => d.accept());
 
     await page.goto(pageUrl('code-lab.html'));
     await page.evaluate(() => localStorage.clear());
     await page.reload();
-    await page.waitForFunction(() => window.codeLab && window.CodeLabEditor);
+    await page.waitForFunction(() => window.codeLab && window.CodeLabBlocksVertical && window.CodeLabPython, null, { timeout: 15000 });
     assert.match(await page.title(), /Phòng lập trình/);
-    assert.match(await page.locator('#map-name').innerText(), /Về đích/);
-    assert.equal(await page.locator('#world').isVisible(), true);
 
-    // Khay → dải khối và chạy từng khối: dừng trước khối Chờ, sau Tiến 1 giây.
-    await page.locator('#toolbox .cl-tool').filter({ hasText: 'Tiến' }).first().click();
-    assert.deepEqual(await page.evaluate(() => codeLab.state.blocks.map(b => b.t)), ['start', 'move']);
-    await page.locator('#toolbox .cl-tool').filter({ hasText: 'Chờ' }).first().click();
-    assert.deepEqual(await page.evaluate(() => codeLab.state.blocks.map(b => b.t)), ['start', 'move', 'wait']);
-    await page.locator('#btn-step').click();
-    await page.waitForFunction(() => codeLab.sim.paused, null, { timeout: 10000 });
-    const step = await page.evaluate(() => ({ active: codeLab.sim.active, t: codeLab.sim.t, x: codeLab.sim.robot.x }));
-    assert.equal(step.active, 2, 'Từng khối phải dừng trước khối thứ 3 (Chờ)');
-    assert.ok(step.t >= 0.95 && step.t <= 1.1, `Tiến phải chạy hết 1 giây trước khi dừng: ${step.t}`);
-    assert.ok(step.x > 25, 'Xe phải thực sự di chuyển trong bước Tiến');
-    assert.equal(await page.locator('#program .cl-block.is-active').getAttribute('data-i'), '2');
+    const noOverflow = async where => {
+      const o = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      assert.ok(o <= 1, `${where}: tràn ngang ${o}px ở 1024×768`);
+    };
 
-    // Sa bàn Bé: chương trình gợi ý về đích, hiển thị kết quả có sao.
-    page.once('dialog', dialog => dialog.accept());
+    // 1. Bốn màn chuyển qua lại bằng thanh trên
+    for (const screen of ['home', 'robot', 'code', 'sim', 'home']) {
+      await page.locator(`.cl-nav-tab[data-screen="${screen}"]`).click();
+      assert.equal(await page.locator(`#screen-${screen}`).isVisible(), true, `Màn ${screen} phải hiện`);
+      assert.equal(await page.locator('.cl-nav-tab.is-active').getAttribute('data-screen'), screen);
+      await noOverflow('Màn ' + screen);
+    }
+    const mapCount = await page.evaluate(() => CodeLab.MAPS.length);
+    assert.equal(await page.locator('#home-map-grid .cl-home-card').count(), mapCount, 'Trang chủ phải có đủ thẻ sa bàn');
+    assert.match(await page.locator('[data-home-filter="all"]').innerText(), new RegExp(`\\(${mapCount}\\)`));
+
+    // 2. Chọn thẻ "Đếm vạch" → màn Viết chương trình, nạp gợi ý → khối dọc + mã Python đúng
+    await page.locator('#home-map-grid .cl-home-card').filter({ hasText: 'Đếm vạch' }).click();
+    assert.equal(await page.locator('#screen-code').isVisible(), true);
     await page.locator('#btn-hint').click();
-    assert.deepEqual(await page.evaluate(() => codeLab.state.blocks.map(b => b.t)), ['start', 'move', 'stop']);
-    await page.locator('#btn-run').click();
-    await page.locator('#result').waitFor({ state: 'visible', timeout: 20000 });
-    assert.match(await page.locator('#result-text').innerText(), /Tới đích rồi/);
-    assert.ok(await page.locator('#result-stars .on').count() >= 1, 'Phải có ít nhất 1 sao');
-    assert.equal(await page.evaluate(() => codeLab.sim.result.ok), true);
+    const hintTypes = await page.evaluate(() => codeLab.state.blocks.map(b => b.t));
+    assert.ok(hintTypes.includes('setVar') && hintTypes.includes('forever'), 'Gợi ý Đếm vạch dùng biến và lặp mãi');
+    const roundTrip = await page.evaluate(() => CodeLabBlocksVertical.toFlatBlocks().map(b => b.t));
+    assert.deepEqual(roundTrip, hintTypes, 'Khối dọc phải dịch ra đúng chuỗi khối phẳng');
+    assert.ok(await page.evaluate(() => CodeLabBlocksVertical.workspace.getAllBlocks(false).length) > hintTypes.length,
+      'Blockly phải dựng đủ khối (kèm khối số/biểu thức)');
+    const area = await page.locator('#blockly-div').boundingBox();
+    assert.ok(area && area.height > 300, `Vùng khối Blockly phải có chiều cao thật: ${area && area.height}px`);
+    assert.equal(await page.locator('.blocklyToolbox').isVisible(), true, 'Cột nhóm khối phải hiện');
+    const py = await page.locator('#python-code').innerText();
+    assert.match(py, /dem = 0/);
+    assert.match(py, /while True:/);
+    assert.match(py, /show_variable\("dem"/);
 
-    // Sa bàn Lớp 3+: xe chờ cảm biến rồi dừng trước tường trong ô đích.
-    await page.locator('[data-level="pro"]').click();
+    // 3. Chạy → khối được tô sáng → có kết quả, biến hiện trên bảng cảm biến
+    await page.evaluate(() => {
+      window.__lit = new Set();
+      const orig = CodeLabBlocksVertical.highlightBlock;
+      CodeLabBlocksVertical.highlightBlock = id => { if (id) window.__lit.add(id); return orig(id); };
+      codeLab.state.speed = 4;
+    });
+    await page.locator('#btn-code-run').click();
+    assert.equal(await page.locator('#screen-sim').isVisible(), true);
+    await page.locator('#result').waitFor({ state: 'visible', timeout: 30000 });
+    assert.equal(await page.evaluate(() => codeLab.sim.result.ok), true, 'Gợi ý phải hoàn thành sa bàn Đếm vạch');
+    assert.ok(await page.locator('#result-stars .on').count() >= 1, 'Phải có ít nhất 1 sao');
+    // khối tức thì xong trong một khung hình nên chỉ chắc thấy các khối có thời gian (Chờ đến khi…)
+    assert.ok(await page.evaluate(() => [...window.__lit].some(id => CodeLabBlocksVertical.workspace.getBlockById(id))),
+      'Phải tô sáng khối Blockly khi chạy');
+    assert.match(await page.locator('#s-vars').innerText(), /dem: \d+/);
+    assert.match(await page.locator('#s-timer').innerText(), /\d+ ms/);
+    await noOverflow('Mô phỏng');
+
+    // 4. 3D bật/tắt không lỗi, chạy được khi đang 3D
+    await page.locator('#btn-view3d').click();
+    await page.locator('#world-3d canvas').waitFor({ state: 'visible', timeout: 10000 });
+    assert.equal(await page.evaluate(() => codeLab.state.viewMode), '3d');
+    const [box3d, wrap] = [await page.locator('#world-3d').boundingBox(), await page.locator('#canvas-wrap').boundingBox()];
+    assert.ok(Math.abs(box3d.y - wrap.y) < 2 && Math.abs(box3d.height - wrap.height) < 2, '3D phải phủ đúng khung sa bàn, không nằm dưới');
+    await page.locator('#btn-reset').click();
+    await page.locator('#btn-run').click();
+    await page.waitForFunction(() => codeLab.sim.t > 0.5, null, { timeout: 10000 });
+    await page.locator('#btn-view3d').click();
+    assert.equal(await page.locator('#world-3d').isHidden(), true);
+    assert.equal(await page.evaluate(() => codeLab.state.viewMode), '2d');
+
+    // 5. Gỡ cảm biến Dò vạch ở Lắp robot → khối dò vạch mờ trong khay, chạy bị chặn với lời nhắc
+    await page.locator('.cl-nav-tab[data-screen="robot"]').click();
+    await page.locator('#sensor-deck .cl-sensor-card').filter({ hasText: 'Dò vạch' }).getByRole('button').click();
+    assert.equal(await page.evaluate(() => codeLab.state.sensors.line), null);
+    await page.locator('.cl-nav-tab[data-screen="code"]').click();
+    await page.locator('.blocklyToolboxCategory, .blocklyTreeRow').filter({ hasText: 'Dò vạch' }).first().click();
+    await page.waitForFunction(() => {
+      const ws = CodeLabBlocksVertical.workspace.getFlyout()?.getWorkspace();
+      const b = ws && ws.getAllBlocks(false).find(x => x.type === 'block_line_follow');
+      return b && !b.isEnabled();
+    }, null, { timeout: 5000 });
+    await page.locator('#btn-code-run').click();
+    assert.match(await page.locator('#msg').innerText(), /Chưa gắn cảm biến Dò vạch/);
+    assert.equal(await page.evaluate(() => codeLab.sim.running), false);
+    await page.locator('.cl-nav-tab[data-screen="robot"]').click();
+    await page.locator('#robot-btn-reset-default').click();
+
+    // 6. Chọn sa bàn khác từ thanh trên khi đang ở màn khối dọc → Blockly nạp chương trình mới
+    await page.locator('.cl-nav-tab[data-screen="code"]').click();
     await page.locator('#btn-maps').click();
     await page.locator('#map-grid .cl-map-card').filter({ hasText: 'Dừng trước tường' }).click();
-    assert.match(await page.locator('#map-name').innerText(), /Dừng trước tường/);
     await page.locator('#btn-hint').click();
-    assert.deepEqual(await page.evaluate(() => codeLab.state.blocks.map(b => b.t)), ['start', 'move', 'waitUntil', 'stop']);
-    await page.locator('#btn-run').click();
+    assert.deepEqual(await page.evaluate(() => CodeLabBlocksVertical.toFlatBlocks().map(b => b.t)),
+      ['start', 'move', 'waitUntil', 'stop']);
+    await page.locator('#btn-code-run').click();
     await page.locator('#result').waitFor({ state: 'visible', timeout: 30000 });
-    assert.equal(await page.evaluate(() => codeLab.sim.result.ok), true, 'Gợi ý phải hoàn thành sa bàn Dừng trước tường');
-    assert.ok(await page.locator('#result-stars .on').count() >= 1);
+    assert.equal(await page.evaluate(() => codeLab.sim.result.ok), true, 'Gợi ý phải hoàn thành Dừng trước tường');
 
-    // Trình vẽ: kéo Ô đích, lưu, thấy sa bàn mới trong danh sách.
-    await page.locator('#btn-editor').click();
-    await page.locator('#editor-dialog').waitFor({ state: 'visible' });
-    await page.locator('#ed-name').fill('Sa bàn smoke 74b');
-    await page.locator('#ed-tools [data-tool="goal"]').click();
-    const bounds = await page.locator('#ed-canvas').boundingBox();
-    assert.ok(bounds && bounds.width > 100 && bounds.height > 100, 'Canvas vẽ phải nhìn thấy');
-    await page.mouse.move(bounds.x + bounds.width * 0.6, bounds.y + bounds.height * 0.45);
-    await page.mouse.down();
-    await page.mouse.move(bounds.x + bounds.width * 0.75, bounds.y + bounds.height * 0.65, { steps: 4 });
-    await page.mouse.up();
-    await page.locator('#ed-save').click();
-    assert.equal(await page.locator('#editor-dialog').evaluate(el => el.open), false, 'Đặt được ô đích rồi phải lưu được');
-    assert.match(await page.locator('#map-name').innerText(), /Sa bàn smoke 74b/);
-    assert.ok(await page.evaluate(() => codeLab.state.mapId.startsWith('tu-ve-')));
-    await page.locator('#btn-maps').click();
-    assert.equal(await page.locator('#map-grid .cl-map-card').filter({ hasText: 'Sa bàn smoke 74b' }).count(), 1);
-    await page.locator('#maps-dialog form button').click();
+    // 7. Chế độ Bé (khối ngang) vẫn dùng được
+    await page.locator('.cl-nav-tab[data-screen="code"]').click();
+    await page.locator('[data-block-mode="horizontal"]').click();
+    assert.equal(await page.locator('#cl-horizontal-container').isVisible(), true);
+    assert.ok(await page.locator('#toolbox .cl-tool').count() > 3);
+    await noOverflow('Khối ngang');
+    await page.locator('[data-block-mode="vertical"]').click();
 
-    const overflow = await page.evaluate(() => ({ width: document.documentElement.clientWidth, content: document.documentElement.scrollWidth }));
-    assert.ok(overflow.content <= overflow.width, `Trang tràn ngang ở 1024×768: ${JSON.stringify(overflow)}`);
-    assert.deepEqual(errors, [], 'Trang có lỗi JavaScript, console hoặc tải tệp');
-    console.log('PASS: Code Lab mở, thêm khối, từng khối, 2 sa bàn gợi ý đạt sao, vẽ/lưu sa bàn, không tràn ngang 1024×768.');
+    assert.deepEqual(errors, [], 'Không được có lỗi console/mạng');
+    console.log('PASS: Phòng lập trình – 4 màn, khối dọc ↔ Python, chạy + tô sáng + sao, 3D bật/tắt, gỡ cảm biến, đổi sa bàn, khối ngang, không tràn 1024×768.');
   } finally {
     await browser.close();
   }
-})().catch(err => { console.error(err); process.exitCode = 1; });
+})().catch(e => {
+  console.error(e);
+  process.exit(1);
+});

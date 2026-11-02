@@ -3,27 +3,58 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Phòng lập trình · Happy STEAM</title>
+  <title>Phòng lập trình RoboSim · Happy STEAM</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="css/code-lab.css">
 </head>
-<body>
+<body data-screen="home" data-block-mode="vertical">
+  <!-- Thanh trên như RoboSim: 4 nút lớn chuyển màn + công cụ -->
   <header class="cl-top">
-    <a class="cl-back" href="index.html">← Chọn bài</a>
-    <div class="cl-title">
-      <div class="cl-eyebrow">Happy STEAM · Robot Alpha 330</div>
-      <h1>Phòng lập trình</h1>
+    <div class="cl-top-brand">
+      <a class="cl-back" href="index.html" title="Quay lại trang chính">← Trang chính</a>
+      <span class="cl-brand-sub">Robot Alpha 330</span>
     </div>
-    <button type="button" class="cl-map-btn" id="btn-maps" aria-haspopup="dialog">
-      <span class="cl-map-label">Sa bàn</span> <strong id="map-name">–</strong> ▾
-    </button>
-    <div class="cl-seg" role="group" aria-label="Cấp khối lệnh">
-      <button type="button" data-level="kid" class="is-on">Bé</button>
-      <button type="button" data-level="pro">Lớp 3+</button>
-    </div>
+
+    <!-- 4 Nút lớn chuyển màn hình RoboSim -->
+    <nav class="cl-nav-tabs" role="tablist" aria-label="Màn hình chính">
+      <button type="button" class="cl-nav-tab is-active" data-screen="home" role="tab" aria-selected="true" id="tab-home">
+        <span class="cl-nav-icon" aria-hidden="true">🏠</span>
+        <span class="cl-nav-text">Trang chủ</span>
+      </button>
+      <button type="button" class="cl-nav-tab" data-screen="robot" role="tab" aria-selected="false" id="tab-robot">
+        <span class="cl-nav-icon" aria-hidden="true">🛠️</span>
+        <span class="cl-nav-text">Lắp robot</span>
+      </button>
+      <button type="button" class="cl-nav-tab" data-screen="code" role="tab" aria-selected="false" id="tab-code">
+        <span class="cl-nav-icon" aria-hidden="true">💻</span>
+        <span class="cl-nav-text">Viết chương trình</span>
+      </button>
+      <button type="button" class="cl-nav-tab" data-screen="sim" role="tab" aria-selected="false" id="tab-sim">
+        <span class="cl-nav-icon" aria-hidden="true">🎮</span>
+        <span class="cl-nav-text">Mô phỏng</span>
+      </button>
+    </nav>
+
+    <!-- Công cụ góc phải -->
     <div class="cl-top-tools">
+      <button type="button" class="cl-map-btn" id="btn-maps" aria-haspopup="dialog" title="Chọn sa bàn luyện tập">
+        <span class="cl-map-label">Sa bàn</span> <strong id="map-name">–</strong> ▾
+      </button>
+
+      <!-- Công tắc kiểu khối: Dọc (RoboSim) / Ngang (Bé) -->
+      <div class="cl-seg cl-mode-seg" role="group" aria-label="Kiểu khối">
+        <button type="button" data-block-mode="vertical" class="is-on" title="Khối dọc kiểu RoboSim">Dọc</button>
+        <button type="button" data-block-mode="horizontal" title="Khối ngang cho trẻ em">Ngang</button>
+      </div>
+
+      <!-- Cấp khối lệnh cho chế độ ngang -->
+      <div class="cl-seg cl-level-seg" role="group" aria-label="Cấp khối lệnh" id="level-seg" hidden>
+        <button type="button" data-level="kid">Bé</button>
+        <button type="button" data-level="pro" class="is-on">Lớp 3+</button>
+      </div>
+
       <button type="button" class="cl-btn" id="btn-editor">Vẽ sa bàn</button>
-      <button type="button" class="cl-btn" id="btn-file" aria-haspopup="menu">Lưu / chia sẻ ▾</button>
+      <button type="button" class="cl-btn" id="btn-file" aria-haspopup="menu">Tệp ▾</button>
       <div class="cl-menu" id="file-menu" role="menu" hidden>
         <button type="button" role="menuitem" data-act="export">Tải chương trình về máy (.json)</button>
         <button type="button" role="menuitem" data-act="import">Mở chương trình từ máy…</button>
@@ -34,77 +65,293 @@
     </div>
   </header>
 
-  <main class="cl-main">
-    <section class="cl-stage" aria-label="Sa bàn">
-      <div class="cl-mission">
-        <div class="cl-mission-text">
-          <strong id="mission-name"></strong>
-          <span id="mission-about"></span>
+  <main class="cl-main-views">
+    <!-- ==================== MÀN 1: TRANG CHỦ ==================== -->
+    <section class="cl-screen" id="screen-home" aria-label="Trang chủ RoboSim">
+      <div class="cl-home-hero">
+        <div class="cl-hero-content">
+          <div class="cl-eyebrow">Hệ thống mô phỏng robot giáo dục · Happy STEAM</div>
+          <h1>Phòng lập trình RoboSim</h1>
+          <p>Lắp ráp cảm biến, lập trình kéo thả khối trực quan, sinh mã Python chuẩn và mô phỏng vật lý đa chiều.</p>
         </div>
-        <div class="cl-goals" id="mission-goals"></div>
+        <div class="cl-hero-actions">
+          <button type="button" class="cl-hero-btn cl-btn-primary" id="home-btn-quickstart">
+            <span class="cl-hero-icon">🚀</span>
+            <strong>Vào lập trình ngay</strong>
+            <span>Khám phá sa bàn hiện tại</span>
+          </button>
+          <button type="button" class="cl-hero-btn" id="home-btn-free">
+            <span class="cl-hero-icon">🏟️</span>
+            <strong>Sân tự do</strong>
+            <span>Thử mọi lệnh & cảm biến</span>
+          </button>
+          <button type="button" class="cl-hero-btn" id="home-btn-editor">
+            <span class="cl-hero-icon">🎨</span>
+            <strong>Thiết kế sa bàn</strong>
+            <span>Tự vẽ bản đồ thi đấu</span>
+          </button>
+          <button type="button" class="cl-hero-btn" id="home-btn-sent">
+            <span class="cl-hero-icon">📋</span>
+            <strong>Bài đã gửi</strong>
+            <span>Xem lịch sử bài nộp</span>
+          </button>
+        </div>
       </div>
-      <div class="cl-canvas-wrap">
-        <canvas id="world" width="900" height="560" aria-label="Sa bàn nhìn từ trên xuống"></canvas>
-        <div class="cl-result" id="result" hidden>
-          <div class="cl-stars" id="result-stars"></div>
-          <p id="result-text"></p>
-          <p class="cl-result-sub" id="result-sub"></p>
-          <div class="cl-result-btns">
-            <button type="button" class="cl-btn" id="btn-again">Thử lại</button>
-            <button type="button" class="cl-btn cl-primary" id="btn-next-map">Sa bàn tiếp →</button>
+
+      <!-- Luyện theo chủ đề (7 sa bàn có sẵn) -->
+      <div class="cl-home-section">
+        <div class="cl-section-head">
+          <div>
+            <h2>Luyện theo chủ đề</h2>
+            <p>Chọn sa bàn để luyện tập điều khiển robot Alpha 330 từ cơ bản đến nâng cao</p>
+          </div>
+          <div class="cl-seg" role="group" aria-label="Lọc sa bàn">
+            <button type="button" data-home-filter="all" class="is-on">Tất cả (7)</button>
+            <button type="button" data-home-filter="kid">Cơ bản (3)</button>
+            <button type="button" data-home-filter="pro">Nâng cao (4)</button>
+          </div>
+        </div>
+        <div class="cl-home-grid" id="home-map-grid"></div>
+      </div>
+    </section>
+
+    <!-- ==================== MÀN 2: LẮP ROBOT ==================== -->
+    <section class="cl-screen" id="screen-robot" aria-label="Lắp ráp robot Alpha 330" hidden>
+      <div class="cl-robot-layout">
+        <!-- Cột trái: Sơ đồ robot nhìn từ trên -->
+        <div class="cl-robot-diagram-card">
+          <div class="cl-card-head">
+            <div>
+              <h2>Mô hình: Xe Alpha 330</h2>
+              <p>Sơ đồ cổng kết nối động cơ M1, M2 và các cổng cảm biến P1 – P4</p>
+            </div>
+            <button type="button" class="cl-btn" id="robot-btn-reset-default">Khôi phục mặc định (Gắn đủ)</button>
+          </div>
+
+          <div class="cl-robot-view">
+            <!-- Sơ đồ SVG của xe Alpha 330 -->
+            <svg class="cl-robot-svg" viewBox="0 0 340 380" aria-label="Sơ đồ xe Alpha 330 nhìn từ trên">
+              <!-- Bánh trái M1 -->
+              <rect x="25" y="140" width="30" height="90" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+              <text x="40" y="190" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">M1</text>
+              <text x="40" y="205" fill="#94a3b8" font-size="9" text-anchor="middle">Trái</text>
+
+              <!-- Bánh phải M2 -->
+              <rect x="285" y="140" width="30" height="90" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+              <text x="300" y="190" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">M2</text>
+              <text x="300" y="205" fill="#94a3b8" font-size="9" text-anchor="middle">Phải</text>
+
+              <!-- Khung xe chính (xanh Alpha) -->
+              <rect x="65" y="80" width="210" height="230" rx="28" fill="#0284c7" stroke="#0369a1" stroke-width="3"/>
+              
+              <!-- Khối điều khiển trung tâm (vàng RoboSim) -->
+              <rect x="95" y="125" width="150" height="145" rx="16" fill="#f59e0b" stroke="#d97706" stroke-width="2"/>
+              <!-- Màn hình LCD nhỏ -->
+              <rect x="115" y="145" width="110" height="55" rx="8" fill="#1e293b"/>
+              <text x="170" y="172" fill="#38bdf8" font-size="13" font-family="monospace" font-weight="bold" text-anchor="middle">ALPHA 330</text>
+              <text x="170" y="188" fill="#a7f3d0" font-size="10" font-family="monospace" text-anchor="middle">READY</text>
+              <!-- Nút bấm trên bộ điều khiển -->
+              <circle cx="140" cy="235" r="10" fill="#dc2626"/>
+              <circle cx="170" cy="235" r="10" fill="#10b981"/>
+              <circle cx="200" cy="235" r="10" fill="#3b82f6"/>
+
+              <!-- Mũi xe phía trước (hướng lên trên) -->
+              <path d="M 130 80 L 170 45 L 210 80 Z" fill="#0369a1"/>
+              <polygon points="170,55 163,70 177,70" fill="#fef08a"/>
+
+              <!-- Cổng P1: Sóng âm -->
+              <g class="cl-port-node" id="node-p1" transform="translate(170, 35)">
+                <circle cx="0" cy="0" r="18" fill="#2563eb" stroke="#ffffff" stroke-width="2"/>
+                <text x="0" y="5" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">P1</text>
+              </g>
+
+              <!-- Cổng P2: Chạm -->
+              <g class="cl-port-node" id="node-p2" transform="translate(90, 60)">
+                <circle cx="0" cy="0" r="16" fill="#2563eb" stroke="#ffffff" stroke-width="2"/>
+                <text x="0" y="4" fill="#ffffff" font-size="10" font-weight="bold" text-anchor="middle">P2</text>
+              </g>
+
+              <!-- Cổng P3: Dò vạch -->
+              <g class="cl-port-node" id="node-p3" transform="translate(250, 60)">
+                <circle cx="0" cy="0" r="16" fill="#2563eb" stroke="#ffffff" stroke-width="2"/>
+                <text x="0" y="4" fill="#ffffff" font-size="10" font-weight="bold" text-anchor="middle">P3</text>
+              </g>
+
+              <!-- Cổng P4: Cảm biến màu -->
+              <g class="cl-port-node" id="node-p4" transform="translate(170, 315)">
+                <circle cx="0" cy="0" r="16" fill="#2563eb" stroke="#ffffff" stroke-width="2"/>
+                <text x="0" y="4" fill="#ffffff" font-size="10" font-weight="bold" text-anchor="middle">P4</text>
+              </g>
+
+              <!-- Cổng LED -->
+              <g class="cl-port-node" id="node-led" transform="translate(170, 105)">
+                <circle cx="0" cy="0" r="12" fill="#10b981" stroke="#ffffff" stroke-width="2"/>
+                <text x="0" y="4" fill="#ffffff" font-size="9" font-weight="bold" text-anchor="middle">LED</text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Bảng trạng thái cổng -->
+          <div class="cl-ports-table" id="robot-ports-summary"></div>
+        </div>
+
+        <!-- Cột phải: Khay linh kiện / Cảm biến -->
+        <div class="cl-robot-parts-card">
+          <div class="cl-card-head">
+            <div>
+              <h2>Khay cảm biến &amp; Thiết bị</h2>
+              <p>Chạm hoặc bấm vào nút để gắn hoặc gỡ cảm biến khỏi cổng của xe</p>
+            </div>
+          </div>
+          <div class="cl-sensor-deck" id="sensor-deck"></div>
+          <div class="cl-robot-actions">
+            <button type="button" class="cl-btn cl-btn-primary" id="robot-btn-go-code">
+              Sang Viết chương trình →
+            </button>
           </div>
         </div>
       </div>
     </section>
 
-    <aside class="cl-side">
-      <h2>Cảm biến &amp; động cơ</h2>
-      <dl class="cl-sensors" id="sensors">
-        <div><dt>Động cơ M1 (trái)</dt><dd id="s-m1">0</dd></div>
-        <div><dt>Động cơ M2 (phải)</dt><dd id="s-m2">0</dd></div>
-        <div><dt>Sóng âm</dt><dd id="s-dist">–</dd></div>
-        <div><dt>Chạm</dt><dd id="s-touch">○</dd></div>
-        <div><dt>Mắt dò vạch trái · phải</dt><dd id="s-line">○ ○</dd></div>
-        <div><dt>Màu dưới xe</dt><dd id="s-color">trắng</dd></div>
-        <div><dt>Thời gian</dt><dd id="s-time">0,0 s</dd></div>
-        <div><dt>Va chạm</dt><dd id="s-bumps">0</dd></div>
-      </dl>
-      <h2>Nhật ký</h2>
-      <ol class="cl-log" id="log"></ol>
-    </aside>
-
-    <section class="cl-code" aria-label="Chương trình">
-      <div class="cl-runbar">
-        <button type="button" class="cl-run" id="btn-run">▶ Chạy</button>
-        <button type="button" class="cl-btn" id="btn-step" title="Chạy một khối rồi dừng">⏯ Từng khối</button>
-        <button type="button" class="cl-btn" id="btn-reset">⟲ Đặt lại</button>
-        <div class="cl-seg cl-speed" role="group" aria-label="Tốc độ mô phỏng">
-          <button type="button" data-speed="0.25">0,25×</button>
-          <button type="button" data-speed="1" class="is-on">1×</button>
-          <button type="button" data-speed="2">2×</button>
+    <!-- ==================== MÀN 3: VIẾT CHƯƠNG TRÌNH ==================== -->
+    <section class="cl-screen" id="screen-code" aria-label="Viết chương trình" hidden>
+      <div class="cl-code-toolbar">
+        <div class="cl-tool-left">
+          <button type="button" class="cl-btn cl-btn-primary" id="btn-code-run">▶ Chạy sang Mô phỏng</button>
+          <button type="button" class="cl-btn" id="btn-hint">Gợi ý sa bàn</button>
+          <button type="button" class="cl-btn" id="btn-clear">Xóa hết khối</button>
+          <span class="cl-code-msg" id="code-msg" role="status"></span>
         </div>
-        <span class="cl-msg" id="msg" role="status"></span>
-        <span class="cl-spacer"></span>
-        <button type="button" class="cl-btn" id="btn-hint">Gợi ý</button>
-        <button type="button" class="cl-btn" id="btn-clear">Xóa hết</button>
+        <div class="cl-tool-right">
+          <button type="button" class="cl-btn cl-btn-accent" id="btn-to-sim">Mở Sa bàn mô phỏng 🎮</button>
+        </div>
       </div>
-      <div class="cl-program" id="program" aria-label="Chuỗi khối lệnh"></div>
-      <div class="cl-inspector" id="inspector" hidden></div>
-      <div class="cl-toolbox" id="toolbox" aria-label="Khay khối lệnh"></div>
+
+      <!-- Vùng soạn thảo dọc (Blockly + Python) -->
+      <div class="cl-vertical-workspace" id="cl-vertical-container">
+        <!-- Khung Blockly -->
+        <div class="cl-blockly-wrap" id="blockly-wrap">
+          <div id="blockly-div"></div>
+        </div>
+
+        <!-- Khung xem mã Python trực tiếp -->
+        <aside class="cl-python-pane" id="python-panel">
+          <div class="cl-py-head">
+            <div class="cl-py-title">
+              <span class="cl-py-tag">Python 3</span>
+              <strong>Mã nguồn tương đương</strong>
+            </div>
+            <button type="button" class="cl-btn cl-btn-sm" id="btn-copy-py">Sao chép</button>
+          </div>
+          <div class="cl-py-body" id="python-code"></div>
+          <div class="cl-py-foot">
+            <span>Tự động cập nhật theo chuỗi khối lệnh</span>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Vùng soạn thảo ngang cho chế độ Bé (khi chuyển kiểu khối: Ngang) -->
+      <div class="cl-horizontal-workspace" id="cl-horizontal-container" hidden>
+        <div class="cl-program" id="program" aria-label="Chuỗi khối lệnh ngang"></div>
+        <div class="cl-inspector" id="inspector" hidden></div>
+        <div class="cl-toolbox" id="toolbox" aria-label="Khay khối lệnh ngang"></div>
+      </div>
+    </section>
+
+    <!-- ==================== MÀN 4: MÔ PHỎNG ==================== -->
+    <section class="cl-screen" id="screen-sim" aria-label="Mô phỏng robot" hidden>
+      <div class="cl-sim-layout">
+        <!-- Khung Sa bàn lớn chiếm diện tích chính -->
+        <div class="cl-sim-main">
+          <!-- Nhiệm vụ sa bàn -->
+          <div class="cl-mission">
+            <div class="cl-mission-text">
+              <strong id="mission-name">–</strong>
+              <span id="mission-about">–</span>
+            </div>
+            <div class="cl-goals" id="mission-goals"></div>
+          </div>
+
+          <!-- Thanh điều khiển mô phỏng -->
+          <div class="cl-runbar">
+            <button type="button" class="cl-run" id="btn-run">▶ Chạy</button>
+            <button type="button" class="cl-btn" id="btn-step" title="Chạy một khối rồi dừng">⏯ Từng khối</button>
+            <button type="button" class="cl-btn" id="btn-reset">⟲ Đặt lại</button>
+            <div class="cl-seg cl-speed" role="group" aria-label="Tốc độ mô phỏng">
+              <button type="button" data-speed="0.25">0,25×</button>
+              <button type="button" data-speed="1" class="is-on">1×</button>
+              <button type="button" data-speed="2">2×</button>
+            </div>
+            <!-- Nút 2D / 3D (sẵn sàng gọi window.CodeLabView3D của phiếu 77b) -->
+            <button type="button" class="cl-btn" id="btn-view3d" hidden>Góc nhìn: 3D</button>
+            <span class="cl-msg" id="msg" role="status"></span>
+            <span class="cl-spacer"></span>
+            <button type="button" class="cl-btn" id="btn-sim-to-code">← Sửa chương trình</button>
+          </div>
+
+          <!-- Vùng Canvas 2D & 3D -->
+          <div class="cl-canvas-wrap" id="canvas-wrap">
+            <canvas id="world" width="900" height="560" aria-label="Sa bàn nhìn từ trên xuống"></canvas>
+            <div id="world-3d" class="cl-world-3d" hidden></div>
+            
+            <!-- Kết quả đạt sao -->
+            <div class="cl-result" id="result" hidden>
+              <div class="cl-stars" id="result-stars"></div>
+              <p id="result-text"></p>
+              <p class="cl-result-sub" id="result-sub"></p>
+              <div class="cl-result-btns">
+                <button type="button" class="cl-btn" id="btn-again">Thử lại</button>
+                <button type="button" class="cl-btn cl-primary" id="btn-next-map">Sa bàn tiếp →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bảng điều khiển phụ: Cảm biến & Nhật ký -->
+        <aside class="cl-sim-aside">
+          <h2>Cảm biến &amp; Động cơ</h2>
+          <dl class="cl-sensors" id="sensors">
+            <div><dt>Động cơ M1 (trái)</dt><dd id="s-m1">0</dd></div>
+            <div><dt>Động cơ M2 (phải)</dt><dd id="s-m2">0</dd></div>
+            <div><dt>Sóng âm (P1)</dt><dd id="s-dist">–</dd></div>
+            <div><dt>Chạm (P2)</dt><dd id="s-touch">○</dd></div>
+            <div><dt>Dò vạch (P3) Trái · Phải</dt><dd id="s-line">○ ○</dd></div>
+            <div><dt>Màu dưới xe (P4)</dt><dd id="s-color">trắng</dd></div>
+            <div><dt>Quang (0–4095)</dt><dd id="s-light">0</dd></div>
+            <div><dt>Bộ đếm M1 (độ)</dt><dd id="s-enc1">0°</dd></div>
+            <div><dt>Bộ đếm M2 (độ)</dt><dd id="s-enc2">0°</dd></div>
+            <div><dt>Đồng hồ điều khiển</dt><dd id="s-timer">0 ms</dd></div>
+            <div class="cl-shown-vars"><dt>Biến đang hiển thị</dt><dd id="s-vars">Chưa có</dd></div>
+            <div><dt>Thời gian</dt><dd id="s-time">0,0 s</dd></div>
+            <div><dt>Va chạm</dt><dd id="s-bumps">0</dd></div>
+          </dl>
+          <h2>Nhật ký hoạt động</h2>
+          <ol class="cl-log" id="log"></ol>
+        </aside>
+      </div>
     </section>
   </main>
 
+  <!-- Hộp thoại chọn sa bàn -->
   <dialog class="cl-dialog" id="maps-dialog">
-    <h2>Chọn sa bàn</h2>
+    <h2>Chọn sa bàn luyện tập</h2>
     <div class="cl-map-grid" id="map-grid"></div>
     <form method="dialog"><button class="cl-btn">Đóng</button></form>
   </dialog>
+
+  <!-- Hộp thoại bài đã gửi -->
   <dialog class="cl-dialog" id="sent-dialog">
     <h2>Bài đã gửi <small class="cl-mock">DỮ LIỆU MẪU – chưa lưu lên máy chủ</small></h2>
-    <table class="cl-table"><thead><tr><th>Học sinh</th><th>Sa bàn</th><th>Sao</th><th>Thời gian</th><th>Số khối</th><th>Lúc gửi</th></tr></thead>
-      <tbody id="sent-rows"></tbody></table>
+    <table class="cl-table">
+      <thead>
+        <tr><th>Học sinh</th><th>Sa bàn</th><th>Sao</th><th>Thời gian</th><th>Số khối</th><th>Lúc gửi</th></tr>
+      </thead>
+      <tbody id="sent-rows"></tbody>
+    </table>
     <form method="dialog"><button class="cl-btn">Đóng</button></form>
   </dialog>
+
+  <!-- Hộp thoại vẽ sa bàn -->
   <dialog class="cl-dialog cl-editor" id="editor-dialog">
     <div class="cl-ed-head">
       <h2>Vẽ sa bàn</h2>
@@ -122,12 +369,17 @@
       <button type="button" class="cl-btn cl-primary" id="ed-save">Lưu và chơi thử</button>
     </div>
   </dialog>
+
   <div class="cl-toast" id="toast" role="status" hidden></div>
 
+  <!-- Scripts -->
   <script src="js/audio-sfx.js"></script>
   <script src="js/code-lab/core.js"></script>
   <script src="js/code-lab/view.js"></script>
   <script src="js/code-lab/map-editor.js"></script>
-  <script src="js/code-lab/ui.js"></script>
+  <script src="js/code-lab/python.js"></script>
+  <script type="module" src="js/code-lab/view3d.js"></script>
+  <script type="module" src="js/code-lab/blocks-vertical.js"></script>
+  <script type="module" src="js/code-lab/ui.js"></script>
 </body>
 </html>

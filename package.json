@@ -23,6 +23,8 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.118.0"
+    "@supabase/supabase-js": "^2.118.0",
+    "blockly": "^13.4.0",
+    "three": "^0.187.0"
   }
 }

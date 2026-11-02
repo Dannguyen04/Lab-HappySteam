@@ -71,11 +71,44 @@ for (const map of CL.MAPS) {
   assert.ok(Math.abs(sim.robot.x - (25 + CL.ROBOT.vmax / 2)) < 1, 'Khối Di chuyển 1 giây chạy đủ 1 giây');
 }
 
+// 4b. Bộ khối RoboSim: quay theo độ bánh, dò vạch tự động, rẽ tới khi gặp vạch, biến/biểu thức, đồng hồ, 888
+{
+  const free = CL.MAPS.find(m => m.id === 'san-tu-do');
+  const { sim } = run(free, prog(['start', ['moveDeg', { dir: 'fwd', speed: 50, deg: 360 }], ['wait', { sec: 0.5 }]]), 5);
+  assert.ok(Math.abs(sim.robot.x - (40 + Math.PI * 5)) < 0.3, 'Quay 360° bánh Ø5 cm = 15,7 cm, được ' + (sim.robot.x - 40).toFixed(2));
+  assert.ok(Math.abs(sim.sensors().enc1 - 360) <= 2, 'Bộ đếm M1 = 360°');
+  const line = CL.MAPS.find(m => m.id === 'do-vach');
+  const { result } = run(line, prog(['start', ['lineFollow', { speed: 45, sec: 30 }]]));
+  assert.ok(result && result.ok, 'Khối Dò vạch tự động về đích: ' + (result && result.text));
+  const s2 = new CL.Sim(free);
+  s2.setProgram(prog(['start', ['setVar', { name: 'k', value: 0 }], ['repeat', { n: { v: 'k' } }], 'soundA', 'end',
+    ['setVar', { name: 'x', value: { op: '+', a: { n: 2 }, b: { op: '*', a: { n: 3 }, b: { n: 4 } } } }], ['wait', { sec: 1 }], 'timerReset', ['wait', { sec: 0.5 }]]));
+  s2.start();
+  for (let i = 0; i < 120 && s2.running; i++) s2.tick(1 / 60);
+  assert.equal(s2.events.filter(e => e[0] === 'sound').length, 0, 'Lặp 0 lần bỏ qua thân');
+  assert.equal(s2.vars.x, 14, 'Biểu thức 2 + 3 × 4');
+  assert.ok(Math.abs(s2.sensors().timer - 500) < 40, 'Đồng hồ đếm từ lúc đặt lại (ms)');
+  const s3 = new CL.Sim(CL.MAPS[0]);
+  s3.setProgram(prog(['start', ['motor', { port: 1, speed: -30 }]]));
+  s3.start();
+  s3.tick(1 / 60);
+  assert.equal(s3.val({ s: 'dist' }) === 888 || s3.val({ s: 'dist' }) < 180, true);
+  assert.equal(s3.sensors().m1, -30, 'Khối một động cơ M1');
+  assert.equal(s3.sensors().m2, 0);
+  const s4 = new CL.Sim(line);
+  s4.setProgram(prog(['start', ['turnUntilLine', { l: 40, r: -40, eye: 'R' }], 'soundB']));
+  s4.robot.th = -1.2;
+  s4.start();
+  s4.robot.th = -1.2; // quay lệch khỏi vạch rồi rẽ phải tới khi mắt phải gặp lại vạch
+  for (let i = 0; i < 300 && !s4.events.some(e => e[0] === 'sound'); i++) s4.tick(1 / 60);
+  assert.ok(s4.events.some(e => e[0] === 'sound'), 'Rẽ tới khi gặp vạch thì đi tiếp');
+}
+
 // 5. Thử ngẫu nhiên: không ném lỗi, không NaN, thời gian không vượt giới hạn sa bàn
 let seed = 3;
 const rnd = () => (seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648;
 const pick = a => a[Math.floor(rnd() * a.length)];
-const KEYS = ['move', 'motors', 'stop', 'wait', 'waitUntil', 'soundA', 'led'];
+const KEYS = ['move', 'motors', 'stop', 'wait', 'waitUntil', 'soundA', 'led', 'motor', 'moveDeg', 'lineFollow', 'turnUntilLine', 'setVar', 'changeVar', 'show', 'timerReset', 'buzzer', 'halt'];
 function randomBody(depth) {
   const out = [];
   const n = 1 + Math.floor(rnd() * 4);
