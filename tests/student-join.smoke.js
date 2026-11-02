@@ -119,6 +119,7 @@ const { chromium } = require('playwright');
     await page.getByRole('button', { name: 'Tiếp tục vào lớp' }).click();
     await page.waitForURL(/\/index\.html(?:\?|$)/, { timeout: 12000 });
     await page.locator('#home-student-name').getByText('An').waitFor();
+    await page.locator('#grade-tabs [data-grade]').first().waitFor({ timeout: 12000 });
     assert.equal(await page.locator('#grade-tabs [data-grade]').count(), 1);
     await page.locator('.lesson-card.is-locked').first().waitFor();
     const student = await page.evaluate(() => JSON.parse(sessionStorage.getItem('happy-student-session')));

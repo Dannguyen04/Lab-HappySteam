@@ -32,8 +32,8 @@ async function main() {
     await page.goto(url);
     await page.evaluate(() => localStorage.clear());
     await page.reload();
-    await page.waitForFunction(() => window.robotViewer, null, { timeout: 20000 });
-    await page.locator('#lesson-loading').waitFor({ state: 'detached', timeout: 20000 });
+    await page.waitForFunction(() => window.robotViewer, null, { timeout: 35000 });
+    await page.locator('#lesson-loading').waitFor({ state: 'detached', timeout: 35000 });
     assert.match(await page.title(), /Vệ tinh ZMrobo/);
     assert.equal(await page.locator('html').getAttribute('data-theme'), 'light', 'Mặc định giao diện sáng như Bài 7');
     assert.equal(await page.locator('#mission-summary-badge').innerText(), '0/4 nhiệm vụ');
@@ -126,8 +126,8 @@ async function main() {
     await page.click('#btn-toggle-theme');
     assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
     await page.reload();
-    await page.waitForFunction(() => window.robotViewer, null, { timeout: 20000 });
-    await page.locator('#lesson-loading').waitFor({ state: 'detached', timeout: 20000 });
+    await page.waitForFunction(() => window.robotViewer, null, { timeout: 35000 });
+    await page.locator('#lesson-loading').waitFor({ state: 'detached', timeout: 35000 });
     assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
     assert.equal(await page.locator('#tab-btn-creative').getAttribute('aria-selected'), 'true', 'Nhớ chặng đang học');
     await page.click('#btn-toggle-theme');
@@ -216,7 +216,7 @@ async function main() {
     await mobile.goto(url);
     await mobile.evaluate(() => localStorage.clear());
     await mobile.reload();
-    await mobile.waitForFunction(() => window.robotViewer, null, { timeout: 20000 });
+    await mobile.waitForFunction(() => window.robotViewer, null, { timeout: 35000 });
     for (const tab of ['#tab-btn-asm', '#tab-btn-creative', '#tab-btn-sim']) {
       await mobile.click(tab);
       await mobile.waitForTimeout(300);

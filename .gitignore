@@ -20,3 +20,10 @@ docs/giao-viec/logs/
 
 # Skill tham khảo thiết kế (baoyu-design, giấy phép hỗn hợp) – chỉ dùng trên máy, không commit
 .agents/skills/claude-design/
+
+# Thư mục tạm, công cụ local và agent skills
+.agents/
+.claude/
+scratch/
+skills-lock.json
+*.log
