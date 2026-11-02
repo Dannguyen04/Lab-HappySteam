@@ -97,6 +97,26 @@ function createCheckeredTexture() {
   return texture;
 }
 
+function createStudTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 64;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#c9cbce';
+  ctx.fillRect(0, 0, 64, 64);
+  ctx.strokeStyle = '#8d9096';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(0.5, 0.5, 63, 63);
+  ctx.beginPath();
+  ctx.arc(32, 32, 17, 0, Math.PI * 2);
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = '#7d8086';
+  ctx.stroke();
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
 function buildAlpha330Robot(materials) {
   const group = new THREE.Group();
 
@@ -206,26 +226,55 @@ function buildAlpha330Robot(materials) {
   const pupilGeom = new THREE.CylinderGeometry(0.7, 0.7, 1.7, 12);
   pupilGeom.rotateZ(Math.PI / 2);
 
+  const sonarGroup = new THREE.Group(); // cảm biến sóng âm – cổng P1
   for (const ez of [-2.4, 2.4]) {
     const eyeHousing = new THREE.Mesh(eyeGeom, materials.sonarEye);
     eyeHousing.position.set(8.8, 3.8, ez);
     eyeHousing.castShadow = true;
-    group.add(eyeHousing);
+    sonarGroup.add(eyeHousing);
 
     const pupil = new THREE.Mesh(pupilGeom, materials.sonarPupil);
     pupil.position.set(8.85, 3.8, ez);
-    group.add(pupil);
+    sonarGroup.add(pupil);
   }
+  group.add(sonarGroup);
 
   // 5. Cảm biến dò vạch (2 mắt LED đỏ/xám dưới gầm mũi xe)
   const lineSensorGeom = new THREE.CylinderGeometry(0.45, 0.45, 0.5, 10);
+  const lineGroup = new THREE.Group(); // dò vạch 2 mắt – cổng P3
+  const lineBar = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.8, 7.2), materials.bumper);
+  lineBar.position.set(5.5, 1.0, 0);
+  lineGroup.add(lineBar);
   const leftLineLed = new THREE.Mesh(lineSensorGeom, materials.lineSensorOff);
   leftLineLed.position.set(5.5, 0.35, -2.5);
-  group.add(leftLineLed);
+  lineGroup.add(leftLineLed);
 
   const rightLineLed = new THREE.Mesh(lineSensorGeom, materials.lineSensorOff);
   rightLineLed.position.set(5.5, 0.35, 2.5);
-  group.add(rightLineLed);
+  lineGroup.add(rightLineLed);
+  group.add(lineGroup);
+
+  // Cảm biến chạm – cổng P2: hộp trắng + nút đỏ ở góc trước trái
+  const touchGroup = new THREE.Group();
+  const touchBox = new THREE.Mesh(new THREE.BoxGeometry(2.6, 2.2, 2.6), materials.rim);
+  touchBox.position.set(6.4, 5.2, -4.0);
+  touchBox.castShadow = true;
+  touchGroup.add(touchBox);
+  const touchBtn = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 1.0, 12), materials.touchButton);
+  touchBtn.rotation.z = Math.PI / 2;
+  touchBtn.position.set(7.9, 5.2, -4.0);
+  touchGroup.add(touchBtn);
+  group.add(touchGroup);
+
+  // Cảm biến màu – cổng P4: hộp đen nhỏ dưới gầm, mắt sáng trắng
+  const colorGroup = new THREE.Group();
+  const colorBox = new THREE.Mesh(new THREE.BoxGeometry(2.4, 1.0, 2.4), materials.bumper);
+  colorBox.position.set(2.6, 0.9, 0);
+  colorGroup.add(colorBox);
+  const colorEye = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 0.3, 12), materials.colorEye);
+  colorEye.position.set(2.6, 0.3, 0);
+  colorGroup.add(colorEye);
+  group.add(colorGroup);
 
   // 6. Tia sóng âm & nón phát hiện
   const sonarBeamGroup = new THREE.Group();
@@ -256,6 +305,7 @@ function buildAlpha330Robot(materials) {
 
   return {
     group,
+    parts: { dist: sonarGroup, line: lineGroup, touch: touchGroup, color: colorGroup, led: ledMesh },
     chassisMesh,
     leftWheel,
     rightWheel,
@@ -452,6 +502,9 @@ function createView3D(container, opts = {}) {
       opacity: 0.65,
       linewidth: 2
     }),
+    touchButton: new THREE.MeshStandardMaterial({ color: 0xdc2626, roughness: 0.4 }),
+    colorEye: new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xfff4d6, emissiveIntensity: 0.8 }),
+    studPlate: new THREE.MeshStandardMaterial({ map: createStudTexture(), roughness: 0.75 }),
     flagPole: new THREE.MeshStandardMaterial({
       color: 0xcfd8dc,
       roughness: 0.25,
@@ -477,6 +530,23 @@ function createView3D(container, opts = {}) {
   // 5. Khởi tạo Robot 3D
   const robot = buildAlpha330Robot(materials);
   scene.add(robot.group);
+
+  // Tấm đế có núm dưới xe (màn Lắp robot)
+  if (opts.baseplate) {
+    materials.studPlate.map.repeat.set(30, 30);
+    const plate = new THREE.Mesh(new THREE.PlaneGeometry(120, 120), materials.studPlate);
+    plate.rotation.x = -Math.PI / 2;
+    plate.position.set(30, 0, 20);
+    plate.receiveShadow = true;
+    scene.add(plate);
+  }
+
+  // Cảm biến đang gắn: { dist, touch, line, color, led } – rỗng thì ẩn bộ phận và tia sóng âm
+  let mounted = { dist: true, touch: true, line: true, color: true, led: true };
+  function setMounted(m) {
+    mounted = { ...m };
+    for (const [key, part] of Object.entries(robot.parts)) part.visible = !!mounted[key];
+  }
 
   // 6. Nhóm sa bàn (Floor, Walls, Zones, Lines, Flags)
   const mapGroup = new THREE.Group();
@@ -971,10 +1041,8 @@ function createView3D(container, opts = {}) {
       buildMap(map);
     }
 
-    if (opts.showcase) {
-      mapGroup.visible = false;
-      robot.sonarRay.visible = robot.sonarCone.visible = false;
-    }
+    if (opts.showcase) mapGroup.visible = false;
+    robot.sonarRay.visible = robot.sonarCone.visible = !opts.showcase && !!mounted.dist;
 
     // Đồng bộ vị trí và góc quay của robot Alpha 330
     const r = sim.robot;
@@ -1023,7 +1091,7 @@ function createView3D(container, opts = {}) {
     robot.sonarCone.position.x = 0;
 
     // Vòng phản xạ sóng tại điểm gặp chướng ngại
-    if (sensors.dist !== null && !opts.showcase) {
+    if (sensors.dist !== null && !opts.showcase && mounted.dist) {
       robot.hitRing.visible = true;
       robot.hitRing.position.set(dist, 0, 0);
     } else {
@@ -1101,7 +1169,8 @@ function createView3D(container, opts = {}) {
   return {
     render,
     resize,
-    dispose
+    dispose,
+    setMounted
   };
 }
 

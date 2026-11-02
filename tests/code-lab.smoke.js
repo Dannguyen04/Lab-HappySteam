@@ -111,8 +111,11 @@ const { pageUrl } = require('./helpers/page-url');
 
     // 5. Gỡ cảm biến Dò vạch ở Lắp robot → khối dò vạch mờ trong khay, chạy bị chặn với lời nhắc
     await page.locator('.cl-nav-tab[data-screen="robot"]').click();
-    await page.locator('#sensor-deck .cl-sensor-card').filter({ hasText: 'Dò vạch' }).getByRole('button').click();
+    assert.equal(await page.locator('#robot3d canvas').isVisible(), true, 'Lắp robot phải có xe 3D trên tấm đế');
+    await page.locator('#sensor-deck .rs-part[data-sensor="line"]').click();
     assert.equal(await page.evaluate(() => codeLab.state.sensors.line), null);
+    assert.equal(await page.locator('#sensor-deck .rs-part[data-sensor="line"]').getAttribute('aria-pressed'), 'false');
+    assert.match(await page.locator('#robot-ports-summary').innerText(), /P3 trống/);
     await page.locator('.cl-nav-tab[data-screen="code"]').click();
     await page.locator('.blocklyToolboxCategory, .blocklyTreeRow').filter({ hasText: 'Dò vạch' }).first().click();
     await page.waitForFunction(() => {

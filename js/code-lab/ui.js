@@ -332,69 +332,54 @@
   }
 
   // ---------- MÀN 2: LẮP ROBOT ----------
+  // Hình ô chi tiết trong khay (vẽ phẳng, màu theo linh kiện thật)
+  const PART_ICON = {
+    car: '<svg viewBox="0 0 48 48"><rect x="6" y="14" width="34" height="18" rx="6" fill="#0a7bd0"/><rect x="14" y="10" width="16" height="10" rx="2" fill="#e8b10b"/><circle cx="14" cy="34" r="6" fill="#1f2937"/><circle cx="32" cy="34" r="6" fill="#1f2937"/></svg>',
+    dist: '<svg viewBox="0 0 48 48"><rect x="6" y="14" width="36" height="20" rx="4" fill="#334155"/><circle cx="16" cy="24" r="7" fill="#cbd5e1"/><circle cx="32" cy="24" r="7" fill="#cbd5e1"/><circle cx="16" cy="24" r="3" fill="#475569"/><circle cx="32" cy="24" r="3" fill="#475569"/></svg>',
+    touch: '<svg viewBox="0 0 48 48"><rect x="10" y="12" width="28" height="26" rx="4" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/><circle cx="24" cy="25" r="8" fill="#dc2626"/></svg>',
+    line: '<svg viewBox="0 0 48 48"><rect x="6" y="18" width="36" height="12" rx="3" fill="#1f2937"/><circle cx="15" cy="24" r="3.5" fill="#ef4444"/><circle cx="33" cy="24" r="3.5" fill="#ef4444"/><path d="M4 40h40" stroke="#111" stroke-width="4"/></svg>',
+    color: '<svg viewBox="0 0 48 48"><rect x="12" y="12" width="24" height="24" rx="4" fill="#1f2937"/><circle cx="24" cy="24" r="6" fill="#fff"/><circle cx="24" cy="24" r="9" fill="none" stroke="#22c55e" stroke-width="2"/></svg>',
+    led: '<svg viewBox="0 0 48 48"><circle cx="24" cy="20" r="11" fill="#22c55e"/><rect x="18" y="31" width="12" height="8" rx="2" fill="#64748b"/></svg>'
+  };
+  let robotView = null;
+  const robotSim = { ...showcaseSim, robot: { ...showcaseSim.robot } };
+  function syncMounted() {
+    const on = Object.fromEntries(Object.keys(SENSOR_META).map(k => [k, !!state.sensors[k]]));
+    if (robotView) robotView.setMounted(on);
+    if (view3dInstance && view3dInstance.setMounted) view3dInstance.setMounted(on);
+  }
   function renderRobotScreen() {
-    // 1. Cập nhật các node cổng trên SVG
-    const ports = {
-      P1: state.sensors.dist ? 'Sóng âm' : 'Trống',
-      P2: state.sensors.touch ? 'Chạm' : 'Trống',
-      P3: state.sensors.line ? 'Dò vạch' : 'Trống',
-      P4: state.sensors.color ? 'Màu' : 'Trống',
-      LED: state.sensors.led ? 'Đèn LED' : 'Trống'
-    };
-
-    ['p1', 'p2', 'p3', 'p4', 'led'].forEach(p => {
-      const node = $(`node-${p}`);
-      if (node) {
-        const isMounted = ports[p.toUpperCase()] !== 'Trống';
-        node.classList.toggle('is-unmounted', !isMounted);
-      }
-    });
-
-    // 2. Bảng tóm tắt cổng
+    // Bảng cổng (nổi dưới vùng 3D)
     const summary = $('robot-ports-summary');
-    if (summary) {
-      summary.innerHTML = Object.entries(ports).map(([port, dev]) => `
-        <div class="cl-port-row ${dev === 'Trống' ? 'is-empty' : 'is-filled'}">
-          <span class="cl-port-badge">${port}</span>
-          <strong class="cl-port-dev">${dev}</strong>
-          <span class="cl-port-state">${dev === 'Trống' ? '○ Chưa nối' : '● Sẵn sàng'}</span>
-        </div>
-      `).join('');
-    }
+    summary.innerHTML = Object.entries(SENSOR_META).map(([key, meta]) => {
+      const on = !!state.sensors[key];
+      return `<span class="rs-port${on ? ' is-on' : ''}"><b>${meta.port}</b> ${on ? meta.name : 'trống'}</span>`;
+    }).join('');
 
-    // 3. Khay linh kiện / Cảm biến
+    // Khay chi tiết: ô xe (cố định) + 5 cảm biến gắn/tháo
     const deck = $('sensor-deck');
-    if (deck) {
-      deck.innerHTML = '';
-      Object.entries(SENSOR_META).forEach(([key, meta]) => {
-        const isMounted = !!state.sensors[key];
-        const card = document.createElement('div');
-        card.className = `cl-sensor-card ${isMounted ? 'is-mounted' : 'is-detached'}`;
-        card.innerHTML = `
-          <div class="cl-sensor-card-head">
-            <span class="cl-sensor-icon">${meta.icon}</span>
-            <div class="cl-sensor-meta">
-              <strong>${meta.name}</strong>
-              <small>Cổng chuẩn: ${meta.port}</small>
-            </div>
-            <span class="cl-sensor-status">${isMounted ? 'Đang gắn ✓' : 'Đã tháo'}</span>
-          </div>
-          <p class="cl-sensor-desc">${meta.desc}</p>
-          <div class="cl-sensor-act">
-            <button type="button" class="cl-btn cl-btn-sm ${isMounted ? 'cl-btn-warn' : 'cl-btn-primary'}">
-              ${isMounted ? 'Gỡ khỏi cổng' : 'Gắn vào cổng ' + meta.port}
-            </button>
-          </div>
-        `;
-
-        card.querySelector('button').addEventListener('click', e => {
-          e.stopPropagation();
-          toggleSensor(key);
-        });
-
-        deck.appendChild(card);
-      });
+    deck.innerHTML = `<div class="rs-part is-on is-base" title="Xe Alpha 330 – 2 động cơ M1, M2">${PART_ICON.car}<span>Xe Alpha 330</span></div>`;
+    for (const [key, meta] of Object.entries(SENSOR_META)) {
+      const on = !!state.sensors[key];
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'rs-part cl-sensor-card' + (on ? ' is-on' : '');
+      b.dataset.sensor = key;
+      b.title = `${meta.desc}. ${on ? 'Chạm để tháo khỏi' : 'Chạm để gắn vào'} cổng ${meta.port}.`;
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.innerHTML = `${PART_ICON[key]}<span>${meta.name}</span><small>${meta.port}</small>`;
+      b.addEventListener('click', () => toggleSensor(key));
+      deck.appendChild(b);
     }
+
+    // Xe 3D trên tấm đế
+    if (!robotView && window.CodeLabView3D && state.screen === 'robot') {
+      try {
+        robotView = window.CodeLabView3D.create($('robot3d'), { hud: false, transparent: true, showcase: true, baseplate: true, spin: 0.18, radius: 48, theta: 0.5 });
+        robotView.render(robotSim);
+      } catch { robotView = null; }
+    }
+    syncMounted();
   }
 
   function toggleSensor(key) {
@@ -554,6 +539,7 @@
           container3d.style.position = 'absolute'; // view3d gán relative → 3D rơi xuống dưới sa bàn 2D thay vì phủ lên
         }
         view3dInstance.resize();
+        syncMounted();
         state.viewMode = '3d';
         view3dInstance.render(sim);
       } catch {
