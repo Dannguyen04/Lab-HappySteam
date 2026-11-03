@@ -201,18 +201,19 @@ Hiện có hai hệ:
 | `lop1-du-an.html` | Dự án nhóm | **Gom** vào "Dự án của em" |
 | `lop1-trung-bay.html` | Trưng bày | **Giữ** làm trang sự kiện do giáo viên mở |
 | `giao-vien.html` | Cửa giáo viên | **Giữ** |
-| `mock/*` (8 trang: lớp GV, phụ huynh, trưng bày, khách, phiếu mời) | Bản mẫu cho cửa giáo viên và phụ huynh | **Chuyển** sang `docs/mau/`; xóa từng trang khi trang thật xong |
-| `docs/wireframes/*` | Bản mẫu S-01/06/07 | **Chuyển** cùng chỗ với `mock` |
+| `mock/*` (8 trang: lớp GV, phụ huynh, trưng bày, khách, phiếu mời) | Bản mẫu cho cửa giáo viên và phụ huynh | **Giữ tạm** ở gốc vì đang được build ra `/mock/` để demo; xóa từng trang khi trang thật xong |
+| `docs/mau/wireframes/*` | Bản mẫu S-01/06/07 | ✅ Đã chuyển từ `docs/wireframes/` (2026-11-03) |
 | `js/bai*/`, `js/lop*-bai*/` (code riêng từng bài) | Trái luật "bài là dữ liệu" | **Bỏ dần**: mỗi lần chuyển một bài sang robot ảo chung thì xóa thư mục của bài đó |
 | `js/blocks-engine.js` + `js/code-lab/blocks-vertical.js` | Hai hệ khối | **Gom** thành một (mục 6) |
-| `scratch/`, các script dùng một lần | Không thuộc ô nào | **Bỏ** (D1–D3 trong `ban-do-he-thong.md`) |
+| `scratch/` | Không thuộc ô nào | ✅ Đã xóa (2026-11-03) |
+| `scripts/*-parts.js`, `*-plan.js` | Dữ liệu lắp của bài cũ; test và `rbb2content.js` còn dùng | **Giữ** tới khi các bài đó chuyển sang `build.json` |
 
 ---
 
 ## 10. Thứ tự làm (đề xuất)
 
-0. **Chốt nhánh đang dở**: `lop1-bai09-flow` đang có hơn 30 file sửa và nhiều ảnh, mesh mới chưa commit. Commit hoặc tách ra trước để có một điểm xuất phát sạch.
-1. **Dọn**: D1–D3, D7 trong `ban-do-he-thong.md`; chuyển `mock/` và `wireframes/`. Không đổi tính năng.
+0. ✅ **Chốt nhánh đang dở** (2026-11-03): 3 commit c0a8e03, 3fae5b7, 78a3364. Ảnh sách ZMROBO mới để ngoài git (GD-34).
+1. ✅ **Dọn** (2026-11-03): xóa `scratch/`, chuyển `wireframes/`. D2, D3, D7 đã làm từ trước. Còn chờ: dọn 357 ảnh sách cũ đã lên git (BRD 12.19) và mesh RoboBuilder (12.18).
 2. **Mạch 5 chặng cho mọi bài đã có**: thêm `flow.json` cho các bài lớp 1 và lớp 3 học kì I. Đây là việc soạn dữ liệu, giao được cho Codex/Antigravity theo mẫu lớp 1 bài 9.
 3. **Dự án của em + tự lưu theo em**: màn hình trang chủ và lưu Supabase. Phần này gắn với BRD MVP (mục tiêu số 4).
 4. **Sổ ghi chép chung + trang phụ huynh** (BRD S-10, S-11).
