@@ -33,11 +33,17 @@
   function save() {
     try {
       localStorage.setItem(KEY, JSON.stringify(state));
+      window.ZMStages?.refresh();
       return true;
     } catch (e) {
       return false; // đầy bộ nhớ (ảnh lớn)
     }
   }
+
+  window.ZMFlow = {
+    isExploreDone: () => !!(F.explore?.question && state.answers['explore:' + F.explore.question.id]),
+    isShareDone: () => state.photos.length > 0 || (F.share?.questions || []).some(q => !!state.answers['share:' + q.id])
+  };
 
   // ---------- Đọc to bằng giọng tiếng Việt của máy ----------
   const synth = window.speechSynthesis;

@@ -2192,6 +2192,7 @@ const gl = canvas ? canvas.getContext('webgl', { antialias: true, alpha: true, p
       },
       stats() {
         return {
+          steps: DATA.steps,
           instances: DATA.instances.length,
           visible: active.length,
           meshes: meshes.length,

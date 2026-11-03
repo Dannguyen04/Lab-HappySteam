@@ -51,16 +51,22 @@ h1 { font: 700 clamp(26px, 3.2vw, 36px)/1.1 var(--f-display); margin: 6px 0 4px;
 .mission-badge.badge-all-done { color: var(--ok); }
 
 /* ---------- Ba chặng ---------- */
-.stages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.stages { position: sticky; top: 8px; z-index: 40; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(12, 19, 24, .08); }
 .stage-tab { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border: 0; border-right: 1px solid var(--line); background: transparent; text-align: left; cursor: pointer; min-width: 0; }
 .stage-tab:last-child { border-right: 0; }
 .stage-tab i { flex: none; width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--line); display: grid; place-items: center; font: 700 14px/1 var(--f-mono); font-style: normal; color: var(--muted); }
+.stage-tab.is-done i { background: var(--ok); border-color: var(--ok); color: #fff; }
 .stage-tab span { display: grid; min-width: 0; }
 .stage-tab b { font: 600 16px/1.2 var(--f-display); letter-spacing: .02em; }
 .stage-tab small { font-size: 12.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stage-prog { display: none; align-items: center; gap: 5px; margin-top: 3px; font: 600 11.5px/1.2 var(--f-mono); color: var(--accent); white-space: nowrap; }
+.stage-tab[aria-selected="true"] .stage-prog { display: inline-flex; color: inherit; opacity: .85; }
+.stage-dot { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid currentColor; opacity: .55; display: inline-block; flex: none; }
+.stage-dot.is-done { background: var(--ok); border-color: var(--ok); opacity: 1; transform: scale(1.15); }
 .stage-tab:hover { background: var(--sunk); }
 .stage-tab[aria-selected="true"] { background: var(--ink); color: var(--surface); }
 .stage-tab[aria-selected="true"] i { border-color: var(--surface); color: var(--surface); }
+.stage-tab[aria-selected="true"].is-done i { background: var(--ok); border-color: #fff; color: #fff; }
 .stage-tab[aria-selected="true"] small { color: inherit; opacity: .75; }
 .stage-tab:focus-visible { outline-offset: -3px; }
 
@@ -364,7 +370,7 @@ details.more > summary::-webkit-details-marker { display: none; }
 .zb-block-start .zb-badge-idx { left: 14px; }
 .zb-block { cursor: pointer; }
 .zb-block:hover { transform: translateY(-1px); }
-.zb-block.is-active { box-shadow: 0 0 0 3px var(--surface), 0 0 0 6px var(--ink); transform: translateY(-3px); z-index: 5; }
+.zb-block.is-active { box-shadow: 0 0 0 3px var(--surface), 0 0 0 7px var(--ink), 0 6px 16px rgba(0, 0, 0, .28); transform: translateY(-4px) scale(1.05); z-index: 5; }
 .zb-del-btn { position: absolute; top: -8px; right: -6px; z-index: 3; width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--surface); background: var(--ink); color: var(--surface); font: 700 12px/1 var(--f-body); display: grid; place-items: center; cursor: pointer; padding: 0; opacity: 0; }
 .zb-move-btns { position: absolute; left: 0; right: 0; bottom: -9px; z-index: 3; display: flex; justify-content: center; gap: 4px; opacity: 0; }
 .zb-mv-btn { width: 22px; height: 16px; border-radius: 4px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 9px; line-height: 1; padding: 0; cursor: pointer; }
@@ -468,13 +474,17 @@ html[data-mode="pro"] .zb-traffic-card .zb-traffic-pro { font-size: 9px; line-he
 
 /* ===== Chương trình: nút chạy to, hàng mẫu mờ ===== */
 .program-h { align-items: center; }
-.runbar { display: flex; gap: 8px; }
-.run { width: 52px; height: 52px; border-radius: 50%; border: 0; display: grid; place-items: center; cursor: pointer; background: var(--ok); color: #fff; box-shadow: 0 3px 0 color-mix(in srgb, var(--ok) 60%, #000); }
-.run svg { width: 26px; height: 26px; fill: currentColor; }
+.program-workspace { position: relative; min-height: 112px; }
+.runbar { position: absolute; right: 12px; bottom: 12px; z-index: 6; display: flex; gap: 10px; align-items: center; }
+.run { position: relative; width: 66px; height: 66px; min-width: 64px; min-height: 64px; border-radius: 50%; border: 0; display: grid; place-items: center; cursor: pointer; background: var(--ok); color: #fff; box-shadow: 0 3px 0 color-mix(in srgb, var(--ok) 60%, #000); }
+.run svg { width: 30px; height: 30px; fill: currentColor; }
 .run:hover { filter: brightness(1.08); }
 .run:active { transform: translateY(2px); box-shadow: none; }
-.run.stop { width: 44px; height: 44px; background: var(--sunk); color: var(--ink); border: 1px solid var(--line); box-shadow: none; align-self: center; }
-.run.stop svg { width: 18px; height: 18px; }
+.run.stop { width: 66px; height: 66px; min-width: 64px; min-height: 64px; background: var(--sunk); color: var(--ink); border: 2px solid var(--line); box-shadow: none; align-self: center; }
+.run.stop svg { width: 24px; height: 24px; }
+.run.is-running::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 3px solid rgba(255, 255, 255, .28); border-top-color: var(--ok); border-right-color: var(--zb-start); animation: zm-spin 1s linear infinite; pointer-events: none; }
+@keyframes zm-spin { to { transform: rotate(360deg); } }
+.run.stop.is-running { background: var(--bad); color: #fff; border-color: var(--bad); box-shadow: 0 3px 0 color-mix(in srgb, var(--bad) 60%, #000); }
 .ghost-wrap { margin: 0; border-width: 0 0 1px; border-radius: 0; padding: 8px 8px 0 4px; border: 1px dashed var(--line); border-radius: 10px; background: var(--sunk); }
 .ghost-h { display: flex; justify-content: space-between; padding: 0 6px; font: 600 11.5px/1.2 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .ghost-h b { color: var(--ok); }
@@ -503,7 +513,9 @@ html[data-mode="pro"] .zb-traffic-card .zb-traffic-pro { font-size: 9px; line-he
 .zb-del-btn { width: 26px; height: 26px; top: -11px; right: -9px; font-size: 15px; }
 .zb-move-btns { bottom: -13px; }
 .zb-mv-btn { width: 30px; height: 22px; font-size: 11px; }
-.chain#program-canvas-chain { row-gap: 22px; padding-bottom: 20px; }
+.chain#program-canvas-chain { row-gap: 22px; padding: 18px 164px 24px 20px; min-height: 112px; max-height: 260px; overflow-y: auto; border-radius: 8px; transition: box-shadow .2s, background-color .2s; }
+.chain#program-canvas-chain.is-running { box-shadow: inset 0 0 0 3px var(--ok), 0 0 18px color-mix(in srgb, var(--ok) 35%, transparent); background: color-mix(in srgb, var(--ok-soft) 35%, transparent); }
+@media (max-width: 480px) { .chain#program-canvas-chain { padding-right: 16px; padding-bottom: 92px; } }
 /* Bé: khối lệnh to hơn chút trong khay */
 html[data-mode="kid"] .zb-item { width: 76px; height: 78px; }
 html[data-mode="kid"] .zb-item .zb-caption { font-size: 11px; }
@@ -750,3 +762,25 @@ html.has-flow[data-mode="kid"] .zb-caption, html.has-flow[data-mode="kid"] .zb-t
 .fl-play .fl-svg { fill: currentColor; }
 .fl-play[aria-pressed="true"] .fl-svg { fill: none; stroke-width: 3; }
 .fl-clip video { display: block; width: 100%; max-height: 60vh; background: #000; }
+
+/* ===== Lớp phủ gợi ý thao tác đầu tiên (js/spotlight.js — U4) ===== */
+.zm-spotlight { position: fixed; inset: 0; z-index: 9000; pointer-events: none; }
+.zm-spotlight-hole { position: fixed; border-radius: 14px; box-shadow: 0 0 0 9999px rgba(12, 19, 24, .58), 0 0 0 4px var(--zb-start); pointer-events: none; transition: left .2s, top .2s, width .2s, height .2s; animation: zm-spot-pulse 1.6s ease-in-out infinite; }
+@keyframes zm-spot-pulse { 50% { box-shadow: 0 0 0 9999px rgba(12, 19, 24, .58), 0 0 0 8px var(--zb-start); } }
+.zm-spotlight-bubble { position: fixed; pointer-events: none; display: inline-flex; align-items: center; gap: 10px; max-width: min(320px, calc(100vw - 24px)); padding: 12px 14px; border-radius: 16px; background: var(--surface); color: var(--ink); border: 3px solid var(--accent); box-shadow: 0 10px 28px rgba(0, 0, 0, .32); font: 700 18px/1.25 var(--f-display); }
+.zm-spotlight-bubble::after { content: ""; position: absolute; left: var(--spot-arrow-x, 50%); width: 14px; height: 14px; background: var(--surface); border-right: 3px solid var(--accent); border-bottom: 3px solid var(--accent); transform: translateX(-50%) rotate(45deg); }
+.zm-spotlight-bubble[data-side="top"]::after { bottom: -9px; }
+.zm-spotlight-bubble[data-side="bottom"]::after { top: -9px; transform: translateX(-50%) rotate(225deg); }
+.zm-spotlight-icon { flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; }
+.zm-spotlight-icon svg { width: 22px; height: 22px; fill: currentColor; }
+.zm-spotlight-text { flex: 1; }
+.zm-spotlight-close { pointer-events: auto; flex: none; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line); background: var(--sunk); color: var(--ink); font: 700 18px/1 var(--f-body); display: grid; place-items: center; cursor: pointer; padding: 0; }
+.zm-spotlight-close:hover { border-color: var(--muted); }
+@media (max-width: 760px) {
+  .stage-prog { font-size: 10px; gap: 3px; }
+  .stage-dot { width: 6px; height: 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .zm-spotlight-hole { animation: none; transition: none; }
+  .run.is-running::after { animation: none; }
+}

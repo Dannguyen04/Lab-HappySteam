@@ -221,6 +221,8 @@ Hiện có hai hệ:
 6. **Robot ảo chung**: chuyển từng bài sang, bắt đầu từ lớp 3 bài 13 và lớp 1 bài 1 như `kien-truc.md` đã định.
 7. **Bổ sung kiểu LEGO**: bảng thiết bị ở mọi bài, Lái thử, trợ giúp trên khối, 3 bài Làm quen, ghi chú giáo viên.
 
+Bài mẫu (2026-11-04): lớp 1 bài 9 đạt U1, U3, U4, U6, U9 và nhớ chặng/bước; code dùng chung nên mọi bài trên `bai.html` cùng có (test `tests/lop1-bai09-ux.smoke.js`). Chờ chủ dự án xem mẫu trước khi nhân ra.
+
 Các quy tắc giao diện P0 ở mục 11 (U1–U6, U8–U9) áp dụng ngay từ bước 2: mỗi màn hình mới hoặc sửa phải đạt các quy tắc đó.
 
 Bước 2–4 mang lại cảm giác "giống LEGO" nhanh nhất mà chưa phải viết lại phần lõi. Bước 5–6 là phần lõi lớn, làm sau khi khung đã rõ.

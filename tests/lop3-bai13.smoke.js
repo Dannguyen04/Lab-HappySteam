@@ -90,8 +90,24 @@ const { pageUrl } = require('./helpers/page-url');
       s.updateUI();
       return { stage: s.stage, v: s.v, x: s.x };
     });
-    assert.equal(result.stage, 'airborne', 'Có cụm động cơ đẩy thì mẫu 3-3-3 vừa đủ cất cánh');
-    assert.ok(result.x < 41);
+    // Luật từ 78a3364: gói động cơ không làm mẫu 3-3-3 tự cất cánh; em phải chỉnh thời gian chờ (giống tests/lop3-bai13.test.js).
+    assert.equal(result.stage, 'braking', 'Gói động cơ không làm mẫu 3-3-3 tự cất cánh');
+    assert.ok(!(await page.locator('#chip-m3').evaluate(el => el.classList.contains('is-done'))), 'Mẫu 3-3-3 chưa đạt NV3');
+    // Chỉnh khối Chờ cuối thành 4 giây rồi chạy lại: cất cánh, quãng lấy đà ngắn hơn
+    const fixed = await page.evaluate(() => {
+      const s = window.simEngine, B = window.ZMApp.blocks;
+      s.stop();
+      B.blocks[8].duration = 4;
+      B.render();
+      B.notifyChange();
+      s.start();
+      s.pauseLoop();
+      for (let i = 0; i < 720 && s.running; i++) s.advance(0.05);
+      s.updateUI();
+      return { stage: s.stage, x: s.x };
+    });
+    assert.equal(fixed.stage, 'airborne', 'Chờ 3-3-4 với gói động cơ thì cất cánh');
+    assert.ok(fixed.x < 41);
     await page.waitForFunction(() => document.getElementById('mission-summary-badge').textContent.includes('4/4'));
     for (const id of ['m2', 'm3', 'm4'])
       assert.ok(await page.locator('#chip-' + id).evaluate(el => el.classList.contains('is-done')), `Phải đạt ${id}`);

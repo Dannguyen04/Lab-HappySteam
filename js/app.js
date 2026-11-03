@@ -23,22 +23,97 @@
       const g = $('program-ghost');
       $('ghost-score').textContent = g.dataset.total ? `Đúng ${g.dataset.right}/${g.dataset.total} khối` : '';
     };
+    // Đang chạy (U3, U9 trong docs/thiet-ke-san-pham.md): nút Chạy có vòng quay, nút Dừng đổi màu, cả chuỗi khối sáng viền.
+    // Theo đúng cờ running của bộ mô phỏng: bài 9 hết khối mà motor còn quay thì vẫn là "đang chạy" như kit thật.
+    function syncRunUI() {
+      const on = !!simEngine.running;
+      $('btn-run-program').classList.toggle('is-running', on);
+      $('btn-stop-program').classList.toggle('is-running', on);
+      $('program-canvas-chain').classList.toggle('is-running', on);
+    }
+    let blockCount = blockEngine.blocks.length;
     blockEngine.setOnChange(blocks => {
+      const added = blocks.length > blockCount;
+      blockCount = blocks.length;
       simEngine.setProgram(blocks);
       simEngine.checkMissions();
       ghostScore();
+      if (added) hintRun();
     });
     blockEngine.setGhost($('program-ghost'));
     ghostScore();
+    const run = () => {
+      window.ZMSpotlight?.hide();
+      simEngine.start();
+      syncRunUI();
+    };
     // Như phần mềm ZMrobo: chạm khối Start màu vàng để chạy
-    blockEngine.onStartTap = () => simEngine.start();
+    blockEngine.onStartTap = run;
     simEngine.setProgram(blockEngine.blocks);
     simEngine.onActiveBlockUpdate = i => blockEngine.setActiveBlock(i);
-    simEngine.onEvent = (type, data) => window.ZMScene?.onEvent(type, data);
+    simEngine.onEvent = (type, data) => {
+      if (type === 'start' || type === 'stop' || type === 'end') syncRunUI();
+      window.ZMScene?.onEvent(type, data);
+    };
     simEngine.onMissionUpdate = state => {
       missionTracker.update(state);
       updateMissionCard();
+      refreshStages();
     };
+
+    // ---------- Thanh chặng: dấu ✓ khi xong, tiến độ con của chặng đang mở (U6) ----------
+    // Trình xem lắp đã báo tiến độ trước khi app.js chạy: đọc trạng thái ban đầu trực tiếp
+    const rv = window.robotViewer, rvStats = rv?.stats();
+    let asm = { step: rv ? rv.getStep() : 1, total: rvStats?.steps || 1, done: rvStats?.done || 0, end: false };
+    try {
+      asm.end = localStorage.getItem(L.store + 'asm-end') === '1';
+    } catch (e) {}
+    document.querySelectorAll('.stage-tab > span').forEach(s => s.append(Object.assign(document.createElement('span'), { className: 'stage-prog' })));
+    function stageDone(stage) {
+      if (stage === 'explore') return !!window.ZMFlow?.isExploreDone();
+      if (stage === 'assembly') return asm.end || asm.done >= asm.total;
+      if (stage === 'creative') return Object.keys(window.ZMCreative?.choice() || {}).length > 0;
+      if (stage === 'sim') return L.missions.core.every(k => missionTracker.missions[k]);
+      if (stage === 'share') return !!window.ZMFlow?.isShareDone();
+      return false;
+    }
+    function refreshStages() {
+      const pro = document.documentElement.dataset.mode === 'pro';
+      const keys = [...L.missions.core, ...(pro ? L.missions.pro || [] : [])];
+      document.querySelectorAll('.stage-tab').forEach((tab, i) => {
+        const done = stageDone(tab.dataset.stage);
+        tab.classList.toggle('is-done', done);
+        tab.querySelector('i').textContent = done ? '✓' : i + 1;
+        const prog = tab.querySelector('.stage-prog');
+        if (tab.dataset.stage === 'assembly') prog.textContent = `bước ${asm.step}/${asm.total}`;
+        else if (tab.dataset.stage === 'sim') prog.innerHTML = keys.map(k => `<span class="stage-dot${missionTracker.missions[k] ? ' is-done' : ''}"></span>`).join('');
+      });
+    }
+
+    // ---------- Nhắc kiểu đèn chiếu (U4), mỗi em thấy một lần mỗi bài ----------
+    function hintOnce(key, show) {
+      if (current !== 'sim' || !window.ZMSpotlight) return;
+      try {
+        if (localStorage.getItem(L.store + key)) return;
+      } catch (e) {}
+      setTimeout(() => {
+        if (current === 'sim' && show()) {
+          try {
+            localStorage.setItem(L.store + key, '1');
+          } catch (e) {}
+        }
+      }, 50);
+    }
+    const hintToolbox = () =>
+      hintOnce('hint-toolbox', () =>
+        window.ZMSpotlight.show({ target: [...document.querySelectorAll('#block-toolbox .zb-item')].find(b => b.offsetWidth > 0), text: 'Chạm khối này để thêm' }));
+    const hintRun = () =>
+      hintOnce('hint-run', () =>
+        window.ZMSpotlight.show({
+          target: $('btn-run-program'),
+          icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',
+          text: 'Chạm để chạy'
+        }));
 
     // Thẻ nhiệm vụ ở chặng ③: nhiệm vụ chưa xong đầu tiên, một câu ngắn
     const CARDS = L.cards;
@@ -61,16 +136,26 @@
       $('ghost-wrap').hidden = !!m.m2;
     }
     // NV1: tiến độ "Đã lắp xong bước này" của trình xem 3D
-    window.addEventListener('zm:assembly-progress', e => simEngine.setAssemblyDone(e.detail.done >= e.detail.total));
+    window.addEventListener('zm:assembly-progress', e => {
+      asm.done = e.detail.done;
+      asm.total = e.detail.total;
+      simEngine.setAssemblyDone(e.detail.done >= e.detail.total);
+      refreshStages();
+    });
     simEngine.checkMissions();
     updateMissionCard();
 
     // ---------- Chương trình ----------
-    $('btn-run-program').addEventListener('click', () => simEngine.start());
-    $('btn-stop-program').addEventListener('click', () => simEngine.stop());
+    $('btn-run-program').addEventListener('click', run);
+    $('btn-stop-program').addEventListener('click', () => {
+      simEngine.stop();
+      syncRunUI();
+    });
     $('btn-load-sample').addEventListener('click', () => {
       if (confirm('Nạp chương trình mẫu trong sách? Các khối đang ghép sẽ bị thay.')) blockEngine.loadDefaultProgram();
     });
+    // Gói sáng tạo đổi: cập nhật dấu ✓ của chặng Sáng tạo
+    $('stage-creative').addEventListener('click', () => setTimeout(refreshStages, 0));
     $('btn-clear-code').addEventListener('click', () => {
       if (confirm('Xóa hết các khối lệnh để tự ghép lại từ đầu?')) blockEngine.clearProgram();
     });
@@ -106,19 +191,22 @@
         window.ZMCreative?.close();
         window.ZMScene?.enter();
         simEngine.resumeLoop();
+        hintToolbox();
       } else {
+        window.ZMSpotlight?.hide();
         simEngine.pauseLoop();
         window.ZMScene?.leave();
         if (stage === 'creative') window.ZMCreative?.open();
         else window.ZMCreative?.close();
       }
+      refreshStages();
       window.dispatchEvent(new Event('resize'));
       window.dispatchEvent(new CustomEvent('zm:stage', { detail: { stage } }));
       try {
         localStorage.setItem(L.store + 'stage', stage);
       } catch (e) {}
     }
-    window.ZMStages = { go, current: () => current };
+    window.ZMStages = { go, current: () => current, refresh: () => refreshStages() };
     const tabs = [...document.querySelectorAll('.stage-tab')];
     tabs.forEach((tab, i) => {
       tab.addEventListener('click', () => {
@@ -142,6 +230,15 @@
     // ---------- Chặng 1: đồng hồ đo + hình sách theo bước đang xem ----------
     window.addEventListener('zm:step', e => {
       const d = e.detail;
+      asm.step = d.step;
+      asm.total = d.total;
+      if (d.step >= d.total && !asm.end && current === 'assembly') {
+        asm.end = true;
+        try {
+          localStorage.setItem(L.store + 'asm-end', '1');
+        } catch (err) {}
+      }
+      if (current === 'assembly') refreshStages();
       $('am-step').innerHTML = `${d.step}<small>/ ${d.total}</small>`;
       $('am-step-s').textContent = d.group ? `${d.group[0].toUpperCase() + d.group.slice(1)} ${d.sub}/${d.subCount}` : d.joins ? 'Ghép cụm' : L.baseName;
       $('am-added').textContent = d.added;

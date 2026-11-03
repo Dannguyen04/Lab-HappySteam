@@ -10,12 +10,13 @@
     engineBase: 'js/lesson-engine.js',
     sceneKit: 'js/scene-kit.js',
     missions: 'js/mission-tracker.js',
+    spotlight: 'js/spotlight.js',
     app: 'js/app.js'
   };
   const order = (lesson, scene, engine, art) => [
     lesson, ...(art ? [art] : []), shared.audio, shared.assembly,
     shared.creative, shared.sandbox, shared.sceneKit, scene, shared.blocks, shared.engineBase,
-    engine, shared.missions, shared.app
+    engine, shared.missions, shared.spotlight, shared.app
   ];
 
   window.ZM_LESSONS = {
