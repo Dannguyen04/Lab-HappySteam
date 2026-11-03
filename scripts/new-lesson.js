@@ -125,7 +125,7 @@ function spec(S) {
     missions: { core: S.core, pro: S.pro },
     cards: Object.fromEntries([...S.core, ...S.pro].map(k => [k, card(k)])),
     cardOrder: { kid: order(S.core), pro: order([...S.core, ...S.pro]) },
-    blocks: { toolbox: S.blocks.toolbox, pro: S.blocks.pro || [], sample: S.blocks.sample, empty: S.blocks.empty || ['start'] },
+    blocks: { toolbox: S.blocks.toolbox, pro: S.blocks.pro || [], sample: S.blocks.sample, empty: S.blocks.empty || ['start'], ...(S.blocks.sensorRange ? { sensorRange: true } : {}) },
     sampleSig: sampleSig(S.blocks.sample),
     creative: { store: S.store.replace(/_$/, '') + '.creative', emptyText: `${S.baseName} cơ bản – chưa có tính năng mới.` }
   };

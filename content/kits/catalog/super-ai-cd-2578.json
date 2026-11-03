@@ -1,0 +1,54 @@
+{
+ "id": "super-ai-cd-2578",
+ "name": "2025 Super AI Prop Set - Engineering Innovation (Bộ đạo cụ sa bàn 2025 Đổi Mới Kỹ Thuật / 夺塔奇兵 & Khám Phá Sao Hỏa)",
+ "model": "JMC-CD-2578",
+ "controller": null,
+ "baseKitRequired": null,
+ "pitchMm": 10,
+ "pieces": null,
+ "countedPieces": 4,
+ "complete": false,
+ "sources": [
+  "https://www.zmrobo.net/products/94",
+  "https://www.zmrobo.com (Product ID 868)"
+ ],
+ "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-CD-2578/images/3.png: Phối cảnh 3D toàn bộ đạo cụ tháp trung tâm, bóng đá và sa bàn; 7-6.png: File đồ họa sa bàn độ phân giải cao chia 2 phân khu AI và Remote.",
+ "parts": [
+  {
+   "code": null,
+   "count": 1,
+   "nameVi": "Tháp chiếm cứ trung tâm (kèm bóng đá đỉnh tháp)",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 2,
+   "nameVi": "Cột cờ và trạm tiếp sức",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": null,
+   "nameVi": "Túi cát / Khối tài nguyên khoáng sản (đỏ, xanh dương, xanh lục)",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 1,
+   "nameVi": "Bản đồ bạt thi đấu phân khu AI & Điều khiển từ xa 3000x2000mm",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  }
+ ]
+}

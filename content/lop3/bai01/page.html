@@ -1,0 +1,98 @@
+<title>Cấu trúc bền vững · Lớp 3 · Bài 1 · Happy STEAM</title>
+<template data-slot="header-copy">
+      <div class="eyebrow">Lớp 3 · Bài 1 · Cấu trúc bền vững</div>
+      <h1>Cấu trúc bền vững – Phòng thí nghiệm động đất</h1>
+      <p class="lede pro-only">Lắp bàn rung 27 bước với M1 và cơ cấu tay quay–thanh truyền. Kiểm tra kết cấu ngôi nhà qua ba mức tốc độ, giảm thời gian rung mạnh để tránh đổ nhà.</p>
+</template>
+
+<template data-slot="mission-chips">
+    <span class="chip" id="chip-m1" title="Lắp đủ 27 bước theo sách"><i>1</i>Lắp 27 bước</span>
+    <span class="chip" id="chip-m2" title="Chạy đúng một vòng mẫu: chậm 3 giây, vừa 3 giây, nhanh 3 giây, đều ngược chiều"><i>2</i>Chạy mẫu 9 khối</span>
+    <span class="chip" id="chip-m3" title="Chỉ đổi Wait cuối từ 3 giây thành 1 giây"><i>3</i>Cứu ngôi nhà</span>
+    <span class="chip" id="chip-m4" title="Gắn giằng, đối trọng, cột hoặc đệm móng rồi chạy"><i>4</i>Gia cố công trình</span>
+    <span class="chip pro-only" id="chip-m5" title="Quan sát mục tiêu mỗi lượt; chạy lại và đổi Wait cuối theo mức 1s – 2s – 1s"><i>5</i>Ba lượt dư chấn</span>
+</template>
+
+<template data-slot="victory-copy">
+      <p>Em đã hiểu cách bàn rung tạo địa chấn, viết chương trình ba tốc độ và kiểm chứng giải pháp giúp ngôi nhà vững hơn.</p>
+      <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM3-01</code></p>
+</template>
+
+<template data-slot="assembly-tab">
+      <i>1</i><span><b>Lắp ráp</b><small>27 bước theo sách</small></span>
+</template>
+
+<template data-slot="assembly-count">
+          <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 27</span></span>
+</template>
+
+<template data-slot="assembly-canvas">
+              <canvas id="view" aria-label="Mô hình bàn rung địa chấn và ngôi nhà thử nghiệm 3D: kéo để xoay, cuộn để phóng to"></canvas>
+</template>
+
+<template data-slot="assembly-slider">
+                <input id="slider" type="range" min="1" max="27" value="1" aria-label="Chọn bước lắp">
+</template>
+
+<template data-slot="assembly-meter-step">
+          <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 27</small></div><div class="s" id="am-step-s">Đế và khung bàn rung</div></dd></div>
+</template>
+
+<template data-slot="assembly-meter-done">
+          <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 27</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+</template>
+
+<template data-slot="book-image">
+          <img id="book-img" src="assets/lop3-bai01/step-01.jpg" alt="Bước 1: sách lắp bàn rung địa chấn">
+</template>
+
+<template data-slot="book-link">
+          <a id="book-pdf" class="link" href="assets/lop3-bai01/step-01.jpg" target="_blank" rel="noopener">Mở hình lớn ↗</a>
+</template>
+
+<template data-slot="creative-intro">
+          <p class="status-text">Làm cho ngôi nhà chịu được rung mạnh: <b>giằng chéo tam giác</b> giữ khung, <b>con lắc mái</b> giảm lắc, <b>cột góc</b> gia cường và <b>đệm móng</b> hấp thu dao động. Gắn phụ kiện để thử nghiệm khả năng chống rung.</p>
+</template>
+
+<template data-slot="creative-canvas">
+        <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình bàn rung địa chấn và ngôi nhà thử nghiệm 3D đang sáng tạo"></div>
+</template>
+
+<template data-slot="creative-slot-label">
+        <div class="panel-h"><h2>Tự gắn chi tiết</h2><small>4 khu vực có thể gia cố</small></div>
+</template>
+
+<template data-slot="creative-result-label">
+        <div class="panel-h"><h2>Bàn rung địa chấn của em sẽ có</h2></div>
+</template>
+
+<template data-slot="sim-upgrade-label">
+            <small id="sim-active-upgrade-badge" class="status-tag">Kết cấu nguyên bản</small>
+</template>
+
+<template data-slot="sim-scene">
+          <canvas id="space-scene" aria-label="Phòng thí nghiệm địa chấn nhìn ngang: động cơ kéo đẩy bàn rung, ngôi nhà chịu tải và máy đo rung"></canvas>
+          <div class="sim-stage" id="sim-stage" aria-label="Bàn rung 3D chạy theo lệnh M1"></div>
+          <p class="scene-idle" id="scene-idle">Nạp chương trình mẫu rồi bấm Start để theo dõi ba cấp rung chấn</p>
+</template>
+
+<template data-slot="sim-meters">
+        <dl class="meters pro-only">
+          <div class="meter"><dt>Động cơ M1</dt><dd><div class="v" id="m-speed">0<small>/8</small></div><div class="s" id="m-speed-note">Chưa chạy</div></dd></div>
+          <div class="meter"><dt>Rung chấn</dt><dd><div class="v" id="m-quake">0<small>%</small></div><div class="s" id="m-quake-note">Ba cấp: nhẹ, vừa, mạnh</div></dd></div>
+          <div class="meter"><dt>Độ ổn định</dt><dd><div class="v" id="m-stability">100<small>%</small></div><div class="s" id="m-stability-note">Ngôi nhà nguyên bản</div></dd></div>
+          <div class="meter"><dt>Thời gian</dt><dd><div class="v" id="m-time">0<small>giây</small></div><div class="s" id="m-time-note">Thử nghiệm địa chấn</div></dd></div>
+        </dl>
+</template>
+
+<template data-slot="sim-calculation">
+        <div class="panel-h"><h2>Tính toán</h2><small>Cơ cấu tay quay biến chuyển động quay M1 thành rung lắc qua lại; rung mạnh kéo dài làm giảm ổn định.</small></div>
+        <div class="pad calc">
+          <p class="calc-eq" id="calc-eq1"></p>
+          <p class="calc-eq" id="calc-eq2"></p>
+        </div>
+</template>
+
+<template data-slot="sim-hint">
+            <p class="hint"><b>M2:</b> bấm Mẫu trong sách và chạy đủ ba cấp. <b>M3:</b> chạm khối Wait cuối để chọn 1 giây; 3 giây khiến nhà đổ. <b>Nâng cao:</b> đọc nhịp yêu cầu 1s → 2s → 1s rồi chỉnh và chạy lại.</p>
+</template>

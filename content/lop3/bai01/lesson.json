@@ -1,0 +1,52 @@
+{
+  "title": "Cấu trúc bền vững – Phòng thí nghiệm động đất",
+  "pageTitle": "Cấu trúc bền vững",
+  "topic": "Cấu trúc bền vững",
+  "model": "bàn rung địa chấn và ngôi nhà thử nghiệm",
+  "sheetName": "Lớp 3 · Bài 1: Cấu trúc bền vững",
+  "baseName": "Bàn rung địa chấn",
+  "steps": 27,
+  "assetFolder": "lop3-bai01",
+  "bookAlt": "Bước 1: sách lắp bàn rung địa chấn",
+  "firstStep": "Đế và khung bàn rung",
+  "lede": "Lắp bàn rung 27 bước với M1 và cơ cấu tay quay–thanh truyền. Kiểm tra kết cấu ngôi nhà qua ba mức tốc độ, giảm thời gian rung mạnh để tránh đổ nhà.",
+  "victory": "Em đã hiểu cách bàn rung tạo địa chấn, viết chương trình ba tốc độ và kiểm chứng giải pháp giúp ngôi nhà vững hơn.",
+  "engine": { "class": "QuakeEngine", "file": "quake-engine.js" },
+  "scene": {
+    "file": "quake-scene.js",
+    "aria": "Phòng thí nghiệm địa chấn nhìn ngang: động cơ kéo đẩy bàn rung, ngôi nhà chịu tải và máy đo rung",
+    "stage": "Bàn rung 3D chạy theo lệnh M1",
+    "idle": "Nạp chương trình mẫu rồi bấm Start để theo dõi ba cấp rung chấn"
+  },
+  "missions": {
+    "m1": { "chip": "Lắp 27 bước", "title": "Lắp bàn rung và khung nhà", "tip": "Lắp đủ 27 bước theo sách" },
+    "m2": { "chip": "Chạy mẫu 9 khối", "title": "Thử rung ba cấp tốc độ", "tip": "Chạy đúng một vòng mẫu: chậm 3 giây, vừa 3 giây, nhanh 3 giây, đều ngược chiều", "text": "Chạy một vòng chậm → vừa → nhanh theo đúng 9 vị trí khối của giáo án; quan sát kết cấu khi rung mạnh." },
+    "m3": { "chip": "Cứu ngôi nhà", "title": "Rút ngắn nhịp rung mạnh", "tip": "Chỉ đổi Wait cuối từ 3 giây thành 1 giây", "text": "Giữ tốc độ và chiều quay đúng mẫu; đổi thời gian rung ở cấp nhanh từ 3 giây xuống 1 giây để nhà trụ vững." },
+    "m4": { "chip": "Gia cố công trình", "title": "Thử bốn cách gia cố nhà", "tip": "Gắn giằng, đối trọng, cột hoặc đệm móng rồi chạy", "text": "Thử ít nhất một gói kết cấu: giằng tam giác, con lắc giảm chấn, cột góc hay đệm chân móng." },
+    "m5": { "pro": true, "chip": "Ba lượt dư chấn", "title": "Điều chỉnh theo tải địa chấn", "tip": "Quan sát mục tiêu mỗi lượt; chạy lại và đổi Wait cuối theo mức 1s – 2s – 1s", "text": "Nâng cao: kiểm định ba đợt địa chấn với nhịp rung mạnh yêu cầu lần lượt 1, 2, 1 giây. Sau mỗi lượt đạt, thay thời gian Wait cuối và chạy lại." }
+  },
+  "blocks": {
+    "toolbox": ["lowSpeed", "mediumSpeed", "highSpeedCCW", "wait", "motorStop"],
+    "pro": ["motorPower", "motorReverse"],
+    "sample": [
+      "start", "repeatStart", ["lowSpeed", {"dir":"ccw"}], ["wait",{"duration":3}],
+      ["mediumSpeed",{"dir":"ccw"}], ["wait",{"duration":3}],
+      "highSpeedCCW", ["wait",{"duration":3}], "repeatEnd"
+    ],
+    "empty": ["start", "repeatStart", "repeatEnd"]
+  },
+  "creative": {
+    "intro": "Làm cho ngôi nhà chịu được rung mạnh: <b>giằng chéo tam giác</b> giữ khung, <b>con lắc mái</b> giảm lắc, <b>cột góc</b> gia cường và <b>đệm móng</b> hấp thu dao động. Gắn phụ kiện để thử nghiệm khả năng chống rung.",
+    "slots": 4,
+    "badge": "Kết cấu nguyên bản",
+    "slotHint": "4 khu vực có thể gia cố"
+  },
+  "meters": [
+    {"label":"Động cơ M1", "id":"m-speed", "value":0, "unit":"/8", "note":"Chưa chạy", "noteId":"m-speed-note"},
+    {"label":"Rung chấn", "id":"m-quake", "value":0, "unit":"%", "note":"Ba cấp: nhẹ, vừa, mạnh", "noteId":"m-quake-note"},
+    {"label":"Độ ổn định", "id":"m-stability", "value":100, "unit":"%", "note":"Ngôi nhà nguyên bản", "noteId":"m-stability-note"},
+    {"label":"Thời gian", "id":"m-time", "value":0, "unit":"giây", "note":"Thử nghiệm địa chấn", "noteId":"m-time-note"}
+  ],
+  "calc": "Cơ cấu tay quay biến chuyển động quay M1 thành rung lắc qua lại; rung mạnh kéo dài làm giảm ổn định.",
+  "hint": "<b>M2:</b> bấm Mẫu trong sách và chạy đủ ba cấp. <b>M3:</b> chạm khối Wait cuối để chọn 1 giây; 3 giây khiến nhà đổ. <b>Nâng cao:</b> đọc nhịp yêu cầu 1s → 2s → 1s rồi chỉnh và chạy lại."
+}

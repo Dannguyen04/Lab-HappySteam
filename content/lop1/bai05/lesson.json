@@ -1,0 +1,51 @@
+{
+  "folder": "lop1-bai05",
+  "assetFolder": "lop1-bai05",
+  "title": "Chào hỏi, kết bạn – Spy Robot",
+  "pageTitle": "Spy Robot chào hỏi và kết bạn",
+  "topic": "Chào hỏi, kết bạn",
+  "model": "robot điệp viên",
+  "baseName": "Spy Robot",
+  "sheetName": "Lớp 1 · Bài 5: Chào hỏi, kết bạn – Spy Robot",
+  "steps": 21,
+  "firstStep": "Lắp đế đứng vững cho robot",
+  "lede": "Em lắp Spy Robot, cho robot chào và tạm biệt bằng tay vẫy, khuôn mặt và giai điệu. Thử điều chỉnh cách chào thật thân thiện!",
+  "victory": "Em đã biết dùng cảm biến để Spy Robot lễ phép chào hỏi và tạm biệt!",
+  "engine": { "class": "SpyEngine", "file": "spy-engine.js" },
+  "scene": {
+    "file": "spy-scene.js",
+    "aria": "Cổng trường học nhìn ngang, Spy Robot đứng đón bạn tới và vẫy chào tạm biệt",
+    "stage": "Robot điệp viên 3D đang chào và tạm biệt",
+    "idle": "Ghép 13 thẻ màu. Chạm ▶ để xem robot chào bạn nhé!",
+    "hand": true
+  },
+  "missions": {
+    "m1": { "title": "Lắp Spy Robot", "text": "Đánh dấu đủ 21 bước lắp robot điệp viên." },
+    "m2": { "chip": "13 khối chào hỏi", "tip": "Hai lần chờ vật cản, hai mặt và hai giai điệu", "title": "Robot biết chào và tạm biệt", "text": "Ghép 13 khối như sách rồi chạy trọn một vòng chào – tạm biệt." },
+    "m3": { "chip": "Chào thật thân thiện", "tip": "Đổi Wait đầu tiên từ 1 lên 2 giây", "title": "Chào vừa đủ lâu", "text": "Đổi thời gian chờ sau lời chào đầu từ 1 thành 2 giây. Chờ 1 giây sẽ quá vội!" },
+    "m4": { "title": "Điệp viên nhí sáng tạo", "text": "Thử gắn kính, ăng-ten, mũ hoặc huy hiệu rồi chạy robot." },
+    "m5": { "pro": true, "chip": "Nhìn đúng bạn", "tip": "Nâng cao: 20 cm bỏ lỡ, 50 cm thấy nhầm; hãy thử 30 cm", "title": "Cảm biến lịch sự", "text": "Chạm khối Chờ vật cản để thử cự ly 20, 30, 50 cm. Nhận bạn ở 28 cm, bỏ qua người đi ngang 45 cm." }
+  },
+  "blocks": {
+    "toolbox": ["repeatStart", "repeatEnd", "obstacle", "displaySmile", "displayWink", "melodyA", "melodyB", "highSpeed", "highSpeedCCW", "wait"],
+    "pro": ["displayHeart", "lowSpeed", "mediumSpeed"],
+    "sample": ["start", "repeatStart", "obstacle", "displaySmile", "melodyA", "highSpeed", ["wait", { "duration": 1 }], "obstacle", "displayWink", "melodyB", "highSpeedCCW", ["wait", { "duration": 1 }], "repeatEnd"],
+    "empty": ["start", "repeatStart", "repeatEnd"],
+    "sensorRange": true
+  },
+  "creative": {
+    "intro": "Điệp viên nhí có thể gắn <b>kính đặc biệt</b>, <b>ăng-ten kép</b>, <b>mũ</b> hoặc <b>huy hiệu ngôi sao</b>. Chọn món em thích để thử trên robot 3D!",
+    "slots": 4,
+    "slotHint": "4 vị trí trên robot",
+    "resultTitle": "Điệp viên sáng tạo của em",
+    "badge": "Điệp viên cơ bản"
+  },
+  "meters": [
+    { "label": "Khoảng cách", "id": "m-spy-distance", "value": 0, "unit": "cm", "note": "Cảm biến đang đợi", "noteId": "m-spy-distance-note" },
+    { "label": "Động cơ", "id": "m-spy-speed", "value": 0, "unit": "mức", "note": "Chờ phát hiện bạn", "noteId": "m-spy-speed-note" },
+    { "label": "Thời gian", "id": "m-spy-time", "value": 0, "unit": "giây", "note": "Một vòng chào – tạm biệt", "noteId": "m-spy-time-note" }
+  ],
+  "calc": "Nâng cao: đo khoảng cách 20 / 30 / 50 cm và thời gian chào.",
+  "calcProOnly": true,
+  "hint": "<b>Mẫu:</b> thấy bạn → 😊 nhạc A, vẫy chào → thấy lần nữa → 😉 nhạc B, vẫy tạm biệt. <b>Thử thách:</b> đổi Wait đầu thành 2s. <b>Nâng cao:</b> đổi cự ly phát hiện thành 30 cm."
+}

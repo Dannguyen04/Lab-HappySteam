@@ -1,0 +1,50 @@
+{
+  "folder": "lop1-bai04",
+  "assetFolder": "lop1-bai04",
+  "title": "Cảm biến của robot",
+  "pageTitle": "Máy khoan cảm biến chạm",
+  "topic": "Cảm biến của robot",
+  "model": "máy khoan thông minh",
+  "sheetName": "Lớp 1 · Bài 4: Cảm biến của robot",
+  "baseName": "Máy khoan",
+  "steps": 23,
+  "firstStep": "Động cơ và hai chốt đầu khoan",
+  "lede": "Lắp máy khoan 23 bước. Nhấn giữ cò đỏ để khoan, thả cò để dừng. Thử chọn tốc độ phù hợp và sáng tạo công cụ treo tranh.",
+  "victory": "Em đã lắp máy khoan, làm chủ cảm biến chạm và thử nâng cấp để treo tranh!",
+  "engine": { "class": "DrillEngine", "file": "drill-engine.js" },
+  "scene": {
+    "file": "drill-scene.js",
+    "aria": "Phòng khách nhìn ngang: máy khoan hướng vào bức tường để tạo lỗ treo tranh",
+    "stage": "Máy khoan 3D dùng cảm biến chạm",
+    "idle": "Nhấn ▶, sau đó giữ 🔴 để khoan. Thả tay để dừng.",
+    "press": true
+  },
+  "missions": {
+    "m1": { "title": "Lắp máy khoan", "text": "Đánh dấu đủ 23 bước lắp máy khoan." },
+    "m2": { "chip": "Cò nhấn – nhả", "tip": "Ghép 7 khối theo mẫu rồi nhấn giữ và nhả cò", "title": "Máy khoan nghe lời", "text": "Ghép mẫu. Nhấn giữ cò đỏ rồi thả tay." },
+    "m3": { "chip": "Khoan gạch không nứt", "tip": "Đổi khối Quay nhanh thành Quay chậm, giữ đủ lâu rồi thả", "title": "Treo tranh lên tường", "text": "Chọn Quay chậm. Giữ cò tới vạch xanh rồi thả." },
+    "m4": { "title": "Thiết kế máy khoan mới", "text": "Gắn một món mới rồi chạy thử máy khoan." },
+    "m5": { "pro": true, "chip": "Thử ba chất liệu", "tip": "Nâng cao: khoan đúng lần lượt gạch men, gỗ và thạch cao", "title": "Kỹ sư chọn vật liệu", "text": "Khoan đúng cả ba chất liệu với tốc độ phù hợp, tới vạch xanh rồi nhả." }
+  },
+  "blocks": {
+    "toolbox": ["repeatStart", "repeatEnd", "touch", "release", "highSpeed", "lowSpeed", "motorStop"],
+    "pro": ["mediumSpeed", "motorPower", "wait"],
+    "sample": ["start", "repeatStart", "touch", "highSpeed", "release", "motorStop", "repeatEnd"],
+    "empty": ["start", "repeatStart", "repeatEnd"]
+  },
+  "creative": {
+    "intro": "Máy khoan cần <b>cò dễ nhấn</b>, <b>tay cầm vững</b>, <b>thước đo độ sâu</b> hoặc <b>tấm chắn phoi</b>. Chọn một món để gắn lên mô hình rồi thử khoan.",
+    "slots": 4,
+    "slotHint": "4 vị trí trên máy khoan",
+    "resultTitle": "Máy khoan cải tiến của em",
+    "badge": "Máy khoan cơ bản"
+  },
+  "meters": [
+    { "label": "Độ sâu", "id": "m-depth", "value": 0, "unit": "mm", "note": "Đích 8–11 mm", "noteId": "m-depth-note" },
+    { "label": "Thời gian", "id": "m-seconds", "value": 0, "unit": "giây", "note": "Giữ cò để khoan", "noteId": "m-seconds-note" },
+    { "label": "Tốc độ", "id": "m-drill-speed", "value": 0, "unit": "mức", "note": "Chậm / Vừa / Nhanh", "noteId": "m-drill-speed-note" }
+  ],
+  "calc": "Độ sâu phụ thuộc tốc độ, thời gian và bề mặt tường.",
+  "calcProOnly": true,
+  "hint": "<b>Mẫu:</b> Chờ nhấn → Quay nhanh → Chờ nhả → Dừng. <b>Thử thách:</b> chọn Quay chậm khi khoan gạch men. Giữ tới vạch xanh rồi nhả. <b>Nâng cao:</b> thử gỗ và thạch cao với tốc độ khác."
+}

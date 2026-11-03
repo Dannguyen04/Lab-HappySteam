@@ -1,0 +1,46 @@
+{
+  "title": "Di chuyển vật thể – Xe nâng hàng",
+  "pageTitle": "Xe nâng hàng",
+  "topic": "Di chuyển vật thể",
+  "model": "xe nâng hàng và pallet",
+  "sheetName": "Lớp 3 · Bài 2: Di chuyển vật thể",
+  "baseName": "Xe nâng",
+  "steps": 31,
+  "assetFolder": "lop3-bai02",
+  "firstStep": "Động cơ M1 và khung xe",
+  "bookAlt": "Bước 1: hình sách lắp xe nâng hàng",
+  "lede": "Lắp xe nâng 31 bước với M1 đưa xe tiến/lùi, M2 nâng hạ càng và cảm biến siêu âm. Lập trình tiếp cận, đưa càng vào gầm pallet, nâng và lùi về ô tập kết.",
+  "victory": "Em đã lắp xe nâng, đưa pallet về ô tập kết và cải tiến mô hình để vận chuyển an toàn.",
+  "engine": { "class": "ForkliftEngine", "file": "forklift-engine.js" },
+  "scene": {
+    "file": "forklift-scene.js",
+    "aria": "Nhà kho nhìn ngang có xe nâng, cảm biến siêu âm, pallet và ô tập kết",
+    "stage": "Xe nâng 3D chạy theo các khối lệnh",
+    "idle": "Nạp 16 khối mẫu trong sách, nhấn Start để xe tiếp cận pallet"
+  },
+  "missions": {
+    "m1": { "chip": "Lắp 31 bước", "title": "Lắp xe nâng và giá pallet", "tip": "Hoàn thành đủ 31 trang lắp ráp trong sách" },
+    "m2": { "chip": "Mẫu 16 khối", "title": "Chạy trọn chương trình mẫu", "tip": "Lắp đúng thứ tự 16 khối của KHGD và chạy hết", "text": "Lập trình 16 khối: M1 tiến đến vật cản; M2 hạ; M1 tiến vào 1 giây; M2 nâng; M1 lùi 3 giây." },
+    "m3": { "chip": "Nâng pallet về đích", "title": "Căn càng và vận chuyển pallet", "tip": "Chỉnh Chờ sau M1 tiến vào thành 2 giây", "text": "Mẫu tiến vào 1 giây nên càng chưa đỡ đúng pallet. Tăng thời gian tiến vào thành 2 giây, nâng rồi lùi 3 giây để về ô tập kết." },
+    "m4": { "chip": "Gắn nâng cấp", "title": "Cải tiến xe nâng", "tip": "Thử một trong bốn gói càng, chắn lưng, bánh kép hoặc cảnh báo", "text": "Chọn và gắn một trong bốn nâng cấp vào xưởng sáng tạo, sau đó chạy mô phỏng." },
+    "m5": { "pro": true, "chip": "Vượt vật cản", "title": "Lùi xe an toàn khi có vật cản", "tip": "Thêm Đợi đường trống ngay trước khi M1 lùi", "text": "Một xe hàng bất ngờ băng qua đường lùi sau khi nâng pallet. Thêm Đợi đường trống trước lệnh M1 lùi; lùi ngay khi còn vật cản sẽ thất bại." }
+  },
+  "blocks": {
+    "toolbox": ["m1Motor", "m2Motor", "obstacle", "motorStop", "wait", "waitClear"],
+    "pro": ["motorPower", "motorReverse"],
+    "sample": ["start", ["m1Motor", {"dir":"ccw"}], "obstacle", "motorStop", ["m2Motor", {"dir":"ccw"}], ["wait",{"duration":1}], "motorStop", ["m1Motor",{"dir":"ccw"}], ["wait",{"duration":1}], "motorStop", ["m2Motor",{"dir":"cw"}], ["wait",{"duration":1}], "motorStop", ["m1Motor",{"dir":"cw"}], ["wait",{"duration":3}], "motorStop"],
+    "empty": ["start"]
+  },
+  "creative": {
+    "intro": "Cải tiến xe nâng trong nhà kho: <b>càng nâng rộng</b> giúp đỡ pallet lớn, <b>chắn lưng</b> giữ hàng, <b>bánh sau kép</b> tăng ổn định và <b>đèn/còi lùi</b> cảnh báo người xung quanh. Các phụ kiện trong xưởng là mô phỏng ý tưởng.",
+    "slots": 4, "badge": "Xe nâng cơ bản", "slotHint": "Bốn vị trí nâng cấp"
+  },
+  "meters": [
+    {"label":"Tốc độ xe", "id":"m-speed", "value":0, "unit":"cm/giây", "note":"M1 · bánh sau", "noteId":"m-speed-note"},
+    {"label":"Khoảng cách", "id":"m-dist", "value":0, "unit":"cm", "note":"Cảm biến siêu âm phía trước", "noteId":"m-dist-note"},
+    {"label":"Độ nâng", "id":"m-lift", "value":0, "unit":"%", "note":"M2 · càng nâng", "noteId":"m-lift-note"},
+    {"label":"Thời gian", "id":"m-time", "value":0, "unit":"giây", "note":"Đường lùi", "noteId":"m-time-note"}
+  ],
+  "calc": "Quãng đường = tốc độ M1 × thời gian chờ; M2 hạ/nâng bằng cơ cấu 4 khâu",
+  "hint": "<b>Mẫu:</b> 16 khối đúng KHGD (M1 tiến CCW, M2 hạ CCW, M1 tiến CCW, M2 nâng CW, M1 lùi CW). <b>M3:</b> đổi Chờ khi tiến vào pallet từ 1 lên 2 giây. <b>Nâng cao:</b> Đợi đường trống ngay trước khi lùi."
+}

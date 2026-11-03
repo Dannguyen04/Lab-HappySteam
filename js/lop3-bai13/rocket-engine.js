@@ -64,7 +64,7 @@
       return super.enterBlock(b);
     }
     boost() {
-      return 1 + (this.has('wings') ? 0.02 : 0) + (this.has('boosters') ? 0.08 : 0)
+      return 1 + (this.has('wings') ? 0.02 : 0) + (this.has('boosters') ? 0.04 : 0)
         - (this.has('radar') ? 0.02 : 0) - (this.has('legs') ? 0.03 : 0);
     }
     pose3d() {

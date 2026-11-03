@@ -19,6 +19,12 @@
   ];
 
   window.ZM_LESSONS = {
+    'lop1-bai01': {
+      content: 'lop1/bai01',
+      scripts: ['js/lop1-bai01/lesson.js', 'js/lop1-bai01/ramp-scene.js', 'js/lop1-bai01/ramp-engine.js'],
+      optional: ['js/lop1-bai01/art.js'],
+      order: order('js/lop1-bai01/lesson.js', 'js/lop1-bai01/ramp-scene.js', 'js/lop1-bai01/ramp-engine.js', 'js/lop1-bai01/art.js')
+    },
     'lop1-bai02': {
       content: 'lop1/bai02',
       scripts: ['js/bai02/lesson.js', 'js/bai02/race-scene.js', 'js/bai02/race-engine.js'],
@@ -61,6 +67,12 @@
       scripts: ['js/bai13/lesson.js', 'js/bai13/snow-scene.js', 'js/bai13/plow-engine.js'],
       optional: ['js/bai13/art.js'],
       order: order('js/bai13/lesson.js', 'js/bai13/snow-scene.js', 'js/bai13/plow-engine.js', 'js/bai13/art.js')
+    },
+    'lop3-bai01': {
+      content: 'lop3/bai01',
+      scripts: ['js/lop3-bai01/lesson.js', 'js/lop3-bai01/quake-scene.js', 'js/lop3-bai01/quake-engine.js'],
+      optional: ['js/lop3-bai01/art.js'],
+      order: order('js/lop3-bai01/lesson.js', 'js/lop3-bai01/quake-scene.js', 'js/lop3-bai01/quake-engine.js', 'js/lop3-bai01/art.js')
     },
     'lop3-bai08': {
       content: 'lop3/bai08',
@@ -115,6 +127,60 @@
       scripts: ['js/lop1-bai19/lesson.js', 'js/lop1-bai19/snail-scene.js', 'js/lop1-bai19/snail-engine.js'],
       optional: ['js/lop1-bai19/art.js'],
       order: order('js/lop1-bai19/lesson.js', 'js/lop1-bai19/snail-scene.js', 'js/lop1-bai19/snail-engine.js', 'js/lop1-bai19/art.js')
+    },
+    'lop3-bai14': {
+      content: 'lop3/bai14',
+      scripts: ['js/lop3-bai14/lesson.js', 'js/lop3-bai14/guitar-scene.js', 'js/lop3-bai14/guitar-engine.js'],
+      optional: ['js/lop3-bai14/art.js'],
+      order: order('js/lop3-bai14/lesson.js', 'js/lop3-bai14/guitar-scene.js', 'js/lop3-bai14/guitar-engine.js', 'js/lop3-bai14/art.js')
+    },
+    'lop1-bai04': {
+      content: 'lop1/bai04',
+      scripts: ['js/lop1-bai04/lesson.js', 'js/lop1-bai04/drill-scene.js', 'js/lop1-bai04/drill-engine.js'],
+      optional: ['js/lop1-bai04/art.js'],
+      order: order('js/lop1-bai04/lesson.js', 'js/lop1-bai04/drill-scene.js', 'js/lop1-bai04/drill-engine.js', 'js/lop1-bai04/art.js')
+    },
+    'lop1-bai05': {
+      content: 'lop1/bai05',
+      scripts: ['js/lop1-bai05/lesson.js', 'js/lop1-bai05/spy-scene.js', 'js/lop1-bai05/spy-engine.js'],
+      optional: ['js/lop1-bai05/art.js'],
+      order: order('js/lop1-bai05/lesson.js', 'js/lop1-bai05/spy-scene.js', 'js/lop1-bai05/spy-engine.js', 'js/lop1-bai05/art.js')
+    },
+    'lop1-bai06': {
+      content: 'lop1/bai06',
+      scripts: ['js/lop1-bai06/lesson.js', 'js/lop1-bai06/traffic-scene.js', 'js/lop1-bai06/traffic-engine.js'],
+      optional: ['js/lop1-bai06/art.js'],
+      order: order('js/lop1-bai06/lesson.js', 'js/lop1-bai06/traffic-scene.js', 'js/lop1-bai06/traffic-engine.js', 'js/lop1-bai06/art.js')
+    },
+    'lop1-bai08': {
+      content: 'lop1/bai08',
+      scripts: ['js/lop1-bai08/lesson.js', 'js/lop1-bai08/gate-scene.js', 'js/lop1-bai08/gate-engine.js'],
+      optional: ['js/lop1-bai08/art.js'],
+      order: order('js/lop1-bai08/lesson.js', 'js/lop1-bai08/gate-scene.js', 'js/lop1-bai08/gate-engine.js', 'js/lop1-bai08/art.js')
+    },
+    'lop3-bai02': {
+      content: 'lop3/bai02',
+      scripts: ['js/lop3-bai02/lesson.js', 'js/lop3-bai02/forklift-scene.js', 'js/lop3-bai02/forklift-engine.js'],
+      optional: ['js/lop3-bai02/art.js'],
+      order: order('js/lop3-bai02/lesson.js', 'js/lop3-bai02/forklift-scene.js', 'js/lop3-bai02/forklift-engine.js', 'js/lop3-bai02/art.js')
+    },
+    'lop3-bai03': {
+      content: 'lop3/bai03',
+      scripts: ['js/lop3-bai03/lesson.js', 'js/lop3-bai03/lever-scene.js', 'js/lop3-bai03/lever-engine.js'],
+      optional: ['js/lop3-bai03/art.js'],
+      order: order('js/lop3-bai03/lesson.js', 'js/lop3-bai03/lever-scene.js', 'js/lop3-bai03/lever-engine.js', 'js/lop3-bai03/art.js')
+    },
+    'lop3-bai04': {
+      content: 'lop3/bai04',
+      scripts: ['js/lop3-bai04/lesson.js', 'js/lop3-bai04/sorter-scene.js', 'js/lop3-bai04/sorter-engine.js'],
+      optional: ['js/lop3-bai04/art.js'],
+      order: order('js/lop3-bai04/lesson.js', 'js/lop3-bai04/sorter-scene.js', 'js/lop3-bai04/sorter-engine.js', 'js/lop3-bai04/art.js')
+    },
+    'lop3-bai05': {
+      content: 'lop3/bai05',
+      scripts: ['js/lop3-bai05/lesson.js', 'js/lop3-bai05/truck-scene.js', 'js/lop3-bai05/truck-engine.js'],
+      optional: ['js/lop3-bai05/art.js'],
+      order: order('js/lop3-bai05/lesson.js', 'js/lop3-bai05/truck-scene.js', 'js/lop3-bai05/truck-engine.js', 'js/lop3-bai05/art.js')
     }
   };
 })();

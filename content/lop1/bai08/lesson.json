@@ -1,0 +1,52 @@
+{
+  "folder": "lop1-bai08",
+  "assetFolder": "lop1-bai08",
+  "title": "Ngôi nhà thông minh – Cổng tự động",
+  "pageTitle": "Cổng nhà thông minh đón bạn nhỏ",
+  "topic": "Ngôi nhà thông minh",
+  "model": "cổng nhà thông minh",
+  "baseName": "Cổng tự động",
+  "sheetName": "Lớp 1 · Bài 8: Ngôi nhà thông minh – Cổng tự động",
+  "steps": 19,
+  "firstStep": "Lắp chân đế và khớp đầu tiên của cổng",
+  "lede": "Lắp cổng tự động 19 bước, dùng mắt siêu âm phát hiện bạn đến nhà rồi điều khiển động cơ M1 mở và đóng cửa.",
+  "victory": "Em đã biết lập trình cổng thông minh đón bạn nhỏ an toàn!",
+  "engine": { "class": "GateEngine", "file": "gate-engine.js" },
+  "scene": {
+    "file": "gate-scene.js",
+    "aria": "Cổng nhà nhìn ngang, bạn nhỏ mang ba lô tới cảm biến, cổng tự mở rồi đóng",
+    "stage": "Cổng tự động 3D với động cơ M1",
+    "idle": "Ghép 13 thẻ màu, chạm ▶ để đón bạn nhỏ nhé!",
+    "hand": true
+  },
+  "missions": {
+    "m1": { "title": "Lắp cổng thông minh", "text": "Hoàn thành đủ 19 bước lắp cổng, mắt siêu âm và động cơ M1." },
+    "m2": { "chip": "13 khối mở và đóng", "tip": "Hai lần chờ vật cản, hai biểu tượng GO và ↓, động cơ M1 quay hai chiều", "title": "Cổng biết đón khách", "text": "Ghép đúng 13 khối theo sách, chạy đủ một lần mở rồi đóng cổng." },
+    "m3": { "chip": "Mở đủ rộng", "tip": "Đổi khối Chờ đầu tiên từ 0,2 lên 1 giây; 0,2 giây cửa mở quá ít", "title": "Cho bạn bước vào an toàn", "text": "Đổi đúng khối Chờ đầu tiên thành 1 giây để cửa mở đủ rộng cho bạn đi qua." },
+    "m4": { "title": "Thiết kế cổng nhà của em", "text": "Gắn thêm mái hiên, đèn xanh GO, biển số nhà hoặc hàng rào hoa rồi chạy thử." },
+    "m5": { "pro": true, "chip": "Mắt siêu âm tinh ý", "tip": "Ngưỡng 15–20 cm thấy bạn ở 17 cm; 5 cm bỏ lỡ, 50 cm nhận nhầm người đi ngang", "title": "Chọn đúng khoảng cách", "text": "Chạm khối Chờ vật cản để chọn khoảng cách 15–20 cm. Đừng chọn quá gần hoặc quá xa!" }
+  },
+  "blocks": {
+    "toolbox": ["repeatStart", "repeatEnd", "obstacle", "displayGO", "displayArrowDown", "highSpeedCCWM1", "highSpeedM1", "wait", "motorStop"],
+    "pro": ["displaySmile", "lowSpeed"],
+    "sample": ["start", "repeatStart", "obstacle", "displayGO", ["highSpeedCCW", {"port":"M1"}], ["wait", {"duration":0.2}], "motorStop", "obstacle", "displayArrowDown", ["highSpeed", {"port":"M1"}], ["wait", {"duration":0.2}], "motorStop", "repeatEnd"],
+    "empty": ["start", "repeatStart", "repeatEnd"],
+    "sensorRange": true,
+    "sensorRanges": [5, 15, 20, 50]
+  },
+  "creative": {
+    "intro": "Ngôi nhà thông minh có thể thêm <b>mái hiên che mưa</b>, <b>đèn xanh GO</b>, <b>biển số nhà</b> hoặc <b>hàng rào hoa</b>. Hãy chọn rồi xem thay đổi ngay trên cổng!",
+    "slots": 4,
+    "slotHint": "4 vị trí trang trí cổng",
+    "resultTitle": "Cổng nhà sáng tạo của em",
+    "badge": "Cổng thông minh cơ bản"
+  },
+  "meters": [
+    { "label": "Mắt siêu âm", "id": "m-gate-distance", "value": 0, "unit": "cm", "note": "Đang tìm khách", "noteId": "m-gate-distance-note" },
+    { "label": "Cánh cổng mở", "id": "m-gate-open", "value": 0, "unit": "%", "note": "Động cơ M1", "noteId": "m-gate-open-note" },
+    { "label": "Thời gian", "id": "m-gate-time", "value": 0, "unit": "giây", "note": "Một lượt mở–đóng", "noteId": "m-gate-time-note" }
+  ],
+  "calc": "Nâng cao: quan sát khoảng cách cảm biến (cm), thời gian mở (giây), và chiều quay động cơ M1.",
+  "calcProOnly": true,
+  "hint": "<b>Mẫu:</b> thấy bạn → GO, M1 mở 0,2s → thấy lần nữa → ↓, M1 đóng 0,2s. <b>Thử thách:</b> tăng Chờ đầu lên 1s để cửa mở đủ. <b>Nâng cao:</b> cảm biến đúng 15–20cm."
+}

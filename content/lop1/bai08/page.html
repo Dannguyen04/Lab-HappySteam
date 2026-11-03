@@ -1,0 +1,100 @@
+<title>Cổng nhà thông minh đón bạn nhỏ · Lớp 1 · Bài 8 · Happy STEAM</title>
+<template data-slot="header-copy">
+      <div class="eyebrow">Lớp 1 · Bài 8 · Ngôi nhà thông minh</div>
+      <h1>Ngôi nhà thông minh – Cổng tự động</h1>
+      <p class="lede pro-only">Lắp cổng tự động 19 bước, dùng mắt siêu âm phát hiện bạn đến nhà rồi điều khiển động cơ M1 mở và đóng cửa.</p>
+</template>
+
+<template data-slot="mission-chips">
+    <span class="chip" id="chip-m1" title="Bấm “Đã lắp xong bước này” ở cả 19 bước"><i>1</i>Lắp xong 19 bước</span>
+    <span class="chip" id="chip-m2" title="Hai lần chờ vật cản, hai biểu tượng GO và ↓, động cơ M1 quay hai chiều"><i>2</i>13 khối mở và đóng</span>
+    <span class="chip" id="chip-m3" title="Đổi khối Chờ đầu tiên từ 0,2 lên 1 giây; 0,2 giây cửa mở quá ít"><i>3</i>Mở đủ rộng</span>
+    <span class="chip" id="chip-m4" title="Gắn gói nâng cấp ở chặng Sáng tạo, đưa vào sa bàn và cho động cơ chạy"><i>4</i>Thử nâng cấp sáng tạo</span>
+    <span class="chip pro-only" id="chip-m5" title="Ngưỡng 15–20 cm thấy bạn ở 17 cm; 5 cm bỏ lỡ, 50 cm nhận nhầm người đi ngang"><i>5</i>Mắt siêu âm tinh ý</span>
+</template>
+
+<template data-slot="victory-copy">
+      <p>Em đã biết lập trình cổng thông minh đón bạn nhỏ an toàn!</p>
+      <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM8</code></p>
+</template>
+
+<template data-slot="assembly-tab">
+      <i>1</i><span><b>Lắp ráp</b><small>19 bước theo sách</small></span>
+</template>
+
+<template data-slot="assembly-count">
+          <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 19</span></span>
+</template>
+
+<template data-slot="assembly-canvas">
+              <canvas id="view" aria-label="Mô hình cổng nhà thông minh 3D: kéo để xoay, cuộn để phóng to"></canvas>
+</template>
+
+<template data-slot="assembly-slider">
+                <input id="slider" type="range" min="1" max="19" value="1" aria-label="Chọn bước lắp">
+</template>
+
+<template data-slot="assembly-meter-step">
+          <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 19</small></div><div class="s" id="am-step-s">Lắp chân đế và khớp đầu tiên của cổng</div></dd></div>
+</template>
+
+<template data-slot="assembly-meter-done">
+          <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 19</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+</template>
+
+<template data-slot="book-image">
+          <img id="book-img" src="assets/lop1-bai08/step-01.jpg" alt="Hình bước 1 trong sách hướng dẫn lắp ráp">
+</template>
+
+<template data-slot="book-link">
+          <a id="book-pdf" class="link" href="assets/lop1-bai08/step-01.jpg" target="_blank" rel="noopener">Mở hình lớn ↗</a>
+</template>
+
+<template data-slot="creative-intro">
+          <p class="status-text">Ngôi nhà thông minh có thể thêm <b>mái hiên che mưa</b>, <b>đèn xanh GO</b>, <b>biển số nhà</b> hoặc <b>hàng rào hoa</b>. Hãy chọn rồi xem thay đổi ngay trên cổng!</p>
+</template>
+
+<template data-slot="creative-canvas">
+        <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình cổng nhà thông minh 3D đang sáng tạo"></div>
+</template>
+
+<template data-slot="creative-slot-label">
+        <div class="panel-h"><h2>Tự gắn chi tiết</h2><small>4 vị trí trang trí cổng</small></div>
+</template>
+
+<template data-slot="creative-result-label">
+        <div class="panel-h"><h2>Cổng nhà sáng tạo của em</h2></div>
+</template>
+
+<template data-slot="sim-upgrade-label">
+            <small id="sim-active-upgrade-badge" class="status-tag">Cổng thông minh cơ bản</small>
+</template>
+
+<template data-slot="sim-scene">
+          <canvas id="space-scene" aria-label="Cổng nhà nhìn ngang, bạn nhỏ mang ba lô tới cảm biến, cổng tự mở rồi đóng"></canvas>
+          <div class="sim-stage" id="sim-stage" aria-label="Cổng tự động 3D với động cơ M1"></div>
+          <p class="scene-idle" id="scene-idle">Ghép 13 thẻ màu, chạm ▶ để đón bạn nhỏ nhé!</p>
+          <button type="button" class="hand-btn" id="scene-hand" title="Nhấn cảm biến chạm trên mô hình" aria-label="Nhấn cảm biến chạm">✋</button>
+</template>
+
+<template data-slot="sim-meters">
+        <dl class="meters pro-only">
+          <div class="meter"><dt>Mắt siêu âm</dt><dd><div class="v" id="m-gate-distance">0<small>cm</small></div><div class="s" id="m-gate-distance-note">Đang tìm khách</div></dd></div>
+          <div class="meter"><dt>Cánh cổng mở</dt><dd><div class="v" id="m-gate-open">0<small>%</small></div><div class="s" id="m-gate-open-note">Động cơ M1</div></dd></div>
+          <div class="meter"><dt>Thời gian</dt><dd><div class="v" id="m-gate-time">0<small>giây</small></div><div class="s" id="m-gate-time-note">Một lượt mở–đóng</div></dd></div>
+        </dl>
+</template>
+
+<template data-slot="sim-calculation">
+        <div class="pro-only">
+        <div class="panel-h"><h2>Tính toán</h2><small>Nâng cao: quan sát khoảng cách cảm biến (cm), thời gian mở (giây), và chiều quay động cơ M1.</small></div>
+        <div class="pad calc">
+          <p class="calc-eq" id="calc-eq1"></p>
+          <p class="calc-eq" id="calc-eq2"></p>
+        </div>
+        </div>
+</template>
+
+<template data-slot="sim-hint">
+            <p class="hint"><b>Mẫu:</b> thấy bạn → GO, M1 mở 0,2s → thấy lần nữa → ↓, M1 đóng 0,2s. <b>Thử thách:</b> tăng Chờ đầu lên 1s để cửa mở đủ. <b>Nâng cao:</b> cảm biến đúng 15–20cm.</p>
+</template>

@@ -1,4 +1,15 @@
 {
+ "BE-1153|": {
+  "originalPart": "be-1153.dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/be-1153-1-4ce546a7.json",
+   "content/kits/alpha330/meshes/be-1153-156-9ab5bc1a.json",
+   "content/kits/alpha330/meshes/be-1153-11-edaadf55.json",
+   "content/kits/alpha330/meshes/be-1153-86-58ecb4fc.json",
+   "content/kits/alpha330/meshes/be-1153-12-c2abb8c6.json"
+  ],
+  "from": "lop1/bai06 (.io)"
+ },
  "BE-2257|": {
   "originalPart": "be-2257.dat",
   "meshes": [
@@ -29,6 +40,16 @@
    "content/kits/alpha330/meshes/be-5158-5-4298888d.json"
   ],
   "from": "lop1/bai03"
+ },
+ "BE-6208|": {
+  "originalPart": "be-6208.dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/be-6208-1-67ece118.json",
+   "content/kits/alpha330/meshes/be-6208-156-efbfbc99.json",
+   "content/kits/alpha330/meshes/be-6208-11-e5faa253.json",
+   "content/kits/alpha330/meshes/be-6208-86-e6de19ac.json"
+  ],
+  "from": "lop1/bai20"
  },
  "BE-6313|": {
   "originalPart": "be-6313.dat",
@@ -74,6 +95,13 @@
    "content/kits/alpha330/meshes/4519-01-7f936ed5.json"
   ],
   "from": "lop1/bai03"
+ },
+ "BP-3992|(01)": {
+  "originalPart": "32073.dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/32073-01-6e298b6b.json"
+  ],
+  "from": "lop1/bai20"
  },
  "BP-3992|H": {
   "originalPart": "32073.dat",
@@ -151,6 +179,13 @@
    "content/kits/alpha330/meshes/43093-09-326caba8.json"
   ],
   "from": "lop1/bai10"
+ },
+ "BP-7013|t": {
+  "originalPart": "3749.dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/3749-t-b33bee5d.json"
+  ],
+  "from": "lop1/bai20"
  },
  "BP-7014|t": {
   "originalPart": "32556.dat",
@@ -315,6 +350,13 @@
   ],
   "from": "lop3/bai08"
  },
+ "BP-7076|(06)": {
+  "originalPart": "32348.dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/32348-06-359f892b.json"
+  ],
+  "from": "lop1/bai20"
+ },
  "BP-7076|M": {
   "originalPart": "rbb:BP-7076",
   "meshes": [
@@ -365,6 +407,14 @@
   ],
   "from": "lop1/bai09"
  },
+ "BP-7091|(03)": {
+  "originalPart": "rbb:BP-7091",
+  "meshes": [
+   "content/kits/alpha330/meshes/rbb-bp-7091-03-b364fb22.json"
+  ],
+  "from": "RoboBuilder",
+  "frame": "rbb"
+ },
  "BP-7093|(01)": {
   "originalPart": "62462.dat",
   "meshes": [
@@ -378,6 +428,13 @@
    "content/kits/alpha330/meshes/6536-01-6778a1cc.json"
   ],
   "from": "lop1/bai09"
+ },
+ "BP-7095|(02)": {
+  "originalPart": "4185.dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/4185-02-e8469e46.json"
+  ],
+  "from": "lop1/bai20"
  },
  "BP-7095|(03)": {
   "originalPart": "4185.dat",
@@ -428,12 +485,27 @@
   ],
   "from": "lop3/bai08"
  },
+ "BP-7527A|(06)": {
+  "originalPart": "bp-7527a(06).dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/bp-7527a-06-06-9be73af6.json"
+  ],
+  "from": "lop1/bai20"
+ },
  "BP-7528|m": {
   "originalPart": "32278.dat",
   "meshes": [
    "content/kits/alpha330/meshes/32278-m-008a603b.json"
   ],
   "from": "lop1/bai09"
+ },
+ "BP-7547|B": {
+  "originalPart": "rbb:BP-7547",
+  "meshes": [
+   "content/kits/alpha330/meshes/rbb-bp-7547-b-2f4ab26e.json"
+  ],
+  "from": "RoboBuilder",
+  "frame": "rbb"
  },
  "BP-7548|B": {
   "originalPart": "bp-7548b.dat",
@@ -456,6 +528,14 @@
   ],
   "from": "lop1/bai03"
  },
+ "BP-7600|(02)": {
+  "originalPart": "rbb:BP-7600",
+  "meshes": [
+   "content/kits/alpha330/meshes/rbb-bp-7600-02-365b2c6f.json"
+  ],
+  "from": "RoboBuilder",
+  "frame": "rbb"
+ },
  "BP-7620|(16)": {
   "originalPart": "bp-7620(16).dat",
   "meshes": [
@@ -469,6 +549,14 @@
    "content/kits/alpha330/meshes/3705-02-146928b1.json"
   ],
   "from": "lop1/bai03"
+ },
+ "BP-7629|(02)": {
+  "originalPart": "rbb:BP-7629",
+  "meshes": [
+   "content/kits/alpha330/meshes/rbb-bp-7629-02-fb0474d5.json"
+  ],
+  "from": "RoboBuilder",
+  "frame": "rbb"
  },
  "BP-7630|(02)": {
   "originalPart": "3707.dat",
@@ -491,6 +579,13 @@
   ],
   "from": "lop3/bai16 (.io)"
  },
+ "BP-7799|(16)": {
+  "originalPart": "bp-7799 (16).dat",
+  "meshes": [
+   "content/kits/alpha330/meshes/bp-7799-16-16-9b92c12e.json"
+  ],
+  "from": "lop1/bai20"
+ },
  "BP-8813|(06)": {
   "originalPart": "bp-8813(06).dat",
   "meshes": [
@@ -498,12 +593,28 @@
   ],
   "from": "lop1/bai10"
  },
+ "BP-8814|(06)": {
+  "originalPart": "rbb:BP-8814",
+  "meshes": [
+   "content/kits/alpha330/meshes/rbb-bp-8814-06-901fbedb.json"
+  ],
+  "from": "RoboBuilder",
+  "frame": "rbb"
+ },
  "BP-8818|(16)": {
   "originalPart": "bp-8818(16).dat",
   "meshes": [
    "content/kits/alpha330/meshes/bp-8818-16-16-eef566de.json"
   ],
   "from": "lop1/bai03"
+ },
+ "BP-8819|(06)": {
+  "originalPart": "rbb:BP-8819",
+  "meshes": [
+   "content/kits/alpha330/meshes/rbb-bp-8819-06-1099a27c.json"
+  ],
+  "from": "RoboBuilder",
+  "frame": "rbb"
  },
  "BP-8840|(06)": {
   "originalPart": "bp-8840(06).dat",

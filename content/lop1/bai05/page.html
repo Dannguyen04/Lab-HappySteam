@@ -1,0 +1,100 @@
+<title>Spy Robot chào hỏi và kết bạn · Lớp 1 · Bài 5 · Happy STEAM</title>
+<template data-slot="header-copy">
+      <div class="eyebrow">Lớp 1 · Bài 5 · Chào hỏi, kết bạn</div>
+      <h1>Chào hỏi, kết bạn – Spy Robot</h1>
+      <p class="lede pro-only">Em lắp Spy Robot, cho robot chào và tạm biệt bằng tay vẫy, khuôn mặt và giai điệu. Thử điều chỉnh cách chào thật thân thiện!</p>
+</template>
+
+<template data-slot="mission-chips">
+    <span class="chip" id="chip-m1" title="Bấm “Đã lắp xong bước này” ở cả 21 bước"><i>1</i>Lắp xong 21 bước</span>
+    <span class="chip" id="chip-m2" title="Hai lần chờ vật cản, hai mặt và hai giai điệu"><i>2</i>13 khối chào hỏi</span>
+    <span class="chip" id="chip-m3" title="Đổi Wait đầu tiên từ 1 lên 2 giây"><i>3</i>Chào thật thân thiện</span>
+    <span class="chip" id="chip-m4" title="Gắn gói nâng cấp ở chặng Sáng tạo, đưa vào sa bàn và cho động cơ chạy"><i>4</i>Thử nâng cấp sáng tạo</span>
+    <span class="chip pro-only" id="chip-m5" title="Nâng cao: 20 cm bỏ lỡ, 50 cm thấy nhầm; hãy thử 30 cm"><i>5</i>Nhìn đúng bạn</span>
+</template>
+
+<template data-slot="victory-copy">
+      <p>Em đã biết dùng cảm biến để Spy Robot lễ phép chào hỏi và tạm biệt!</p>
+      <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM5</code></p>
+</template>
+
+<template data-slot="assembly-tab">
+      <i>1</i><span><b>Lắp ráp</b><small>21 bước theo sách</small></span>
+</template>
+
+<template data-slot="assembly-count">
+          <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 21</span></span>
+</template>
+
+<template data-slot="assembly-canvas">
+              <canvas id="view" aria-label="Mô hình robot điệp viên 3D: kéo để xoay, cuộn để phóng to"></canvas>
+</template>
+
+<template data-slot="assembly-slider">
+                <input id="slider" type="range" min="1" max="21" value="1" aria-label="Chọn bước lắp">
+</template>
+
+<template data-slot="assembly-meter-step">
+          <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 21</small></div><div class="s" id="am-step-s">Lắp đế đứng vững cho robot</div></dd></div>
+</template>
+
+<template data-slot="assembly-meter-done">
+          <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 21</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+</template>
+
+<template data-slot="book-image">
+          <img id="book-img" src="assets/lop1-bai05/step-01.jpg" alt="Hình bước 1 trong sách hướng dẫn lắp ráp">
+</template>
+
+<template data-slot="book-link">
+          <a id="book-pdf" class="link" href="assets/lop1-bai05/step-01.jpg" target="_blank" rel="noopener">Mở hình lớn ↗</a>
+</template>
+
+<template data-slot="creative-intro">
+          <p class="status-text">Điệp viên nhí có thể gắn <b>kính đặc biệt</b>, <b>ăng-ten kép</b>, <b>mũ</b> hoặc <b>huy hiệu ngôi sao</b>. Chọn món em thích để thử trên robot 3D!</p>
+</template>
+
+<template data-slot="creative-canvas">
+        <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình robot điệp viên 3D đang sáng tạo"></div>
+</template>
+
+<template data-slot="creative-slot-label">
+        <div class="panel-h"><h2>Tự gắn chi tiết</h2><small>4 vị trí trên robot</small></div>
+</template>
+
+<template data-slot="creative-result-label">
+        <div class="panel-h"><h2>Điệp viên sáng tạo của em</h2></div>
+</template>
+
+<template data-slot="sim-upgrade-label">
+            <small id="sim-active-upgrade-badge" class="status-tag">Điệp viên cơ bản</small>
+</template>
+
+<template data-slot="sim-scene">
+          <canvas id="space-scene" aria-label="Cổng trường học nhìn ngang, Spy Robot đứng đón bạn tới và vẫy chào tạm biệt"></canvas>
+          <div class="sim-stage" id="sim-stage" aria-label="Robot điệp viên 3D đang chào và tạm biệt"></div>
+          <p class="scene-idle" id="scene-idle">Ghép 13 thẻ màu. Chạm ▶ để xem robot chào bạn nhé!</p>
+          <button type="button" class="hand-btn" id="scene-hand" title="Nhấn cảm biến chạm trên mô hình" aria-label="Nhấn cảm biến chạm">✋</button>
+</template>
+
+<template data-slot="sim-meters">
+        <dl class="meters pro-only">
+          <div class="meter"><dt>Khoảng cách</dt><dd><div class="v" id="m-spy-distance">0<small>cm</small></div><div class="s" id="m-spy-distance-note">Cảm biến đang đợi</div></dd></div>
+          <div class="meter"><dt>Động cơ</dt><dd><div class="v" id="m-spy-speed">0<small>mức</small></div><div class="s" id="m-spy-speed-note">Chờ phát hiện bạn</div></dd></div>
+          <div class="meter"><dt>Thời gian</dt><dd><div class="v" id="m-spy-time">0<small>giây</small></div><div class="s" id="m-spy-time-note">Một vòng chào – tạm biệt</div></dd></div>
+        </dl>
+</template>
+
+<template data-slot="sim-calculation">
+        <div class="pro-only">
+        <div class="panel-h"><h2>Tính toán</h2><small>Nâng cao: đo khoảng cách 20 / 30 / 50 cm và thời gian chào.</small></div>
+        <div class="pad calc">
+          <p class="calc-eq" id="calc-eq1"></p>
+          <p class="calc-eq" id="calc-eq2"></p>
+        </div>
+        </div>
+</template>
+
+<template data-slot="sim-hint">
+            <p class="hint"><b>Mẫu:</b> thấy bạn → 😊 nhạc A, vẫy chào → thấy lần nữa → 😉 nhạc B, vẫy tạm biệt. <b>Thử thách:</b> đổi Wait đầu thành 2s. <b>Nâng cao:</b> đổi cự ly phát hiện thành 30 cm.</p>
+</template>

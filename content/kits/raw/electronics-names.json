@@ -1,0 +1,784 @@
+{
+  "BE-1007": {
+    "nameVi": "Hộp pin",
+    "kind": "power",
+    "sizeMm": [
+      90,
+      22.9,
+      59.3
+    ],
+    "sets": [
+      "setlebo5.0-1"
+    ],
+    "confidence": "chac",
+    "evidence": "Mesh hộp pin 90x23x59mm có chấu tiếp xúc kim loại và nút gạt nguồn màu cam trong bộ Lebo 5.0-1"
+  },
+  "BE-1133": {
+    "nameVi": "Cảm biến hồng ngoại",
+    "kind": "sensor",
+    "sizeMm": [
+      39,
+      10.8,
+      29
+    ],
+    "sets": [
+      "setlebo5.0-4"
+    ],
+    "confidence": "kha",
+    "evidence": "Mesh cảm biến dòng 11xx vỏ Lebo 39x11x29mm có hai diode quang thu phát hồng ngoại trong bộ Lebo 5.0-4"
+  },
+  "BE-1146": {
+    "nameVi": "Cảm biến quang điện",
+    "kind": "sensor",
+    "sizeMm": [
+      20.2,
+      30,
+      38.1
+    ],
+    "sets": [
+      "set2106+",
+      "set2108+"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2108+E và 2106+E ghi rõ Photoelectric Sensor; mesh 20.2x30x38.1mm dòng 11xx"
+  },
+  "BE-1147": {
+    "nameVi": "Cảm biến màu",
+    "kind": "sensor",
+    "sizeMm": [
+      20.2,
+      30,
+      38.1
+    ],
+    "sets": [
+      "set2108+"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2108+E ghi rõ Color Sensor (RGB raw data); mesh 20.2x30x38.1mm có cửa sổ quang học"
+  },
+  "BE-1149": {
+    "nameVi": "Mảng cảm biến dò đường đa kênh",
+    "kind": "sensor",
+    "sizeMm": [
+      129.6,
+      25,
+      10
+    ],
+    "sets": [
+      "setTemp"
+    ],
+    "confidence": "chac",
+    "evidence": "Thanh cảm biến dài 130mm vỏ xám; mục chuanganqi trong brick_config说明文件; mảng cảm biến độ xám dò line"
+  },
+  "BE-1152": {
+    "nameVi": "Cảm biến quang điện",
+    "kind": "sensor",
+    "sizeMm": [
+      30,
+      30,
+      30
+    ],
+    "sets": [
+      "set2324"
+    ],
+    "confidence": "chac",
+    "evidence": "Texture rbbc32texture1 in rõ chữ 'Photoelectric'; khối 30x30x30mm trong bộ Alpha D 2324"
+  },
+  "BE-1153": {
+    "nameVi": "Cảm biến màu",
+    "kind": "sensor",
+    "sizeMm": [
+      30,
+      30,
+      30
+    ],
+    "sets": [
+      "set2323"
+    ],
+    "confidence": "chac",
+    "evidence": "Sách KHGD Lớp 3 Bài 11 ghi rõ cảm biến màu; khối 30x30x30mm trong bộ Alpha C 2323; texture rbbc20texture1"
+  },
+  "BE-1154": {
+    "nameVi": "Cảm biến đọc mã quang học OID",
+    "kind": "sensor",
+    "sizeMm": [
+      30,
+      30,
+      30
+    ],
+    "sets": [
+      "set2321A"
+    ],
+    "confidence": "chac",
+    "evidence": "Texture rbbc35texture1 in rõ chữ 'OID'; đầu đọc mã chấm OID trên giáo trình trong bộ Alpha A 2321A"
+  },
+  "BE-1157": {
+    "nameVi": "Mảng cảm biến dò đường 7 kênh",
+    "kind": "sensor",
+    "sizeMm": [
+      129.6,
+      25,
+      10
+    ],
+    "sets": [
+      "set2421",
+      "setTemp"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2421 Beta Set ghi rõ 7-Channel Grayscale Detection Module; thanh dài 130mm màu xanh ngọc"
+  },
+  "BE-1158": {
+    "nameVi": "Cảm biến quang điện",
+    "kind": "sensor",
+    "sizeMm": [
+      20.2,
+      30,
+      38
+    ],
+    "sets": [
+      "set2508"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2508E Innovation Storm ghi rõ 3 Photoelectric Sensor; mesh 20.2x30x38mm dòng 11xx"
+  },
+  "BE-1165": {
+    "nameVi": "Cảm biến dò line",
+    "kind": "sensor",
+    "sizeMm": [
+      20,
+      11.7,
+      30
+    ],
+    "sets": [
+      "setlebo5.0-2",
+      "setlebo5.0-3"
+    ],
+    "confidence": "kha",
+    "evidence": "Mesh cảm biến dòng 11xx kích thước nhỏ 20x11.7x30mm hướng xuống mặt đất trong bộ Lebo 5.0-2 và 5.0-3"
+  },
+  "BE-1245": {
+    "nameVi": "Cảm biến khoảng cách laser",
+    "kind": "sensor",
+    "sizeMm": [
+      20.2,
+      30,
+      38
+    ],
+    "sets": [
+      "set2508"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2508E Innovation Storm ghi rõ Laser Ranging Sensor (2-120cm); mesh có cửa sổ phát laser đỏ"
+  },
+  "BE-1322": {
+    "nameVi": "Mắt thu hồng ngoại",
+    "kind": "sensor",
+    "sizeMm": [
+      30,
+      33.2,
+      30
+    ],
+    "sets": [
+      "set2324"
+    ],
+    "confidence": "chac",
+    "evidence": "Texture rbbc31texture1 in rõ chữ 'IR Receiver'; khối 30x33.2x30mm trong bộ Alpha D 2324"
+  },
+  "BE-1416": {
+    "nameVi": "Cảm biến ánh sáng",
+    "kind": "sensor",
+    "sizeMm": [
+      30,
+      30,
+      30
+    ],
+    "sets": [
+      "set2323"
+    ],
+    "confidence": "chac",
+    "evidence": "Texture rbbc22texture1 in rõ chữ 'Light'; khối 30x30x30mm trong bộ Alpha C 2323"
+  },
+  "BE-1536": {
+    "nameVi": "Đèn LED đa màu",
+    "kind": "light",
+    "sizeMm": [
+      20.2,
+      30,
+      38
+    ],
+    "sets": [
+      "set2106+",
+      "set2108+",
+      "set2508"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2108+E, 2106+E và 2508E ghi rõ Color Lamp (đèn 7 màu); mesh có vòm đèn LED đổi màu"
+  },
+  "BE-1537": {
+    "nameVi": "Đèn LED đa màu",
+    "kind": "light",
+    "sizeMm": [
+      30,
+      35,
+      30
+    ],
+    "sets": [
+      "set2321A"
+    ],
+    "confidence": "chac",
+    "evidence": "Texture rbbc36texture1 in rõ chữ 'LED'; khối 30x35x30mm có chỏm đèn nhô cao trong bộ Alpha A 2321A"
+  },
+  "BE-1553": {
+    "nameVi": "Đèn LED",
+    "kind": "light",
+    "sizeMm": [
+      39,
+      10.8,
+      29
+    ],
+    "sets": [
+      "setlebo5.0-1"
+    ],
+    "confidence": "kha",
+    "evidence": "Mesh dòng 15xx vỏ Lebo 39x10.8x29mm có chỏm đèn LED hiển thị trong bộ Lebo 5.0-1"
+  },
+  "BE-1601": {
+    "nameVi": "Cảm biến chạm",
+    "kind": "sensor",
+    "sizeMm": [
+      39,
+      14.1,
+      29
+    ],
+    "sets": [
+      "setlebo5.0-1"
+    ],
+    "confidence": "kha",
+    "evidence": "Mesh dòng 16xx vỏ Lebo 39x14.1x29mm có phím bấm cơ học ở mặt trên trong bộ Lebo 5.0-1"
+  },
+  "BE-1624": {
+    "nameVi": "Cảm biến chạm",
+    "kind": "sensor",
+    "sizeMm": [
+      20.2,
+      30,
+      41.5
+    ],
+    "sets": [
+      "set2106+",
+      "set2108+",
+      "set2508"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2108+E, 2106+E và 2508E ghi rõ Touch Sensor; mesh có cần gạt/nút bấm đỏ nhô cao 41.5mm"
+  },
+  "BE-1743": {
+    "nameVi": "Mô-đun camera AI",
+    "kind": "camera",
+    "sizeMm": [
+      50,
+      50,
+      34.1
+    ],
+    "sets": [
+      "set2108+"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2108+E ghi rõ AI Vision Module (nhận dạng hình ảnh, lập trình Python); mesh vỏ đen 50x50x34.1mm"
+  },
+  "BE-1756": {
+    "nameVi": "Mô-đun camera AI có màn hình",
+    "kind": "camera",
+    "sizeMm": [
+      69.5,
+      62.8,
+      18.6
+    ],
+    "sets": [
+      "set2508"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2508E ghi rõ AI CAM V2.0 với màn hình cảm ứng 2.4 inch; mesh 69.5x62.8x18.6mm"
+  },
+  "BE-1759": {
+    "nameVi": "Bảng ma trận cảm ứng",
+    "kind": "sensor",
+    "sizeMm": [
+      68.4,
+      6,
+      70
+    ],
+    "sets": [
+      "setlebo5.0-3"
+    ],
+    "confidence": "doan",
+    "evidence": "Tấm phẳng vuông 68.4x6x70mm gồm 16 mảng màu làm bàn cờ ma trận/tấm cảm ứng trong bộ Lebo 5.0-3"
+  },
+  "BE-2209": {
+    "nameVi": "Cảm biến nhận dạng giọng nói",
+    "kind": "sensor",
+    "sizeMm": [
+      50,
+      31.4,
+      30
+    ],
+    "sets": [
+      "set2324"
+    ],
+    "confidence": "chac",
+    "evidence": "Texture rbbc33texture1 in rõ chữ 'Speech Recognition'; khối 50x31.4x30mm trong bộ Alpha D 2324"
+  },
+  "BE-2218": {
+    "nameVi": "Cảm biến âm thanh",
+    "kind": "sensor",
+    "sizeMm": [
+      39,
+      12.1,
+      49.1
+    ],
+    "sets": [
+      "setlebo5.0-3"
+    ],
+    "confidence": "kha",
+    "evidence": "Mesh dòng 22xx vỏ Lebo kích thước 39x12.1x49.1mm có lỗ màng thu âm thanh/micro trong bộ Lebo 5.0-3"
+  },
+  "BE-2222": {
+    "nameVi": "Cảm biến âm thanh",
+    "kind": "sensor",
+    "sizeMm": [
+      30,
+      30.1,
+      30
+    ],
+    "sets": [
+      "set2322"
+    ],
+    "confidence": "chac",
+    "evidence": "Texture rbbc26texture1 in rõ chữ 'MIC'; khối 30x30.1x30mm trong bộ Alpha B 2322"
+  },
+  "BE-2257": {
+    "nameVi": "Cảm biến chạm",
+    "kind": "sensor",
+    "sizeMm": [
+      30,
+      31,
+      30
+    ],
+    "sets": [
+      "set2321A"
+    ],
+    "confidence": "chac",
+    "evidence": "Texture rbbc34texture1 in rõ chữ 'Button'; nút đỏ mặt trên; dùng ở Bài 12 trong Lab và kit set2321A"
+  },
+  "BE-2260": {
+    "nameVi": "Cảm biến nghiêng",
+    "kind": "sensor",
+    "sizeMm": [
+      30,
+      30,
+      30
+    ],
+    "sets": [
+      "set2322"
+    ],
+    "confidence": "chac",
+    "evidence": "Texture rbbc25texture1 in rõ chữ 'Tilt'; khối 30x30x30mm trong bộ Alpha B 2322"
+  },
+  "BE-2626": {
+    "nameVi": "Cảm biến con quay hồi chuyển 6 trục",
+    "kind": "sensor",
+    "sizeMm": [
+      20.2,
+      30,
+      38
+    ],
+    "sets": [
+      "set2508"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2508E ghi rõ AHRS Sensor (Six-axis attitude data); texture rbbc29texture1 có sơ đồ hệ trục tọa độ"
+  },
+  "BE-2632": {
+    "nameVi": "Cảm biến từ trường",
+    "kind": "sensor",
+    "sizeMm": [
+      39,
+      10.8,
+      29
+    ],
+    "sets": [
+      "setlebo5.0-4"
+    ],
+    "confidence": "kha",
+    "evidence": "Mesh dòng 26xx vỏ Lebo kích thước 39x10.8x29mm trong bộ Lebo 5.0-4 (tương ứng cảm biến từ trường/la bàn)"
+  },
+  "BE-2701": {
+    "nameVi": "Cảm biến chiết áp xoay",
+    "kind": "sensor",
+    "sizeMm": [
+      30,
+      48.4,
+      30
+    ],
+    "sets": [
+      "set2322"
+    ],
+    "confidence": "chac",
+    "evidence": "Texture rbbc24texture1 in rõ chữ 'Potentiometer'; khối 30x48.4x30mm có trục xoay trong bộ Alpha B 2322"
+  },
+  "BE-2705": {
+    "nameVi": "Cảm biến chiết áp xoay",
+    "kind": "sensor",
+    "sizeMm": [
+      39,
+      27.2,
+      29
+    ],
+    "sets": [
+      "setlebo5.0-1"
+    ],
+    "confidence": "chac",
+    "evidence": "Mesh dòng 27xx vỏ Lebo có núm xoay tròn màu cam nhô cao 27.2mm trong bộ Lebo 5.0-1"
+  },
+  "BE-3570": {
+    "nameVi": "Động cơ lớn",
+    "kind": "motor",
+    "sizeMm": [
+      40,
+      55,
+      120.1
+    ],
+    "sets": [
+      "set2108+"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2108+E ghi rõ Large Motor tích hợp encoder; kích thước lớn 40x55x120.1mm"
+  },
+  "BE-3571": {
+    "nameVi": "Động cơ vừa",
+    "kind": "motor",
+    "sizeMm": [
+      30,
+      40,
+      77.1
+    ],
+    "sets": [
+      "set2108+"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2108+E ghi rõ Medium Motor một trục ra; kích thước 30x40x77.1mm"
+  },
+  "BE-3579": {
+    "nameVi": "Động cơ",
+    "kind": "motor",
+    "sizeMm": [
+      30.1,
+      40.5,
+      70
+    ],
+    "sets": [
+      "set2106+"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2106+E Defender WiseKit; động cơ vỏ xám kích thước 30.1x40.5x70mm"
+  },
+  "BE-3581": {
+    "nameVi": "Động cơ thông minh",
+    "kind": "motor",
+    "sizeMm": [
+      30.1,
+      40.5,
+      70
+    ],
+    "sets": [
+      "set2321A",
+      "set2323",
+      "set2324",
+      "set2421"
+    ],
+    "confidence": "chac",
+    "evidence": "Động cơ vỏ trắng đĩa xoay xanh ngọc chuẩn trong các bộ Alpha (2321A/2323/2324) và Beta (2421), dùng xuyên suốt Lab"
+  },
+  "BE-3582": {
+    "nameVi": "Động cơ giảm tốc lớn",
+    "kind": "motor",
+    "sizeMm": [
+      30.1,
+      50.2,
+      70
+    ],
+    "sets": [
+      "set2508"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2508E Innovation Storm ghi rõ Large Geared Motor; kích thước 30.1x50.2x70mm trục ra kép"
+  },
+  "BE-3588": {
+    "nameVi": "Động cơ",
+    "kind": "motor",
+    "sizeMm": [
+      30.1,
+      40,
+      70.2
+    ],
+    "sets": [
+      "setlebo5.0-1",
+      "setlebo5.0-2",
+      "setlebo5.0-4",
+      "setlebo5.0-test"
+    ],
+    "confidence": "chac",
+    "evidence": "Động cơ chính cho các cấp bộ Lebo 5.0 (5.0-1, 5.0-2, 5.0-4); mesh 30.1x40x70.2mm"
+  },
+  "BE-5147": {
+    "nameVi": "Bộ điều khiển M6-RCU",
+    "kind": "controller",
+    "sizeMm": [
+      70,
+      32.1,
+      70.1
+    ],
+    "sets": [
+      "set2106+"
+    ],
+    "confidence": "chac",
+    "evidence": "Texture M6; danh mục ZMROBO 2106+E ghi rõ M6-RCU Cortex-M4 màn hình màu 2.4 inch, kích thước 70x32.1x70.1mm"
+  },
+  "BE-5148": {
+    "nameVi": "Bộ điều khiển E6-RCU",
+    "kind": "controller",
+    "sizeMm": [
+      70.2,
+      43.8,
+      110.2
+    ],
+    "sets": [
+      "set2108+"
+    ],
+    "confidence": "chac",
+    "evidence": "brick_config说明文件 ghi 'rcu: BE-5148'; danh mục ZMROBO 2108+E ghi rõ E6-RCU màn hình HD 2.4 inch kích thước 70.2x43.8x110.2mm"
+  },
+  "BE-5158": {
+    "nameVi": "Bộ điều khiển M5",
+    "kind": "controller",
+    "sizeMm": [
+      70,
+      28.7,
+      70
+    ],
+    "sets": [
+      "set2321A"
+    ],
+    "confidence": "chac",
+    "evidence": "Smart Hub M5 vỏ trắng đáy xanh ngọc ma trận LED 5x5; dùng xuyên suốt Lab Bài 2/3/11/12/13/16/19 trong bộ Alpha A 2321A"
+  },
+  "BE-5161": {
+    "nameVi": "Bộ điều khiển C6-RCU",
+    "kind": "controller",
+    "sizeMm": [
+      70,
+      30.3,
+      70
+    ],
+    "sets": [
+      "set2421"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2421 Beta Set ghi rõ C6-RCU màn hình màu 1.8 inch, tích hợp Bluetooth, Mic; kích thước 70x30.3x70mm xanh ngọc"
+  },
+  "BE-5166": {
+    "nameVi": "Bộ điều khiển E7-RCU",
+    "kind": "controller",
+    "sizeMm": [
+      70.1,
+      38.7,
+      110.2
+    ],
+    "sets": [
+      "set2508"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2508E Innovation Storm ghi rõ E7-RCU màn hình cảm ứng 3.2 inch, 8 cổng motor, 8 cổng sensor, kích thước 70.1x38.7x110.2mm"
+  },
+  "BE-5168": {
+    "nameVi": "Bộ điều khiển RCU Tianji",
+    "kind": "controller",
+    "sizeMm": [
+      89.6,
+      40.6,
+      90
+    ],
+    "sets": [
+      "set2521"
+    ],
+    "confidence": "chac",
+    "evidence": "Bộ điều khiển trung tâm trong bộ ZMROBO JMC-NY-2521 (Tianji/Gamma); kích thước 89.6x40.6x90mm"
+  },
+  "BE-5171": {
+    "nameVi": "Bộ điều khiển RCU Lebo",
+    "kind": "controller",
+    "sizeMm": [
+      70,
+      20.5,
+      80
+    ],
+    "sets": [
+      "setlebo5.0-1"
+    ],
+    "confidence": "chac",
+    "evidence": "Bộ điều khiển trung tâm trong bộ Lebo 5.0-1; mesh 70x20.5x80mm"
+  },
+  "BE-6208": {
+    "nameVi": "Cảm biến khoảng cách hồng ngoại",
+    "kind": "sensor",
+    "sizeMm": [
+      30,
+      30,
+      30
+    ],
+    "sets": [
+      "set2323"
+    ],
+    "confidence": "chac",
+    "evidence": "Texture rbbc21texture1 in rõ chữ 'IR Range Finder'; khối 30x30x30mm trong bộ Alpha C 2323"
+  },
+  "BE-6311": {
+    "nameVi": "Cảm biến siêu âm",
+    "kind": "sensor",
+    "sizeMm": [
+      60,
+      35,
+      51
+    ],
+    "sets": [
+      "set2108+"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2108+E ghi rõ Ultrasonic Sensor; mesh có 2 ống phát thu sóng âm kích thước 60x35x51mm"
+  },
+  "BE-6313": {
+    "nameVi": "Cảm biến siêu âm",
+    "kind": "sensor",
+    "sizeMm": [
+      50,
+      30,
+      30
+    ],
+    "sets": [
+      "set2322"
+    ],
+    "confidence": "chac",
+    "evidence": "Texture rbbc23texture1 in rõ chữ 'Ultrasonic'; 2 mắt tròn ở đầu; dùng xuyên suốt Lab Bài 3/13/19/20 trong bộ Alpha B 2322"
+  },
+  "BE-6317": {
+    "nameVi": "Cảm biến siêu âm",
+    "kind": "sensor",
+    "sizeMm": [
+      39,
+      22.8,
+      49
+    ],
+    "sets": [
+      "setlebo5.0-2"
+    ],
+    "confidence": "chac",
+    "evidence": "Mesh dòng 63xx có 2 ống trụ siêu âm nhô ra đặc trưng vỏ Lebo 39x22.8x49mm trong bộ Lebo 5.0-2"
+  },
+  "BE-9225": {
+    "nameVi": "Cảm biến ngọn lửa",
+    "kind": "sensor",
+    "sizeMm": [
+      39,
+      10.8,
+      29
+    ],
+    "sets": [
+      "setlebo5.0-2"
+    ],
+    "confidence": "kha",
+    "evidence": "Mesh dòng 92xx vỏ Lebo 39x10.8x29mm trong bộ Lebo 5.0-2 (tương ứng cảm biến lửa Flame sensor trong giáo trình)"
+  },
+  "BE-9254": {
+    "nameVi": "Đĩa nhận diện tròn 50mm",
+    "kind": "rfid",
+    "sizeMm": [
+      50,
+      20,
+      50
+    ],
+    "sets": [],
+    "confidence": "kha",
+    "evidence": "Mesh đĩa tròn đường kính 50mm dày 20mm, dùng chung cấu trúc mesh với BE-9255 làm vật thể/thẻ nhận diện"
+  },
+  "BE-9255": {
+    "nameVi": "Bia nhận diện tròn 60mm",
+    "kind": "rfid",
+    "sizeMm": [
+      60,
+      20,
+      60
+    ],
+    "sets": [
+      "setTemp"
+    ],
+    "confidence": "chac",
+    "evidence": "Mesh đĩa tròn đường kính 60mm mang texture '圆形贴图' (vòng tròn đồng tâm làm bia ngắm / thẻ nhận diện mục tiêu)"
+  },
+  "BE-9262": {
+    "nameVi": "Mô-đun thu phát không dây 2.4G",
+    "kind": "rfid",
+    "sizeMm": [
+      30,
+      30.1,
+      30
+    ],
+    "sets": [
+      "setTemp"
+    ],
+    "confidence": "chac",
+    "evidence": "Texture rbbc... in rõ chữ '2.4G'; khối 30x30.1x30mm gắn mô-đun kết nối không dây 2.4GHz với tay cầm điều khiển"
+  },
+  "BE-9520": {
+    "nameVi": "Động cơ servo kỹ thuật số",
+    "kind": "servo",
+    "sizeMm": [
+      30.1,
+      50,
+      70
+    ],
+    "sets": [
+      "set2508"
+    ],
+    "confidence": "chac",
+    "evidence": "Danh mục ZMROBO 2508E Innovation Storm ghi rõ Digital Servo góc quay 360 độ; kích thước 30.1x50x70mm"
+  },
+  "BE-9528": {
+    "nameVi": "Động cơ servo thông minh",
+    "kind": "servo",
+    "sizeMm": [
+      30.1,
+      40.2,
+      50
+    ],
+    "sets": [
+      "setTemp"
+    ],
+    "confidence": "chac",
+    "evidence": "Động cơ servo kích thước 30.1x40.2x50mm đĩa quay tròn xanh ngọc tương thích hệ Alpha/Beta"
+  },
+  "BE-9529": {
+    "nameVi": "Động cơ servo",
+    "kind": "servo",
+    "sizeMm": [
+      30.1,
+      40.3,
+      50
+    ],
+    "sets": [
+      "setlebo5.0-2",
+      "setlebo5.0-3"
+    ],
+    "confidence": "chac",
+    "evidence": "Động cơ servo trong bộ Lebo 5.0-2 và 5.0-3; kích thước 30.1x40.3x50mm đĩa quay màu đỏ"
+  }
+}

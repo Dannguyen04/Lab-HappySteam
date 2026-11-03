@@ -1,0 +1,50 @@
+{
+  "folder": "lop1-bai06",
+  "assetFolder": "lop1-bai06",
+  "title": "Luật giao thông – Xe thông minh",
+  "pageTitle": "Xe thông minh nhận biết đèn giao thông",
+  "topic": "An toàn giao thông",
+  "model": "xe giao thông",
+  "baseName": "Xe giao thông",
+  "sheetName": "Lớp 1 · Bài 6: Luật giao thông – Xe thông minh",
+  "steps": 14,
+  "firstStep": "Lắp động cơ và khung xe",
+  "lede": "Em lắp xe, ghép khối nhận màu đèn và cho xe đi đúng tín hiệu trước cổng trường.",
+  "victory": "Em đã biết xanh đi, vàng chậm, đỏ dừng!",
+  "engine": { "class": "TrafficEngine", "file": "traffic-engine.js" },
+  "scene": {
+    "file": "traffic-scene.js",
+    "aria": "Xe tự hành ở đường trước cổng trường, đèn tín hiệu xanh, vàng, đỏ và vạch sang đường",
+    "stage": "Xe 3D nhận tín hiệu đèn giao thông",
+    "idle": "Ghép 9 thẻ. Chạm ▶ để xe nhận màu đèn nhé!"
+  },
+  "missions": {
+    "m1": { "title": "Lắp chiếc xe", "text": "Đánh dấu đủ 14 bước lắp xe." },
+    "m2": { "chip": "9 thẻ đúng màu", "tip": "Chờ xanh → nhanh → chờ vàng → chậm → chờ đỏ → dừng", "title": "Xe hiểu tín hiệu đèn", "text": "Ghép đúng 9 thẻ. Xanh chạy nhanh, vàng chạy chậm, đỏ dừng." },
+    "m3": { "chip": "Qua đường khi xanh", "tip": "Đèn xanh chỉ 3 giây: cần thẻ thỏ chạy nhanh", "title": "Qua vạch kịp đèn xanh", "text": "Khi đèn xanh ngắn, chọn thỏ nhanh. Rùa chậm sẽ không kịp!" },
+    "m4": { "title": "Xe an toàn sáng tạo", "text": "Gắn đèn ưu tiên, cản xe, biển an toàn hoặc kính chắn rồi chạy thử." },
+    "m5": { "pro": true, "chip": "Thử nhịp xanh", "tip": "Chạm đèn trong sa bàn để đổi 3 / 4 / 5 giây", "title": "Lập trình theo nhịp đèn", "text": "Chạm đèn để đổi 3, 4, 5 giây. Thử thỏ nhanh và rùa chậm xem khi nào qua kịp." }
+  },
+  "blocks": {
+    "toolbox": ["repeatStart", "repeatEnd", "sensorGreen", "sensorYellow", "sensorRed", "highSpeed", "lowSpeed", "motorStop"],
+    "pro": [],
+    "sample": ["start", "repeatStart", "sensorGreen", "highSpeed", "sensorYellow", "lowSpeed", "sensorRed", "motorStop", "repeatEnd"],
+    "empty": ["start", "repeatStart", "repeatEnd"]
+  },
+  "creative": {
+    "intro": "Em chọn <b>đèn ưu tiên</b>, <b>cản trước</b>, <b>biển an toàn</b> hoặc <b>kính chắn gió</b> để thử gắn trên xe 3D.",
+    "slots": 4,
+    "slotHint": "4 vị trí trên chiếc xe",
+    "resultTitle": "Chiếc xe an toàn của em",
+    "badge": "Xe cơ bản"
+  },
+  "metersProOnly": true,
+  "meters": [
+    { "label": "Tốc độ", "id": "m-traffic-speed", "value": 0, "unit": "mức", "note": "Xanh: nhanh · Vàng: chậm" },
+    { "label": "Thời gian đèn xanh", "id": "m-traffic-green", "value": 3, "unit": "giây", "note": "Chạm đèn trên sa bàn để đổi" },
+    { "label": "Quãng đường", "id": "m-traffic-distance", "value": 0, "unit": "m", "note": "Sa bàn minh họa" }
+  ],
+  "calc": "Nâng cao: so sánh thời gian xe qua vạch ở mức 4 và mức 8 với đèn xanh 3 / 4 / 5 giây.",
+  "calcProOnly": true,
+  "hint": "<b>Nhớ nhé:</b> 🟢 thỏ chạy nhanh → 🟡 rùa chạy chậm → 🔴 dừng lại. <b>Nâng cao:</b> chạm đèn để đổi nhịp xanh."
+}

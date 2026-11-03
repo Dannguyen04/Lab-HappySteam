@@ -1,0 +1,97 @@
+<title>Cơ cấu đòn bẩy · Lớp 3 · Bài 3 · Happy STEAM</title>
+<template data-slot="header-copy">
+      <div class="eyebrow">Lớp 3 · Bài 3 · Khám phá đòn bẩy và lực đàn hồi</div>
+      <h1>Cơ cấu đòn bẩy – Máy bắn đá</h1>
+      <p class="lede pro-only">Tìm hiểu đòn bẩy và lực đàn hồi qua mô hình cơ khí 24 trang. Trên sa bàn học tập, thử thả bóng mềm ảo vào vòng đích và so sánh ba nấc lực mô phỏng.</p>
+</template>
+
+<template data-slot="mission-chips">
+    <span class="chip" id="chip-m1" title="Bấm “Đã lắp xong bước này” ở cả 24 bước"><i>1</i>Lắp xong 24 bước</span>
+    <span class="chip" id="chip-m2" title="Mức 1 là mẫu ban đầu; chờ bóng chạm sân"><i>2</i>Chạy mẫu cơ khí</span>
+    <span class="chip" id="chip-m3" title="Mức 1 hụt vòng, mức 3 vượt vòng; thử mức 2"><i>3</i>Bóng vào vòng đích</span>
+    <span class="chip" id="chip-m4" title="Gắn chi tiết ở xưởng rồi thả bóng một lượt"><i>4</i>Sáng tạo mô hình</span>
+    <span class="chip pro-only" id="chip-m5" title="Đọc vị trí vòng đích ở từng lượt rồi chọn nấc thích hợp"><i>5</i>Thử ba vòng</span>
+</template>
+
+<template data-slot="victory-copy">
+      <p>Em đã xem đủ 24 trang, thử đòn bẩy một lượt, tìm nấc phù hợp để bóng mềm vào vòng đích và sáng tạo mô hình mới. Hãy giải thích vai trò của điểm tựa và lực đàn hồi.</p>
+      <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM3-03</code></p>
+</template>
+
+<template data-slot="assembly-tab">
+      <i>1</i><span><b>Lắp ráp</b><small>24 bước theo sách</small></span>
+</template>
+
+<template data-slot="assembly-count">
+          <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 24</span></span>
+</template>
+
+<template data-slot="assembly-canvas">
+              <canvas id="view" aria-label="Mô hình xe đòn bẩy phóng bóng mềm 3D: kéo để xoay, cuộn để phóng to"></canvas>
+</template>
+
+<template data-slot="assembly-slider">
+                <input id="slider" type="range" min="1" max="24" value="1" aria-label="Chọn bước lắp">
+</template>
+
+<template data-slot="assembly-meter-step">
+          <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 24</small></div><div class="s" id="am-step-s">Quan sát khung xe và chi tiết đòn bẩy</div></dd></div>
+</template>
+
+<template data-slot="assembly-meter-done">
+          <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 24</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+</template>
+
+<template data-slot="book-image">
+          <img id="book-img" src="assets/lop3-bai03/step-01.jpg" alt="Hình sách hướng dẫn lắp ráp mô hình đòn bẩy">
+</template>
+
+<template data-slot="book-link">
+          <a id="book-pdf" class="link" href="assets/lop3-bai03/step-01.jpg" target="_blank" rel="noopener">Mở hình lớn ↗</a>
+</template>
+
+<template data-slot="creative-intro">
+          <p class="status-text">Thử trang trí mô hình đòn bẩy bằng <b>giỏ bóng mềm</b>, <b>biển số đội</b>, <b>thước vạch khoảng cách</b> hoặc <b>chốt giữ bánh</b>. Đây là gói minh họa trong xưởng 3D; việc lắp thực tế cần đối chiếu linh kiện có sẵn.</p>
+</template>
+
+<template data-slot="creative-canvas">
+        <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình xe đòn bẩy phóng bóng mềm 3D đang sáng tạo"></div>
+</template>
+
+<template data-slot="creative-slot-label">
+        <div class="panel-h"><h2>Tự gắn chi tiết</h2><small>4 vị trí trang trí và quan sát</small></div>
+</template>
+
+<template data-slot="creative-result-label">
+        <div class="panel-h"><h2>Mô hình đòn bẩy của em sẽ có</h2></div>
+</template>
+
+<template data-slot="sim-upgrade-label">
+            <small id="sim-active-upgrade-badge" class="status-tag">Mô hình đòn bẩy cơ bản</small>
+</template>
+
+<template data-slot="sim-scene">
+          <canvas id="space-scene" aria-label="Sân hội khoa học nhìn ngang: mô hình đòn bẩy thả bóng mềm ảo vào vòng điểm theo ba nấc mô phỏng"></canvas>
+          <div class="sim-stage" id="sim-stage" aria-label="Sa bàn thử nghiệm đòn bẩy và vòng điểm"></div>
+          <p class="scene-idle" id="scene-idle">Chọn nấc lực mô phỏng rồi chạm Thả bóng</p>
+</template>
+
+<template data-slot="sim-meters">
+        <dl class="meters pro-only">
+          <div class="meter"><dt>Nấc mô phỏng</dt><dd><div class="v" id="m-level">1<small>/ 3</small></div><div class="s">Thử đổi nấc</div></dd></div>
+          <div class="meter"><dt>Vị trí bóng</dt><dd><div class="v" id="m-dist">0<small>đơn vị</small></div><div class="s">Vị trí hiển thị trên sa bàn</div></dd></div>
+          <div class="meter"><dt>Lượt</dt><dd><div class="v" id="m-round">1<small>/ 3</small></div><div class="s">Mỗi lượt vòng đích đổi chỗ</div></dd></div>
+        </dl>
+</template>
+
+<template data-slot="sim-calculation">
+        <div class="panel-h"><h2>Thí nghiệm trên sa bàn</h2><small>Các nấc lực và số đo chỉ dùng trong trò chơi mô phỏng, không phải thông số kỹ thuật.</small></div>
+        <div class="pad calc">
+          <p class="calc-eq" id="calc-eq1"></p>
+          <p class="calc-eq" id="calc-eq2"></p>
+        </div>
+</template>
+
+<template data-slot="sim-hint">
+            <p class="hint"><b>M2:</b> Thả bóng với mức 1 và xem hết lượt. <b>M3:</b> thử mức 2 để bóng nằm trong vòng giữa. <b>Nâng cao:</b> đọc vị trí vòng đích mỗi lượt, chỉnh nấc và hoàn thành 3 vòng liên tiếp.</p>
+</template>

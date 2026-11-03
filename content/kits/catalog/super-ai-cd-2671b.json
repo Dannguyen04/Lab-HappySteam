@@ -1,0 +1,49 @@
+{
+ "id": "super-ai-cd-2671b",
+ "name": "2026 Super AI Prop Set - Cosmic Odyssey (Bộ đạo cụ sa bàn 2026 Du Hành Vũ Trụ)",
+ "model": "JMC-CD-2671B",
+ "controller": "Sử dụng nguồn từ Mô-đun cấp nguồn motor kép độc lập",
+ "baseKitRequired": null,
+ "pitchMm": 10,
+ "pieces": null,
+ "countedPieces": 3,
+ "complete": false,
+ "sources": [
+  "https://www.zmrobo.net/products/92",
+  "https://www.zmrobo.com"
+ ],
+ "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2681B/images/6-10.png: Bản đồ thi đấu và các đạo cụ thông minh đi kèm cho nội dung Bảng phổ thông.",
+ "parts": [
+  {
+   "code": "BE-9528",
+   "count": 1,
+   "nameVi": "Động cơ servo kỹ thuật số mini đạo cụ",
+   "group": "electronic",
+   "sizeMm": [
+    30.1,
+    40.2,
+    50
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 1,
+   "nameVi": "Mô-đun màn hình thông tin LCD 1.28 inch NFC/RFID",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 1,
+   "nameVi": "Mô-đun cấp nguồn motor hai cổng",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  }
+ ]
+}

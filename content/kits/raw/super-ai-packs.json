@@ -1,0 +1,1001 @@
+{
+  "JMC-NY-2681": {
+    "name": "2026 Super AI Expansion Set - Interstellar Cruise (Gói mở rộng 2026 Tuần Tra Liên Sao)",
+    "year": 2026,
+    "controller": "Sử dụng controller từ bộ nền: E6-RCU (BE-5148) hoặc M6-RCU (BE-5147)",
+    "baseKitRequired": "JMC-NY-2108+ (Intelligence Storm)",
+    "pieces": null,
+    "parts": [
+      {
+        "code": "BE-3581",
+        "nameVi": "Động cơ vừa encoder",
+        "nameSource": "Medium Geared Motor / 中型电机",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": null,
+        "nameVi": "Mô-đun màn hình thông tin LCD 1.28 inch NFC/RFID",
+        "nameSource": "Info-Tag Module (1.28-inch color screen, dynamic text, RFID/NFC) / 信息标签模块",
+        "count": 1,
+        "hasMesh": false
+      },
+      {
+        "code": "BE-1157",
+        "nameVi": "Mảng cảm biến dò đường thông minh 7 kênh",
+        "nameSource": "Smart Tracking Module / 智能循迹模块",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BE-9528",
+        "nameVi": "Động cơ servo kỹ thuật số mini",
+        "nameSource": "Mini Digital Servo / 小型舵机",
+        "count": 2,
+        "hasMesh": true
+      }
+    ],
+    "partsListComplete": false,
+    "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2681/images/5-7.png: Robot thi đấu hoàn chỉnh ghép từ bộ nền 2108+ và gói 2681; 5-1.png đến 5-6.png: Chi tiết 4 module điện tử kèm huy hiệu số lượng chính thức (icon-one.png = 1, icon-two.png = 2).",
+    "sources": [
+      "https://www.zmrobo.net/products/93",
+      "https://www.zmrobo.com (Product ID 883)"
+    ],
+    "note": "Gói mở rộng thi đấu 2026 Super AI - Interstellar Cruise (星际巡航) dành cho Bảng nâng cao. Kết hợp với bộ kit nền Intelligence Storm (2108+). Đạo cụ sa bàn tương ứng: JMC-CD-2671."
+  },
+  "JMC-NY-2681B": {
+    "name": "2026 Super AI Expansion Set - Cosmic Odyssey (Gói mở rộng 2026 Du Hành Vũ Trụ)",
+    "year": 2026,
+    "controller": "Sử dụng controller từ bộ nền: E6-RCU (BE-5148) hoặc M6-RCU (BE-5147)",
+    "baseKitRequired": "JMC-NY-2108+ (Intelligence Storm)",
+    "pieces": null,
+    "parts": [
+      {
+        "code": "BE-9528",
+        "nameVi": "Động cơ servo kỹ thuật số mini",
+        "nameSource": "Mini Digital Servo / 小型舵机",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": null,
+        "nameVi": "Mô-đun màn hình thông tin LCD 1.28 inch NFC/RFID",
+        "nameSource": "Info-Tag Module (1.28-inch color screen, dynamic text, RFID/NFC) / 信息标签模块",
+        "count": 1,
+        "hasMesh": false
+      },
+      {
+        "code": null,
+        "nameVi": "Tay cầm điều khiển từ xa 2.4G",
+        "nameSource": "2.4G Wireless Remote Handle / 遥控手柄 (JMC-RT-9259)",
+        "count": 1,
+        "hasMesh": false
+      }
+    ],
+    "partsListComplete": false,
+    "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2681B/images/5-5.png: Mô hình robot thi đấu hoàn chỉnh kết hợp bộ kit nền 2108+; 5-1.png đến 5-4.png: Chi tiết module điện tử kèm huy hiệu số lượng icon-one.",
+    "sources": [
+      "https://www.zmrobo.net/products/92",
+      "https://www.zmrobo.com (Product ID 882)"
+    ],
+    "note": "Gói mở rộng thi đấu 2026 Super AI - Cosmic Odyssey (星宇奇航) dành cho Bảng phổ thông. Kết hợp với bộ kit nền Intelligence Storm (2108+). Đạo cụ sa bàn tương ứng: JMC-CD-2671B."
+  },
+  "JMC-NY-2685": {
+    "name": "2026 Super AI Independent Competition Kit - Smart Craftsmanship (Bộ thi đấu độc lập 2026 Trí Tuệ Cơ Khí / 智达天工)",
+    "year": 2026,
+    "controller": "E7-RCU (BE-5166) tích hợp AI Vision CAM 2.0 (BE-1756)",
+    "baseKitRequired": null,
+    "pieces": null,
+    "parts": [
+      {
+        "code": "BE-5166",
+        "nameVi": "Bộ điều khiển chính E7-RCU",
+        "nameSource": "E7-RCU Master Controller (RK3566, NPU 1.0T, 2GB RAM, 3.5\" Touchscreen) / E7主控",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BE-1756",
+        "nameVi": "Cảm biến thị giác AI CAM 2.0",
+        "nameSource": "AI CAM 2.0 Vision Sensor (2MP, Auto-focus, Dual-fill LED) / 视觉传感器",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BE-3581",
+        "nameVi": "Động cơ vừa encoder trục đôi",
+        "nameSource": "Medium Geared Motor (Dual shaft output, built-in encoder) / 中型电机",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BE-3582",
+        "nameVi": "Động cơ lớn encoder",
+        "nameSource": "Large Geared Motor (High torque, built-in encoder) / 大型电机",
+        "count": 5,
+        "hasMesh": true
+      },
+      {
+        "code": null,
+        "nameVi": "Tay cầm điều khiển từ xa 2.4G",
+        "nameSource": "2.4G Wireless Remote Handle / 遥控手柄 (JMC-RT-9259)",
+        "count": 1,
+        "hasMesh": false
+      },
+      {
+        "code": "BE-9520",
+        "nameVi": "Động cơ servo kỹ thuật số thi đấu 360 độ",
+        "nameSource": "Competition Digital Servo 360° / 竞赛数码舵机",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": null,
+        "nameVi": "Mô-đun màn hình thông tin LCD 1.28 inch NFC/RFID",
+        "nameSource": "Info-Tag Module (1.28-inch color screen, dynamic text, RFID/NFC) / 信息标签模块",
+        "count": 1,
+        "hasMesh": false
+      },
+      {
+        "code": "BE-9262",
+        "nameVi": "Mô-đun thu sóng không dây 2.4G",
+        "nameSource": "2.4G Wireless Receiver Module / 2.4G无线接收模块",
+        "count": 1,
+        "hasMesh": true
+      }
+    ],
+    "partsListComplete": false,
+    "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2685/images/6-2.png: Hộp bộ kit và danh mục 8 loại linh kiện điện tử kèm huy hiệu số lượng chính thức (E7 x1, CAM 2.0 x1, Medium Motor x2, Large Motor x5, Remote x1, Digital Servo x1, Info-Tag x1, 2.4G Receiver x1); 6-3.png: Robot thi đấu tiêu chuẩn 4 bánh Mecanum.",
+    "sources": [
+      "https://www.zmrobo.net/products/91",
+      "https://www.zmrobo.com (Product ID 876)"
+    ],
+    "note": "Bộ kit thi đấu độc lập cao cấp nhất của dòng Super AI (智达天工). Không cần mua thêm bộ nền. Đi kèm hộp chứa chuyên dụng, hệ dẫn động bánh Mecanum 4 bánh và cơ cấu tay gắp phân loại nông sản. Đạo cụ sa bàn tương ứng: JMC-CD-2675."
+  },
+  "JMC-NY-2585B": {
+    "name": "2025 Super AI Independent Competition Kit - Tower Conquest (Bộ thi đấu độc lập 2025 Đoạt Tháp Kỳ Binh / 夺塔奇兵)",
+    "year": 2025,
+    "controller": "Bộ điều khiển kép: E6-RCU (BE-5148) làm chủ + M6-RCU (BE-5147) làm tớ",
+    "baseKitRequired": null,
+    "pieces": null,
+    "parts": [
+      {
+        "code": "BE-5148",
+        "nameVi": "Bộ điều khiển chính E6-RCU",
+        "nameSource": "E6-RCU Master Controller / E6主控",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BE-3582",
+        "nameVi": "Động cơ lớn encoder",
+        "nameSource": "Large Geared Motor / 大型减速电机",
+        "count": 4,
+        "hasMesh": true
+      },
+      {
+        "code": "BE-5147",
+        "nameVi": "Bộ điều khiển M6-RCU",
+        "nameSource": "M6-RCU Secondary Controller / M6从控",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BE-3581",
+        "nameVi": "Động cơ vừa encoder trục đôi",
+        "nameSource": "Medium Geared Motor / 中型减速电机",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BE-9262",
+        "nameVi": "Mô-đun thu sóng không dây 2.4G",
+        "nameSource": "2.4G Wireless Receiver Module / 2.4G无线接收模块",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": null,
+        "nameVi": "Tay cầm điều khiển từ xa 2.4G",
+        "nameSource": "2.4G Wireless Remote Handle / 遥控手柄 (JMC-RT-9259)",
+        "count": 1,
+        "hasMesh": false
+      },
+      {
+        "code": "BE-9520",
+        "nameVi": "Động cơ servo kỹ thuật số thi đấu",
+        "nameSource": "Competition Digital Servo / 竞赛数码舵机",
+        "count": 2,
+        "hasMesh": true
+      }
+    ],
+    "partsListComplete": false,
+    "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2585/images/5-2.png: Hộp đựng sản phẩm và bảng 7 linh kiện điện tử kèm số lượng chính thức (E6 x1, M6 x1, Large Motor x4, Medium Motor x2, 2.4G Receiver x2, Remote x1, Digital Servo x2); 5-3.png: Robot thi đấu tiêu chuẩn 2 RCU E6+M6.",
+    "sources": [
+      "https://www.zmrobo.net/products/94",
+      "https://www.zmrobo.com (Product ID 863, JMC-NY-2585)"
+    ],
+    "note": "Bộ kit thi đấu độc lập 2025 (夺塔奇兵) dành cho hạng mục Engineering Innovation. Cấu hình đặc biệt sử dụng 2 bộ điều khiển (E6-RCU xử lý AI/chiến thuật + M6-RCU mở rộng cổng motor/servo). Đạo cụ sa bàn tương ứng: JMC-CD-2578."
+  },
+  "JMC-NY-2581": {
+    "name": "2025 Super AI Expansion Set - Interstellar Legend (Gói mở rộng 2025 Huyền Thoại Liên Sao / 星际传奇)",
+    "year": 2025,
+    "controller": "Sử dụng controller từ bộ nền: E6-RCU (BE-5148) hoặc M6-RCU (BE-5147)",
+    "baseKitRequired": "JMC-NY-2108+E (Intelligence Storm) hoặc JMC-NY-2106+E (Defender WiseKit)",
+    "pieces": null,
+    "parts": [
+      {
+        "code": "BE-9524A",
+        "nameVi": "Động cơ servo mini",
+        "nameSource": "Mini Block Servo / 小型积木舵机 (JMP-BE-9524A)",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BE-3579A",
+        "nameVi": "Động cơ vừa encoder trục đôi",
+        "nameSource": "Medium Motor / 中型马达 (JMP-BE-3579A)",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BE-3582A",
+        "nameVi": "Động cơ lớn encoder",
+        "nameSource": "Large Geared Motor / 大型积木减速电机 (JMP-BE-3582A)",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BE-1148",
+        "nameVi": "Cảm biến quang điện nhỏ",
+        "nameSource": "Small Photoelectric Sensor / 小光电 (JMP-BE-1148)",
+        "count": 3,
+        "hasMesh": true
+      },
+      {
+        "code": "BE-1149",
+        "nameVi": "Mô-đun dò đường thông minh",
+        "nameSource": "Smart Tracking Module / 智能寻迹模块 (JMP-BE-1149)",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BM-3035",
+        "nameVi": "Bi sắt lăn bánh dẫn hướng 10mm",
+        "nameSource": "Steel Caster Ball 10mm / 万向钢珠 (BM-3035)",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-8965",
+        "nameVi": "Thanh ray trượt dẫn hướng xanh ngọc 25 lỗ",
+        "nameSource": "Slide Guide Rail / 滑轨 (BP-8965)",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-8943",
+        "nameVi": "Thanh răng trượt xanh ngọc 15 lỗ",
+        "nameSource": "Gear Rack 15H / 齿条 (BP-8943)",
+        "count": 1,
+        "hasMesh": true
+      }
+    ],
+    "partsListComplete": false,
+    "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2581/images/1_2.png: Banner chính thức gói mở rộng; 2-2.png đến 2-6.png: Danh mục module điện tử chính thức kèm mã JMP-BE-xxxx và huy hiệu số lượng (icon-one x1, icon-two x2, icon-three x3); 2-7.png: Các linh kiện cơ khí đặc trưng (bi sắt, thanh ray, thanh răng).",
+    "sources": [
+      "https://www.zmrobo.net/products/95",
+      "https://www.zmrobo.com (Product ID 853)"
+    ],
+    "note": "Gói mở rộng thi đấu 2025 Super AI - Interstellar Legend (星际传奇) dành cho Bảng nâng cao THCS & THPT. Ghép nối với bộ kit nền Intelligence Storm hoặc Defender WiseKit. Đạo cụ sa bàn tương ứng: JMC-CD-2571."
+  },
+  "JMC-NY-2486": {
+    "name": "2024 Super AI Expansion Set - Interstellar Crossing (Gói mở rộng 2024 Vượt Qua Liên Sao / 星际穿越)",
+    "year": 2024,
+    "controller": "Sử dụng controller từ bộ nền: M6-RCU (BE-5147)",
+    "baseKitRequired": "JMC-NY-2106+E (Defender WiseKit)",
+    "pieces": 249,
+    "parts": [
+      {
+        "code": "BE-3582",
+        "nameVi": "Động cơ lớn encoder",
+        "nameSource": "Large Motor (Large Torque, Built-in Encoder Disk) / 大型马达",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BE-3581",
+        "nameVi": "Động cơ vừa encoder trục đôi",
+        "nameSource": "Medium motor (Biaxial Output, Built-in Encoder Disk) / 中型马达",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": null,
+        "nameVi": "Mô-đun đọc thẻ RFID và thẻ RFID mã hóa",
+        "nameSource": "RFID Module & Encrypted RFID Card / RFID模块与加密卡 (JMP-BE-1548A)",
+        "count": 1,
+        "hasMesh": false
+      },
+      {
+        "code": "BE-1157",
+        "nameVi": "Mảng cảm biến dò đường thông minh 7 kênh (quét ngưỡng tự động)",
+        "nameSource": "Intelligent Tracking Module (7-channel Grayscale Detection, Auto Threshold) / 智能循迹模块",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7045",
+        "nameVi": "Bánh răng 40 răng",
+        "nameSource": "40-tooth Gear / 40齿齿轮",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7054",
+        "nameVi": "Bánh răng 8 răng",
+        "nameSource": "8-tooth Gear / 8齿齿轮",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-6911",
+        "nameVi": "Tấm 3×3 lỗ tím",
+        "nameSource": "3x3 Hole Plate Purple / 3x3紫孔板",
+        "count": 3,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-6918",
+        "nameVi": "Tấm 5×11 lỗ xám",
+        "nameSource": "5x11 Hole Plate Gray / 5x11灰孔板",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-6910",
+        "nameVi": "Tấm đế 11×15 lỗ xám",
+        "nameSource": "11x15 Hole Plate Gray / 11x15大孔板",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-8818",
+        "nameVi": "Khung đế 7×11 trắng",
+        "nameSource": "7x11 Base Frame White / 7x11白框架",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-3976",
+        "nameVi": "Khung 5×7 xám",
+        "nameSource": "5x7 Frame Gray / 5x7灰框架",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-8819",
+        "nameVi": "Khung 3×5 xám",
+        "nameSource": "3x5 Frame Gray / 3x5灰框架",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7528",
+        "nameVi": "Thanh 15 lỗ xám",
+        "nameSource": "15-hole Beam Gray / 15孔梁",
+        "count": 4,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7528",
+        "nameVi": "Thanh 15 lỗ đen",
+        "nameSource": "15-hole Beam Black / 15孔黑梁",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7527A",
+        "nameVi": "Thanh 11 lỗ xám",
+        "nameSource": "11-hole Beam Gray / 11孔梁",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7526A",
+        "nameVi": "Thanh 9 lỗ xám",
+        "nameSource": "9-hole Beam Gray / 9孔梁",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7525A",
+        "nameVi": "Thanh 7 lỗ xám",
+        "nameSource": "7-hole Beam Gray / 7孔梁",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7524A",
+        "nameVi": "Thanh 5 lỗ xám",
+        "nameSource": "5-hole Beam Gray / 5孔梁",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7523A",
+        "nameVi": "Thanh 3 lỗ xám",
+        "nameSource": "3-hole Beam Gray / 3孔梁",
+        "count": 4,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7794",
+        "nameVi": "Thanh 7 lỗ vàng",
+        "nameSource": "7-hole Beam Yellow / 7孔黄梁",
+        "count": 3,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7078",
+        "nameVi": "Thanh chữ L 3×5 đen",
+        "nameSource": "3x5 L-Beam Black / 3x5黑L形梁",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7077",
+        "nameVi": "Thanh chữ L 3×3 đen",
+        "nameSource": "3x3 L-Beam Black / 3x3黑L形梁",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7074",
+        "nameVi": "Thanh góc vát xanh ngọc",
+        "nameSource": "Bent Beam Cyan / 青色折角梁",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7076",
+        "nameVi": "Thanh gấp góc bát giác trắng",
+        "nameSource": "Bent Octagon Beam White / 白色八角梁",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-8813",
+        "nameVi": "Bầu cánh quạt / Khối nối 3 cánh trắng",
+        "nameSource": "3-Rotor Hub White / 白色三叶连件",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7079",
+        "nameVi": "Thanh chữ L 2×4 đỏ cam",
+        "nameSource": "2x4 Bent Beam Red / 红色2x4折梁",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7080",
+        "nameVi": "Khớp chốt xám nối đôi",
+        "nameSource": "Gray Double Connector / 双孔连件",
+        "count": 3,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7094",
+        "nameVi": "Khối nối 2 lỗ xám",
+        "nameSource": "2-hole Connector / 灰双孔轴套件",
+        "count": 3,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7694",
+        "nameVi": "Vành bánh xe 43mm đen",
+        "nameSource": "Wheel Rim Black 43mm / 43mm黑色轮毂",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-3035",
+        "nameVi": "Lốp xe cao su trắng",
+        "nameSource": "Rubber Tire White / 白色橡胶轮胎圈",
+        "count": 4,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-3957",
+        "nameVi": "Ổ bi lăn bánh xe dẫn hướng",
+        "nameSource": "Caster Ball Socket / 万向轮套",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BM-3035",
+        "nameVi": "Bi sắt 10mm",
+        "nameSource": "Steel Ball 10mm / 10mm钢珠",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-8840",
+        "nameVi": "Bi lăn nhựa trắng 10mm",
+        "nameSource": "Plastic Ball White / 白色塑料万向珠",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BM-3071",
+        "nameVi": "Bi kim loại nhỏ",
+        "nameSource": "Small Metal Bearing / 小型金属滚珠",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7023",
+        "nameVi": "Bạc chặn trục vàng",
+        "nameSource": "Axle Bushing Yellow / 黄色轴套",
+        "count": 8,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7024",
+        "nameVi": "Bạc nửa vàng",
+        "nameSource": "Half Bushing Yellow / 黄色半轴套",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7012",
+        "nameVi": "Chốt đen 2L",
+        "nameSource": "Friction Pin Black 2L / 黑色摩擦销",
+        "count": 56,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7011",
+        "nameVi": "Chốt dài xanh dương 3L",
+        "nameSource": "Long Pin Blue 3L / 蓝色长销",
+        "count": 14,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-3990",
+        "nameVi": "Chốt trục đỏ 2L",
+        "nameSource": "Axle Pin Red 2L / 红色轴销",
+        "count": 7,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7010",
+        "nameVi": "Chốt ngắn màu be 1/2L",
+        "nameSource": "Half Pin Beige / 米色半销",
+        "count": 8,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7015",
+        "nameVi": "Chốt xám 2L không ma sát",
+        "nameSource": "Pin Gray Frictionless 2L / 灰色无阻力销",
+        "count": 16,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7003",
+        "nameVi": "Khớp nối góc 90° đen",
+        "nameSource": "90° Perpendicular Connector Black / 黑色直角连件",
+        "count": 6,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7030",
+        "nameVi": "Khớp nối thẳng / Ống bọc trục xám",
+        "nameSource": "Axle Connector Gray / 灰色轴套连件",
+        "count": 6,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7093",
+        "nameVi": "Khớp nối tròn đầu bi xám",
+        "nameSource": "Ball Joint Connector Gray / 灰球头连接件",
+        "count": 6,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7007",
+        "nameVi": "Khớp nối vuông 2 lỗ xám",
+        "nameSource": "Square Connector 2H Gray / 灰色双孔方件",
+        "count": 4,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7626",
+        "nameVi": "Khối nối chữ T đen",
+        "nameSource": "T-Connector Black / 黑色T形连件",
+        "count": 4,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7022",
+        "nameVi": "Tay quay 2 lỗ đen",
+        "nameSource": "Crank 2H Black / 黑色曲柄连件",
+        "count": 4,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7632",
+        "nameVi": "Trục chữ thập đen 12L",
+        "nameSource": "Cross Axle Black 12L / 12L黑色十字轴",
+        "count": 4,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7631",
+        "nameVi": "Trục chữ thập xám 10L",
+        "nameSource": "Cross Axle Gray 10L / 10L灰色十字轴",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7630",
+        "nameVi": "Trục chữ thập xám 8L",
+        "nameSource": "Cross Axle Gray 8L / 8L灰色十字轴",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7629",
+        "nameVi": "Trục chữ thập đen 6L",
+        "nameSource": "Cross Axle Black 6L / 6L黑色十字轴",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7628",
+        "nameVi": "Trục chữ thập xám 4L",
+        "nameSource": "Cross Axle Gray 4L / 4L灰色十字轴",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-3991",
+        "nameVi": "Trục chữ thập xám 3L",
+        "nameSource": "Cross Axle Gray 3L / 3L灰色十字轴",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7001",
+        "nameVi": "Khối nối trục 3 lỗ đỏ",
+        "nameSource": "Axle Joiner 3H Red / 红色三孔轴连接块",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7005",
+        "nameVi": "Khối nối góc vuông 2×2 xám",
+        "nameSource": "Corner Connector 2x2 Gray / 灰色2x2直角块",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BP-7002",
+        "nameVi": "Khối nối chữ thập xám",
+        "nameSource": "Cross Connector Gray / 灰色十字连接块",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": null,
+        "nameVi": "Vòng đệm và phụ kiện chốt phụ",
+        "nameSource": "Spacer / Washers / 垫片及辅助插销配件",
+        "count": 4,
+        "hasMesh": false
+      }
+    ],
+    "partsListComplete": true,
+    "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2486/images/7-1.png: Ảnh studio chính thức trải phẳng toàn bộ 59 chủng loại linh kiện cơ khí gồm 249 chi tiết sắp xếp hoàn chỉnh; 6-1.png đến 6-4.png: Chi tiết 4 module điện tử kèm số lượng chính thức (Large Motor x1, Medium Motor x2, RFID Module x1, Tracking Module x1).",
+    "sources": [
+      "https://www.zmrobo.net/products/96",
+      "https://www.zmrobo.com (Product ID 777)"
+    ],
+    "note": "Gói mở rộng thi đấu 2024 Super AI - Interstellar Crossing (星际穿越). Đầy đủ 249 chi tiết cơ khí (59 chủng loại) và 4 module điện tử. Đạo cụ sa bàn tương ứng: JMC-CD-2471 (661 chi tiết)."
+  },
+  "2022SUPERAI": {
+    "name": "2022 Super AI Competition Configuration - Super Track (Cấu hình thi đấu 2022 Siêu Quỹ Đạo / 超级轨迹赛)",
+    "year": 2022,
+    "controller": "Bộ điều khiển M6-RCU (BE-5147) từ bộ nền Intelligence Storm",
+    "baseKitRequired": "2 bộ JMC-NY-2108+ (Intelligence Storm)",
+    "pieces": null,
+    "parts": [
+      {
+        "code": null,
+        "nameVi": "Bộ pin sạc Lithium chuyên dụng",
+        "nameSource": "Lithium Battery / 锂电池 (JMC-CG-1001A)",
+        "count": 2,
+        "hasMesh": false
+      },
+      {
+        "code": "BE-1148",
+        "nameVi": "Cảm biến quang điện nhỏ",
+        "nameSource": "Photoelectric Sensor / 光电传感器 (JMC-CG-1001A)",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BE-1153",
+        "nameVi": "Cảm biến đo khoảng cách laser ToF",
+        "nameSource": "Laser Ranging Sensor / 激光测距传感器 (JMC-CG-1001A)",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": "BE-9528",
+        "nameVi": "Động cơ servo mini",
+        "nameSource": "Mini Servo Motor / 小型舵机 (JMC-CG-1001A)",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BE-9520",
+        "nameVi": "Động cơ servo kỹ thuật số thi đấu",
+        "nameSource": "Competition Block Digital Steering Gear / 竞赛数码舵机 (JMC-CG-1001A)",
+        "count": 2,
+        "hasMesh": true
+      },
+      {
+        "code": "BE-3582",
+        "nameVi": "Động cơ giảm tốc thi đấu lớn",
+        "nameSource": "Competition Block Deceleration Motor / 竞赛减速电机 (JMC-CG-1001A)",
+        "count": 4,
+        "hasMesh": true
+      }
+    ],
+    "partsListComplete": false,
+    "evidence": "references/super-ai/2022SUPERAI/2022-超级轨迹赛-海报（英文）_03.jpg: Poster chính thức gói mở rộng JMC-CG-1001A (dành cho 2 bộ 2108+) kèm số lượng 6 loại linh kiện điện tử và bố cục cơ khí hoàn chỉnh; 07.jpg & 08.jpg: Poster bộ đạo cụ JMP-CD3113 Blocks series 1, 2, 3.",
+    "sources": [
+      "Tài liệu luật thi đấu Super AI 2022",
+      "https://www.zmrobo.com (Poster chính thức 2022 Super Track Competition)"
+    ],
+    "note": "Cấu hình thi đấu Super AI 2022 Super Track gồm: 2 bộ nền 2108+ (Intelligence Storm) kết hợp với Gói mở rộng mã JMC-CG-1001A (bổ sung 2 pin lithium, 4 motor lớn, 2 servo số, 2 mini servo, 1 cảm biến laser ToF, 1 cảm biến quang điện và khối chi tiết cơ khí). Đạo cụ sa bàn tương ứng: JMP-CD3113 (gồm M6 RCU, 2 motor, 2 cảm biến laser/touch và 3 series khối lắp ráp)."
+  },
+  "JMC-CD-2671": {
+    "name": "2026 Super AI Prop Set - Interstellar Cruise (Bộ đạo cụ sa bàn 2026 Tuần Tra Liên Sao)",
+    "year": 2026,
+    "controller": "Sử dụng nguồn từ Mô-đun cấp nguồn motor kép độc lập",
+    "baseKitRequired": null,
+    "pieces": null,
+    "parts": [
+      {
+        "code": "BE-9528",
+        "nameVi": "Động cơ servo kỹ thuật số mini đạo cụ",
+        "nameSource": "Mini Digital Servo / 小型舵机",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": null,
+        "nameVi": "Mô-đun màn hình thông tin LCD 1.28 inch NFC/RFID",
+        "nameSource": "Info-Tag Module / 信息标签模块",
+        "count": 1,
+        "hasMesh": false
+      },
+      {
+        "code": null,
+        "nameVi": "Mô-đun cấp nguồn motor hai cổng",
+        "nameSource": "Two-port Motor Power Supply Module / 双口马达供电模块",
+        "count": 1,
+        "hasMesh": false
+      }
+    ],
+    "partsListComplete": false,
+    "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2681/images/6-10.png: Bản đồ sa bàn thi đấu 2026 và bảng liệt kê 3 linh kiện điện tử chuyên dụng cho cơ cấu đạo cụ cơ động.",
+    "sources": [
+      "https://www.zmrobo.net/products/93",
+      "https://www.zmrobo.com"
+    ],
+    "note": "Bộ đạo cụ nhiệm vụ trên sa bàn cho nội dung Super AI 2026 Bảng nâng cao (星际巡航). Bao gồm các mô hình trạm liên sao và cơ cấu mục tiêu tương tác chủ động có trang bị servo, module Info-Tag và bộ cấp nguồn motor riêng."
+  },
+  "JMC-CD-2671B": {
+    "name": "2026 Super AI Prop Set - Cosmic Odyssey (Bộ đạo cụ sa bàn 2026 Du Hành Vũ Trụ)",
+    "year": 2026,
+    "controller": "Sử dụng nguồn từ Mô-đun cấp nguồn motor kép độc lập",
+    "baseKitRequired": null,
+    "pieces": null,
+    "parts": [
+      {
+        "code": "BE-9528",
+        "nameVi": "Động cơ servo kỹ thuật số mini đạo cụ",
+        "nameSource": "Mini Digital Servo / 小型舵机",
+        "count": 1,
+        "hasMesh": true
+      },
+      {
+        "code": null,
+        "nameVi": "Mô-đun màn hình thông tin LCD 1.28 inch NFC/RFID",
+        "nameSource": "Info-Tag Module / 信息标签模块",
+        "count": 1,
+        "hasMesh": false
+      },
+      {
+        "code": null,
+        "nameVi": "Mô-đun cấp nguồn motor hai cổng",
+        "nameSource": "Two-port Motor Power Supply Module / 双口马达供电模块",
+        "count": 1,
+        "hasMesh": false
+      }
+    ],
+    "partsListComplete": false,
+    "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2681B/images/6-10.png: Bản đồ thi đấu và các đạo cụ thông minh đi kèm cho nội dung Bảng phổ thông.",
+    "sources": [
+      "https://www.zmrobo.net/products/92",
+      "https://www.zmrobo.com"
+    ],
+    "note": "Bộ đạo cụ nhiệm vụ trên sa bàn cho nội dung Super AI 2026 Bảng phổ thông (星宇奇航)."
+  },
+  "JMC-CD-2675": {
+    "name": "2026 Super AI Prop Set - Smart Craftsmanship (Bộ đạo cụ sa bàn 2026 Trí Tuệ Cơ Khí / 智达天工)",
+    "year": 2026,
+    "controller": null,
+    "baseKitRequired": null,
+    "pieces": null,
+    "parts": [
+      {
+        "code": null,
+        "nameVi": "Mô hình tháp trồng trọt trung tâm",
+        "nameSource": "Planting Tower Structure Model / 种植塔模型",
+        "count": 1,
+        "hasMesh": false
+      },
+      {
+        "code": null,
+        "nameVi": "Mô hình trạm nhận diện cây trồng",
+        "nameSource": "Crop Identification Target Station / 作物辨识模块模型",
+        "count": 2,
+        "hasMesh": false
+      },
+      {
+        "code": null,
+        "nameVi": "Mô hình máng nạp hạt giống",
+        "nameSource": "Seed Loading Bay Model / 种子装载区模型",
+        "count": 1,
+        "hasMesh": false
+      },
+      {
+        "code": null,
+        "nameVi": "Bản đồ bạt thi đấu 3000x2400mm",
+        "nameSource": "Competition Field Mat 3000x2400mm / 场地地图",
+        "count": 1,
+        "hasMesh": false
+      }
+    ],
+    "partsListComplete": false,
+    "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2685/images/7-12.png: Toàn cảnh sa bàn thi đấu 3000x2400mm gồm tháp trung tâm, trạm nhận diện và các khối nông sản; 4.png: Sơ đồ kích thước phân khu nhiệm vụ chi tiết.",
+    "sources": [
+      "https://www.zmrobo.net/products/91",
+      "https://www.zmrobo.com"
+    ],
+    "note": "Bộ đạo cụ nhiệm vụ sa bàn kích thước 3000mm x 2400mm cho nội dung 2026 Super AI 智达天工. Bao gồm 1 tháp trồng trọt trung tâm 2 tầng, 2 trạm camera nhận diện, khay hạt giống, khay phân bón và các khối lập phương màu."
+  },
+  "JMC-CD-2571": {
+    "name": "2025 Super AI Prop Set - Super Track (Bộ đạo cụ sa bàn 2025 Siêu Quỹ Đạo / 星际传奇)",
+    "year": 2025,
+    "controller": null,
+    "baseKitRequired": null,
+    "pieces": null,
+    "parts": [
+      {
+        "code": null,
+        "nameVi": "Mô hình trạm xuất phát và chướng ngại vật quỹ đạo",
+        "nameSource": "Base Station & Orbital Obstacles / 任务道具模型",
+        "count": null,
+        "hasMesh": false
+      },
+      {
+        "code": null,
+        "nameVi": "Bản đồ thi đấu Tiểu học & THCS/THPT chủ đề Hố đen vũ trụ",
+        "nameSource": "Field Mats (Primary & Junior/Senior Division) / 场地地图",
+        "count": 2,
+        "hasMesh": false
+      }
+    ],
+    "partsListComplete": false,
+    "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-CD-2571/images/3-1.png & 3-2.png: Sa bàn thi đấu kèm đạo cụ cho cả 2 bảng Tiểu học và THCS/THPT; 6-10.png: File đồ họa bản đồ sa bàn chuẩn HD.",
+    "sources": [
+      "https://www.zmrobo.net/products/95",
+      "https://www.zmrobo.com (Product ID 845)"
+    ],
+    "note": "Bộ đạo cụ sa bàn nhiệm vụ Super Track 2025 (星际传奇). Gồm 2 bản đồ thi đấu: Tiểu học (sa bàn tự do không vạch đen) và THCS/THPT (sa bàn quỹ đạo đường line phức tạp quanh hố đen)."
+  },
+  "JMC-CD-2578": {
+    "name": "2025 Super AI Prop Set - Engineering Innovation (Bộ đạo cụ sa bàn 2025 Đổi Mới Kỹ Thuật / 夺塔奇兵 & Khám Phá Sao Hỏa)",
+    "year": 2025,
+    "controller": null,
+    "baseKitRequired": null,
+    "pieces": null,
+    "parts": [
+      {
+        "code": null,
+        "nameVi": "Tháp chiếm cứ trung tâm (kèm bóng đá đỉnh tháp)",
+        "nameSource": "Central Relay Tower Model / 抢占塔模型",
+        "count": 1,
+        "hasMesh": false
+      },
+      {
+        "code": null,
+        "nameVi": "Cột cờ và trạm tiếp sức",
+        "nameSource": "Flag Station & Relay Posts / 旗帜基座与接力站",
+        "count": 2,
+        "hasMesh": false
+      },
+      {
+        "code": null,
+        "nameVi": "Túi cát / Khối tài nguyên khoáng sản (đỏ, xanh dương, xanh lục)",
+        "nameSource": "Mineral Blocks & Sandbags / 矿石沙包",
+        "count": null,
+        "hasMesh": false
+      },
+      {
+        "code": null,
+        "nameVi": "Bản đồ bạt thi đấu phân khu AI & Điều khiển từ xa 3000x2000mm",
+        "nameSource": "Competition Field Mat 3000x2000mm / 场地地图",
+        "count": 1,
+        "hasMesh": false
+      }
+    ],
+    "partsListComplete": false,
+    "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-CD-2578/images/3.png: Phối cảnh 3D toàn bộ đạo cụ tháp trung tâm, bóng đá và sa bàn; 7-6.png: File đồ họa sa bàn độ phân giải cao chia 2 phân khu AI và Remote.",
+    "sources": [
+      "https://www.zmrobo.net/products/94",
+      "https://www.zmrobo.com (Product ID 868)"
+    ],
+    "note": "Bộ đạo cụ sa bàn kích thước 3000mm x 2000mm cho nội dung Đoạt Tháp Kỳ Binh (夺塔奇兵). Sa bàn chia đôi gồm Phân khu AI dò đường tự động và Phân khu Điều khiển từ xa vượt địa hình Sao Hỏa."
+  },
+  "JMC-CD-2471": {
+    "name": "2024 Super AI Prop Set - Interstellar Crossing (Bộ đạo cụ sa bàn 2024 Vượt Qua Liên Sao / 星际穿越道具包)",
+    "year": 2024,
+    "controller": "Bộ điều khiển M5 (M5 Controller) độc lập tích hợp pin Lithium",
+    "baseKitRequired": null,
+    "pieces": 661,
+    "parts": [
+      {
+        "code": null,
+        "nameVi": "Bộ điều khiển tích hợp màn hình M5 Controller",
+        "nameSource": "M5 Controller (ESP32, built-in lithium battery, 5x7 LED matrix, 5 I/O ports) / M5控制器",
+        "count": 1,
+        "hasMesh": false
+      },
+      {
+        "code": null,
+        "nameVi": "Mô-đun đọc thẻ IC thông minh",
+        "nameSource": "IC Card Reader Module / IC读卡模块",
+        "count": 1,
+        "hasMesh": false
+      },
+      {
+        "code": null,
+        "nameVi": "Chi tiết lắp ráp cơ khí đạo cụ sa bàn (79 chủng loại)",
+        "nameSource": "Mechanical Building Blocks for Mission Props (79 types) / 79种积木配件",
+        "count": 661,
+        "hasMesh": false
+      },
+      {
+        "code": null,
+        "nameVi": "Bản đồ bạt thi đấu 3000x2000mm",
+        "nameSource": "Competition Field Mat 3000x2000mm / 场地地图",
+        "count": 1,
+        "hasMesh": false
+      }
+    ],
+    "partsListComplete": false,
+    "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2486/images/10-1.png: Ảnh studio chụp trải phẳng toàn bộ 79 chủng loại linh kiện cơ khí gồm 661 chi tiết của bộ đạo cụ; 9-1.png & 9-2.png: Chi tiết bộ điều khiển M5 và mô-đun đọc thẻ IC kèm số lượng icon-one.",
+    "sources": [
+      "https://www.zmrobo.net/products/96",
+      "https://www.zmrobo.com (Product ID 777 - Phần Đạo cụ)"
+    ],
+    "note": "Bộ đạo cụ sa bàn chính thức cho Super AI 2024 (星际穿越). Chứa 79 loại linh kiện cơ khí với tổng cộng 661 chi tiết lắp ráp, 1 bộ điều khiển M5 tích hợp ESP32 và 1 mô-đun đọc thẻ IC."
+  }
+}

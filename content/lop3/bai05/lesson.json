@@ -1,0 +1,47 @@
+{
+  "title": "Xe đổ rác",
+  "pageTitle": "Xe đổ rác – Hành trình xanh",
+  "topic": "Thu gom và phân loại rác thải",
+  "model": "xe thu gom rác bốn bánh",
+  "sheetName": "Lớp 3 · Bài 5: Xe đổ rác",
+  "baseName": "Xe thu gom rác",
+  "steps": 24,
+  "assetFolder": "lop3-bai05",
+  "firstStep": "Lắp khung gầm xe bốn bánh",
+  "lede": "Lắp xe thu gom rác 24 bước, tìm hiểu motor M1 và bánh răng truyền động, lập trình xe chạy nhanh liên tục rồi thử đỗ đúng ô gom rác trên phố.",
+  "victory": "Em đã hoàn thành xe đổ rác, lập trình chuyển động và biết cách đỗ đúng vị trí để thu gom an toàn.",
+  "engine": { "class": "GarbageTruckEngine", "file": "truck-engine.js" },
+  "scene": {
+    "file": "truck-scene.js",
+    "aria": "Sa bàn đường phố nhìn ngang với xe chở rác, ô thu gom, thùng rác phân loại và dải chắn cuối phố",
+    "stage": "Xe thu gom rác tiến đến ô đỗ theo thời gian chạy động cơ M1",
+    "idle": "Ghép chương trình 4 khối theo mẫu, nhấn Start để xe chạy"
+  },
+  "missions": {
+    "m1": { "chip": "Lắp đủ 24 bước", "title": "Lắp xe thu gom rác", "tip": "Hoàn thành cả 24 trang sách hướng dẫn" },
+    "m2": { "chip": "4 khối theo mẫu", "title": "Chạy một vòng chương trình mẫu", "tip": "Start → Repeat Start → High Speed → Repeat End", "text": "Chạy đúng 4 khối như giáo án cho xe di chuyển liên tục ở tốc độ cao; hoàn tất ít nhất một vòng lặp." },
+    "m3": { "chip": "Đỗ đúng ô gom", "title": "Đỗ xe ở điểm thu gom", "tip": "Bỏ lặp, dùng High Speed → Chờ 3 giây → Dừng", "text": "Đặt thời gian động cơ chạy 3 giây rồi dừng đúng ô xanh. 2 giây xe chưa tới, 4 giây xe vượt ô và chạm dải chắn." },
+    "m4": { "chip": "Thử gói sáng tạo", "title": "Cải tiến xe thu gom", "tip": "Chọn một phụ kiện, gắn lên xe 3D và chạy thử", "text": "Lắp thùng ben thủ công, tấm gạt trước, nắp khoang hoặc vách ngăn hai loại rác; quan sát phụ kiện trên mô phỏng." },
+    "m5": { "pro": true, "chip": "Tải nặng đổi quán tính", "title": "Đỗ xe khi chở rác nặng", "tip": "Chuyển sang lượt nặng và chỉnh Chờ thành 2 giây", "text": "Nâng cao: tải đầy khiến xe trôi thêm lúc phanh. Thử lại 2 giây thay cho 3 giây để dừng vừa ô xanh; 1 hoặc 3 giây sẽ trượt ô." }
+  },
+  "blocks": {
+    "toolbox": ["highSpeed", "lowSpeed", "mediumSpeed", "wait", "motorStop"],
+    "pro": ["motorPower", "motorReverse"],
+    "sample": ["start", "repeatStart", "highSpeed", "repeatEnd"],
+    "empty": ["start", "repeatStart", "repeatEnd"]
+  },
+  "creative": {
+    "intro": "Gắn <b>thùng ben thủ công</b> để đổ rác tại trạm, <b>tấm gạt</b> hỗ trợ gom rác, <b>nắp thùng</b> hạn chế rơi vãi hoặc <b>vách ngăn</b> tách rác hữu cơ và tái chế. Những bộ phận này chưa có motor riêng; em thao tác bằng tay trên mô hình thật.",
+    "slots": 4,
+    "badge": "Xe thu gom cơ bản",
+    "slotHint": "4 vị trí gắn phụ kiện trên xe"
+  },
+  "meters": [
+    { "label": "Đường đã đi", "id": "m-distance", "value": 0, "unit": "m", "note": "Động cơ M1 kéo bánh sau", "noteId": "m-distance-note" },
+    { "label": "Tốc độ", "id": "m-speed", "value": 0, "unit": "m/s", "note": "Chậm / vừa / nhanh", "noteId": "m-speed-note" },
+    { "label": "Thời gian", "id": "m-time", "value": 0, "unit": "giây", "note": "Thời gian di chuyển", "noteId": "m-time-note" },
+    { "label": "Tải rác", "id": "m-load", "value": "Nhẹ", "unit": "", "note": "Chở đầy trôi phanh xa hơn", "noteId": "m-load-note" }
+  ],
+  "calc": "Quãng đường = tốc độ × thời gian; lúc phanh xe còn trôi thêm nếu tải nặng.",
+  "hint": "<b>Mẫu:</b> Start → Lặp → High Speed → Hết lặp. <b>Đỗ xe:</b> Start → High Speed → Chờ 3s → Dừng. <b>Nâng cao:</b> chở nặng, giảm thời gian còn 2s."
+}

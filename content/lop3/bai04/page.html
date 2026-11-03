@@ -1,0 +1,98 @@
+<title>Phân loại, tái chế rác thải · Lớp 3 · Bài 4 · Happy STEAM</title>
+<template data-slot="header-copy">
+      <div class="eyebrow">Lớp 3 · Bài 4 · Bảo vệ môi trường – phân loại rác</div>
+      <h1>Trạm phân loại rác thông minh</h1>
+      <p class="lede pro-only">Lắp trạm cố định 18 bước, dùng cảm biến màu để nhận rác đỏ hoặc xanh và động cơ M1 điều khiển cần gạt. Thử điều chỉnh thời gian để rác rơi đúng ngăn.</p>
+</template>
+
+<template data-slot="mission-chips">
+    <span class="chip" id="chip-m1" title="Đánh dấu hoàn thành cả 18 trang hướng dẫn"><i>1</i>Lắp đủ 18 bước</span>
+    <span class="chip" id="chip-m2" title="Chờ đỏ → Do → M1 chậm ngược → 1 giây → dừng → chờ xanh → Mi → M1 chậm thuận → 1 giây → dừng"><i>2</i>Đủ 13 khối mẫu</span>
+    <span class="chip" id="chip-m3" title="Giữ đỏ 1 giây, sửa riêng thời gian gạt xanh về 0,5 giây"><i>3</i>Đúng 4 túi rác</span>
+    <span class="chip" id="chip-m4" title="Gắn một gói 3D và chạy thử"><i>4</i>Thử 4 gói sáng tạo</span>
+    <span class="chip pro-only" id="chip-m5" title="Sửa cả hai khối Chờ thành 0,5 giây"><i>5</i>Dòng rác siêu tốc</span>
+</template>
+
+<template data-slot="victory-copy">
+      <p>Em đã lắp trạm, lập trình nhận màu và tìm thời gian phù hợp để phân loại rác chính xác.</p>
+      <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM3-04</code></p>
+</template>
+
+<template data-slot="assembly-tab">
+      <i>1</i><span><b>Lắp ráp</b><small>18 bước theo sách</small></span>
+</template>
+
+<template data-slot="assembly-count">
+          <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 18</span></span>
+</template>
+
+<template data-slot="assembly-canvas">
+              <canvas id="view" aria-label="Mô hình trạm phân loại rác cố định 3D: kéo để xoay, cuộn để phóng to"></canvas>
+</template>
+
+<template data-slot="assembly-slider">
+                <input id="slider" type="range" min="1" max="18" value="1" aria-label="Chọn bước lắp">
+</template>
+
+<template data-slot="assembly-meter-step">
+          <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 18</small></div><div class="s" id="am-step-s">Lắp bộ khung hai ngăn</div></dd></div>
+</template>
+
+<template data-slot="assembly-meter-done">
+          <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 18</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+</template>
+
+<template data-slot="book-image">
+          <img id="book-img" src="assets/lop3-bai04/step-01.jpg" alt="Hình bước 1 trong sách hướng dẫn lắp ráp">
+</template>
+
+<template data-slot="book-link">
+          <a id="book-pdf" class="link" href="assets/lop3-bai04/step-01.jpg" target="_blank" rel="noopener">Mở hình lớn ↗</a>
+</template>
+
+<template data-slot="creative-intro">
+          <p class="status-text">Thử nâng cấp trạm: <b>phễu dẫn hướng</b> giảm nguy cơ kẹt; <b>tay gạt nối dài có đệm</b> đổi ngoại hình; <b>nắp ngăn tự đóng</b> che ngăn; <b>khay hứng tràn</b> giữ túi rơi nhưng không tính là phân loại đúng.</p>
+</template>
+
+<template data-slot="creative-canvas">
+        <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình trạm phân loại rác cố định 3D đang sáng tạo"></div>
+</template>
+
+<template data-slot="creative-slot-label">
+        <div class="panel-h"><h2>Tự gắn chi tiết</h2><small>Bốn vị trí nâng cấp 3D</small></div>
+</template>
+
+<template data-slot="creative-result-label">
+        <div class="panel-h"><h2>Trạm phân loại của em sẽ có</h2></div>
+</template>
+
+<template data-slot="sim-upgrade-label">
+            <small id="sim-active-upgrade-badge" class="status-tag">Trạm cơ bản</small>
+</template>
+
+<template data-slot="sim-scene">
+          <canvas id="space-scene" aria-label="Sa bàn khu dân cư nhìn ngang, túi rác đỏ xanh đi qua cảm biến tới cần gạt và hai ngăn phân loại"></canvas>
+          <div class="sim-stage" id="sim-stage" aria-label="Trạm phân loại cố định và cần gạt M1 chuyển động theo chương trình"></div>
+          <p class="scene-idle" id="scene-idle">Ghép chương trình mẫu rồi nhấn Start để phân loại rác</p>
+</template>
+
+<template data-slot="sim-meters">
+        <dl class="meters pro-only">
+          <div class="meter"><dt>Đã phân loại</dt><dd><div class="v" id="m-sorted">0<small>/ 4 túi</small></div><div class="s" id="m-sorted-note">Hai màu – hai ngăn</div></dd></div>
+          <div class="meter"><dt>Túi bị trượt</dt><dd><div class="v" id="m-missed">0<small>túi</small></div><div class="s" id="m-missed-note">Sai thời gian hoặc chiều gạt</div></dd></div>
+          <div class="meter"><dt>Góc cần gạt</dt><dd><div class="v" id="m-angle">0<small>°</small></div><div class="s" id="m-angle-note">Động cơ M1</div></dd></div>
+          <div class="meter"><dt>Thời gian</dt><dd><div class="v" id="m-time">0<small>giây</small></div><div class="s" id="m-time-note">Quan sát mỗi lượt</div></dd></div>
+        </dl>
+</template>
+
+<template data-slot="sim-calculation">
+        <div class="panel-h"><h2>Tính toán</h2><small>Góc quay = tốc độ góc × thời gian · cần gạt đúng chiều, đúng nhịp</small></div>
+        <div class="pad calc">
+          <p class="calc-eq" id="calc-eq1"></p>
+          <p class="calc-eq" id="calc-eq2"></p>
+        </div>
+</template>
+
+<template data-slot="sim-hint">
+            <p class="hint"><b>M2:</b> giữ đúng 13 khối theo giáo án. <b>M3:</b> đỏ gạt trái 1 giây, xanh gạt phải 0,5 giây. <b>Nâng cao:</b> đặt cả hai khối Chờ về 0,5 giây để bắt kịp dòng rác.</p>
+</template>

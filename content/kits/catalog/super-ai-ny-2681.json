@@ -1,0 +1,66 @@
+{
+ "id": "super-ai-ny-2681",
+ "name": "2026 Super AI Expansion Set - Interstellar Cruise (Gói mở rộng 2026 Tuần Tra Liên Sao)",
+ "model": "JMC-NY-2681",
+ "controller": "Sử dụng controller từ bộ nền: E6-RCU (BE-5148) hoặc M6-RCU (BE-5147)",
+ "baseKitRequired": "JMC-NY-2108+ (Intelligence Storm)",
+ "pitchMm": 10,
+ "pieces": null,
+ "countedPieces": 5,
+ "complete": false,
+ "sources": [
+  "https://www.zmrobo.net/products/93",
+  "https://www.zmrobo.com (Product ID 883)"
+ ],
+ "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2681/images/5-7.png: Robot thi đấu hoàn chỉnh ghép từ bộ nền 2108+ và gói 2681; 5-1.png đến 5-6.png: Chi tiết 4 module điện tử kèm huy hiệu số lượng chính thức (icon-one.png = 1, icon-two.png = 2).",
+ "parts": [
+  {
+   "code": "BE-3581",
+   "count": 1,
+   "nameVi": "Động cơ vừa encoder",
+   "group": "electronic",
+   "sizeMm": [
+    30.1,
+    40.5,
+    70
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 1,
+   "nameVi": "Mô-đun màn hình thông tin LCD 1.28 inch NFC/RFID",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-1157",
+   "count": 1,
+   "nameVi": "Mảng cảm biến dò đường thông minh 7 kênh",
+   "group": "electronic",
+   "sizeMm": [
+    129.6,
+    25,
+    10
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-9528",
+   "count": 2,
+   "nameVi": "Động cơ servo kỹ thuật số mini",
+   "group": "electronic",
+   "sizeMm": [
+    30.1,
+    40.2,
+    50
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  }
+ ]
+}

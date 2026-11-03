@@ -1,0 +1,54 @@
+{
+ "id": "super-ai-cd-2675",
+ "name": "2026 Super AI Prop Set - Smart Craftsmanship (Bộ đạo cụ sa bàn 2026 Trí Tuệ Cơ Khí / 智达天工)",
+ "model": "JMC-CD-2675",
+ "controller": null,
+ "baseKitRequired": null,
+ "pitchMm": 10,
+ "pieces": null,
+ "countedPieces": 5,
+ "complete": false,
+ "sources": [
+  "https://www.zmrobo.net/products/91",
+  "https://www.zmrobo.com"
+ ],
+ "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2685/images/7-12.png: Toàn cảnh sa bàn thi đấu 3000x2400mm gồm tháp trung tâm, trạm nhận diện và các khối nông sản; 4.png: Sơ đồ kích thước phân khu nhiệm vụ chi tiết.",
+ "parts": [
+  {
+   "code": null,
+   "count": 1,
+   "nameVi": "Mô hình tháp trồng trọt trung tâm",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 2,
+   "nameVi": "Mô hình trạm nhận diện cây trồng",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 1,
+   "nameVi": "Mô hình máng nạp hạt giống",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 1,
+   "nameVi": "Bản đồ bạt thi đấu 3000x2400mm",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  }
+ ]
+}

@@ -1,0 +1,43 @@
+{
+  "title": "Cơ cấu đòn bẩy – Máy bắn đá",
+  "pageTitle": "Cơ cấu đòn bẩy",
+  "topic": "Khám phá đòn bẩy và lực đàn hồi",
+  "model": "xe đòn bẩy phóng bóng mềm",
+  "sheetName": "Lớp 3 · Bài 03: Cơ cấu đòn bẩy – Máy bắn đá",
+  "baseName": "Mô hình đòn bẩy",
+  "steps": 24,
+  "assetFolder": "lop3-bai03",
+  "bookAlt": "Hình sách hướng dẫn lắp ráp mô hình đòn bẩy",
+  "firstStep": "Quan sát khung xe và chi tiết đòn bẩy",
+  "lede": "Tìm hiểu đòn bẩy và lực đàn hồi qua mô hình cơ khí 24 trang. Trên sa bàn học tập, thử thả bóng mềm ảo vào vòng đích và so sánh ba nấc lực mô phỏng.",
+  "victory": "Em đã xem đủ 24 trang, thử đòn bẩy một lượt, tìm nấc phù hợp để bóng mềm vào vòng đích và sáng tạo mô hình mới. Hãy giải thích vai trò của điểm tựa và lực đàn hồi.",
+  "engine": { "class": "LeverEngine", "file": "lever-engine.js" },
+  "scene": {
+    "file": "lever-scene.js",
+    "aria": "Sân hội khoa học nhìn ngang: mô hình đòn bẩy thả bóng mềm ảo vào vòng điểm theo ba nấc mô phỏng",
+    "stage": "Sa bàn thử nghiệm đòn bẩy và vòng điểm",
+    "idle": "Chọn nấc lực mô phỏng rồi chạm Thả bóng"
+  },
+  "missions": {
+    "m1": { "title": "Lắp mô hình cơ khí", "text": "Quan sát đủ 24 trang hướng dẫn, đánh dấu hoàn thành từng bước lắp ráp." },
+    "m2": { "chip": "Chạy mẫu cơ khí", "title": "Quan sát một lượt thả bóng", "tip": "Mức 1 là mẫu ban đầu; chờ bóng chạm sân", "text": "Thử mức 1 mặc định, chạm Thả bóng và quan sát trọn một vòng hoạt động của đòn bẩy." },
+    "m3": { "chip": "Bóng vào vòng đích", "title": "Chọn đúng nấc lực ảo", "tip": "Mức 1 hụt vòng, mức 3 vượt vòng; thử mức 2", "text": "Ba nấc cho ba vị trí rơi khác nhau. Chọn mức phù hợp để bóng mềm ảo dừng trong vòng đích giữa sân." },
+    "m4": { "chip": "Sáng tạo mô hình", "title": "Thử một gói trang trí", "tip": "Gắn chi tiết ở xưởng rồi thả bóng một lượt", "text": "Gắn một gói sáng tạo trên mô hình 3D, quay lại sa bàn và thả bóng một lượt." },
+    "m5": { "pro": true, "chip": "Thử ba vòng", "title": "Đưa bóng vào ba vòng đổi chỗ", "tip": "Đọc vị trí vòng đích ở từng lượt rồi chọn nấc thích hợp", "text": "Nâng cao: vòng điểm đổi chỗ qua ba lượt. Chọn lại nấc mô phỏng ở mỗi lượt để chạm đúng cả ba vòng liên tiếp; sai sẽ thử lại từ đầu." }
+  },
+  "blocks": { "toolbox": [], "pro": [], "sample": ["start"], "empty": ["start"] },
+  "creative": {
+    "intro": "Thử trang trí mô hình đòn bẩy bằng <b>giỏ bóng mềm</b>, <b>biển số đội</b>, <b>thước vạch khoảng cách</b> hoặc <b>chốt giữ bánh</b>. Đây là gói minh họa trong xưởng 3D; việc lắp thực tế cần đối chiếu linh kiện có sẵn.",
+    "slots": 4,
+    "badge": "Mô hình đòn bẩy cơ bản",
+    "slotHint": "4 vị trí trang trí và quan sát"
+  },
+  "meters": [
+    { "label": "Nấc mô phỏng", "id": "m-level", "value": 1, "unit": "/ 3", "note": "Thử đổi nấc" },
+    { "label": "Vị trí bóng", "id": "m-dist", "value": 0, "unit": "đơn vị", "note": "Vị trí hiển thị trên sa bàn" },
+    { "label": "Lượt", "id": "m-round", "value": 1, "unit": "/ 3", "note": "Mỗi lượt vòng đích đổi chỗ" }
+  ],
+  "calcTitle": "Thí nghiệm trên sa bàn",
+  "calc": "Các nấc lực và số đo chỉ dùng trong trò chơi mô phỏng, không phải thông số kỹ thuật.",
+  "hint": "<b>M2:</b> Thả bóng với mức 1 và xem hết lượt. <b>M3:</b> thử mức 2 để bóng nằm trong vòng giữa. <b>Nâng cao:</b> đọc vị trí vòng đích mỗi lượt, chỉnh nấc và hoàn thành 3 vòng liên tiếp."
+}

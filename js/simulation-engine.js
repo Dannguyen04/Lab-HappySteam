@@ -58,8 +58,355 @@
     bad: '#FF7A6B'
   };
 
-  class SimulationEngine {
+  // Khung fallback tương thích khi test chạy trong môi trường Node VM cô lập không nạp js/lesson-engine.js trước
+  if (typeof window !== 'undefined' && !window.LessonEngine) {
+    (function () {
+      const LEVEL = { low: 4, medium: 6, high: 8 };
+      const TIMED = new Set(['wait', 'melody', 'sensor_touch', 'sensor_obstacle']);
+      function loopStart(prog, end) {
+        let depth = 0;
+        for (let j = end - 1; j >= 0; j--) {
+          if (prog[j].type === 'repeatEnd') depth++;
+          else if (prog[j].type === 'repeatStart') {
+            if (!depth) return j;
+            depth--;
+          }
+        }
+        return -1;
+      }
+      const sig = b => (b.type === 'motor' ? 'motor:' + b.speed : b.type === 'wait' ? 'wait:' + b.duration : b.type === 'drive' ? 'drive:' + b.move : b.type);
+
+      class LessonEngine {
+        constructor(opts = {}) {
+          this.opts = opts;
+          this.sample = opts.sample || [];
+          this.touchTypes = new Set(opts.touch || ['sensor_touch']);
+          this.prog = [];
+          this.logs = [];
+          this.t = 0;
+          this.upgrades = new Set();
+          this.advanced = false;
+          this.assemblyDone = false;
+          this.done = {};
+          this.best = null;
+          this.rafId = null;
+          this.loopActive = true;
+          this.reset();
+        }
+        init() { this.startLoop(); }
+        resizeCanvas() {}
+        reset() {
+          this.running = false;
+          this.pc = 0;
+          this.entered = false;
+          this.blkT = 0;
+          this.motorOn = false;
+          this.power = 0;
+          this.dir = 1;
+          this.runT = 0;
+          this.pressed = false;
+          this.pressT = 0;
+          this.waitingPress = false;
+          this.resetState();
+          if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
+        }
+        resetState() {}
+        emit(type, data) {
+          if (this.onEvent) this.onEvent(type, data);
+        }
+        log(kind, text) {
+          const time = this.opts.logTime ? this.opts.logTime(this) : this.runT.toFixed(1) + 's';
+          this.logs.unshift({ time, kind, text: this.opts.logText ? this.opts.logText(text) : text });
+          if (this.logs.length > (this.opts.logLimit || 8)) this.logs.length = this.opts.logLimit || 8;
+          const el = document.getElementById('sim-log-list');
+          if (el)
+            el.innerHTML = this.logs
+              .map(e => `<li class="log-item" data-kind="${e.kind}"><time class="log-time">${e.time}</time><span class="log-dot"></span><span class="log-text">${e.text}</span></li>`)
+              .join('');
+        }
+        set(id, html) {
+          const el = document.getElementById(id);
+          if (el) el.innerHTML = html;
+        }
+        setProgram(blocks) {
+          this.prog = blocks || [];
+          this.stop(true);
+          this.reset();
+        }
+        start() {
+          this.reset();
+          this.running = true;
+          if (window.SFX) window.SFX.init();
+          this.log('info', 'Bắt đầu chạy chương trình.');
+          this.emit('start');
+          this.onStart();
+        }
+        onStart() {}
+        stop(silent) {
+          const was = this.running;
+          this.running = false;
+          this.motorOn = false;
+          this.waitingPress = false;
+          if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
+          if (was && !silent) {
+            this.log('info', 'Đã dừng chương trình.');
+            this.emit('stop');
+          }
+        }
+        press() {
+          this.pressed = true;
+          this.pressT = 0.3;
+          this.emit('press');
+        }
+        setAssemblyDone(done) {
+          if (this.assemblyDone === !!done) return;
+          this.assemblyDone = !!done;
+          this.checkMissions();
+        }
+        setUpgrades(list) {
+          this.upgrades = new Set(list || []);
+          this.upgradeRun = false;
+          const labels = this.opts.labels || {};
+          const names = [...this.upgrades].map(t => labels[t] || t);
+          const badge = document.getElementById('sim-active-upgrade-badge');
+          if (badge) badge.textContent = names.length ? names.join(' · ') : this.opts.baseLabel || '';
+          this.log('ok', names.length ? 'Đã gắn: ' + names.join(', ') : this.opts.baseLabel || '');
+        }
+        has(t) { return this.upgrades.has(t); }
+        noteUpgradeRun() {
+          if (this.upgrades.size && !this.upgradeRun) {
+            this.upgradeRun = true;
+            this.checkMissions();
+          }
+        }
+        setAdvanced(on) {
+          on = !!on;
+          if (this.advanced === on) return;
+          this.advanced = on;
+          this.stop(true);
+          this.reset();
+          this.checkMissions();
+        }
+        matchesSample(sample = this.sample) {
+          const f = this.opts.sig || sig;
+          return this.prog.length === sample.length && this.prog.every((b, i) => f(b) === sample[i]);
+        }
+        advance(dt) {
+          if (this.pressed && (this.pressT -= dt) <= 0) this.pressed = false;
+          if (!this.running) return;
+          let budget = this.beforeAdvance(dt),
+            guard = 0;
+          while (this.running && guard++ < (this.opts.advanceGuard || 40)) {
+            if (this.pc >= this.prog.length) {
+              this.onProgramEnd();
+              break;
+            }
+            const b = this.prog[this.pc];
+            if (b.type === 'start' || b.type === 'repeatStart') {
+              this.pc++;
+              continue;
+            }
+            if (b.type === 'repeatEnd') {
+              const end = this.pc;
+              const r = this.loopStartOf(end);
+              if (this.opts.loopEndBeforeJump) {
+                this.onLoopEnd();
+                if (!this.running) break;
+              }
+              this.pc = this.loopNext(r, end);
+              if (!this.opts.loopEndBeforeJump) this.onLoopEnd();
+              if (this.shouldYieldLoop(r, end, budget)) break;
+              continue;
+            }
+            if (b.type === 'motor' || b.type === 'motor_power') {
+              this.onMotorBefore(b);
+              this.power = b.type === 'motor_power' ? Math.max(1, Math.min(8, b.power || 8)) : (this.opts.levels || LEVEL)[b.speed] || 8;
+              this.motorOn = true;
+              this.onMotor(b);
+              this.pc++;
+              continue;
+            }
+            if (b.type === 'motor_reverse') {
+              this.dir = -this.dir;
+              this.onReverse();
+              this.pc++;
+              continue;
+            }
+            if (b.type === 'stop') {
+              const wasOn = this.motorOn;
+              this.motorOn = false;
+              this.pc++;
+              this.onStopBlock(wasOn);
+              continue;
+            }
+            if (this.touchTypes.has(b.type)) {
+              if (!this.entered) {
+                this.entered = true;
+                this.waitingPress = true;
+                this.pressed = false;
+                if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
+              }
+              if (this.pressed) {
+                this.pressed = false;
+                this.waitingPress = false;
+                this.entered = false;
+                this.pc++;
+                continue;
+              }
+              this.integrate(budget);
+              budget = 0;
+              break;
+            }
+            if (this.isConditionWait(b)) {
+              if (!this.entered) {
+                this.entered = true;
+                this.blkT = 0;
+                if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
+                this.onWaitEnter(b);
+              }
+              let ready = this.waitDone(b);
+              while (!ready && budget > 1e-9 && this.running) {
+                const step = this.waitStep(b, budget);
+                this.integrate(step);
+                this.blkT += step;
+                budget -= step;
+                if (this.waitCheckAfterStep(b)) ready = this.waitDone(b);
+              }
+              if (!this.running || !ready) break;
+              this.onWaitExit(b);
+              this.entered = false;
+              this.pc++;
+              continue;
+            }
+            if (!this.entered && this.onInstant(b)) {
+              this.pc++;
+              continue;
+            }
+            if (!this.entered) {
+              this.entered = true;
+              this.blkT = 0;
+              if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
+              this.onTimedEnter(b);
+              this.blkDur = this.enterBlock(b);
+            }
+            const need = this.blkDur - this.blkT;
+            if (budget < need) {
+              this.blkT += budget;
+              this.integrate(budget);
+              budget = 0;
+              break;
+            }
+            this.integrate(need);
+            budget -= need;
+            if (!this.running && this.opts.stopTimedOnFinish) break;
+            this.onTimedExit(b);
+            this.entered = false;
+            this.pc++;
+            if (this.shouldYieldAfterTimed(b, budget)) break;
+          }
+          if (budget > 0 && this.running) this.integrate(budget);
+        }
+        beforeAdvance(dt) { return dt; }
+        onProgramEnd() { this.finish(); }
+        loopNext(r, end) { return r < 0 ? (this.opts.orphanEnd === 'stop' ? this.prog.length : end + 1) : r + 1; }
+        shouldYieldLoop(r, end) {
+          return r >= 0 && !this.prog.slice(r + 1, end).some(x => TIMED.has(x.type) || this.touchTypes.has(x.type));
+        }
+        onReverse() {}
+        onMotorBefore() {}
+        onTimedEnter() {}
+        onTimedExit() {}
+        shouldYieldAfterTimed() { return false; }
+        isConditionWait() { return false; }
+        waitDone() { return false; }
+        onWaitEnter() {}
+        onWaitExit() {}
+        waitStep(b, budget) { return budget; }
+        waitCheckAfterStep() { return true; }
+        loopStartOf(end) { return loopStart(this.prog, end); }
+        enterBlock(b) {
+          if (b.type === 'wait') return b.duration || 3;
+          if (b.type === 'melody') {
+            if (window.SFX) window.SFX.melody(b.tune);
+            this.emit('melody', b.tune);
+            return this.opts.melodyTime || 1;
+          }
+          return this.onBlock(b) || 0;
+        }
+        onMotor() {}
+        onStopBlock() {}
+        onLoopEnd() {}
+        onInstant() { return false; }
+        onBlock() { return 0; }
+        integrate(dt) { if (this.running) this.runT += dt; }
+        finish() {
+          this.running = false;
+          this.motorOn = false;
+          if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
+          this.emit('end');
+          this.checkMissions();
+        }
+        checkMissions() {
+          const s = { m1: this.assemblyDone, ...this.done, m4: this.upgrades.size > 0 && !!this.upgradeRun };
+          s.allDone = (this.opts.core || ['m1', 'm2', 'm3', 'm4']).every(k => s[k]);
+          Object.assign(s, this.missionExtra());
+          if (this.onMissionUpdate) this.onMissionUpdate(s);
+        }
+        missionExtra() { return { upgrades: [...this.upgrades], best: this.best }; }
+        updateUI() {
+          const pill = document.getElementById('sim-status-pill');
+          if (pill) {
+            pill.textContent = this.running ? (this.waitingPress ? 'Chờ nhấn nút' : 'Đang chạy') : 'Đã dừng';
+            pill.dataset.k = this.running ? (this.waitingPress ? 'warn' : 'ok') : 'muted';
+          }
+        }
+        startLoop() {
+          cancelAnimationFrame(this.rafId);
+          this.loopActive = true;
+          let last = performance.now();
+          const loop = now => {
+            if (!this.loopActive) return;
+            const dt = Math.min(0.05, (now - last) / 1000);
+            last = now;
+            this.t += dt;
+            this.advance(dt);
+            this.updateUI();
+            this.rafId = requestAnimationFrame(loop);
+          };
+          this.rafId = requestAnimationFrame(loop);
+        }
+        pauseLoop() {
+          this.loopActive = false;
+          cancelAnimationFrame(this.rafId);
+        }
+        resumeLoop() {
+          if (!this.loopActive) this.startLoop();
+        }
+      }
+      LessonEngine.LEVEL = LEVEL;
+      LessonEngine.sig = sig;
+      LessonEngine.loopStart = loopStart;
+      window.LessonEngine = LessonEngine;
+    })();
+  }
+
+  class SimulationEngine extends window.LessonEngine {
     constructor(canvas2dId) {
+      super({
+        sample: SAMPLE,
+        sig,
+        touch: [],
+        advanceGuard: 35,
+        levels: { low: 4, medium: 8, high: 8 },
+        loopEndBeforeJump: true,
+        logTime: (engine) => {
+          const m = Math.floor(engine.t / 60);
+          const s = (engine.t - m * 60).toFixed(1);
+          return `${String(m).padStart(2, '0')}:${s.padStart(4, '0')}`;
+        },
+        logText: (text) => String(text).replace(/^[\p{Extended_Pictographic}️‍\s]+/u, '')
+      });
+
       this.cv = document.getElementById(canvas2dId);
       this.ctx = this.cv ? this.cv.getContext('2d') : null;
 
@@ -83,7 +430,7 @@
 
       this.prog = [];
       this.logs = [];
-      this.lastTimestamp = performance.now();
+      this.lastTimestamp = 0;
       this.loopActive = true;
       this.rafId = null;
 
@@ -126,10 +473,30 @@
 
       this.onMissionUpdate = null;
       this.onActiveBlockUpdate = null;
-    }
 
-    init() {
-      this.startLoop();
+      for (const key of ['dir', 'pressed', 'pressT', 'waitingPress', 'blkDur']) {
+        Object.defineProperty(this, key, { enumerable: false, writable: true, configurable: true, value: this[key] });
+      }
+      Object.defineProperty(this, 'dir', {
+        configurable: true,
+        enumerable: false,
+        get() { return this.motorDir; },
+        set(value) { this.motorDir = value; }
+      });
+
+      const LEGACY_KEYS = [
+        'running', 'power', 'motorOn', 't', 'pc', 'entered', 'blkT', 'rev',
+        'motorRev', 'segStart', 'lastSeg', 'streak', 'm3Achieved', 'loopsDone',
+        'assemblyDone', 'upgradeRun', 'lastTimestamp', 'loopActive', 'motorDir',
+        'asteroidAvoided', 'melodyBPlayed', 'hazardDetected', 'hazardEncountered',
+        'advanced', 'runT', 'waitedT', 'laneCrash', 'rockPassed', 'sensorHinted',
+        'progDone', 'nearWarned'
+      ];
+      for (const k of LEGACY_KEYS) {
+        const val = this[k];
+        delete this[k];
+        this[k] = val;
+      }
     }
 
     resizeCanvas() {
@@ -146,10 +513,6 @@
     setProgram(blocks) {
       this.prog = blocks || [];
       this.restart(false);
-    }
-    // Báo sự kiện cho cảnh câu chuyện (js/space-scene.js): melody, near, crash, avoid, loop, start, stop
-    emit(type, data) {
-      if (this.onEvent) this.onEvent(type, data);
     }
 
     // Bật/tắt thử thách Nâng cao (theo nút Chế độ)
@@ -337,6 +700,10 @@
       this.checkMissions();
     }
 
+    resetState() {
+      this.restart(false);
+    }
+
     restart(run = false) {
       this.pc = 0;
       this.progDone = false;
@@ -368,29 +735,6 @@
       if (window.SFX) window.SFX.init();
     }
 
-    log(kind, text) {
-      const m = Math.floor(this.t / 60);
-      const s = (this.t - m * 60).toFixed(1);
-      const timeStr = `${String(m).padStart(2, '0')}:${s.padStart(4, '0')}`;
-      // Giao diện gọn như Bài 7: bỏ biểu tượng cảm xúc ở đầu câu, màu chấm của dòng nhật ký đã cho biết loại tin
-      text = String(text).replace(/^[\p{Extended_Pictographic}️‍\s]+/u, '');
-      this.logs.unshift({ time: timeStr, kind, text });
-      if (this.logs.length > 8) this.logs.length = 8;
-      this.renderLogs();
-    }
-
-    renderLogs() {
-      const el = document.getElementById('sim-log-list');
-      if (!el) return;
-      el.innerHTML = this.logs.map(e => `
-        <li class="log-item" data-kind="${e.kind}">
-          <time class="log-time">${e.time}</time>
-          <span class="log-dot"></span>
-          <span class="log-text">${e.text}</span>
-        </li>
-      `).join('');
-    }
-
     headingDegrees() {
       return (((this.rev * 360) % 360) + 360) % 360;
     }
@@ -410,212 +754,155 @@
       this.checkMissions();
     }
 
-    advance(dt) {
-      if (!this.running || !this.prog.length) return;
+    press() {}
 
-      let budget = dt;
-      let guard = 0;
+    beforeAdvance(dt) {
+      if (!this.running || !this.prog.length) return 0;
+      return dt;
+    }
 
-      while (this.running && guard++ < 35) {
-        // Hết chương trình (không có khối Lặp): không tự chạy lại từ đầu. Motor đang bật thì vẫn quay
-        // (như robot thật) cho tới khi bấm Dừng; motor tắt thì chương trình kết thúc.
-        if (this.pc >= this.prog.length) {
-          if (!this.motorOn) {
-            this.finish();
-            break;
-          }
-          if (!this.progDone) {
-            this.progDone = true;
-            if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
-            this.log('info', 'Chương trình đã chạy hết – motor vẫn quay, bấm Dừng để ngắt điện.');
-          }
-          break;
-        }
+    onProgramEnd() {
+      if (!this.prog.length) return;
+      if (!this.motorOn) {
+        this.finish();
+        return;
+      }
+      if (!this.progDone) {
+        this.progDone = true;
+        if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(-1);
+        this.log('info', 'Chương trình đã chạy hết – motor vẫn quay, bấm Dừng để ngắt điện.');
+      }
+    }
 
-        const b = this.prog[this.pc];
-        if (!b) break;
+    onLoopEnd() {
+      this.loopsDone++;
+      this.emit('loop', this.loopsDone);
+      if (this.loopsDone === 1) this.checkMissions();
+    }
 
-        if (b.type === 'start') {
-          this.pc++;
-          continue;
-        }
+    shouldYieldLoop(r, end) {
+      return r !== -1 && !this.prog.slice(r + 1, end).some(x => ['wait', 'melody', 'photo', 'sensor_obstacle', 'wait_clear'].includes(x.type));
+    }
 
-        if (b.type === 'repeatStart') {
-          this.pc++;
-          continue;
-        }
+    onMotor() {
+      if (this.upgrades.size && !this.upgradeRun) {
+        this.upgradeRun = true;
+        this.checkMissions();
+      }
+    }
 
-        if (b.type === 'repeatEnd') {
-          this.loopsDone++;
-          this.emit('loop', this.loopsDone);
-          if (this.loopsDone === 1) this.checkMissions();
-          // Quay lại sau khối Bắt đầu lặp ghép cặp với khối này; không có thì đi tiếp
-          const end = this.pc;
-          const rIdx = window.LessonEngine ? window.LessonEngine.loopStart(this.prog, end) : this.prog.findIndex(x => x.type === 'repeatStart');
-          this.pc = rIdx !== -1 ? rIdx + 1 : end + 1;
-          // Thân vòng lặp không có khối tốn thời gian: nhường khung hình sau (tránh đếm hàng chục vòng mỗi khung)
-          if (rIdx !== -1 && !this.prog.slice(rIdx + 1, end).some(x => ['wait', 'melody', 'photo', 'sensor_obstacle', 'wait_clear'].includes(x.type))) break;
-          continue;
-        }
+    onReverse() {
+      const avoided = this.motorOn && this.motorDir < 0 && !this.hazardEncountered && this.headingDegrees() >= 60 && this.headingDegrees() < 110;
+      this.log('ok', `Đảo chiều động cơ (hướng hiện tại: ${this.motorDir > 0 ? 'Thuận CW' : 'Nghịch CCW'}).`);
+      if (avoided) this.recordAvoidance('reverse');
+    }
 
-        if (b.type === 'motor' || b.type === 'motor_power') {
-          // High Speed = mức 8; Low Speed (chương trình cũ) = mức 4; Motor Power = mức học sinh chọn
-          this.power = b.type === 'motor_power' ? Math.max(1, Math.min(8, b.power || 8)) : b.speed === 'low' ? 4 : 8;
-          this.motorOn = true;
-          if (this.upgrades.size && !this.upgradeRun) {
-            this.upgradeRun = true;
+    onStopBlock(wasOn) {
+      const angle = this.headingDegrees();
+      const approaching = wasOn && this.motorDir > 0 && !this.hazardEncountered && angle >= 60 && angle < 110;
+      if (this.melodyAlertRev !== null && approaching && this.rev - this.melodyAlertRev < 50 / 360) {
+        this.recordAvoidance('melody-stop');
+      }
+    }
+
+    onInstant(b) {
+      if (b.type === 'if_end') return true;
+      if (b.type === 'if_see') {
+        const o = this.needSensor() ? null : this.seen();
+        if (o && o.kind !== this.lastSeenKind) this.log('warn', `Cảm biến thấy ${o.name}!`);
+        this.lastSeenKind = o ? o.kind : null;
+        if (o) return true;
+        const end = this.matchIfEnd(this.pc);
+        this.pc = end === -1 ? this.pc : end;
+        return true;
+      }
+      return false;
+    }
+
+    isConditionWait(b) {
+      return b.type === 'wait_clear' || b.type === 'sensor_obstacle';
+    }
+
+    onWaitEnter(b) {
+      if (b.type === 'wait_clear') {
+        if (!this.needSensor() && this.pathBlocked()) this.log('warn', 'Thiên thạch đang chặn đường – đợi nó bay qua.');
+      } else if (b.type === 'sensor_obstacle') {
+        this.log('warn', this.has('sensor')
+          ? (this.advanced ? 'Đang quét: chờ vệ tinh đến gần đường bay thiên thạch.' : '🛡️ Đang quét: chờ vệ tinh đến gần vành đai thiên thạch (60°–110°).')
+          : '🛡️ Cần gắn gói Cảm biến vật cản ở phần Sáng tạo 3D để nhận tín hiệu.');
+        if (window.SFX) window.SFX.tone(660, 0.15);
+      }
+    }
+
+    waitDone(b) {
+      if (b.type === 'wait_clear') {
+        return !(this.has('sensor') && this.pathBlocked());
+      }
+      if (b.type === 'sensor_obstacle') {
+        return this.has('sensor') && this.isApproachingHazard();
+      }
+      return false;
+    }
+
+    waitCheckAfterStep() {
+      return false;
+    }
+
+    onWaitExit(b) {
+      if (b.type === 'wait_clear') {
+        if (this.blkT > 0.2) this.log('ok', 'Đường đã trống, đi tiếp!');
+      } else if (b.type === 'sensor_obstacle') {
+        this.hazardDetected = true;
+        this.log('warn', this.advanced
+          ? 'Phát hiện đường bay thiên thạch phía trước! Dừng lại và đợi nó bay qua.'
+          : '🛡️ Phát hiện thiên thạch phía trước! Hãy đảo chiều hoặc phát Melody B rồi dừng.');
+      }
+    }
+
+    enterBlock(b) {
+      if (b.type === 'melody') {
+        if (window.SFX) window.SFX.melody(b.tune);
+        this.log('info', `Melody ${b.tune}: Vệ tinh phát tín hiệu vi ba về trạm mặt đất trong 1s.`);
+        if (b.tune === 'B') this.melodyBPlayed = true;
+        this.emit('melody', b.tune);
+        return 1.0;
+      }
+      if (b.type === 'photo') {
+        if (window.SFX) window.SFX.tone(1320, 0.08);
+        this.takePhoto();
+        return 1.0;
+      }
+      if (b.type === 'wait') {
+        this.segStart = this.rev;
+        return b.duration || 3.0;
+      }
+      return super.enterBlock(b);
+    }
+
+    onTimedExit(b) {
+      this.blkT = this.blkDur;
+      if (b.type === 'wait') {
+        const r = this.rev - this.segStart;
+        this.lastSeg = r;
+        this.segStart = null;
+        const near = Math.round(r);
+        const off = Math.abs(r - near);
+        const isWhole = near >= 1 && off < 0.04;
+
+        if (isWhole) {
+          this.streak++;
+          this.log('ok', `Wait ${b.duration}s: Vệ tinh quay tròn ${r.toFixed(2)} vòng và về ĐÚNG trạm.`);
+          if (this.streak >= 2 && !this.m3Achieved) {
+            this.m3Achieved = true;
+            if (window.SFX) window.SFX.ding();
+            this.log('ok', '🎉 Thử nghiệm quỹ đạo: Hai khối Wait liên tiếp cho số vòng nguyên!');
             this.checkMissions();
           }
-          this.pc++;
-          continue;
+        } else {
+          this.streak = 0;
+          const deg = Math.round(((r % 1) + 1) % 1 * 360);
+          this.log(r < 1 ? 'warn' : 'info', `Wait ${b.duration}s: Đi được ${r.toFixed(2)} vòng, dừng lệch ${deg}° so với điểm xuất phát.`);
         }
-
-        if (b.type === 'motor_reverse') {
-          const avoided = this.isApproachingHazard();
-          this.motorDir = -this.motorDir;
-          this.log('ok', `Đảo chiều động cơ (hướng hiện tại: ${this.motorDir > 0 ? 'Thuận CW' : 'Nghịch CCW'}).`);
-          if (avoided) this.recordAvoidance('reverse');
-          this.pc++;
-          continue;
-        }
-
-        if (b.type === 'stop') {
-          if (this.melodyAlertRev !== null && this.isApproachingHazard() &&
-              this.rev - this.melodyAlertRev < 50 / 360) {
-            this.recordAvoidance('melody-stop');
-          }
-          this.motorOn = false;
-          this.pc++;
-          continue;
-        }
-
-        if (b.type === 'if_end') {
-          this.pc++;
-          continue;
-        }
-
-        // Nếu thấy vật lạ … Hết Nếu: cảm biến thấy vật thì làm các khối bên trong, không thì nhảy qua
-        if (b.type === 'if_see') {
-          const o = this.needSensor() ? null : this.seen();
-          if (o && o.kind !== this.lastSeenKind) this.log('warn', `Cảm biến thấy ${o.name}!`);
-          this.lastSeenKind = o ? o.kind : null;
-          if (o) this.pc++;
-          else {
-            const end = this.matchIfEnd(this.pc);
-            this.pc = end === -1 ? this.pc + 1 : end + 1;
-          }
-          continue;
-        }
-
-        // Đợi đường trống: đứng ở khối này cho tới khi phía trước không còn thiên thạch
-        if (b.type === 'wait_clear') {
-          if (!this.entered) {
-            this.entered = true;
-            this.blkT = 0;
-            if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
-            if (!this.needSensor() && this.pathBlocked()) this.log('warn', 'Thiên thạch đang chặn đường – đợi nó bay qua.');
-          }
-          if (this.has('sensor') && this.pathBlocked()) {
-            this.blkT += budget;
-            this.integrate(budget);
-            budget = 0;
-            break;
-          }
-          if (this.blkT > 0.2) this.log('ok', 'Đường đã trống, đi tiếp!');
-          this.entered = false;
-          this.pc++;
-          continue;
-        }
-
-        if (b.type === 'sensor_obstacle') {
-          if (!this.entered) {
-            this.entered = true;
-            this.blkT = 0;
-            if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
-            this.log('warn', this.has('sensor')
-              ? (this.advanced ? 'Đang quét: chờ vệ tinh đến gần đường bay thiên thạch.' : '🛡️ Đang quét: chờ vệ tinh đến gần vành đai thiên thạch (60°–110°).')
-              : '🛡️ Cần gắn gói Cảm biến vật cản ở phần Sáng tạo 3D để nhận tín hiệu.');
-            if (window.SFX) window.SFX.tone(660, 0.15);
-          }
-          if (this.has('sensor') && this.isApproachingHazard()) {
-            this.hazardDetected = true;
-            this.log('warn', this.advanced
-              ? 'Phát hiện đường bay thiên thạch phía trước! Dừng lại và đợi nó bay qua.'
-              : '🛡️ Phát hiện thiên thạch phía trước! Hãy đảo chiều hoặc phát Melody B rồi dừng.');
-            this.entered = false;
-            this.pc++;
-            continue;
-          }
-          this.blkT += budget;
-          this.integrate(budget);
-          budget = 0;
-          break;
-        }
-
-        // Các khối tốn thời gian: melody hoặc wait
-        if (!this.entered) {
-          this.entered = true;
-          this.blkT = 0;
-          if (this.onActiveBlockUpdate) this.onActiveBlockUpdate(this.pc);
-
-          if (b.type === 'melody') {
-            if (window.SFX) window.SFX.melody(b.tune);
-            this.log('info', `Melody ${b.tune}: Vệ tinh phát tín hiệu vi ba về trạm mặt đất trong 1s.`);
-            if (b.tune === 'B') this.melodyBPlayed = true;
-            this.emit('melody', b.tune);
-          } else if (b.type === 'photo') {
-            if (window.SFX) window.SFX.tone(1320, 0.08);
-            this.takePhoto();
-          } else if (b.type === 'wait') {
-            this.segStart = this.rev;
-          }
-        }
-
-        const dur = b.type === 'melody' || b.type === 'photo' ? 1.0 : (b.duration || 3.0);
-        const need = dur - this.blkT;
-
-        if (budget < need) {
-          this.blkT += budget;
-          this.integrate(budget);
-          budget = 0;
-          break;
-        }
-
-        this.integrate(need);
-        budget -= need;
-        this.blkT = dur;
-
-        // Exit block
-        if (b.type === 'wait') {
-          const r = this.rev - this.segStart;
-          this.lastSeg = r;
-          this.segStart = null;
-          const near = Math.round(r);
-          const off = Math.abs(r - near);
-          const isWhole = near >= 1 && off < 0.04;
-
-          if (isWhole) {
-            this.streak++;
-            this.log('ok', `Wait ${b.duration}s: Vệ tinh quay tròn ${r.toFixed(2)} vòng và về ĐÚNG trạm.`);
-            if (this.streak >= 2 && !this.m3Achieved) {
-              this.m3Achieved = true;
-              if (window.SFX) window.SFX.ding();
-              this.log('ok', '🎉 Thử nghiệm quỹ đạo: Hai khối Wait liên tiếp cho số vòng nguyên!');
-              this.checkMissions();
-            }
-          } else {
-            this.streak = 0;
-            const deg = Math.round(((r % 1) + 1) % 1 * 360);
-            this.log(r < 1 ? 'warn' : 'info', `Wait ${b.duration}s: Đi được ${r.toFixed(2)} vòng, dừng lệch ${deg}° so với điểm xuất phát.`);
-          }
-        }
-
-        this.entered = false;
-        this.pc++;
-      }
-
-      if (budget > 0) {
-        this.integrate(budget);
       }
     }
 
@@ -1202,6 +1489,7 @@
     }
 
     updateUI() {
+      this.draw();
       const curBlock = this.prog[this.pc];
       const inBlock = this.running && this.entered && curBlock;
 
@@ -1314,44 +1602,6 @@
           cv.className = 'calc-verdict is-warn';
         }
       }
-    }
-
-    startLoop() {
-      if (this.rafId) {
-        cancelAnimationFrame(this.rafId);
-        this.rafId = null;
-      }
-      this.loopActive = true;
-      this.lastTimestamp = performance.now();
-      const loop = (now) => {
-        if (!this.loopActive) {
-          this.rafId = null;
-          return;
-        }
-        const dt = Math.min(0.05, (now - this.lastTimestamp) / 1000);
-        this.lastTimestamp = now;
-        this.t += dt;
-
-        this.advance(dt);
-        this.draw();
-        this.updateUI();
-
-        this.rafId = requestAnimationFrame(loop);
-      };
-      this.rafId = requestAnimationFrame(loop);
-    }
-
-    pauseLoop() {
-      this.loopActive = false;
-      if (this.rafId) {
-        cancelAnimationFrame(this.rafId);
-        this.rafId = null;
-      }
-    }
-
-    resumeLoop() {
-      if (this.loopActive) return;
-      this.startLoop();
     }
   }
 

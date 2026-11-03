@@ -1,0 +1,93 @@
+{
+  "Alpha Set A": {
+    "model": "JMC-NY-2321AE",
+    "robobuilderSet": "set2321A",
+    "confidence": "chac",
+    "sources": [
+      "https://www.zmrobo.net/products/80"
+    ],
+    "note": "Bộ kit tiêu chuẩn (Alpha 330) cho Lớp 1 và Lớp 3. Điều khiển M5-RCU (BE-5158) có màn hình LED ma trận 5x7, đầu đọc thẻ lệnh OID, động cơ vừa BE-3581."
+  },
+  "Alpha Set B": {
+    "model": "JMC-NY-2322E",
+    "robobuilderSet": "set2322",
+    "confidence": "chac",
+    "sources": [
+      "https://www.zmrobo.net/products/83"
+    ],
+    "note": "Bộ mở rộng dùng chung với Alpha Set A. Bổ sung 4 linh kiện điện tử: cảm biến siêu âm BE-2222, MIC BE-2260, góc nghiêng BE-2701, biến trở xoay BE-6313."
+  },
+  "Alpha Set C": {
+    "model": "JMC-NY-2323E",
+    "robobuilderSet": "set2323",
+    "confidence": "chac",
+    "sources": [
+      "https://www.zmrobo.net/products/86"
+    ],
+    "note": "Bộ mở rộng cấp 3 (Tianshu Stage 3). Bổ sung động cơ vừa BE-3581, cảm biến màu sắc BE-1153, cảm biến quang BE-1416 và cảm biến khoảng cách hồng ngoại BE-6208."
+  },
+  "Alpha Set D": {
+    "model": "JMC-NY-2324E",
+    "robobuilderSet": "set2324",
+    "confidence": "chac",
+    "sources": [
+      "https://www.zmrobo.net/products/128"
+    ],
+    "note": "Bộ mở rộng cấp 4 (Tianshu Stage 4). Bổ sung động cơ vừa BE-3581, cảm biến quang điện BE-1152, module nhận dạng giọng nói BE-1322 và remote hồng ngoại BE-2209."
+  },
+  "Beta Set": {
+    "model": "JMC-NY-2421",
+    "robobuilderSet": "set2421",
+    "confidence": "chac",
+    "sources": [
+      "https://www.zmrobo.net/products/89"
+    ],
+    "note": "Bộ kit lập trình và thi đấu cơ bản (Thiên Huyền). Bộ điều khiển C6-RCU (BE-5161) có màn hình màu 1.8 inch, 2 động cơ encoder BE-3581, module dò line 7 kênh BE-1157."
+  },
+  "Innovation Storm": {
+    "model": "JMC-NY-2508E",
+    "robobuilderSet": "set2508",
+    "confidence": "chac",
+    "sources": [
+      "https://www.zmrobo.net/products/349"
+    ],
+    "note": "Bộ robot AI cao cấp (Bão Đổi Mới). Điều khiển E7-RCU (BE-5166) chip Cortex-M7 màn hình cảm ứng 3.2 inch, Camera AI CAM V2.0 (BE-1756), 2 động cơ lớn BE-3582, cảm biến laser BE-1245."
+  },
+  "Gamma Series": {
+    "model": "JMC-NY-2521E",
+    "robobuilderSet": "set2521",
+    "confidence": "chac",
+    "sources": [
+      "https://www.zmrobo.net/products/355"
+    ],
+    "note": "Bộ kit STEM All-in-one không cần máy tính. Sử dụng bộ điều khiển tích hợp All-in-one BE-5168."
+  },
+  "Defender WiseKit": {
+    "model": "JMC-NY-2106+E",
+    "robobuilderSet": "set2106+",
+    "confidence": "chac",
+    "sources": [
+      "https://www.zmrobo.net/products/68"
+    ],
+    "note": "Bộ kit cơ điện tử thi đấu (Hậu vệ Little Wichi). Bộ điều khiển M6-RCU (BE-5147), 2 động cơ giảm tốc BE-3579, cảm biến siêu âm/quang BE-1146, cảm biến chạm BE-1536."
+  },
+  "Intelligence Storm": {
+    "model": "JMC-NY-2108+E",
+    "robobuilderSet": "set2108+",
+    "confidence": "chac",
+    "sources": [
+      "https://www.zmrobo.net/products/67"
+    ],
+    "note": "Bộ kit robot AI và thuật toán thi đấu (Bão Thông Minh). Bộ điều khiển E6-RCU (BE-5148) màn hình màu 2.4 inch, AI Vision Module (BE-1743), 2 động cơ lớn BE-3570, 1 động cơ vừa BE-3571."
+  },
+  "Super AI": {
+    "model": "JMC-NY-2681",
+    "robobuilderSet": null,
+    "confidence": "chac",
+    "sources": [
+      "https://www.zmrobo.net/products/352",
+      "https://www.zmrobo.net/products/91"
+    ],
+    "note": "Hệ sinh thái thi đấu Super AI (Super Track Competition) gồm các gói mở rộng theo mùa giải (2026 Star Cruise JMC-NY-2681, 2024 Interstellar Crossing JMC-NY-2486...). Trang bị Camera AI (AI CAM JMP-BE-1748), Module RFID (JMP-BE-1548A / Info-Tag Module NFC), thẻ RFID mã hóa, servo kỹ thuật số mini (JMP-BE-9528A). Dùng kết hợp cùng bộ nền tảng (như Defender WiseKit hoặc Innovation Storm), không có bộ kit RoboBuilder độc lập tương ứng trong 9 bộ hiện có."
+  }
+}

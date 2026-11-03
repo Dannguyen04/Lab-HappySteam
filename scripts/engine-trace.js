@@ -87,4 +87,93 @@ for (const [name, prog] of programs)
       for (const [k, v] of Object.entries(sim)) if (['number', 'string', 'boolean'].includes(typeof v) && k !== 'rafId') state[k] = typeof v === 'number' ? +v.toFixed(6) : v;
       out.push({ name, adv, up, ev, st, logs: sim.logs, state, pose: sim.pose3d ? sortKeys(sim.pose3d()) : null });
     }
+
+// Các ca biên trong duyệt chéo Phiếu 72. Giữ chung trong trace để cùng một
+// kịch bản chạy được trên commit chuẩn và cây hiện tại.
+const stateOf = sim => {
+  const state = {};
+  for (const [k, v] of Object.entries(sim))
+    if (['number', 'string', 'boolean'].includes(typeof v) && k !== 'rafId')
+      state[k] = typeof v === 'number' ? +v.toFixed(6) : v;
+  return state;
+};
+const makeCase = (name, program) => {
+  seed = 1 + out.length;
+  const sim = new E('sim-canvas-2d');
+  const ev = [], st = [];
+  sim.onEvent = (t, d) => ev.push([t, d === undefined ? null : JSON.stringify(d)]);
+  sim.onMissionUpdate = s => st.push(JSON.stringify(sortKeys(s)));
+  sim.onActiveBlockUpdate = i => ev.push(['khối', i]);
+  sim.setProgram(program.map(b => typeof b === 'string' || Array.isArray(b) ? mk(b) : { ...b }));
+  if (sim.setAssemblyDone) sim.setAssemblyDone(true);
+  return { name, sim, ev, st };
+};
+const saveCase = c => out.push({
+  name: c.name, scenario: c.name, adv: false, up: [], ev: c.ev, st: c.st,
+  logs: c.sim.logs, state: stateOf(c.sim), pose: c.sim.pose3d ? sortKeys(c.sim.pose3d()) : null
+});
+const step = (sim, count, dt = 0.02, untilStopped = false) => {
+  for (let i = 0; i < count && (!untilStopped || sim.running); i++) sim.advance(dt);
+};
+const tap = sim => {
+  if (sim.press) sim.press();
+  if (sim.pressTouch) sim.pressTouch();
+  else if (sim.putHand) sim.putHand();
+};
+
+for (const duration of [0.1, 0.4, 0.7, 1.4]) {
+  const c = makeCase(`biên:chờ:${duration}`, ['start', { type: 'wait', duration }, 'stop']);
+  c.sim.start();
+  step(c.sim, 100, 0.02, true);
+  saveCase(c);
+}
+
+{
+  const c = makeCase('biên:nút-trước-khi-chạy-và-sau-khi-dừng', ['start', { type: 'wait', duration: 0.4 }, 'stop']);
+  tap(c.sim);
+  c.sim.advance(1.3); // nút phải tự hết hạn dù chương trình chưa chạy
+  c.st.push(JSON.stringify({ phase: 'before-start', state: stateOf(c.sim) }));
+  c.sim.start();
+  step(c.sim, 1);
+  c.sim.stop();
+  tap(c.sim);
+  c.sim.advance(1.3); // và cả sau khi chương trình đã dừng
+  c.st.push(JSON.stringify({ phase: 'after-stop', state: stateOf(c.sim) }));
+  saveCase(c);
+}
+
+{
+  const c = makeCase('biên:chạy-lại-hai-lượt-liên-tiếp', ['start', { type: 'wait', duration: 0.7 }, 'stop']);
+  c.sim.start();
+  step(c.sim, 60, 0.02, true);
+  c.st.push(JSON.stringify({ phase: 'run-1', state: stateOf(c.sim) }));
+  c.sim.start();
+  step(c.sim, 60, 0.02, true);
+  c.st.push(JSON.stringify({ phase: 'run-2', state: stateOf(c.sim) }));
+  saveCase(c);
+}
+
+{
+  const c = makeCase('biên:dừng-giữa-khối-chờ-cảm-biến', ['start', { type: 'sensor_obstacle' }]);
+  const sensorType = ['sensor_obstacle', 'wait_clear', 'sensor_touch'].find(type =>
+    (c.sim.isConditionWait && c.sim.isConditionWait({ type })) ||
+    (type === 'sensor_touch' && c.sim.touchTypes && c.sim.touchTypes.has(type))) || 'sensor_obstacle';
+  c.sim.setProgram(['start', { type: sensorType }]);
+  c.sim.start();
+  // Đưa cảm biến ra xa vật cản để bảo đảm kịch bản thật sự đứng trong trạng thái chờ.
+  if (typeof c.sim.x === 'number') c.sim.x = -1000;
+  step(c.sim, 5, 0.02, true);
+  c.st.push(JSON.stringify({ phase: 'waiting', state: stateOf(c.sim) }));
+  c.sim.stop();
+  c.sim.advance(0.02);
+  c.st.push(JSON.stringify({ phase: 'stopped', state: stateOf(c.sim) }));
+  saveCase(c);
+}
+
+{
+  const c = makeCase('biên:giới-hạn-thời-gian-cuối-khối', ['start', { type: 'wait', duration: 36 }, 'stop']);
+  c.sim.start();
+  step(c.sim, 1810, 0.02, true);
+  saveCase(c);
+}
 process.stdout.write(JSON.stringify(out));

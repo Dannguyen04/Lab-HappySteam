@@ -1,0 +1,48 @@
+{
+  "title": "Cây đàn ghi-ta",
+  "pageTitle": "Cây đàn ghi-ta",
+  "topic": "Âm nhạc và cảm biến siêu âm",
+  "model": "cây đàn ghi-ta cảm biến",
+  "sheetName": "Lớp 3 · Bài 14: Cây đàn ghi-ta",
+  "baseName": "Cây đàn ghi-ta",
+  "steps": 23,
+  "assetFolder": "lop3-bai14",
+  "bookAlt": "Bước 1 trong sách hướng dẫn lắp cây đàn ghi-ta",
+  "firstStep": "Lắp phần thân đàn",
+  "lede": "Lắp cây đàn ghi-ta 23 bước, điều khiển nốt nhạc bằng cách đưa tay đến gần và rời khỏi cảm biến siêu âm. Đổi thứ tự giai điệu để đáp ứng yêu cầu của khán giả.",
+  "victory": "Em đã lắp cây đàn ghi-ta, lập trình đúng hai trạng thái cảm biến và biểu diễn giai điệu theo yêu cầu.",
+  "engine": { "class": "GuitarEngine", "file": "guitar-engine.js" },
+  "scene": {
+    "file": "guitar-scene.js",
+    "aria": "Sân khấu nhìn ngang có cây đàn ghi-ta và bàn tay tiến đến hoặc rời cảm biến siêu âm, hiển thị nốt A hoặc B theo chương trình",
+    "stage": "Đàn ghi-ta 3D và cảm biến siêu âm",
+    "idle": "Nạp 7 khối mẫu, nhấn Start và quan sát tay khán giả đưa vào rồi rời cảm biến"
+  },
+  "missions": {
+    "m1": { "chip": "Lắp 23 bước", "title": "Lắp cây đàn ghi-ta", "tip": "Hoàn thành cả 23 bước lắp ráp, kiểm tra cảm biến siêu âm ở bước 20" },
+    "m2": { "chip": "Đàn phát A–B", "title": "Chạy đúng chương trình mẫu", "tip": "Start → Lặp → Chờ vật cản → A → Đợi đường trống → B → Hết lặp", "text": "Lắp đúng bảy khối như giáo án. Khi khán giả đưa tay gần cảm biến, đàn phát A; khi rút tay, đàn phát B, hoàn tất một vòng." },
+    "m3": { "chip": "Đổi nốt B–A", "title": "Chơi theo yêu cầu khán giả", "tip": "Đảo hai khối Melody A/B nhưng giữ nguyên hai khối chờ cảm biến", "text": "Khán giả muốn nghe B khi đưa tay lại gần và A khi rút tay. Hãy đổi hai khối giai điệu; thiếu hoặc sai khối chờ sẽ không đạt." },
+    "m4": { "chip": "Gắn phụ kiện", "title": "Nâng cấp sân khấu ghi-ta", "tip": "Chọn một trong bốn gói rồi chạy chương trình", "text": "Thử hộp cộng hưởng, dây đàn màu, đèn sân khấu hoặc giá đỡ và quan sát thay đổi trên sân khấu." },
+    "m5": { "pro": true, "chip": "Ba lượt khán giả", "title": "Đợi đúng nhịp khán giả", "tip": "Khán giả giữ tay lâu ngắn khác nhau; giữ đúng cả hai khối chờ và nốt B–A", "text": "Nâng cao: biểu diễn B–A đúng cả ba lượt có thời gian che cảm biến khác nhau. Đừng phát nốt khi cảm biến chưa đổi trạng thái." }
+  },
+  "blocks": {
+    "toolbox": ["obstacle", "waitClear", "melodyA", "melodyB"],
+    "pro": [],
+    "sample": ["start", "repeatStart", "obstacle", "melodyA", "waitClear", "melodyB", "repeatEnd"],
+    "empty": ["start", "repeatStart", "repeatEnd"]
+  },
+  "creative": {
+    "intro": "Chọn phụ kiện cho buổi diễn: <b>hộp cộng hưởng</b> vẽ sóng âm rộng hơn; <b>dây đàn màu</b> làm nốt nhạc nổi bật; <b>đèn sân khấu</b> sáng theo âm thanh; <b>giá đỡ</b> giúp đàn đứng vững. Hiệu ứng là minh họa trên sa bàn.",
+    "slots": 4,
+    "badge": "Ghi-ta cơ bản",
+    "slotHint": "Bốn vị trí nâng cấp thân đàn và sân khấu"
+  },
+  "meters": [
+    { "label": "Cảm biến", "id": "m-sensor", "value": "Đang chờ", "unit": "", "note": "Bàn tay chưa che", "noteId": "m-sensor-note" },
+    { "label": "Nốt nhạc", "id": "m-note", "value": "—", "unit": "", "note": "Nốt phát ra theo khối", "noteId": "m-note-note" },
+    { "label": "Khán giả", "id": "m-visitor", "value": 1, "unit": "/ 3", "note": "Thời gian giữ tay thay đổi", "noteId": "m-visitor-note" },
+    { "label": "Thời gian", "id": "m-time", "value": 0, "unit": "giây", "note": "Một lượt biểu diễn", "noteId": "m-time-note" }
+  ],
+  "calc": "Có vật cản → nốt thứ nhất · Hết vật cản → nốt thứ hai",
+  "hint": "<b>NV2:</b> bảy khối mẫu cho A–B. <b>NV3:</b> đổi vị trí A và B thành B–A nhưng giữ hai khối chờ. <b>Nâng cao:</b> thử ba lượt khán giả giữ tay khác thời gian; một nốt sai hoặc phát sớm sẽ trượt."
+}

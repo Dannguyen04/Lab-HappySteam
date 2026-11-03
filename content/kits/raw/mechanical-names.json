@@ -1,0 +1,2367 @@
+{
+  "BM-3035": {
+    "nameVi": "Bi sắt 10mm",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      9.8,
+      9.8,
+      9.8
+    ],
+    "confidence": "chac"
+  },
+  "BM-3045": {
+    "nameVi": "Bi sắt 22mm",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      22,
+      22,
+      22
+    ],
+    "confidence": "doan"
+  },
+  "BM-3058": {
+    "nameVi": "Đai ốc",
+    "group": "screw",
+    "lengthHoles": null,
+    "sizeMm": [
+      6.2,
+      3,
+      7.1
+    ],
+    "confidence": "chac"
+  },
+  "BM-3059": {
+    "nameVi": "Đai ốc chống trượt",
+    "group": "screw",
+    "lengthHoles": null,
+    "sizeMm": [
+      6.2,
+      4.5,
+      7.1
+    ],
+    "confidence": "chac"
+  },
+  "BM-3060": {
+    "nameVi": "Ốc vít 15mm",
+    "group": "screw",
+    "lengthHoles": null,
+    "sizeMm": [
+      6.7,
+      17,
+      7.7
+    ],
+    "confidence": "chac"
+  },
+  "BM-3061": {
+    "nameVi": "Ốc vít 20mm",
+    "group": "screw",
+    "lengthHoles": null,
+    "sizeMm": [
+      6.7,
+      22,
+      7.7
+    ],
+    "confidence": "chac"
+  },
+  "BM-3062": {
+    "nameVi": "Ốc vít 25mm",
+    "group": "screw",
+    "lengthHoles": null,
+    "sizeMm": [
+      6.7,
+      27,
+      7.7
+    ],
+    "confidence": "chac"
+  },
+  "BM-3065": {
+    "nameVi": "Ốc vít 40mm",
+    "group": "screw",
+    "lengthHoles": null,
+    "sizeMm": [
+      6.7,
+      42,
+      7.7
+    ],
+    "confidence": "chac"
+  },
+  "BM-3066": {
+    "nameVi": "Ốc vít 45mm",
+    "group": "screw",
+    "lengthHoles": null,
+    "sizeMm": [
+      6.7,
+      47,
+      7.7
+    ],
+    "confidence": "chac"
+  },
+  "BM-3069": {
+    "nameVi": "Ốc vít 60mm",
+    "group": "screw",
+    "lengthHoles": null,
+    "sizeMm": [
+      6.7,
+      62,
+      7.7
+    ],
+    "confidence": "chac"
+  },
+  "BM-3071": {
+    "nameVi": "Vòng đệm trục kim loại",
+    "group": "axle",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      0.5,
+      10
+    ],
+    "confidence": "chac"
+  },
+  "BM-7201": {
+    "nameVi": "Vít ngắn 6mm",
+    "group": "screw",
+    "lengthHoles": null,
+    "sizeMm": [
+      6,
+      8,
+      6
+    ],
+    "confidence": "chac"
+  },
+  "BM-7202": {
+    "nameVi": "Vít 7mm",
+    "group": "screw",
+    "lengthHoles": null,
+    "sizeMm": [
+      6,
+      9,
+      6
+    ],
+    "confidence": "chac"
+  },
+  "BM-7203": {
+    "nameVi": "Vít 12mm",
+    "group": "screw",
+    "lengthHoles": null,
+    "sizeMm": [
+      6,
+      14,
+      6
+    ],
+    "confidence": "chac"
+  },
+  "BM-7204": {
+    "nameVi": "Vít 15mm",
+    "group": "screw",
+    "lengthHoles": null,
+    "sizeMm": [
+      6,
+      17,
+      6
+    ],
+    "confidence": "chac"
+  },
+  "BM-7205": {
+    "nameVi": "Vít 20mm",
+    "group": "screw",
+    "lengthHoles": null,
+    "sizeMm": [
+      6,
+      22,
+      6
+    ],
+    "confidence": "chac"
+  },
+  "BM-7207": {
+    "nameVi": "Vít 30mm",
+    "group": "screw",
+    "lengthHoles": null,
+    "sizeMm": [
+      6,
+      32,
+      6
+    ],
+    "confidence": "chac"
+  },
+  "BM-7622": {
+    "nameVi": "Trụ ren đồng",
+    "group": "screw",
+    "lengthHoles": null,
+    "sizeMm": [
+      6,
+      10,
+      6
+    ],
+    "confidence": "kha"
+  },
+  "BM-R-1001": {
+    "nameVi": "Khung nhôm chữ U lớn",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      60.8,
+      20.8,
+      20
+    ],
+    "confidence": "kha"
+  },
+  "BM-R-1003": {
+    "nameVi": "Khung nhôm vuông",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      20.8,
+      20.8,
+      10
+    ],
+    "confidence": "kha"
+  },
+  "BM-R-1004": {
+    "nameVi": "Khung nhôm phẳng",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      60.8,
+      30.8,
+      10
+    ],
+    "confidence": "kha"
+  },
+  "BM-R-1005": {
+    "nameVi": "Khung nhôm góc",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      30.7,
+      18.5,
+      10
+    ],
+    "confidence": "kha"
+  },
+  "BM-R-1008": {
+    "nameVi": "Khung nhôm đa năng",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      30.8,
+      60.8,
+      30
+    ],
+    "confidence": "kha"
+  },
+  "BM-R-1009": {
+    "nameVi": "Khung nhôm chữ U nhỏ",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      20.8,
+      20.8,
+      20
+    ],
+    "confidence": "kha"
+  },
+  "BP-3035": {
+    "nameVi": "Lốp xe cao su",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      3.4,
+      34,
+      34
+    ],
+    "confidence": "chac"
+  },
+  "BP-3045": {
+    "nameVi": "Vòng đệm cao su",
+    "group": "other",
+    "lengthHoles": null,
+    "sizeMm": [
+      38.4,
+      1.4,
+      38.4
+    ],
+    "confidence": "kha"
+  },
+  "BP-3957": {
+    "nameVi": "Ổ bi lăn",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      13,
+      13.4,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-3960": {
+    "nameVi": "Mắt xích",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      20.8,
+      9.8,
+      38
+    ],
+    "confidence": "chac"
+  },
+  "BP-3961": {
+    "nameVi": "Bánh dẫn xích",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      18.5,
+      48.8,
+      48.5
+    ],
+    "confidence": "chac"
+  },
+  "BP-3976": {
+    "nameVi": "Khung 5×7",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      50,
+      10,
+      70
+    ],
+    "confidence": "chac"
+  },
+  "BP-3990": {
+    "nameVi": "Trục chữ thập 2 · đỏ",
+    "group": "axle",
+    "lengthHoles": 2,
+    "sizeMm": [
+      6,
+      6,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-3991": {
+    "nameVi": "Trục chữ thập 3",
+    "group": "axle",
+    "lengthHoles": 3,
+    "sizeMm": [
+      6,
+      6,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-3992": {
+    "nameVi": "Trục chữ thập 5",
+    "group": "axle",
+    "lengthHoles": 5,
+    "sizeMm": [
+      6,
+      6,
+      50
+    ],
+    "confidence": "chac"
+  },
+  "BP-3993": {
+    "nameVi": "Trục chữ thập 7",
+    "group": "axle",
+    "lengthHoles": 7,
+    "sizeMm": [
+      6,
+      6,
+      70
+    ],
+    "confidence": "chac"
+  },
+  "BP-3994": {
+    "nameVi": "Trục chữ thập 9",
+    "group": "axle",
+    "lengthHoles": 9,
+    "sizeMm": [
+      6,
+      6,
+      90
+    ],
+    "confidence": "chac"
+  },
+  "BP-3995": {
+    "nameVi": "Trục chữ thập 11",
+    "group": "axle",
+    "lengthHoles": 11,
+    "sizeMm": [
+      6,
+      6,
+      110
+    ],
+    "confidence": "chac"
+  },
+  "BP-6902": {
+    "nameVi": "Tấm cong 9 lỗ",
+    "group": "plate",
+    "lengthHoles": 9,
+    "sizeMm": [
+      80.3,
+      1.6,
+      27.4
+    ],
+    "confidence": "chac"
+  },
+  "BP-6903": {
+    "nameVi": "Tấm 1×5 lỗ",
+    "group": "plate",
+    "lengthHoles": 5,
+    "sizeMm": [
+      50,
+      1.6,
+      10
+    ],
+    "confidence": "chac"
+  },
+  "BP-6904": {
+    "nameVi": "Tấm 1×9 lỗ",
+    "group": "plate",
+    "lengthHoles": 9,
+    "sizeMm": [
+      90,
+      1.6,
+      10
+    ],
+    "confidence": "chac"
+  },
+  "BP-6905": {
+    "nameVi": "Tấm 1×11 lỗ",
+    "group": "plate",
+    "lengthHoles": 11,
+    "sizeMm": [
+      110,
+      1.6,
+      10
+    ],
+    "confidence": "chac"
+  },
+  "BP-6906": {
+    "nameVi": "Tấm 3×5 lỗ",
+    "group": "plate",
+    "lengthHoles": 5,
+    "sizeMm": [
+      50,
+      1.6,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-6907": {
+    "nameVi": "Tấm 3×7 lỗ",
+    "group": "plate",
+    "lengthHoles": 7,
+    "sizeMm": [
+      70,
+      1.6,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-6908": {
+    "nameVi": "Tấm 3×11 lỗ",
+    "group": "plate",
+    "lengthHoles": 11,
+    "sizeMm": [
+      110,
+      1.6,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-6909": {
+    "nameVi": "Tấm 9×9 lỗ",
+    "group": "plate",
+    "lengthHoles": 9,
+    "sizeMm": [
+      90,
+      1.6,
+      90
+    ],
+    "confidence": "chac"
+  },
+  "BP-6910": {
+    "nameVi": "Tấm 11×15 lỗ",
+    "group": "plate",
+    "lengthHoles": 15,
+    "sizeMm": [
+      110,
+      1.6,
+      150
+    ],
+    "confidence": "chac"
+  },
+  "BP-6911": {
+    "nameVi": "Tấm 3×3 lỗ",
+    "group": "plate",
+    "lengthHoles": 3,
+    "sizeMm": [
+      30,
+      1.6,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-6912": {
+    "nameVi": "Tấm 3×5 lỗ",
+    "group": "plate",
+    "lengthHoles": 5,
+    "sizeMm": [
+      50,
+      1.6,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-6913": {
+    "nameVi": "Tấm 1×7 lỗ",
+    "group": "plate",
+    "lengthHoles": 7,
+    "sizeMm": [
+      70,
+      1.6,
+      10
+    ],
+    "confidence": "chac"
+  },
+  "BP-6914": {
+    "nameVi": "Tấm 1×13 lỗ",
+    "group": "plate",
+    "lengthHoles": 13,
+    "sizeMm": [
+      130,
+      1.6,
+      10
+    ],
+    "confidence": "chac"
+  },
+  "BP-6915": {
+    "nameVi": "Tấm 2×7 lỗ",
+    "group": "plate",
+    "lengthHoles": 7,
+    "sizeMm": [
+      70,
+      1.6,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-6916": {
+    "nameVi": "Tấm 2×9 lỗ",
+    "group": "plate",
+    "lengthHoles": 9,
+    "sizeMm": [
+      90,
+      1.6,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-6917": {
+    "nameVi": "Tấm 3×9 lỗ",
+    "group": "plate",
+    "lengthHoles": 9,
+    "sizeMm": [
+      90,
+      1.6,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-6918": {
+    "nameVi": "Tấm 5×13 lỗ",
+    "group": "plate",
+    "lengthHoles": 13,
+    "sizeMm": [
+      130,
+      1.6,
+      50
+    ],
+    "confidence": "chac"
+  },
+  "BP-6919": {
+    "nameVi": "Tấm 15×15 lỗ",
+    "group": "plate",
+    "lengthHoles": 15,
+    "sizeMm": [
+      150,
+      1.6,
+      150
+    ],
+    "confidence": "chac"
+  },
+  "BP-6920": {
+    "nameVi": "Tấm 1×15 lỗ",
+    "group": "plate",
+    "lengthHoles": 15,
+    "sizeMm": [
+      150,
+      1.6,
+      10
+    ],
+    "confidence": "chac"
+  },
+  "BP-6921": {
+    "nameVi": "Tấm 2×11 lỗ",
+    "group": "plate",
+    "lengthHoles": 11,
+    "sizeMm": [
+      110,
+      1.6,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-6922": {
+    "nameVi": "Tấm 3×13 lỗ",
+    "group": "plate",
+    "lengthHoles": 13,
+    "sizeMm": [
+      130,
+      1.6,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-6923": {
+    "nameVi": "Tấm góc 9×9",
+    "group": "plate",
+    "lengthHoles": 9,
+    "sizeMm": [
+      90,
+      1.6,
+      87.5
+    ],
+    "confidence": "chac"
+  },
+  "BP-6924": {
+    "nameVi": "Tấm tam giác 3 lỗ",
+    "group": "plate",
+    "lengthHoles": 3,
+    "sizeMm": [
+      46.8,
+      1.6,
+      59.1
+    ],
+    "confidence": "chac"
+  },
+  "BP-6925": {
+    "nameVi": "Tấm tròn 3×3",
+    "group": "plate",
+    "lengthHoles": 3,
+    "sizeMm": [
+      30,
+      1.6,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-6926": {
+    "nameVi": "Tấm tròn 4×4",
+    "group": "plate",
+    "lengthHoles": 4,
+    "sizeMm": [
+      44.1,
+      1.6,
+      44.1
+    ],
+    "confidence": "chac"
+  },
+  "BP-6927": {
+    "nameVi": "Tấm vát góc 2×4",
+    "group": "plate",
+    "lengthHoles": 4,
+    "sizeMm": [
+      45.4,
+      1.6,
+      25.4
+    ],
+    "confidence": "chac"
+  },
+  "BP-6928": {
+    "nameVi": "Tấm 5×15 lỗ",
+    "group": "plate",
+    "lengthHoles": 15,
+    "sizeMm": [
+      150,
+      1.6,
+      50
+    ],
+    "confidence": "chac"
+  },
+  "BP-6929": {
+    "nameVi": "Tấm cánh 6×10",
+    "group": "plate",
+    "lengthHoles": 10,
+    "sizeMm": [
+      59.9,
+      1.6,
+      101.2
+    ],
+    "confidence": "chac"
+  },
+  "BP-7001": {
+    "nameVi": "Khối nối trục 3 lỗ",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      10,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-7002": {
+    "nameVi": "Khối nối chữ thập",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      10,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-7003": {
+    "nameVi": "Khớp nối góc 90° 2 lỗ",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      20,
+      10,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-7004": {
+    "nameVi": "Khối nối 3 lỗ",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      20,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-7005": {
+    "nameVi": "Khối nối góc vuông 2×2",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      20,
+      10,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-7006": {
+    "nameVi": "Khối nối 4 chốt",
+    "group": "peg",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      30,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-7007": {
+    "nameVi": "Khớp nối vuông 2 lỗ",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      20,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-7009": {
+    "nameVi": "Chốt trục · xám",
+    "group": "peg",
+    "lengthHoles": 3,
+    "sizeMm": [
+      10,
+      10,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-7010": {
+    "nameVi": "Chốt ngắn · màu be",
+    "group": "peg",
+    "lengthHoles": null,
+    "sizeMm": [
+      7.2,
+      8.3,
+      15
+    ],
+    "confidence": "chac"
+  },
+  "BP-7011": {
+    "nameVi": "Chốt dài · xanh dương",
+    "group": "peg",
+    "lengthHoles": 3,
+    "sizeMm": [
+      7.2,
+      8.3,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-7012": {
+    "nameVi": "Chốt · đen",
+    "group": "peg",
+    "lengthHoles": 2,
+    "sizeMm": [
+      7.2,
+      8.3,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-7013": {
+    "nameVi": "Chốt trục · xanh dương",
+    "group": "peg",
+    "lengthHoles": 2,
+    "sizeMm": [
+      7,
+      7,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-7014": {
+    "nameVi": "Chốt dài · màu be",
+    "group": "peg",
+    "lengthHoles": 3,
+    "sizeMm": [
+      6.6,
+      7,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-7015": {
+    "nameVi": "Chốt · xám",
+    "group": "peg",
+    "lengthHoles": 2,
+    "sizeMm": [
+      6.6,
+      7,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-7016": {
+    "nameVi": "Chốt trục · màu be",
+    "group": "peg",
+    "lengthHoles": 2,
+    "sizeMm": [
+      7,
+      7,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-7017": {
+    "nameVi": "Cánh máy bay trái",
+    "group": "other",
+    "lengthHoles": null,
+    "sizeMm": [
+      20,
+      30.1,
+      110
+    ],
+    "confidence": "chac"
+  },
+  "BP-7018": {
+    "nameVi": "Cánh máy bay phải",
+    "group": "other",
+    "lengthHoles": null,
+    "sizeMm": [
+      20,
+      30.1,
+      110
+    ],
+    "confidence": "chac"
+  },
+  "BP-7019": {
+    "nameVi": "Cánh máy bay ngắn trái",
+    "group": "other",
+    "lengthHoles": null,
+    "sizeMm": [
+      20,
+      30.1,
+      68
+    ],
+    "confidence": "chac"
+  },
+  "BP-7020": {
+    "nameVi": "Cánh máy bay ngắn phải",
+    "group": "other",
+    "lengthHoles": null,
+    "sizeMm": [
+      20,
+      30.1,
+      68
+    ],
+    "confidence": "chac"
+  },
+  "BP-7021": {
+    "nameVi": "Thanh 13 lỗ",
+    "group": "beam",
+    "lengthHoles": 13,
+    "sizeMm": [
+      10,
+      10,
+      130
+    ],
+    "confidence": "chac"
+  },
+  "BP-7022": {
+    "nameVi": "Tay quay 2 lỗ",
+    "group": "beam",
+    "lengthHoles": 2,
+    "sizeMm": [
+      10,
+      10,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-7023": {
+    "nameVi": "Bạc chặn trục",
+    "group": "axle",
+    "lengthHoles": 1,
+    "sizeMm": [
+      10,
+      10,
+      10
+    ],
+    "confidence": "chac"
+  },
+  "BP-7024": {
+    "nameVi": "Bạc nửa",
+    "group": "axle",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      10,
+      5
+    ],
+    "confidence": "chac"
+  },
+  "BP-7026": {
+    "nameVi": "Cần điều khiển",
+    "group": "other",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      10,
+      28
+    ],
+    "confidence": "chac"
+  },
+  "BP-7027": {
+    "nameVi": "Khớp nối góc 90°",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      10,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-7028": {
+    "nameVi": "Khớp nối trục vuông góc",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      10,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-7029": {
+    "nameVi": "Khớp nối góc 135°",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      19.1,
+      29.2
+    ],
+    "confidence": "chac"
+  },
+  "BP-7030": {
+    "nameVi": "Khớp nối thẳng",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      10,
+      30.1
+    ],
+    "confidence": "chac"
+  },
+  "BP-7045": {
+    "nameVi": "Bánh răng 40 răng",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      52.1,
+      52.1
+    ],
+    "confidence": "chac"
+  },
+  "BP-7046": {
+    "nameVi": "Bánh răng 36 răng",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      46.2,
+      46.2
+    ],
+    "confidence": "chac"
+  },
+  "BP-7047": {
+    "nameVi": "Bánh răng 24 răng",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      32.5,
+      32.5
+    ],
+    "confidence": "chac"
+  },
+  "BP-7048": {
+    "nameVi": "Bánh răng 20 răng",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      25.2,
+      25.2
+    ],
+    "confidence": "chac"
+  },
+  "BP-7049": {
+    "nameVi": "Thanh răng 5 lỗ",
+    "group": "gear",
+    "lengthHoles": 5,
+    "sizeMm": [
+      10,
+      19,
+      50
+    ],
+    "confidence": "chac"
+  },
+  "BP-7050": {
+    "nameVi": "Trục vít",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      12.4,
+      12.4,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-7051": {
+    "nameVi": "Bánh răng vát 24 răng",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      29.2,
+      29.2
+    ],
+    "confidence": "chac"
+  },
+  "BP-7052": {
+    "nameVi": "Bánh răng côn 12 răng",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      5,
+      16.1,
+      16.1
+    ],
+    "confidence": "chac"
+  },
+  "BP-7053": {
+    "nameVi": "Bánh răng 12 răng",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      17.2,
+      17.2
+    ],
+    "confidence": "chac"
+  },
+  "BP-7054": {
+    "nameVi": "Bánh răng 8 răng",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      12.6,
+      12.6
+    ],
+    "confidence": "chac"
+  },
+  "BP-7073": {
+    "nameVi": "Thanh cong",
+    "group": "beam",
+    "lengthHoles": 10,
+    "sizeMm": [
+      50,
+      10,
+      90
+    ],
+    "confidence": "chac"
+  },
+  "BP-7074": {
+    "nameVi": "Thanh góc 3×7",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      25.9,
+      10,
+      82
+    ],
+    "confidence": "chac"
+  },
+  "BP-7075": {
+    "nameVi": "Khung thân máy bay",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      33.9,
+      10,
+      78
+    ],
+    "confidence": "chac"
+  },
+  "BP-7076": {
+    "nameVi": "Thanh gấp góc",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      33.9,
+      10,
+      58
+    ],
+    "confidence": "chac"
+  },
+  "BP-7077": {
+    "nameVi": "Thanh chữ L 3×3",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      30,
+      10,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-7078": {
+    "nameVi": "Thanh chữ L 3×5",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      30,
+      10,
+      50
+    ],
+    "confidence": "chac"
+  },
+  "BP-7079": {
+    "nameVi": "Thanh chữ L 2×4",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      20,
+      10,
+      40
+    ],
+    "confidence": "chac"
+  },
+  "BP-7080": {
+    "nameVi": "Khớp chốt xám",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      30,
+      5,
+      50
+    ],
+    "confidence": "chac"
+  },
+  "BP-7081": {
+    "nameVi": "Thanh mỏng 4 lỗ",
+    "group": "beam",
+    "lengthHoles": 4,
+    "sizeMm": [
+      10,
+      5,
+      40
+    ],
+    "confidence": "chac"
+  },
+  "BP-7085": {
+    "nameVi": "Vành bánh xe 61mm",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      22,
+      61,
+      61
+    ],
+    "confidence": "chac"
+  },
+  "BP-7089": {
+    "nameVi": "Trục 3 có gờ",
+    "group": "axle",
+    "lengthHoles": 3,
+    "sizeMm": [
+      8,
+      8,
+      32
+    ],
+    "confidence": "chac"
+  },
+  "BP-7090": {
+    "nameVi": "Trục 4 có gờ chặn",
+    "group": "axle",
+    "lengthHoles": 4,
+    "sizeMm": [
+      8,
+      8,
+      40
+    ],
+    "confidence": "chac"
+  },
+  "BP-7091": {
+    "nameVi": "Trục 8 có gờ chặn",
+    "group": "axle",
+    "lengthHoles": 8,
+    "sizeMm": [
+      8,
+      8,
+      80
+    ],
+    "confidence": "chac"
+  },
+  "BP-7093": {
+    "nameVi": "Khớp nối tròn",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      10,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-7094": {
+    "nameVi": "Khối nối 2 lỗ",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      10,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-7095": {
+    "nameVi": "Bánh đai nhỏ",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      5,
+      30,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-7096": {
+    "nameVi": "Khớp chữ L",
+    "group": "peg",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      40,
+      40
+    ],
+    "confidence": "chac"
+  },
+  "BP-7099": {
+    "nameVi": "Khớp nối trục",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      9.8,
+      8.9,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-7120": {
+    "nameVi": "Lốp xe 56mm",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      28,
+      56.4,
+      56.4
+    ],
+    "confidence": "chac"
+  },
+  "BP-7228": {
+    "nameVi": "Bánh xe Mecanum trái",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      33.1,
+      60.4,
+      60.6
+    ],
+    "confidence": "chac"
+  },
+  "BP-7229": {
+    "nameVi": "Bánh xe Mecanum phải",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      33.1,
+      60.4,
+      60.6
+    ],
+    "confidence": "chac"
+  },
+  "BP-7523A": {
+    "nameVi": "Thanh 3 lỗ",
+    "group": "beam",
+    "lengthHoles": 3,
+    "sizeMm": [
+      10,
+      10,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-7524A": {
+    "nameVi": "Thanh 5 lỗ",
+    "group": "beam",
+    "lengthHoles": 5,
+    "sizeMm": [
+      10,
+      10,
+      50
+    ],
+    "confidence": "chac"
+  },
+  "BP-7525A": {
+    "nameVi": "Thanh 7 lỗ",
+    "group": "beam",
+    "lengthHoles": 7,
+    "sizeMm": [
+      10,
+      10,
+      70
+    ],
+    "confidence": "chac"
+  },
+  "BP-7526A": {
+    "nameVi": "Thanh 9 lỗ",
+    "group": "beam",
+    "lengthHoles": 9,
+    "sizeMm": [
+      10,
+      10,
+      90
+    ],
+    "confidence": "chac"
+  },
+  "BP-7527A": {
+    "nameVi": "Thanh 11 lỗ",
+    "group": "beam",
+    "lengthHoles": 11,
+    "sizeMm": [
+      10,
+      10,
+      110
+    ],
+    "confidence": "chac"
+  },
+  "BP-7528": {
+    "nameVi": "Thanh 15 lỗ",
+    "group": "beam",
+    "lengthHoles": 15,
+    "sizeMm": [
+      10,
+      10,
+      150
+    ],
+    "confidence": "chac"
+  },
+  "BP-7547": {
+    "nameVi": "Chốt nối trục 2 lỗ",
+    "group": "peg",
+    "lengthHoles": 2,
+    "sizeMm": [
+      10,
+      10,
+      20
+    ],
+    "confidence": "kha"
+  },
+  "BP-7548": {
+    "nameVi": "Chốt vuông",
+    "group": "peg",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      20,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-7549": {
+    "nameVi": "Chốt có lỗ ngang",
+    "group": "peg",
+    "lengthHoles": 3,
+    "sizeMm": [
+      10,
+      10,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-7550": {
+    "nameVi": "Khối nối 4 chốt vuông",
+    "group": "peg",
+    "lengthHoles": null,
+    "sizeMm": [
+      30,
+      10,
+      30
+    ],
+    "confidence": "kha"
+  },
+  "BP-7553": {
+    "nameVi": "Khớp nối chốt vuông góc",
+    "group": "peg",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      10,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-7600": {
+    "nameVi": "Thanh 2 lỗ",
+    "group": "beam",
+    "lengthHoles": 2,
+    "sizeMm": [
+      10,
+      10,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-7618": {
+    "nameVi": "Bàn xoay dưới nhỏ",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      26.9,
+      17.8,
+      29.8
+    ],
+    "confidence": "chac"
+  },
+  "BP-7619": {
+    "nameVi": "Bàn xoay trên nhỏ",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      37.4,
+      20.4,
+      37.4
+    ],
+    "confidence": "chac"
+  },
+  "BP-7620": {
+    "nameVi": "Khung chữ H 5×11",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      50,
+      10,
+      110
+    ],
+    "confidence": "chac"
+  },
+  "BP-7621": {
+    "nameVi": "Ổ bi đa hướng",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      28.6,
+      27.8,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-7623": {
+    "nameVi": "Bánh cam",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      18.8,
+      5,
+      29
+    ],
+    "confidence": "chac"
+  },
+  "BP-7626": {
+    "nameVi": "Khối nối chữ T",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      30,
+      10,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-7627": {
+    "nameVi": "Bánh răng côn 20 răng",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      5,
+      25.4,
+      25.4
+    ],
+    "confidence": "chac"
+  },
+  "BP-7628": {
+    "nameVi": "Trục chữ thập 4",
+    "group": "axle",
+    "lengthHoles": 4,
+    "sizeMm": [
+      6,
+      6,
+      40
+    ],
+    "confidence": "chac"
+  },
+  "BP-7629": {
+    "nameVi": "Trục chữ thập 6",
+    "group": "axle",
+    "lengthHoles": 6,
+    "sizeMm": [
+      6,
+      6,
+      60
+    ],
+    "confidence": "chac"
+  },
+  "BP-7630": {
+    "nameVi": "Trục chữ thập 8 · đen",
+    "group": "axle",
+    "lengthHoles": 8,
+    "sizeMm": [
+      6,
+      6,
+      80
+    ],
+    "confidence": "chac"
+  },
+  "BP-7631": {
+    "nameVi": "Trục chữ thập 10 · đen",
+    "group": "axle",
+    "lengthHoles": 10,
+    "sizeMm": [
+      6,
+      6,
+      100
+    ],
+    "confidence": "chac"
+  },
+  "BP-7632": {
+    "nameVi": "Trục chữ thập 12",
+    "group": "axle",
+    "lengthHoles": 12,
+    "sizeMm": [
+      6,
+      6,
+      120
+    ],
+    "confidence": "chac"
+  },
+  "BP-7637": {
+    "nameVi": "Tấm đế 15×15 lỗ",
+    "group": "plate",
+    "lengthHoles": 15,
+    "sizeMm": [
+      150,
+      10,
+      150
+    ],
+    "confidence": "chac"
+  },
+  "BP-7638": {
+    "nameVi": "Tấm đế 5×15 lỗ",
+    "group": "plate",
+    "lengthHoles": 15,
+    "sizeMm": [
+      50,
+      10,
+      150
+    ],
+    "confidence": "chac"
+  },
+  "BP-7639": {
+    "nameVi": "Tấm đế 5×5 lỗ",
+    "group": "plate",
+    "lengthHoles": 5,
+    "sizeMm": [
+      50,
+      10,
+      50
+    ],
+    "confidence": "chac"
+  },
+  "BP-7640": {
+    "nameVi": "Bánh răng 16 răng",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      10,
+      22.5,
+      22.5
+    ],
+    "confidence": "chac"
+  },
+  "BP-7666": {
+    "nameVi": "Bàn xoay trên lớn",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      71,
+      16,
+      71
+    ],
+    "confidence": "chac"
+  },
+  "BP-7667": {
+    "nameVi": "Bàn xoay dưới lớn",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      63,
+      16,
+      63
+    ],
+    "confidence": "chac"
+  },
+  "BP-7668": {
+    "nameVi": "Đĩa tròn 5×5",
+    "group": "plate",
+    "lengthHoles": 5,
+    "sizeMm": [
+      49,
+      10,
+      49.5
+    ],
+    "confidence": "chac"
+  },
+  "BP-7694": {
+    "nameVi": "Vành bánh xe 43mm",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      26,
+      43,
+      43
+    ],
+    "confidence": "chac"
+  },
+  "BP-7788": {
+    "nameVi": "Khung gá thân",
+    "group": "other",
+    "lengthHoles": null,
+    "sizeMm": [
+      30,
+      50,
+      70
+    ],
+    "confidence": "kha"
+  },
+  "BP-7792": {
+    "nameVi": "Thanh 5 lỗ · đỏ",
+    "group": "beam",
+    "lengthHoles": 5,
+    "sizeMm": [
+      10,
+      10,
+      50
+    ],
+    "confidence": "chac"
+  },
+  "BP-7794": {
+    "nameVi": "Thanh 7 lỗ · vàng",
+    "group": "beam",
+    "lengthHoles": 7,
+    "sizeMm": [
+      10,
+      10,
+      70
+    ],
+    "confidence": "chac"
+  },
+  "BP-7795": {
+    "nameVi": "Thanh 9 lỗ · đen",
+    "group": "beam",
+    "lengthHoles": 9,
+    "sizeMm": [
+      10,
+      10,
+      90
+    ],
+    "confidence": "chac"
+  },
+  "BP-7796": {
+    "nameVi": "Thanh 11 lỗ · trắng",
+    "group": "beam",
+    "lengthHoles": 11,
+    "sizeMm": [
+      10,
+      10,
+      110
+    ],
+    "confidence": "chac"
+  },
+  "BP-7797": {
+    "nameVi": "Thanh 13 lỗ · đen",
+    "group": "beam",
+    "lengthHoles": 13,
+    "sizeMm": [
+      10,
+      10,
+      130
+    ],
+    "confidence": "chac"
+  },
+  "BP-7798": {
+    "nameVi": "Thanh 15 lỗ · trắng",
+    "group": "beam",
+    "lengthHoles": 15,
+    "sizeMm": [
+      10,
+      10,
+      150
+    ],
+    "confidence": "chac"
+  },
+  "BP-7799": {
+    "nameVi": "Khối nối trung tâm 3 nhánh",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      30,
+      10,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-8000": {
+    "nameVi": "Vành bánh xe 55mm",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      22,
+      54.8,
+      54.8
+    ],
+    "confidence": "chac"
+  },
+  "BP-8100": {
+    "nameVi": "Lốp xe 66mm",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      19,
+      66.3,
+      66.3
+    ],
+    "confidence": "chac"
+  },
+  "BP-8813": {
+    "nameVi": "Khối 3 cánh (bầu cánh quạt)",
+    "group": "other",
+    "lengthHoles": null,
+    "sizeMm": [
+      44.6,
+      5,
+      40
+    ],
+    "confidence": "chac"
+  },
+  "BP-8814": {
+    "nameVi": "Thanh chữ L 3×5 · trắng",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      30,
+      10,
+      50
+    ],
+    "confidence": "chac"
+  },
+  "BP-8815": {
+    "nameVi": "Thanh chữ L 4×4 · trắng",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      40,
+      10,
+      40
+    ],
+    "confidence": "chac"
+  },
+  "BP-8816": {
+    "nameVi": "Khung chữ U 3×7",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      30,
+      20,
+      70
+    ],
+    "confidence": "chac"
+  },
+  "BP-8817": {
+    "nameVi": "Thanh 5 lỗ · đen",
+    "group": "beam",
+    "lengthHoles": 5,
+    "sizeMm": [
+      10,
+      10,
+      50
+    ],
+    "confidence": "chac"
+  },
+  "BP-8818": {
+    "nameVi": "Khung đế 7×11",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      70,
+      10,
+      110
+    ],
+    "confidence": "chac"
+  },
+  "BP-8819": {
+    "nameVi": "Khung 3×5",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      30,
+      10,
+      50
+    ],
+    "confidence": "chac"
+  },
+  "BP-8840": {
+    "nameVi": "Bánh bi",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      28.6,
+      42.3,
+      50
+    ],
+    "confidence": "chac"
+  },
+  "BP-8841": {
+    "nameVi": "Vành bánh xe",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      19,
+      45,
+      45
+    ],
+    "confidence": "chac"
+  },
+  "BP-8850": {
+    "nameVi": "Lốp xe",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      15,
+      49.4,
+      49.4
+    ],
+    "confidence": "chac"
+  },
+  "BP-8873": {
+    "nameVi": "Khung 5×11",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      50,
+      10,
+      110
+    ],
+    "confidence": "chac"
+  },
+  "BP-8874": {
+    "nameVi": "Khung chữ U 3×11",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      30,
+      20,
+      110
+    ],
+    "confidence": "chac"
+  },
+  "BP-8875": {
+    "nameVi": "Khung 3×7",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      30,
+      10,
+      70
+    ],
+    "confidence": "chac"
+  },
+  "BP-8878": {
+    "nameVi": "Kẹp giữ",
+    "group": "other",
+    "lengthHoles": null,
+    "sizeMm": [
+      6.9,
+      15,
+      15
+    ],
+    "confidence": "chac"
+  },
+  "BP-8888": {
+    "nameVi": "Bánh răng 40 răng phẳng",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      51.3,
+      10,
+      51.3
+    ],
+    "confidence": "chac"
+  },
+  "BP-8890": {
+    "nameVi": "Khối nối đa hướng",
+    "group": "connector",
+    "lengthHoles": null,
+    "sizeMm": [
+      30,
+      20,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-8891": {
+    "nameVi": "Bánh răng 24 răng phẳng",
+    "group": "gear",
+    "lengthHoles": null,
+    "sizeMm": [
+      32.9,
+      10,
+      32.9
+    ],
+    "confidence": "chac"
+  },
+  "BP-8892": {
+    "nameVi": "Bánh dẫn xích",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      48.8,
+      18.5,
+      48.5
+    ],
+    "confidence": "chac"
+  },
+  "BP-8893": {
+    "nameVi": "Vành bánh xe 61mm",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      61,
+      22,
+      61
+    ],
+    "confidence": "chac"
+  },
+  "BP-8894": {
+    "nameVi": "Ổ bi đỡ",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      30,
+      24.3,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-8904": {
+    "nameVi": "Thanh 4 lỗ · vàng",
+    "group": "beam",
+    "lengthHoles": 4,
+    "sizeMm": [
+      40,
+      10,
+      9.5
+    ],
+    "confidence": "chac"
+  },
+  "BP-8919": {
+    "nameVi": "Lốp xe 70mm",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      20,
+      70,
+      70
+    ],
+    "confidence": "chac"
+  },
+  "BP-8943": {
+    "nameVi": "Thanh răng 15 lỗ",
+    "group": "gear",
+    "lengthHoles": 15,
+    "sizeMm": [
+      10,
+      19,
+      150
+    ],
+    "confidence": "chac"
+  },
+  "BP-8944": {
+    "nameVi": "Thanh răng 7 lỗ",
+    "group": "gear",
+    "lengthHoles": 7,
+    "sizeMm": [
+      20,
+      14,
+      70
+    ],
+    "confidence": "chac"
+  },
+  "BP-8965": {
+    "nameVi": "Thanh ray 25 lỗ",
+    "group": "beam",
+    "lengthHoles": 25,
+    "sizeMm": [
+      30,
+      10,
+      250
+    ],
+    "confidence": "chac"
+  },
+  "BP-8974": {
+    "nameVi": "Thanh đôi 9 lỗ",
+    "group": "beam",
+    "lengthHoles": 9,
+    "sizeMm": [
+      90,
+      10,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-8975": {
+    "nameVi": "Thanh vuông 3 lỗ · vàng",
+    "group": "beam",
+    "lengthHoles": 3,
+    "sizeMm": [
+      30,
+      9.9,
+      9.9
+    ],
+    "confidence": "chac"
+  },
+  "BP-8976": {
+    "nameVi": "Thanh vuông 5 lỗ · đỏ cam",
+    "group": "beam",
+    "lengthHoles": 5,
+    "sizeMm": [
+      50,
+      9.9,
+      9.9
+    ],
+    "confidence": "chac"
+  },
+  "BP-8977": {
+    "nameVi": "Thanh vuông 7 lỗ · đỏ cam",
+    "group": "beam",
+    "lengthHoles": 7,
+    "sizeMm": [
+      70,
+      9.9,
+      9.9
+    ],
+    "confidence": "chac"
+  },
+  "BP-8978": {
+    "nameVi": "Thanh vuông 9 lỗ · đỏ cam",
+    "group": "beam",
+    "lengthHoles": 9,
+    "sizeMm": [
+      90,
+      9.9,
+      9.9
+    ],
+    "confidence": "chac"
+  },
+  "BP-8979": {
+    "nameVi": "Thanh 9 lỗ · đỏ cam",
+    "group": "beam",
+    "lengthHoles": 9,
+    "sizeMm": [
+      90,
+      10,
+      9.7
+    ],
+    "confidence": "chac"
+  },
+  "BP-8980": {
+    "nameVi": "Thanh 7 lỗ · đỏ cam",
+    "group": "beam",
+    "lengthHoles": 7,
+    "sizeMm": [
+      70,
+      10,
+      9.7
+    ],
+    "confidence": "chac"
+  },
+  "BP-8981": {
+    "nameVi": "Thanh 5 lỗ · đỏ cam",
+    "group": "beam",
+    "lengthHoles": 5,
+    "sizeMm": [
+      50,
+      10,
+      9.7
+    ],
+    "confidence": "chac"
+  },
+  "BP-8982": {
+    "nameVi": "Khung 3×3 · vàng",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      29.8,
+      10,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-8983": {
+    "nameVi": "Khớp chốt mini · xanh lá",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      8,
+      7,
+      6.9
+    ],
+    "confidence": "kha"
+  },
+  "BP-8984": {
+    "nameVi": "Khớp chốt mini · xanh ngọc",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      8,
+      7,
+      8
+    ],
+    "confidence": "kha"
+  },
+  "BP-8985": {
+    "nameVi": "Thanh đôi 5 lỗ",
+    "group": "beam",
+    "lengthHoles": 5,
+    "sizeMm": [
+      50,
+      10,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-8986": {
+    "nameVi": "Thanh đôi 7 lỗ",
+    "group": "beam",
+    "lengthHoles": 7,
+    "sizeMm": [
+      70,
+      10,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-8987": {
+    "nameVi": "Thanh đôi 11 lỗ",
+    "group": "beam",
+    "lengthHoles": 11,
+    "sizeMm": [
+      110,
+      10,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-8988": {
+    "nameVi": "Thanh đôi 15 lỗ",
+    "group": "beam",
+    "lengthHoles": 15,
+    "sizeMm": [
+      150,
+      10,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-8989": {
+    "nameVi": "Thanh 7 lỗ đa hướng",
+    "group": "beam",
+    "lengthHoles": 7,
+    "sizeMm": [
+      70,
+      10,
+      10
+    ],
+    "confidence": "chac"
+  },
+  "BP-8990": {
+    "nameVi": "Thanh 9 lỗ đa hướng",
+    "group": "beam",
+    "lengthHoles": 9,
+    "sizeMm": [
+      90,
+      10,
+      10
+    ],
+    "confidence": "chac"
+  },
+  "BP-8991": {
+    "nameVi": "Thanh 11 lỗ đa hướng",
+    "group": "beam",
+    "lengthHoles": 11,
+    "sizeMm": [
+      110,
+      11.5,
+      10
+    ],
+    "confidence": "chac"
+  },
+  "BP-8992": {
+    "nameVi": "Thanh đôi 13 lỗ",
+    "group": "beam",
+    "lengthHoles": 13,
+    "sizeMm": [
+      130,
+      10,
+      20
+    ],
+    "confidence": "chac"
+  },
+  "BP-8993": {
+    "nameVi": "Thanh vuông 11 lỗ · đỏ cam",
+    "group": "beam",
+    "lengthHoles": 11,
+    "sizeMm": [
+      110,
+      9.9,
+      9.9
+    ],
+    "confidence": "chac"
+  },
+  "BP-8994": {
+    "nameVi": "Thanh vuông 13 lỗ · đỏ cam",
+    "group": "beam",
+    "lengthHoles": 13,
+    "sizeMm": [
+      130,
+      9.9,
+      9.9
+    ],
+    "confidence": "chac"
+  },
+  "BP-8995": {
+    "nameVi": "Khung 3×5 · vàng",
+    "group": "beam",
+    "lengthHoles": null,
+    "sizeMm": [
+      49.7,
+      10,
+      30
+    ],
+    "confidence": "chac"
+  },
+  "BP-9126": {
+    "nameVi": "Bi lăn 25mm",
+    "group": "wheel",
+    "lengthHoles": null,
+    "sizeMm": [
+      25.4,
+      25.4,
+      25.4
+    ],
+    "confidence": "doan"
+  },
+  "BP-9312": {
+    "nameVi": "Thanh 11 lỗ · đỏ cam",
+    "group": "beam",
+    "lengthHoles": 11,
+    "sizeMm": [
+      110,
+      10,
+      9.7
+    ],
+    "confidence": "chac"
+  },
+  "BP-9313": {
+    "nameVi": "Thanh 13 lỗ · đỏ cam",
+    "group": "beam",
+    "lengthHoles": 13,
+    "sizeMm": [
+      130,
+      10,
+      9.7
+    ],
+    "confidence": "chac"
+  }
+}

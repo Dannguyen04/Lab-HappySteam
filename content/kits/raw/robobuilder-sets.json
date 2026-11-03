@@ -1,0 +1,4020 @@
+{
+ "source": "RBB_Studio/studio/public/rbb-assets/kits.json (RoboBuilder Linux library)",
+ "note": "Danh sách thô theo mã bộ RoboBuilder; tên bộ chưa xác nhận trừ set2321A=Alpha A JMC-NY-2321AE, set2322=Alpha B JMC-NY-2322E",
+ "sets": {
+  "set2321A": {
+   "types": 82,
+   "pieces": 316,
+   "parts": [
+    {
+     "code": "BE-1154",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-1537",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-2257",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-3581",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-5158",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BP-3035",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-3045",
+     "color": "(04)",
+     "count": 5,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-3976",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-3990",
+     "color": "",
+     "count": 5,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3991",
+     "color": "",
+     "count": 6,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3992",
+     "color": "H",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3993",
+     "color": "",
+     "count": 3,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3994",
+     "color": "H",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7001",
+     "color": "(16)",
+     "count": 3,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7002",
+     "color": "(16)",
+     "count": 6,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7003",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7004",
+     "color": "",
+     "count": 1,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7005",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7006",
+     "color": "",
+     "count": 3,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7009",
+     "color": "(01)",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7011",
+     "color": "",
+     "count": 15,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7012",
+     "color": "",
+     "count": 40,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7013",
+     "color": "",
+     "count": 10,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7014",
+     "color": "t",
+     "count": 8,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7015",
+     "color": "a",
+     "count": 8,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7016",
+     "color": "t",
+     "count": 10,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7017",
+     "color": "M",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7018",
+     "color": "M",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7021",
+     "color": "(16)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7022",
+     "color": "",
+     "count": 3,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7023",
+     "color": "",
+     "count": 6,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7024",
+     "color": "",
+     "count": 6,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7027",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7029",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7030",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7045",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7046",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7047",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7048",
+     "color": "(02)",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7049",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7050",
+     "color": "",
+     "count": 1,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7052",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7053",
+     "color": "",
+     "count": 1,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7054",
+     "color": "",
+     "count": 3,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7073",
+     "color": "M",
+     "count": 3,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7074",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7075",
+     "color": "(16)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7076",
+     "color": "M",
+     "count": 3,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7077",
+     "color": "(16)",
+     "count": 3,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7078",
+     "color": "(06)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7079",
+     "color": "(16)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7080",
+     "color": "",
+     "count": 4,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7081",
+     "color": "",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7089",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7090",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7091",
+     "color": "",
+     "count": 1,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7093",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7094",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7095",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7096",
+     "color": "",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7099",
+     "color": "",
+     "count": 3,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(12)",
+     "count": 8,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7524A",
+     "color": "(16)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7525A",
+     "color": "(06)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7526A",
+     "color": "(16)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7527A",
+     "color": "(06)",
+     "count": 3,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7528",
+     "color": "m",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7547",
+     "color": "B",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7548",
+     "color": "B",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7549",
+     "color": "B",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7553",
+     "color": "B",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7600",
+     "color": "",
+     "count": 3,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7620",
+     "color": "(16)",
+     "count": 1,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7623",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7628",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7629",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7631",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7799",
+     "color": "(16)",
+     "count": 1,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8813",
+     "color": "(06)",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8814",
+     "color": "(06)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8817",
+     "color": "(02)",
+     "count": 1,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8818",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    }
+   ]
+  },
+  "set2322": {
+   "types": 90,
+   "pieces": 377,
+   "parts": [
+    {
+     "code": "BE-2222",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-2260",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-2701",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-6313",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BP-3035",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-3045",
+     "color": "(04)",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-3976",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-3990",
+     "color": "",
+     "count": 7,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3991",
+     "color": "",
+     "count": 10,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3992",
+     "color": "H",
+     "count": 4,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3993",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3994",
+     "color": "H",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3995",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7001",
+     "color": "(16)",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7002",
+     "color": "(16)",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7003",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7004",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7005",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7006",
+     "color": "",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7009",
+     "color": "(01)",
+     "count": 10,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7011",
+     "color": "",
+     "count": 20,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7012",
+     "color": "",
+     "count": 44,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7013",
+     "color": "",
+     "count": 14,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7014",
+     "color": "t",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7015",
+     "color": "a",
+     "count": 12,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7016",
+     "color": "t",
+     "count": 9,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7017",
+     "color": "M",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7018",
+     "color": "M",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7019",
+     "color": "M",
+     "count": 1,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7020",
+     "color": "M",
+     "count": 1,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7021",
+     "color": "(16)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7022",
+     "color": "",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7023",
+     "color": "",
+     "count": 11,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7024",
+     "color": "",
+     "count": 15,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7026",
+     "color": "",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7027",
+     "color": "",
+     "count": 5,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7030",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7045",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7046",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7047",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7048",
+     "color": "(02)",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7050",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7052",
+     "color": "",
+     "count": 3,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7053",
+     "color": "",
+     "count": 3,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7054",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7073",
+     "color": "M",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7074",
+     "color": "(16)",
+     "count": 3,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7075",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7076",
+     "color": "M",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7077",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7078",
+     "color": "(06)",
+     "count": 6,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7079",
+     "color": "(16)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7080",
+     "color": "",
+     "count": 4,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7081",
+     "color": "",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7089",
+     "color": "",
+     "count": 3,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7090",
+     "color": "",
+     "count": 4,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7091",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7093",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7094",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7095",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7096",
+     "color": "",
+     "count": 2,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7099",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(12)",
+     "count": 16,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7524A",
+     "color": "(16)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7525A",
+     "color": "(06)",
+     "count": 3,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7526A",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7527A",
+     "color": "(06)",
+     "count": 3,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7528",
+     "color": "m",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7547",
+     "color": "B",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7548",
+     "color": "B",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7549",
+     "color": "B",
+     "count": 2,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7553",
+     "color": "B",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7600",
+     "color": "",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7620",
+     "color": "(16)",
+     "count": 1,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7623",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7628",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7629",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7630",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7631",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7632",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7799",
+     "color": "(16)",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8813",
+     "color": "(06)",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8814",
+     "color": "(06)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8815",
+     "color": "(06)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8816",
+     "color": "(06)",
+     "count": 1,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8817",
+     "color": "(02)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8818",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8819",
+     "color": "(06)",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8841",
+     "color": "(06)",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-8850",
+     "color": "(16)",
+     "count": 2,
+     "type": "Wheel And Gear"
+    }
+   ]
+  },
+  "set2323": {
+   "types": 85,
+   "pieces": 390,
+   "parts": [
+    {
+     "code": "BE-1153",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-1416",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-3581",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-6208",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BP-3035",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-3045",
+     "color": "(04)",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-3976",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-3990",
+     "color": "",
+     "count": 8,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3991",
+     "color": "",
+     "count": 6,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3992",
+     "color": "H",
+     "count": 4,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3993",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3994",
+     "color": "H",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7001",
+     "color": "(16)",
+     "count": 3,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7002",
+     "color": "(16)",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7003",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7004",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7005",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7006",
+     "color": "",
+     "count": 3,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7009",
+     "color": "(01)",
+     "count": 16,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7011",
+     "color": "",
+     "count": 30,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7012",
+     "color": "",
+     "count": 65,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7013",
+     "color": "",
+     "count": 25,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7014",
+     "color": "t",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7015",
+     "color": "a",
+     "count": 16,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7016",
+     "color": "t",
+     "count": 8,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7021",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7022",
+     "color": "",
+     "count": 6,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7023",
+     "color": "",
+     "count": 6,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7024",
+     "color": "",
+     "count": 8,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7027",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7029",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7030",
+     "color": "",
+     "count": 3,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7045",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7046",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7047",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7048",
+     "color": "(02)",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7049",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7053",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7054",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7073",
+     "color": "M",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7074",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7075",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7076",
+     "color": "M",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7077",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7078",
+     "color": "(06)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7079",
+     "color": "(16)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7080",
+     "color": "",
+     "count": 4,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7089",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7090",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7091",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7093",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7094",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7095",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7096",
+     "color": "",
+     "count": 2,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7099",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(12)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(04)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(09)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(10)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7524A",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7525A",
+     "color": "(06)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7526A",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7527A",
+     "color": "(06)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7528",
+     "color": "m",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7547",
+     "color": "B",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7548",
+     "color": "B",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7549",
+     "color": "B",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7553",
+     "color": "B",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7620",
+     "color": "(16)",
+     "count": 1,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7628",
+     "color": "",
+     "count": 4,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7629",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7630",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7799",
+     "color": "(16)",
+     "count": 4,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8814",
+     "color": "(06)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8815",
+     "color": "(06)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8816",
+     "color": "(06)",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8817",
+     "color": "(02)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8818",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8819",
+     "color": "(06)",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8840",
+     "color": "(06)",
+     "count": 1,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-8841",
+     "color": "(06)",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-8850",
+     "color": "(16)",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-8874",
+     "color": "(06)",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8875",
+     "color": "(06)",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-9126",
+     "color": "",
+     "count": 1,
+     "type": "Wheel And Gear"
+    }
+   ]
+  },
+  "set2324": {
+   "types": 55,
+   "pieces": 271,
+   "parts": [
+    {
+     "code": "BE-1152",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-1322",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-2209",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-3581",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BP-3045",
+     "color": "(04)",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-3976",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-3990",
+     "color": "",
+     "count": 4,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3991",
+     "color": "",
+     "count": 8,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3992",
+     "color": "H",
+     "count": 6,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7006",
+     "color": "",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7009",
+     "color": "(01)",
+     "count": 12,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7011",
+     "color": "",
+     "count": 16,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7012",
+     "color": "",
+     "count": 50,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7013",
+     "color": "",
+     "count": 8,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7014",
+     "color": "t",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7015",
+     "color": "a",
+     "count": 12,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7016",
+     "color": "t",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7021",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7022",
+     "color": "",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7023",
+     "color": "",
+     "count": 8,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7024",
+     "color": "",
+     "count": 8,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7046",
+     "color": "",
+     "count": 3,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7048",
+     "color": "(02)",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7052",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7053",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7075",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7076",
+     "color": "M",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7078",
+     "color": "(06)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7079",
+     "color": "(16)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7093",
+     "color": "",
+     "count": 3,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7095",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7096",
+     "color": "",
+     "count": 2,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7099",
+     "color": "",
+     "count": 3,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(12)",
+     "count": 8,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7524A",
+     "color": "(16)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7525A",
+     "color": "(06)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7526A",
+     "color": "(16)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7527A",
+     "color": "(06)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7547",
+     "color": "B",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7549",
+     "color": "B",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7553",
+     "color": "B",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7628",
+     "color": "",
+     "count": 6,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7799",
+     "color": "(16)",
+     "count": 3,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8814",
+     "color": "(06)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8815",
+     "color": "(06)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8816",
+     "color": "(06)",
+     "count": 3,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8817",
+     "color": "(02)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8818",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8819",
+     "color": "(06)",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8840",
+     "color": "(06)",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-8841",
+     "color": "(06)",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-8850",
+     "color": "(16)",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-8875",
+     "color": "(06)",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8878",
+     "color": "",
+     "count": 4,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-9126",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    }
+   ]
+  },
+  "set2421": {
+   "types": 39,
+   "pieces": 125,
+   "parts": [
+    {
+     "code": "BP-7549",
+     "color": "B",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7548",
+     "color": "B",
+     "count": 2,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7553",
+     "color": "B",
+     "count": 2,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(12)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(10)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7525A",
+     "color": "(06)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7527A",
+     "color": "(06)",
+     "count": 3,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-3976",
+     "color": "(16)",
+     "count": 1,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-3993",
+     "color": "",
+     "count": 1,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7006",
+     "color": "",
+     "count": 2,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7009",
+     "color": "(01)",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7011",
+     "color": "",
+     "count": 10,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7012",
+     "color": "",
+     "count": 42,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7013",
+     "color": "",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7015",
+     "color": "a",
+     "count": 2,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7021",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7073",
+     "color": "M",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7075",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7078",
+     "color": "(06)",
+     "count": 6,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7079",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7094",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7621",
+     "color": "",
+     "count": 1,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7668",
+     "color": "",
+     "count": 1,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7792",
+     "color": "(04)",
+     "count": 1,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7794",
+     "color": "(12)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7795",
+     "color": "(02)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7797",
+     "color": "(02)",
+     "count": 1,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8000",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-8816",
+     "color": "(06)",
+     "count": 1,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8818",
+     "color": "(06)",
+     "count": 1,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8818",
+     "color": "(16)",
+     "count": 1,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8819",
+     "color": "(06)",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8840",
+     "color": "(06)",
+     "count": 1,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-8875",
+     "color": "(06)",
+     "count": 1,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8919",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BE-1157",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-3581",
+     "color": "",
+     "count": 2,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BP-9126",
+     "color": "",
+     "count": 1,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BE-5161",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    }
+   ]
+  },
+  "set2508": {
+   "types": 88,
+   "pieces": 437,
+   "parts": [
+    {
+     "code": "BE-5166",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-1158",
+     "color": "",
+     "count": 3,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-1245",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-1536",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-1624",
+     "color": "",
+     "count": 2,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-1756",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-2626",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-3582",
+     "color": "",
+     "count": 2,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-9520",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BP-3035",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-3976",
+     "color": "(04)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-3990",
+     "color": "",
+     "count": 10,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3991",
+     "color": "",
+     "count": 6,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3992",
+     "color": "H",
+     "count": 6,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3993",
+     "color": "",
+     "count": 4,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3994",
+     "color": "H",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7001",
+     "color": "(04)",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7002",
+     "color": "(04)",
+     "count": 6,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7004",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7006",
+     "color": "",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7007",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7009",
+     "color": "",
+     "count": 10,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7011",
+     "color": "",
+     "count": 32,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7012",
+     "color": "",
+     "count": 90,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7013",
+     "color": "",
+     "count": 16,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7014",
+     "color": "t",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7015",
+     "color": "a",
+     "count": 10,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7016",
+     "color": "t",
+     "count": 10,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7019",
+     "color": "M",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7020",
+     "color": "M",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7021",
+     "color": "(04)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7022",
+     "color": "",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7023",
+     "color": "",
+     "count": 6,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7024",
+     "color": "",
+     "count": 6,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7027",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7029",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7045",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7046",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7047",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7048",
+     "color": "(02)",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7053",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7054",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7073",
+     "color": "M",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7074",
+     "color": "(06)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7075",
+     "color": "(04)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7076",
+     "color": "M",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7077",
+     "color": "(04)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7078",
+     "color": "",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7078",
+     "color": "(06)",
+     "count": 6,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7079",
+     "color": "",
+     "count": 6,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7093",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7095",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7096",
+     "color": "",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7099",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(02)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(04)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(09)",
+     "count": 3,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(10)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(12)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7524A",
+     "color": "(04)",
+     "count": 5,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7525A",
+     "color": "(06)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7526A",
+     "color": "(04)",
+     "count": 5,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7527A",
+     "color": "(06)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7528",
+     "color": "m",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7547",
+     "color": "B",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7549",
+     "color": "B",
+     "count": 8,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7553",
+     "color": "B",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7600",
+     "color": "",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7628",
+     "color": "",
+     "count": 4,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7630",
+     "color": "",
+     "count": 4,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7637",
+     "color": "(06)",
+     "count": 1,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7666",
+     "color": "",
+     "count": 1,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7667",
+     "color": "",
+     "count": 1,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7788",
+     "color": "(06)",
+     "count": 1,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7792",
+     "color": "(04)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7794",
+     "color": "(12)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7799",
+     "color": "(04)",
+     "count": 6,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8000",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-8813",
+     "color": "(06)",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8814",
+     "color": "(06)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8815",
+     "color": "(06)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8816",
+     "color": "(06)",
+     "count": 6,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8818",
+     "color": "(04)",
+     "count": 3,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-8819",
+     "color": "(06)",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8840",
+     "color": "(06)",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-8875",
+     "color": "(06)",
+     "count": 4,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-8919",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-9126",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    }
+   ]
+  },
+  "set2521": {
+   "types": 33,
+   "pieces": 127,
+   "parts": [
+    {
+     "code": "BE-5168",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BP-3035",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7012",
+     "color": "",
+     "count": 28,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7024",
+     "color": "",
+     "count": 6,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7095",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-8841",
+     "color": "(06)",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-8850",
+     "color": "(16)",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-8878",
+     "color": "",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7016",
+     "color": "t",
+     "count": 8,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7547",
+     "color": "B",
+     "count": 2,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7525A",
+     "color": "(06)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7526A",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7799",
+     "color": "(16)",
+     "count": 7,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7015",
+     "color": "a",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7014",
+     "color": "t",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7548",
+     "color": "B",
+     "count": 1,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7073",
+     "color": "M",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7074",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7553",
+     "color": "B",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-3991",
+     "color": "",
+     "count": 3,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7023",
+     "color": "",
+     "count": 8,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7090",
+     "color": "",
+     "count": 4,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-8813",
+     "color": "(06)",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-3045",
+     "color": "(04)",
+     "count": 4,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(12)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-3990",
+     "color": "",
+     "count": 4,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3992",
+     "color": "H",
+     "count": 1,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7006",
+     "color": "",
+     "count": 2,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7013",
+     "color": "",
+     "count": 2,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7027",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7076",
+     "color": "M",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7079",
+     "color": "(16)",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7094",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    }
+   ]
+  },
+  "set2106+": {
+   "types": 91,
+   "pieces": 464,
+   "parts": [
+    {
+     "code": "BE-5147",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BP-3960",
+     "color": "",
+     "count": 56,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-3961",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7547",
+     "color": "B",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7549",
+     "color": "B",
+     "count": 3,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7548",
+     "color": "B",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7553",
+     "color": "B",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(04)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(12)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7524A",
+     "color": "",
+     "count": 6,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7525A",
+     "color": "",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7526A",
+     "color": "",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7527A",
+     "color": "",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7528",
+     "color": "m",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-3976",
+     "color": "",
+     "count": 3,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-3990",
+     "color": "",
+     "count": 8,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3991",
+     "color": "",
+     "count": 8,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3992",
+     "color": "H",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3993",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3994",
+     "color": "H",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3995",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7001",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7002",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7003",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7004",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7005",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7006",
+     "color": "",
+     "count": 2,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7009",
+     "color": "",
+     "count": 8,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7010",
+     "color": "",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7011",
+     "color": "",
+     "count": 25,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7012",
+     "color": "",
+     "count": 80,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7013",
+     "color": "",
+     "count": 20,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7014",
+     "color": "t",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7015",
+     "color": "a",
+     "count": 10,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7019",
+     "color": "M",
+     "count": 1,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7020",
+     "color": "M",
+     "count": 1,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7021",
+     "color": "",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7022",
+     "color": "",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7023",
+     "color": "",
+     "count": 10,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7024",
+     "color": "",
+     "count": 10,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7027",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7028",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7030",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7045",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7046",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7047",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7048",
+     "color": "(02)",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7049",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7050",
+     "color": "",
+     "count": 1,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7051",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7052",
+     "color": "",
+     "count": 1,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7053",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7054",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7073",
+     "color": "M",
+     "count": 6,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7074",
+     "color": "",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7075",
+     "color": "",
+     "count": 2,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7076",
+     "color": "M",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7077",
+     "color": "",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7078",
+     "color": "(06)",
+     "count": 6,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7079",
+     "color": "",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7080",
+     "color": "",
+     "count": 4,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7081",
+     "color": "",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7085",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7089",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7090",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7093",
+     "color": "",
+     "count": 2,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7094",
+     "color": "",
+     "count": 6,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7095",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7096",
+     "color": "",
+     "count": 2,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7099",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7618",
+     "color": "",
+     "count": 1,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7619",
+     "color": "",
+     "count": 1,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7620",
+     "color": "",
+     "count": 1,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7626",
+     "color": "",
+     "count": 1,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7627",
+     "color": "",
+     "count": 1,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7628",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7629",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7630",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7639",
+     "color": "",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7640",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7668",
+     "color": "",
+     "count": 2,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7694",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-8100",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7016",
+     "color": "t",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-3035",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-3045",
+     "color": "(04)",
+     "count": 5,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7120",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BE-1146",
+     "color": "",
+     "count": 2,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-1536",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-1624",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-3579",
+     "color": "",
+     "count": 2,
+     "type": "Electronic Components"
+    }
+   ]
+  },
+  "set2108+": {
+   "types": 97,
+   "pieces": 628,
+   "parts": [
+    {
+     "code": "BE-5148",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-1146",
+     "color": "",
+     "count": 2,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-1147",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-1536",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-1624",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-1743",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-3570",
+     "color": "",
+     "count": 2,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-3571",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BE-6311",
+     "color": "",
+     "count": 1,
+     "type": "Electronic Components"
+    },
+    {
+     "code": "BM-3045",
+     "color": "",
+     "count": 1,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-3035",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-3976",
+     "color": "",
+     "count": 3,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-3990",
+     "color": "",
+     "count": 10,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3991",
+     "color": "",
+     "count": 14,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3992",
+     "color": "H",
+     "count": 8,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3993",
+     "color": "",
+     "count": 6,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-3994",
+     "color": "H",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7001",
+     "color": "",
+     "count": 8,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7002",
+     "color": "",
+     "count": 10,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7003",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7004",
+     "color": "",
+     "count": 6,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7005",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7006",
+     "color": "",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7007",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7009",
+     "color": "",
+     "count": 22,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7011",
+     "color": "",
+     "count": 35,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7012",
+     "color": "",
+     "count": 80,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7013",
+     "color": "",
+     "count": 60,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7014",
+     "color": "t",
+     "count": 16,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7015",
+     "color": "a",
+     "count": 16,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7016",
+     "color": "t",
+     "count": 22,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7017",
+     "color": "M",
+     "count": 1,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7018",
+     "color": "M",
+     "count": 1,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7019",
+     "color": "M",
+     "count": 1,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7020",
+     "color": "M",
+     "count": 1,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7021",
+     "color": "",
+     "count": 6,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7022",
+     "color": "",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7023",
+     "color": "",
+     "count": 12,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7024",
+     "color": "",
+     "count": 12,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7026",
+     "color": "",
+     "count": 4,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7027",
+     "color": "",
+     "count": 6,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7030",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7045",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7046",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7047",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7048",
+     "color": "(02)",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7050",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7051",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7052",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7053",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7054",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7073",
+     "color": "M",
+     "count": 6,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7074",
+     "color": "",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7075",
+     "color": "",
+     "count": 6,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7076",
+     "color": "M",
+     "count": 6,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7077",
+     "color": "",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7078",
+     "color": "(06)",
+     "count": 8,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7078",
+     "color": "",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7079",
+     "color": "",
+     "count": 12,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7080",
+     "color": "",
+     "count": 4,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7081",
+     "color": "",
+     "count": 4,
+     "type": "Plate And Others"
+    },
+    {
+     "code": "BP-7085",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7089",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7090",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7091",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7093",
+     "color": "",
+     "count": 4,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7094",
+     "color": "",
+     "count": 8,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7095",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7096",
+     "color": "",
+     "count": 4,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7099",
+     "color": "",
+     "count": 6,
+     "type": "Connector"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(02)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(04)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(09)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(10)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7523A",
+     "color": "(12)",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7524A",
+     "color": "",
+     "count": 6,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7525A",
+     "color": "",
+     "count": 6,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7526A",
+     "color": "",
+     "count": 6,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7527A",
+     "color": "",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7528",
+     "color": "m",
+     "count": 6,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7547",
+     "color": "B",
+     "count": 8,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7548",
+     "color": "B",
+     "count": 8,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7549",
+     "color": "B",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7550",
+     "color": "B",
+     "count": 2,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7553",
+     "color": "B",
+     "count": 6,
+     "type": "Peg"
+    },
+    {
+     "code": "BP-7600",
+     "color": "",
+     "count": 4,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7618",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7619",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7620",
+     "color": "",
+     "count": 1,
+     "type": "Beam"
+    },
+    {
+     "code": "BP-7621",
+     "color": "",
+     "count": 1,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-7628",
+     "color": "",
+     "count": 4,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7629",
+     "color": "",
+     "count": 4,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7630",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7631",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7632",
+     "color": "",
+     "count": 2,
+     "type": "Axle"
+    },
+    {
+     "code": "BP-7640",
+     "color": "",
+     "count": 4,
+     "type": "Wheel And Gear"
+    },
+    {
+     "code": "BP-8100",
+     "color": "",
+     "count": 2,
+     "type": "Wheel And Gear"
+    }
+   ]
+  }
+ }
+}

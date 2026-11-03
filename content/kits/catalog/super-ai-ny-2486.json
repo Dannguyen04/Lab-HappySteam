@@ -1,0 +1,751 @@
+{
+ "id": "super-ai-ny-2486",
+ "name": "2024 Super AI Expansion Set - Interstellar Crossing (Gói mở rộng 2024 Vượt Qua Liên Sao / 星际穿越)",
+ "model": "JMC-NY-2486",
+ "controller": "Sử dụng controller từ bộ nền: M6-RCU (BE-5147)",
+ "baseKitRequired": "JMC-NY-2106+E (Defender WiseKit)",
+ "pitchMm": 10,
+ "pieces": 249,
+ "countedPieces": 235,
+ "complete": false,
+ "sources": [
+  "https://www.zmrobo.net/products/96",
+  "https://www.zmrobo.com (Product ID 777)"
+ ],
+ "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2486/images/7-1.png: Ảnh studio chính thức trải phẳng toàn bộ 59 chủng loại linh kiện cơ khí gồm 249 chi tiết sắp xếp hoàn chỉnh; 6-1.png đến 6-4.png: Chi tiết 4 module điện tử kèm số lượng chính thức (Large Motor x1, Medium Motor x2, RFID Module x1, Tracking Module x1).",
+ "parts": [
+  {
+   "code": "BE-3582",
+   "count": 1,
+   "nameVi": "Động cơ lớn encoder",
+   "group": "electronic",
+   "sizeMm": [
+    30.1,
+    50.2,
+    70
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-3581",
+   "count": 2,
+   "nameVi": "Động cơ vừa encoder trục đôi",
+   "group": "electronic",
+   "sizeMm": [
+    30.1,
+    40.5,
+    70
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 1,
+   "nameVi": "Mô-đun đọc thẻ RFID và thẻ RFID mã hóa",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-1157",
+   "count": 1,
+   "nameVi": "Mảng cảm biến dò đường thông minh 7 kênh (quét ngưỡng tự động)",
+   "group": "electronic",
+   "sizeMm": [
+    129.6,
+    25,
+    10
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7045",
+   "count": 2,
+   "nameVi": "Bánh răng 40 răng",
+   "group": "gear",
+   "sizeMm": [
+    10,
+    52.1,
+    52.1
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7054",
+   "count": 2,
+   "nameVi": "Bánh răng 8 răng",
+   "group": "gear",
+   "sizeMm": [
+    10,
+    12.6,
+    12.6
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-6911",
+   "count": 3,
+   "nameVi": "Tấm 3×3 lỗ tím",
+   "group": "plate",
+   "sizeMm": [
+    30,
+    1.6,
+    30
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-6918",
+   "count": 2,
+   "nameVi": "Tấm 5×11 lỗ xám",
+   "group": "plate",
+   "sizeMm": [
+    130,
+    1.6,
+    50
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-6910",
+   "count": 1,
+   "nameVi": "Tấm đế 11×15 lỗ xám",
+   "group": "plate",
+   "sizeMm": [
+    110,
+    1.6,
+    150
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-8818",
+   "count": 1,
+   "nameVi": "Khung đế 7×11 trắng",
+   "group": "beam",
+   "sizeMm": [
+    70,
+    10,
+    110
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-3976",
+   "count": 2,
+   "nameVi": "Khung 5×7 xám",
+   "group": "beam",
+   "sizeMm": [
+    50,
+    10,
+    70
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-8819",
+   "count": 2,
+   "nameVi": "Khung 3×5 xám",
+   "group": "beam",
+   "sizeMm": [
+    30,
+    10,
+    50
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7528",
+   "count": 4,
+   "nameVi": "Thanh 15 lỗ xám",
+   "group": "beam",
+   "sizeMm": [
+    10,
+    10,
+    150
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7528",
+   "count": 1,
+   "nameVi": "Thanh 15 lỗ đen",
+   "group": "beam",
+   "sizeMm": [
+    10,
+    10,
+    150
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7527A",
+   "count": 2,
+   "nameVi": "Thanh 11 lỗ xám",
+   "group": "beam",
+   "sizeMm": [
+    10,
+    10,
+    110
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7526A",
+   "count": 2,
+   "nameVi": "Thanh 9 lỗ xám",
+   "group": "beam",
+   "sizeMm": [
+    10,
+    10,
+    90
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7525A",
+   "count": 2,
+   "nameVi": "Thanh 7 lỗ xám",
+   "group": "beam",
+   "sizeMm": [
+    10,
+    10,
+    70
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7524A",
+   "count": 2,
+   "nameVi": "Thanh 5 lỗ xám",
+   "group": "beam",
+   "sizeMm": [
+    10,
+    10,
+    50
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7523A",
+   "count": 4,
+   "nameVi": "Thanh 3 lỗ xám",
+   "group": "beam",
+   "sizeMm": [
+    10,
+    10,
+    30
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7794",
+   "count": 3,
+   "nameVi": "Thanh 7 lỗ vàng",
+   "group": "beam",
+   "sizeMm": [
+    10,
+    10,
+    70
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7078",
+   "count": 2,
+   "nameVi": "Thanh chữ L 3×5 đen",
+   "group": "beam",
+   "sizeMm": [
+    30,
+    10,
+    50
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7077",
+   "count": 2,
+   "nameVi": "Thanh chữ L 3×3 đen",
+   "group": "beam",
+   "sizeMm": [
+    30,
+    10,
+    30
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7074",
+   "count": 2,
+   "nameVi": "Thanh góc vát xanh ngọc",
+   "group": "beam",
+   "sizeMm": [
+    25.9,
+    10,
+    82
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7076",
+   "count": 2,
+   "nameVi": "Thanh gấp góc bát giác trắng",
+   "group": "beam",
+   "sizeMm": [
+    33.9,
+    10,
+    58
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-8813",
+   "count": 2,
+   "nameVi": "Bầu cánh quạt / Khối nối 3 cánh trắng",
+   "group": "other",
+   "sizeMm": [
+    44.6,
+    5,
+    40
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7079",
+   "count": 2,
+   "nameVi": "Thanh chữ L 2×4 đỏ cam",
+   "group": "beam",
+   "sizeMm": [
+    20,
+    10,
+    40
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7080",
+   "count": 3,
+   "nameVi": "Khớp chốt xám nối đôi",
+   "group": "connector",
+   "sizeMm": [
+    30,
+    5,
+    50
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7094",
+   "count": 3,
+   "nameVi": "Khối nối 2 lỗ xám",
+   "group": "connector",
+   "sizeMm": [
+    10,
+    10,
+    20
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7694",
+   "count": 2,
+   "nameVi": "Vành bánh xe 43mm đen",
+   "group": "wheel",
+   "sizeMm": [
+    26,
+    43,
+    43
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-3035",
+   "count": 4,
+   "nameVi": "Lốp xe cao su trắng",
+   "group": "wheel",
+   "sizeMm": [
+    3.4,
+    34,
+    34
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-3957",
+   "count": 2,
+   "nameVi": "Ổ bi lăn bánh xe dẫn hướng",
+   "group": "wheel",
+   "sizeMm": [
+    13,
+    13.4,
+    30
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BM-3035",
+   "count": 1,
+   "nameVi": "Bi sắt 10mm",
+   "group": "wheel",
+   "sizeMm": [
+    9.8,
+    9.8,
+    9.8
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-8840",
+   "count": 1,
+   "nameVi": "Bi lăn nhựa trắng 10mm",
+   "group": "wheel",
+   "sizeMm": [
+    28.6,
+    42.3,
+    50
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BM-3071",
+   "count": 2,
+   "nameVi": "Bi kim loại nhỏ",
+   "group": "axle",
+   "sizeMm": [
+    10,
+    0.5,
+    10
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7023",
+   "count": 8,
+   "nameVi": "Bạc chặn trục vàng",
+   "group": "axle",
+   "sizeMm": [
+    10,
+    10,
+    10
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7024",
+   "count": 2,
+   "nameVi": "Bạc nửa vàng",
+   "group": "axle",
+   "sizeMm": [
+    10,
+    10,
+    5
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7012",
+   "count": 56,
+   "nameVi": "Chốt đen 2L",
+   "group": "peg",
+   "sizeMm": [
+    7.2,
+    8.3,
+    20
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7011",
+   "count": 14,
+   "nameVi": "Chốt dài xanh dương 3L",
+   "group": "peg",
+   "sizeMm": [
+    7.2,
+    8.3,
+    30
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-3990",
+   "count": 7,
+   "nameVi": "Chốt trục đỏ 2L",
+   "group": "axle",
+   "sizeMm": [
+    6,
+    6,
+    20
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7010",
+   "count": 8,
+   "nameVi": "Chốt ngắn màu be 1/2L",
+   "group": "peg",
+   "sizeMm": [
+    7.2,
+    8.3,
+    15
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7015",
+   "count": 16,
+   "nameVi": "Chốt xám 2L không ma sát",
+   "group": "peg",
+   "sizeMm": [
+    6.6,
+    7,
+    20
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7003",
+   "count": 6,
+   "nameVi": "Khớp nối góc 90° đen",
+   "group": "connector",
+   "sizeMm": [
+    20,
+    10,
+    20
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7030",
+   "count": 6,
+   "nameVi": "Khớp nối thẳng / Ống bọc trục xám",
+   "group": "connector",
+   "sizeMm": [
+    10,
+    10,
+    30.1
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7093",
+   "count": 6,
+   "nameVi": "Khớp nối tròn đầu bi xám",
+   "group": "connector",
+   "sizeMm": [
+    10,
+    10,
+    20
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7007",
+   "count": 4,
+   "nameVi": "Khớp nối vuông 2 lỗ xám",
+   "group": "connector",
+   "sizeMm": [
+    10,
+    20,
+    20
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7626",
+   "count": 4,
+   "nameVi": "Khối nối chữ T đen",
+   "group": "connector",
+   "sizeMm": [
+    30,
+    10,
+    30
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7022",
+   "count": 4,
+   "nameVi": "Tay quay 2 lỗ đen",
+   "group": "beam",
+   "sizeMm": [
+    10,
+    10,
+    20
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7632",
+   "count": 4,
+   "nameVi": "Trục chữ thập đen 12L",
+   "group": "axle",
+   "sizeMm": [
+    6,
+    6,
+    120
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7631",
+   "count": 2,
+   "nameVi": "Trục chữ thập xám 10L",
+   "group": "axle",
+   "sizeMm": [
+    6,
+    6,
+    100
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7630",
+   "count": 2,
+   "nameVi": "Trục chữ thập xám 8L",
+   "group": "axle",
+   "sizeMm": [
+    6,
+    6,
+    80
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7629",
+   "count": 2,
+   "nameVi": "Trục chữ thập đen 6L",
+   "group": "axle",
+   "sizeMm": [
+    6,
+    6,
+    60
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7628",
+   "count": 2,
+   "nameVi": "Trục chữ thập xám 4L",
+   "group": "axle",
+   "sizeMm": [
+    6,
+    6,
+    40
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-3991",
+   "count": 2,
+   "nameVi": "Trục chữ thập xám 3L",
+   "group": "axle",
+   "sizeMm": [
+    6,
+    6,
+    30
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7001",
+   "count": 2,
+   "nameVi": "Khối nối trục 3 lỗ đỏ",
+   "group": "connector",
+   "sizeMm": [
+    10,
+    10,
+    30
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7005",
+   "count": 2,
+   "nameVi": "Khối nối góc vuông 2×2 xám",
+   "group": "connector",
+   "sizeMm": [
+    20,
+    10,
+    20
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-7002",
+   "count": 2,
+   "nameVi": "Khối nối chữ thập xám",
+   "group": "connector",
+   "sizeMm": [
+    10,
+    10,
+    30
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 4,
+   "nameVi": "Vòng đệm và phụ kiện chốt phụ",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  }
+ ]
+}

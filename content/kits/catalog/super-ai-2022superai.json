@@ -1,0 +1,88 @@
+{
+ "id": "super-ai-2022superai",
+ "name": "2022 Super AI Competition Configuration - Super Track (Cấu hình thi đấu 2022 Siêu Quỹ Đạo / 超级轨迹赛)",
+ "model": "2022SUPERAI",
+ "controller": "Bộ điều khiển M6-RCU (BE-5147) từ bộ nền Intelligence Storm",
+ "baseKitRequired": "2 bộ JMC-NY-2108+ (Intelligence Storm)",
+ "pitchMm": 10,
+ "pieces": null,
+ "countedPieces": 12,
+ "complete": false,
+ "sources": [
+  "Tài liệu luật thi đấu Super AI 2022",
+  "https://www.zmrobo.com (Poster chính thức 2022 Super Track Competition)"
+ ],
+ "evidence": "references/super-ai/2022SUPERAI/2022-超级轨迹赛-海报（英文）_03.jpg: Poster chính thức gói mở rộng JMC-CG-1001A (dành cho 2 bộ 2108+) kèm số lượng 6 loại linh kiện điện tử và bố cục cơ khí hoàn chỉnh; 07.jpg & 08.jpg: Poster bộ đạo cụ JMP-CD3113 Blocks series 1, 2, 3.",
+ "parts": [
+  {
+   "code": null,
+   "count": 2,
+   "nameVi": "Bộ pin sạc Lithium chuyên dụng",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-1148",
+   "count": 1,
+   "nameVi": "Cảm biến quang điện nhỏ",
+   "group": "electronic",
+   "sizeMm": null,
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-1153",
+   "count": 1,
+   "nameVi": "Cảm biến đo khoảng cách laser ToF",
+   "group": "electronic",
+   "sizeMm": [
+    30,
+    30,
+    30
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-9528",
+   "count": 2,
+   "nameVi": "Động cơ servo mini",
+   "group": "electronic",
+   "sizeMm": [
+    30.1,
+    40.2,
+    50
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-9520",
+   "count": 2,
+   "nameVi": "Động cơ servo kỹ thuật số thi đấu",
+   "group": "electronic",
+   "sizeMm": [
+    30.1,
+    50,
+    70
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-3582",
+   "count": 4,
+   "nameVi": "Động cơ giảm tốc thi đấu lớn",
+   "group": "electronic",
+   "sizeMm": [
+    30.1,
+    50.2,
+    70
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  }
+ ]
+}

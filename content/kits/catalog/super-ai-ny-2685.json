@@ -1,0 +1,114 @@
+{
+ "id": "super-ai-ny-2685",
+ "name": "2026 Super AI Independent Competition Kit - Smart Craftsmanship (Bộ thi đấu độc lập 2026 Trí Tuệ Cơ Khí / 智达天工)",
+ "model": "JMC-NY-2685",
+ "controller": "E7-RCU (BE-5166) tích hợp AI Vision CAM 2.0 (BE-1756)",
+ "baseKitRequired": null,
+ "pitchMm": 10,
+ "pieces": null,
+ "countedPieces": 13,
+ "complete": false,
+ "sources": [
+  "https://www.zmrobo.net/products/91",
+  "https://www.zmrobo.com (Product ID 876)"
+ ],
+ "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2685/images/6-2.png: Hộp bộ kit và danh mục 8 loại linh kiện điện tử kèm huy hiệu số lượng chính thức (E7 x1, CAM 2.0 x1, Medium Motor x2, Large Motor x5, Remote x1, Digital Servo x1, Info-Tag x1, 2.4G Receiver x1); 6-3.png: Robot thi đấu tiêu chuẩn 4 bánh Mecanum.",
+ "parts": [
+  {
+   "code": "BE-5166",
+   "count": 1,
+   "nameVi": "Bộ điều khiển chính E7-RCU",
+   "group": "electronic",
+   "sizeMm": [
+    70.1,
+    38.7,
+    110.2
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-1756",
+   "count": 1,
+   "nameVi": "Cảm biến thị giác AI CAM 2.0",
+   "group": "electronic",
+   "sizeMm": [
+    69.5,
+    62.8,
+    18.6
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-3581",
+   "count": 2,
+   "nameVi": "Động cơ vừa encoder trục đôi",
+   "group": "electronic",
+   "sizeMm": [
+    30.1,
+    40.5,
+    70
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-3582",
+   "count": 5,
+   "nameVi": "Động cơ lớn encoder",
+   "group": "electronic",
+   "sizeMm": [
+    30.1,
+    50.2,
+    70
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 1,
+   "nameVi": "Tay cầm điều khiển từ xa 2.4G",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-9520",
+   "count": 1,
+   "nameVi": "Động cơ servo kỹ thuật số thi đấu 360 độ",
+   "group": "electronic",
+   "sizeMm": [
+    30.1,
+    50,
+    70
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 1,
+   "nameVi": "Mô-đun màn hình thông tin LCD 1.28 inch NFC/RFID",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-9262",
+   "count": 1,
+   "nameVi": "Mô-đun thu sóng không dây 2.4G",
+   "group": "electronic",
+   "sizeMm": [
+    30,
+    30.1,
+    30
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  }
+ ]
+}

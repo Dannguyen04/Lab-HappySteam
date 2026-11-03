@@ -17,18 +17,31 @@
 
   const LESSONS = [
     // ---------- Lớp 1 · Học kì I (tuần 1–18) ----------
-    L(1, 1, 1, 'Làm quen bộ công cụ', 'model', { about: 'Nhận biết thanh thẳng, trục, chốt; lắp xe trượt dốc.' }),
+    L(1, 1, 1, 'Làm quen bộ công cụ', 'model', {
+      href: 'bai.html?id=lop1-bai01', cover: 'assets/covers/lop1-bai01.jpg',
+      about: 'Lắp xe trượt dốc 7 bước minh họa 3D, thả xe bằng trọng lực và khám phá ma sát.'
+    }),
     L(1, 1, 2, 'Động cơ', 'model', { about: 'Động cơ hoạt động thế nào; lắp và lập trình xe leo dốc.' }),
     L(1, 1, 3, 'Robot thám hiểm', 'model', {
       href: 'bai.html?id=lop1-bai03',
       cover: 'assets/covers/lop1-bai03.jpg',
       about: 'Lắp robot Milo 22 bước, lập trình thấy vật cản rồi chở mẫu cây trên sao Hỏa.'
     }),
-    L(1, 1, 4, 'Cảm biến của robot', 'model', { about: 'Cảm biến chuyển động và cảm biến nghiêng.' }),
-    L(1, 1, 5, 'Chào hỏi, kết bạn – Spy robot', 'model', { about: 'Lập trình với cảm biến, âm thanh và ghi âm.' }),
-    L(1, 1, 6, 'Luật giao thông', 'model', { about: 'Đèn giao thông, biển báo; mô hình xe mô tô.' }),
+    L(1, 1, 4, 'Cảm biến của robot', 'model', {
+      href: 'bai.html?id=lop1-bai04',
+      cover: 'assets/covers/lop1-bai04.jpg',
+      about: 'Lắp máy khoan 23 bước, dùng cảm biến chạm bấm giữ để khoan và thả để dừng.'
+    }),
+    L(1, 1, 5, 'Chào hỏi, kết bạn – Spy robot', 'model', {
+      href: 'bai.html?id=lop1-bai05', cover: 'assets/covers/lop1-bai05.jpg',
+      about: 'Lắp Spy Robot 21 bước, dùng cảm biến, biểu cảm và giai điệu để chào và tạm biệt.'
+    }),
+    L(1, 1, 6, 'Luật giao thông', 'model', {
+      href: 'bai.html?id=lop1-bai06', cover: 'assets/covers/lop1-bai06.jpg',
+      about: 'Lắp xe giao thông 14 bước, ghép 9 khối cảm biến màu: xanh nhanh, vàng chậm, đỏ dừng.'
+    }),
     L(1, 1, 7, 'Trò chơi của bé', 'model', { about: 'Mô hình xích đu, khu vui chơi; lập trình động cơ.' }),
-    L(1, 1, 8, 'Ngôi nhà thông minh', 'model', { about: 'Thiết bị tự động trong nhà; lập trình cửa tự động.' }),
+    L(1, 1, 8, 'Ngôi nhà thông minh', 'model', { href: 'bai.html?id=lop1-bai08', cover: 'assets/covers/lop1-bai08.jpg', about: 'Lắp 19 bước cổng thông minh, lập trình cảm biến siêu âm và động cơ M1 mở/đóng cửa đón khách.' }),
     L(1, 1, 9, 'Thông tin liên lạc vũ trụ', 'model', {
       href: 'bai.html?id=lop1-bai09',
       cover: 'assets/covers/lop1-bai09.jpg',
@@ -104,10 +117,10 @@
     L(2, 2, 35, 'Trưng bày tổng kết học kì II', 'project', { about: 'Trình bày và trưng bày sản phẩm sáng tạo.' }),
 
     // ---------- Lớp 3 ----------
-    L(3, 1, 1, 'Cấu trúc bền vững', 'model', { about: 'Nguồn gốc động đất; thiết bị kiểm tra cấu trúc chống động đất.' }),
-    L(3, 1, 2, 'Di chuyển vật thể', 'model', { about: 'Lực làm vật chuyển động; mô hình cánh tay robot với bánh răng.' }),
-    L(3, 1, 3, 'Cơ cấu đòn bẩy – Máy bắn đá', 'model', { about: 'Cơ cấu đòn bẩy; mô hình máy bắn đá.' }),
-    L(3, 1, 4, 'Phân loại, tái chế rác thải', 'model', { about: 'Phân loại rác để tái chế; mô hình phân loại rác theo kích cỡ, hình dạng.' }),
+    L(3, 1, 1, 'Cấu trúc bền vững', 'model', { href: 'bai.html?id=lop3-bai01', cover: 'assets/covers/lop3-bai01.jpg', about: 'Lắp bàn rung địa chấn 27 bước, thử ba cấp rung và gia cố ngôi nhà chống động đất.' }),
+    L(3, 1, 2, 'Di chuyển vật thể', 'model', { href: 'bai.html?id=lop3-bai02', cover: 'assets/covers/lop3-bai02.png', about: 'Lắp xe nâng hàng 31 bước, điều khiển M1 tiến/lùi, M2 nâng/hạ và cảm biến siêu âm để vận chuyển pallet.' }),
+    L(3, 1, 3, 'Cơ cấu đòn bẩy – Máy bắn đá', 'model', { href: 'bai.html?id=lop3-bai03', cover: 'assets/covers/lop3-bai03.png', about: 'Lắp đòn bẩy cơ khí 24 trang, thử bóng mềm ảo trên sa bàn và khám phá cách thay đổi vòng đích.' }),
+    L(3, 1, 4, 'Phân loại, tái chế rác thải', 'model', { href: 'bai.html?id=lop3-bai04', cover: 'assets/covers/lop3-bai04.jpg', about: 'Lắp trạm phân loại rác 18 bước, dùng cảm biến màu và động cơ M1 gạt túi đỏ, xanh vào hai ngăn; chỉnh thời gian để phân loại chính xác.' }),
     L(3, 1, 5, 'Xe đổ rác', 'model', { about: 'Các loại xe chuyên dụng; mô hình xe thu gom rác công cộng.' }),
     L(3, 1, 6, 'Năng lượng sạch – Cối xoay gió', 'model', { about: 'Hình thành gió, năng lượng tái tạo; mô hình cối xoay gió.' }),
     L(3, 1, 7, 'Giao thông đường sắt', 'model', { about: 'Hệ thống giao thông đường sắt; mô hình xe tàu hỏa.' }),
@@ -121,7 +134,7 @@
     L(3, 1, 11, 'Sống trên sao Hỏa – Tìm kiếm nguồn nước', 'model', { href: 'bai.html?id=lop3-bai11', cover: 'assets/covers/lop3-bai11.jpg', about: 'Điều kiện sống trên sao Hỏa; mô hình máy bơm nước.' }),
     L(3, 1, 12, 'Sống trên sao Hỏa – Trồng cây', 'model', { href: 'bai.html?id=lop3-bai12', cover: 'assets/covers/lop3-bai12.jpg', about: 'Robot M1 di chuyển, M2 gắp ba chậu cây trong nhà kính và tránh bão bụi sao Hỏa.' }),
     L(3, 1, 13, 'Phi thuyền không gian', 'model', { href: 'bai.html?id=lop3-bai13', cover: 'assets/covers/lop3-bai13.jpg', about: 'Phi thuyền M1 tăng tốc ba cấp trên đường băng sân bay vũ trụ, cất cánh trước hàng rào và thử trọng lực Mặt Trăng, sao Hỏa, tiểu hành tinh.' }),
-    L(3, 1, 14, 'Cây đàn ghi-ta', 'model', { about: 'Các loại nhạc cụ; mô hình cây đàn ghi-ta.' }),
+    L(3, 1, 14, 'Cây đàn ghi-ta', 'model', { href: 'bai.html?id=lop3-bai14', cover: 'assets/covers/lop3-bai14.jpg', about: 'Lắp đàn ghi-ta 23 bước, phát nốt A/B với cảm biến siêu âm, đổi thứ tự giai điệu và thử ba lượt khán giả.' }),
     L(3, 1, 15, 'Robot đẩy xe', 'model', { href: 'bai.html?id=lop3-bai15', cover: 'assets/covers/lop3-bai15.jpg', about: 'Robot hai chân đẩy xe hàng bằng một động cơ M1; chỉnh thời gian và lệnh Dừng để xe dừng đúng vạch đích.' }),
     L(3, 1, 16, 'Xe chở tên lửa vũ trụ', 'model', { href: 'bai.html?id=lop3-bai16', cover: 'assets/covers/lop3-bai16.png', about: 'Xe chở tên lửa ra bệ phóng sân bay vũ trụ; chỉnh thời gian chạy để dừng đúng ô, màn LED hiện mặt cười/buồn.' }),
     L(3, 1, 17, 'Ôn tập học kì I', 'theory', { about: 'Ôn tập kiến thức đã học trong học kì.' }),

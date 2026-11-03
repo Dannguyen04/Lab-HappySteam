@@ -1,0 +1,99 @@
+<title>Xe trượt dốc · Lớp 1 · Bài 1 · Happy STEAM</title>
+<template data-slot="header-copy">
+      <div class="eyebrow">Lớp 1 · Bài 1 · Bánh xe và mặt phẳng nghiêng</div>
+      <h1>Làm quen bộ công cụ – Xe trượt dốc</h1>
+      <p class="lede pro-only">Nhận biết thanh, chốt, trục và bánh xe; thử xe lăn bằng trọng lực trên dốc có ba nấc và ba chất liệu mặt đường.</p>
+</template>
+
+<template data-slot="mission-chips">
+    <span class="chip" id="chip-m1" title="Bấm “Đã lắp xong bước này” ở cả 7 bước"><i>1</i>Lắp đủ 7 bước</span>
+    <span class="chip" id="chip-m2" title="Thả xe trên dốc và đợi xe dừng hoặc về đích"><i>2</i>Thả xe lăn</span>
+    <span class="chip" id="chip-m3" title="Nấc 1 dừng sớm; thử nấc 2 hoặc 3"><i>3</i>Xe tới cờ đích</span>
+    <span class="chip" id="chip-m4" title="Gắn gói nâng cấp ở chặng Sáng tạo, đưa xe ra sa bàn rồi Thả xe"><i>4</i>Thử xe sáng tạo</span>
+    <span class="chip pro-only" id="chip-m5" title="Thử mặt nhám với nấc 2 rồi đổi sang nấc 3"><i>5</i>Vượt đường nhám</span>
+</template>
+
+<template data-slot="victory-copy">
+      <p>Em đã lắp xe, thả xe lăn, chọn độ dốc để đến đích và thử một ý tưởng cải tiến.</p>
+      <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM1</code></p>
+</template>
+
+<template data-slot="assembly-tab">
+      <i>1</i><span><b>Lắp ráp</b><small>7 bước theo sách</small></span>
+</template>
+
+<template data-slot="assembly-count">
+          <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 7</span></span>
+</template>
+
+<template data-slot="assembly-canvas">
+              <canvas id="view" aria-label="Mô hình xe trượt dốc 3D: kéo để xoay, cuộn để phóng to"></canvas>
+</template>
+
+<template data-slot="assembly-slider">
+                <input id="slider" type="range" min="1" max="7" value="1" aria-label="Chọn bước lắp">
+</template>
+
+<template data-slot="assembly-meter-step">
+          <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 7</small></div><div class="s" id="am-step-s">Đặt bốn thanh 15 lỗ làm khung</div></dd></div>
+</template>
+
+<template data-slot="assembly-meter-done">
+          <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 7</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+</template>
+
+<template data-slot="book-image">
+          <img id="book-img" src="assets/lop1-bai01/step-01.jpg" alt="Minh họa bước 1 của mô hình 3D xe trượt dốc, không phải trang sách gốc">
+</template>
+
+<template data-slot="book-link">
+          <a id="book-pdf" class="link" href="assets/lop1-bai01/step-01.jpg" target="_blank" rel="noopener">Mở hình lớn ↗</a>
+</template>
+
+<template data-slot="creative-intro">
+          <p class="status-text">Thử bốn ý tưởng lắp thêm: <b>bánh trước lớn</b>, <b>khối gia tải</b>, <b>cánh đuôi</b>, <b>cản trước</b>. Phụ kiện 3D chỉ là mô phỏng ý tưởng; cần kiểm tra lắp thật.</p>
+</template>
+
+<template data-slot="creative-canvas">
+        <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình xe trượt dốc 3D đang sáng tạo"></div>
+</template>
+
+<template data-slot="creative-slot-label">
+        <div class="panel-h"><h2>Tự gắn chi tiết</h2><small>Bốn vị trí cải tiến trên xe</small></div>
+</template>
+
+<template data-slot="creative-result-label">
+        <div class="panel-h"><h2>Xe trượt dốc của em sẽ có</h2></div>
+</template>
+
+<template data-slot="sim-upgrade-label">
+            <small id="sim-active-upgrade-badge" class="status-tag">Xe trượt dốc cơ bản</small>
+</template>
+
+<template data-slot="sim-scene">
+          <canvas id="space-scene" aria-label="Công viên nhìn ngang, xe lăn từ dốc gỗ tới cờ đích"></canvas>
+          <div class="sim-stage" id="sim-stage" aria-label="Xe trượt dốc nhìn ngang chạy bằng trọng lực"></div>
+          <p class="scene-idle" id="scene-idle">Chọn nấc dốc rồi chạm Thả xe để quan sát</p>
+</template>
+
+<template data-slot="sim-meters">
+        <dl class="meters pro-only">
+          <div class="meter"><dt>Tốc độ</dt><dd><div class="v" id="m-speed">0<small>cm/giây</small></div><div class="s">Tốc độ mô phỏng</div></dd></div>
+          <div class="meter"><dt>Quãng đường</dt><dd><div class="v" id="m-dist">0<small>cm</small></div><div class="s">Từ đầu dốc</div></dd></div>
+          <div class="meter"><dt>Thời gian</dt><dd><div class="v" id="m-time">0<small>giây</small></div><div class="s">Tính từ lúc thả</div></dd></div>
+        </dl>
+</template>
+
+<template data-slot="sim-calculation">
+        <div class="pro-only">
+        <div class="panel-h"><h2>Cùng quan sát xe lăn</h2><small>Quãng đường = tốc độ trung bình × thời gian (các con số là mô phỏng).</small></div>
+        <div class="pad calc">
+          <p class="calc-eq" id="calc-eq1"></p>
+          <p class="calc-eq" id="calc-eq2"></p>
+        </div>
+        </div>
+</template>
+
+<template data-slot="sim-hint">
+            <p class="hint"><b>M2:</b> Thả xe để quan sát. <b>M3:</b> Tăng dốc lên nấc 2 hoặc 3. <b>Nâng cao:</b> thử mặt nhám và tìm nấc dốc đủ để đến đích.</p>
+</template>

@@ -1,0 +1,106 @@
+{
+ "id": "super-ai-ny-2581",
+ "name": "2025 Super AI Expansion Set - Interstellar Legend (Gói mở rộng 2025 Huyền Thoại Liên Sao / 星际传奇)",
+ "model": "JMC-NY-2581",
+ "controller": "Sử dụng controller từ bộ nền: E6-RCU (BE-5148) hoặc M6-RCU (BE-5147)",
+ "baseKitRequired": "JMC-NY-2108+E (Intelligence Storm) hoặc JMC-NY-2106+E (Defender WiseKit)",
+ "pitchMm": 10,
+ "pieces": null,
+ "countedPieces": 12,
+ "complete": false,
+ "sources": [
+  "https://www.zmrobo.net/products/95",
+  "https://www.zmrobo.com (Product ID 853)"
+ ],
+ "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2581/images/1_2.png: Banner chính thức gói mở rộng; 2-2.png đến 2-6.png: Danh mục module điện tử chính thức kèm mã JMP-BE-xxxx và huy hiệu số lượng (icon-one x1, icon-two x2, icon-three x3); 2-7.png: Các linh kiện cơ khí đặc trưng (bi sắt, thanh ray, thanh răng).",
+ "parts": [
+  {
+   "code": "BE-9524A",
+   "count": 1,
+   "nameVi": "Động cơ servo mini",
+   "group": "electronic",
+   "sizeMm": null,
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-3579A",
+   "count": 2,
+   "nameVi": "Động cơ vừa encoder trục đôi",
+   "group": "electronic",
+   "sizeMm": null,
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-3582A",
+   "count": 2,
+   "nameVi": "Động cơ lớn encoder",
+   "group": "electronic",
+   "sizeMm": null,
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-1148",
+   "count": 3,
+   "nameVi": "Cảm biến quang điện nhỏ",
+   "group": "electronic",
+   "sizeMm": null,
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-1149",
+   "count": 1,
+   "nameVi": "Mô-đun dò đường thông minh",
+   "group": "electronic",
+   "sizeMm": [
+    129.6,
+    25,
+    10
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BM-3035",
+   "count": 1,
+   "nameVi": "Bi sắt lăn bánh dẫn hướng 10mm",
+   "group": "wheel",
+   "sizeMm": [
+    9.8,
+    9.8,
+    9.8
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-8965",
+   "count": 1,
+   "nameVi": "Thanh ray trượt dẫn hướng xanh ngọc 25 lỗ",
+   "group": "beam",
+   "sizeMm": [
+    30,
+    10,
+    250
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BP-8943",
+   "count": 1,
+   "nameVi": "Thanh răng trượt xanh ngọc 15 lỗ",
+   "group": "gear",
+   "sizeMm": [
+    10,
+    19,
+    150
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  }
+ ]
+}

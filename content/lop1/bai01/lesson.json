@@ -1,0 +1,41 @@
+{
+  "folder": "lop1-bai01",
+  "title": "Làm quen bộ công cụ – Xe trượt dốc",
+  "pageTitle": "Xe trượt dốc",
+  "topic": "Bánh xe và mặt phẳng nghiêng",
+  "model": "xe trượt dốc",
+  "baseName": "Xe trượt dốc",
+  "sheetName": "Lớp 1 · Bài 01: Làm quen bộ công cụ",
+  "steps": 7,
+  "assetFolder": "lop1-bai01",
+  "bookAlt": "Minh họa bước 1 của mô hình 3D xe trượt dốc, không phải trang sách gốc",
+  "firstStep": "Đặt bốn thanh 15 lỗ làm khung",
+  "lede": "Nhận biết thanh, chốt, trục và bánh xe; thử xe lăn bằng trọng lực trên dốc có ba nấc và ba chất liệu mặt đường.",
+  "victory": "Em đã lắp xe, thả xe lăn, chọn độ dốc để đến đích và thử một ý tưởng cải tiến.",
+  "engine": { "class": "RampEngine", "file": "ramp-engine.js" },
+  "scene": {
+    "file": "ramp-scene.js",
+    "aria": "Công viên nhìn ngang, xe lăn từ dốc gỗ tới cờ đích",
+    "stage": "Xe trượt dốc nhìn ngang chạy bằng trọng lực",
+    "idle": "Chọn nấc dốc rồi chạm Thả xe để quan sát"
+  },
+  "missions": {
+    "m1": { "chip": "Lắp đủ 7 bước", "title": "Lắp xe trượt dốc", "text": "Quan sát mô hình 3D và đánh dấu hoàn tất cả 7 bước lắp." },
+    "m2": { "chip": "Thả xe lăn", "title": "Quan sát xe lăn", "tip": "Thả xe trên dốc và đợi xe dừng hoặc về đích", "text": "Chạm nút Thả xe, xem xe lăn rồi đợi xe kết thúc lượt thử." },
+    "m3": { "chip": "Xe tới cờ đích", "title": "Tăng dốc để đến đích", "tip": "Nấc 1 dừng sớm; thử nấc 2 hoặc 3", "text": "Độ dốc nấc 1 chưa đủ. Chọn nấc 2 hoặc 3, thả xe và quan sát xe tới cờ." },
+    "m4": { "chip": "Thử xe sáng tạo", "title": "Thử một gói cải tiến", "tip": "Gắn gói nâng cấp ở chặng Sáng tạo, đưa xe ra sa bàn rồi Thả xe", "text": "Chọn gói ở xưởng Sáng tạo, đưa xe ra sa bàn rồi Thả xe một lượt." },
+    "m5": { "pro": true, "chip": "Vượt đường nhám", "title": "Đến đích trên đường nhám", "tip": "Thử mặt nhám với nấc 2 rồi đổi sang nấc 3", "text": "Ở chế độ Nâng cao, chọn mặt nhám. Thử nấc 2 chưa tới đích; chỉnh nấc 3 và thả lại." }
+  },
+  "blocks": { "toolbox": [], "pro": [], "sample": ["start"], "empty": ["start"] },
+  "creative": { "intro": "Thử bốn ý tưởng lắp thêm: <b>bánh trước lớn</b>, <b>khối gia tải</b>, <b>cánh đuôi</b>, <b>cản trước</b>. Phụ kiện 3D chỉ là mô phỏng ý tưởng; cần kiểm tra lắp thật.", "slots": 4, "badge": "Xe trượt dốc cơ bản", "slotHint": "Bốn vị trí cải tiến trên xe" },
+  "meters": [
+    { "label": "Tốc độ", "id": "m-speed", "value": 0, "unit": "cm/giây", "note": "Tốc độ mô phỏng" },
+    { "label": "Quãng đường", "id": "m-dist", "value": 0, "unit": "cm", "note": "Từ đầu dốc" },
+    { "label": "Thời gian", "id": "m-time", "value": 0, "unit": "giây", "note": "Tính từ lúc thả" }
+  ],
+  "metersProOnly": true,
+  "calcProOnly": true,
+  "calcTitle": "Cùng quan sát xe lăn",
+  "calc": "Quãng đường = tốc độ trung bình × thời gian (các con số là mô phỏng).",
+  "hint": "<b>M2:</b> Thả xe để quan sát. <b>M3:</b> Tăng dốc lên nấc 2 hoặc 3. <b>Nâng cao:</b> thử mặt nhám và tìm nấc dốc đủ để đến đích."
+}

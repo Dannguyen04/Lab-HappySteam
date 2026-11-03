@@ -1,0 +1,99 @@
+<title>Xe thông minh nhận biết đèn giao thông · Lớp 1 · Bài 6 · Happy STEAM</title>
+<template data-slot="header-copy">
+      <div class="eyebrow">Lớp 1 · Bài 6 · An toàn giao thông</div>
+      <h1>Luật giao thông – Xe thông minh</h1>
+      <p class="lede pro-only">Em lắp xe, ghép khối nhận màu đèn và cho xe đi đúng tín hiệu trước cổng trường.</p>
+</template>
+
+<template data-slot="mission-chips">
+    <span class="chip" id="chip-m1" title="Bấm “Đã lắp xong bước này” ở cả 14 bước"><i>1</i>Lắp xong 14 bước</span>
+    <span class="chip" id="chip-m2" title="Chờ xanh → nhanh → chờ vàng → chậm → chờ đỏ → dừng"><i>2</i>9 thẻ đúng màu</span>
+    <span class="chip" id="chip-m3" title="Đèn xanh chỉ 3 giây: cần thẻ thỏ chạy nhanh"><i>3</i>Qua đường khi xanh</span>
+    <span class="chip" id="chip-m4" title="Gắn gói nâng cấp ở chặng Sáng tạo, đưa vào sa bàn và cho động cơ chạy"><i>4</i>Thử nâng cấp sáng tạo</span>
+    <span class="chip pro-only" id="chip-m5" title="Chạm đèn trong sa bàn để đổi 3 / 4 / 5 giây"><i>5</i>Thử nhịp xanh</span>
+</template>
+
+<template data-slot="victory-copy">
+      <p>Em đã biết xanh đi, vàng chậm, đỏ dừng!</p>
+      <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM6</code></p>
+</template>
+
+<template data-slot="assembly-tab">
+      <i>1</i><span><b>Lắp ráp</b><small>14 bước theo sách</small></span>
+</template>
+
+<template data-slot="assembly-count">
+          <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 14</span></span>
+</template>
+
+<template data-slot="assembly-canvas">
+              <canvas id="view" aria-label="Mô hình xe giao thông 3D: kéo để xoay, cuộn để phóng to"></canvas>
+</template>
+
+<template data-slot="assembly-slider">
+                <input id="slider" type="range" min="1" max="14" value="1" aria-label="Chọn bước lắp">
+</template>
+
+<template data-slot="assembly-meter-step">
+          <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 14</small></div><div class="s" id="am-step-s">Lắp động cơ và khung xe</div></dd></div>
+</template>
+
+<template data-slot="assembly-meter-done">
+          <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 14</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+</template>
+
+<template data-slot="book-image">
+          <img id="book-img" src="assets/lop1-bai06/step-01.jpg" alt="Hình bước 1 trong sách hướng dẫn lắp ráp">
+</template>
+
+<template data-slot="book-link">
+          <a id="book-pdf" class="link" href="assets/lop1-bai06/step-01.jpg" target="_blank" rel="noopener">Mở hình lớn ↗</a>
+</template>
+
+<template data-slot="creative-intro">
+          <p class="status-text">Em chọn <b>đèn ưu tiên</b>, <b>cản trước</b>, <b>biển an toàn</b> hoặc <b>kính chắn gió</b> để thử gắn trên xe 3D.</p>
+</template>
+
+<template data-slot="creative-canvas">
+        <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình xe giao thông 3D đang sáng tạo"></div>
+</template>
+
+<template data-slot="creative-slot-label">
+        <div class="panel-h"><h2>Tự gắn chi tiết</h2><small>4 vị trí trên chiếc xe</small></div>
+</template>
+
+<template data-slot="creative-result-label">
+        <div class="panel-h"><h2>Chiếc xe an toàn của em</h2></div>
+</template>
+
+<template data-slot="sim-upgrade-label">
+            <small id="sim-active-upgrade-badge" class="status-tag">Xe cơ bản</small>
+</template>
+
+<template data-slot="sim-scene">
+          <canvas id="space-scene" aria-label="Xe tự hành ở đường trước cổng trường, đèn tín hiệu xanh, vàng, đỏ và vạch sang đường"></canvas>
+          <div class="sim-stage" id="sim-stage" aria-label="Xe 3D nhận tín hiệu đèn giao thông"></div>
+          <p class="scene-idle" id="scene-idle">Ghép 9 thẻ. Chạm ▶ để xe nhận màu đèn nhé!</p>
+</template>
+
+<template data-slot="sim-meters">
+        <dl class="meters pro-only">
+          <div class="meter"><dt>Tốc độ</dt><dd><div class="v" id="m-traffic-speed">0<small>mức</small></div><div class="s">Xanh: nhanh · Vàng: chậm</div></dd></div>
+          <div class="meter"><dt>Thời gian đèn xanh</dt><dd><div class="v" id="m-traffic-green">3<small>giây</small></div><div class="s">Chạm đèn trên sa bàn để đổi</div></dd></div>
+          <div class="meter"><dt>Quãng đường</dt><dd><div class="v" id="m-traffic-distance">0<small>m</small></div><div class="s">Sa bàn minh họa</div></dd></div>
+        </dl>
+</template>
+
+<template data-slot="sim-calculation">
+        <div class="pro-only">
+        <div class="panel-h"><h2>Tính toán</h2><small>Nâng cao: so sánh thời gian xe qua vạch ở mức 4 và mức 8 với đèn xanh 3 / 4 / 5 giây.</small></div>
+        <div class="pad calc">
+          <p class="calc-eq" id="calc-eq1"></p>
+          <p class="calc-eq" id="calc-eq2"></p>
+        </div>
+        </div>
+</template>
+
+<template data-slot="sim-hint">
+            <p class="hint"><b>Nhớ nhé:</b> 🟢 thỏ chạy nhanh → 🟡 rùa chạy chậm → 🔴 dừng lại. <b>Nâng cao:</b> chạm đèn để đổi nhịp xanh.</p>
+</template>

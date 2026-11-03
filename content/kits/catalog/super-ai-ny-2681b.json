@@ -1,0 +1,49 @@
+{
+ "id": "super-ai-ny-2681b",
+ "name": "2026 Super AI Expansion Set - Cosmic Odyssey (Gói mở rộng 2026 Du Hành Vũ Trụ)",
+ "model": "JMC-NY-2681B",
+ "controller": "Sử dụng controller từ bộ nền: E6-RCU (BE-5148) hoặc M6-RCU (BE-5147)",
+ "baseKitRequired": "JMC-NY-2108+ (Intelligence Storm)",
+ "pitchMm": 10,
+ "pieces": null,
+ "countedPieces": 3,
+ "complete": false,
+ "sources": [
+  "https://www.zmrobo.net/products/92",
+  "https://www.zmrobo.com (Product ID 882)"
+ ],
+ "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2681B/images/5-5.png: Mô hình robot thi đấu hoàn chỉnh kết hợp bộ kit nền 2108+; 5-1.png đến 5-4.png: Chi tiết module điện tử kèm huy hiệu số lượng icon-one.",
+ "parts": [
+  {
+   "code": "BE-9528",
+   "count": 1,
+   "nameVi": "Động cơ servo kỹ thuật số mini",
+   "group": "electronic",
+   "sizeMm": [
+    30.1,
+    40.2,
+    50
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 1,
+   "nameVi": "Mô-đun màn hình thông tin LCD 1.28 inch NFC/RFID",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 1,
+   "nameVi": "Tay cầm điều khiển từ xa 2.4G",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  }
+ ]
+}

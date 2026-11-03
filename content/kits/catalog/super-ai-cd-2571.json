@@ -1,0 +1,36 @@
+{
+ "id": "super-ai-cd-2571",
+ "name": "2025 Super AI Prop Set - Super Track (Bộ đạo cụ sa bàn 2025 Siêu Quỹ Đạo / 星际传奇)",
+ "model": "JMC-CD-2571",
+ "controller": null,
+ "baseKitRequired": null,
+ "pitchMm": 10,
+ "pieces": null,
+ "countedPieces": 2,
+ "complete": false,
+ "sources": [
+  "https://www.zmrobo.net/products/95",
+  "https://www.zmrobo.com (Product ID 845)"
+ ],
+ "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-CD-2571/images/3-1.png & 3-2.png: Sa bàn thi đấu kèm đạo cụ cho cả 2 bảng Tiểu học và THCS/THPT; 6-10.png: File đồ họa bản đồ sa bàn chuẩn HD.",
+ "parts": [
+  {
+   "code": null,
+   "count": null,
+   "nameVi": "Mô hình trạm xuất phát và chướng ngại vật quỹ đạo",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 2,
+   "nameVi": "Bản đồ thi đấu Tiểu học & THCS/THPT chủ đề Hố đen vũ trụ",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  }
+ ]
+}

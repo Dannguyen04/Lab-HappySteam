@@ -104,13 +104,21 @@ async function main() {
   assert.equal(wrong.s.x, 0);
   assert.equal(wrong.results[0].stage, 'braking');
 
-  // M4: gói sáng tạo đổi gia tốc nhẹ
+  // M4: gói động cơ rút ngắn quãng lấy đà, không tự hoàn thành M3
   assert.ok(Math.abs(new RocketEngine().boost() - 1) < 1e-9);
   const boosted = run({ upgrades: ['boosters'] });
-  assert.ok(Math.abs(boosted.s.boost() - 1.08) < 1e-9);
+  assert.ok(Math.abs(boosted.s.boost() - 1.04) < 1e-9);
+  assert.equal(boosted.results[0].stage, 'braking', 'Gói động cơ không làm mẫu 3-3-3 tự cất cánh');
   assert.equal(boosted.state.m4, true);
-  assert.equal(boosted.state.m3, true, 'Cụm đẩy giúp mẫu 3-3-3 vừa đủ cất cánh');
-  assert.equal(boosted.state.m2, true, 'Cất cánh ở khối Chờ cuối vẫn tính đã chạy hết vòng mẫu');
+  assert.equal(boosted.state.m2, true, 'Mẫu 3-3-3 vẫn hoàn thành NV2');
+  assert.ok(!boosted.state.m3, 'Muốn đạt NV3 vẫn phải chỉnh thời gian');
+  const boostedFixed = run({ waits: [3, 3, 4], upgrades: ['boosters'] });
+  assert.equal(boostedFixed.results[0].stage, 'airborne');
+  assert.ok(boostedFixed.results[0].x < fixed.results[0].x, 'Gói động cơ rút ngắn quãng lấy đà hiển thị trên cảnh');
+  assert.equal(boostedFixed.state.m3, true);
+  const boostedWithWings = run({ upgrades: ['boosters', 'wings'] });
+  assert.equal(boostedWithWings.results[0].stage, 'braking', 'Kết hợp phụ kiện vẫn không giúp mẫu 3-3-3 tự đạt M3');
+  assert.ok(!boostedWithWings.state.m3);
   assert.ok(Math.abs(run({ upgrades: ['radar'] }).s.boost() - 0.98) < 1e-9);
   assert.ok(Math.abs(run({ upgrades: ['legs'] }).s.boost() - 0.97) < 1e-9);
   assert.ok(Math.abs(run({ upgrades: ['wings'] }).s.boost() - 1.02) < 1e-9);

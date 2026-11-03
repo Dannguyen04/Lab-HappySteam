@@ -1,0 +1,47 @@
+{
+  "title": "Trạm phân loại rác thông minh",
+  "pageTitle": "Phân loại, tái chế rác thải",
+  "topic": "Bảo vệ môi trường – phân loại rác",
+  "model": "trạm phân loại rác cố định",
+  "sheetName": "Lớp 3 · Bài 4: Phân loại, tái chế rác thải",
+  "baseName": "Trạm phân loại",
+  "steps": 18,
+  "assetFolder": "lop3-bai04",
+  "firstStep": "Lắp bộ khung hai ngăn",
+  "lede": "Lắp trạm cố định 18 bước, dùng cảm biến màu để nhận rác đỏ hoặc xanh và động cơ M1 điều khiển cần gạt. Thử điều chỉnh thời gian để rác rơi đúng ngăn.",
+  "victory": "Em đã lắp trạm, lập trình nhận màu và tìm thời gian phù hợp để phân loại rác chính xác.",
+  "engine": { "class": "SorterEngine", "file": "sorter-engine.js" },
+  "scene": {
+    "file": "sorter-scene.js",
+    "aria": "Sa bàn khu dân cư nhìn ngang, túi rác đỏ xanh đi qua cảm biến tới cần gạt và hai ngăn phân loại",
+    "stage": "Trạm phân loại cố định và cần gạt M1 chuyển động theo chương trình",
+    "idle": "Ghép chương trình mẫu rồi nhấn Start để phân loại rác"
+  },
+  "missions": {
+    "m1": { "chip": "Lắp đủ 18 bước", "title": "Lắp trạm phân loại", "tip": "Đánh dấu hoàn thành cả 18 trang hướng dẫn" },
+    "m2": { "chip": "Đủ 13 khối mẫu", "title": "Chạy một vòng chương trình mẫu", "tip": "Chờ đỏ → Do → M1 chậm ngược → 1 giây → dừng → chờ xanh → Mi → M1 chậm thuận → 1 giây → dừng", "text": "Ghép đúng 13 khối như giáo án và chạy trọn một chu kỳ đỏ–xanh. Bài mẫu có thể gạt chưa chính xác." },
+    "m3": { "chip": "Đúng 4 túi rác", "title": "Phân loại chính xác bốn túi", "tip": "Giữ đỏ 1 giây, sửa riêng thời gian gạt xanh về 0,5 giây", "text": "Phân loại đúng 2 túi đỏ về ngăn trái và 2 túi xanh về ngăn phải. Thời gian gạt xanh 1 giây khiến túi văng ra ngoài." },
+    "m4": { "chip": "Thử 4 gói sáng tạo", "title": "Cải tiến trạm thu gom", "tip": "Gắn một gói 3D và chạy thử", "text": "Thử phễu dẫn hướng, tay gạt nối dài, nắp ngăn tự đóng hoặc khay hứng tràn." },
+    "m5": { "pro": true, "chip": "Dòng rác siêu tốc", "title": "Phân loại khi rác đến nhanh", "tip": "Sửa cả hai khối Chờ thành 0,5 giây", "text": "Nâng cao: rác đến nhanh hơn. Giữ thời gian 1 giây sẽ trễ nhịp; đặt cả hai thời gian gạt 0,5 giây để đạt." }
+  },
+  "blocks": {
+    "toolbox": ["sensorColorRed", "sensorColorBlue", "noteDo", "noteMi", "m1Motor", "motorStop", "wait"],
+    "pro": ["motorPower", "motorReverse"],
+    "sample": ["start", "repeatStart", "sensorColorRed", "noteDo", ["m1Motor", { "dir": "ccw" }], ["wait", { "duration": 1 }], "motorStop", "sensorColorBlue", "noteMi", ["m1Motor", { "dir": "cw" }], ["wait", { "duration": 1 }], "motorStop", "repeatEnd"],
+    "empty": ["start", "repeatStart", "repeatEnd"]
+  },
+  "creative": {
+    "intro": "Thử nâng cấp trạm: <b>phễu dẫn hướng</b> giảm nguy cơ kẹt; <b>tay gạt nối dài có đệm</b> đổi ngoại hình; <b>nắp ngăn tự đóng</b> che ngăn; <b>khay hứng tràn</b> giữ túi rơi nhưng không tính là phân loại đúng.",
+    "slots": 4,
+    "badge": "Trạm cơ bản",
+    "slotHint": "Bốn vị trí nâng cấp 3D"
+  },
+  "meters": [
+    { "label": "Đã phân loại", "id": "m-sorted", "value": 0, "unit": "/ 4 túi", "note": "Hai màu – hai ngăn", "noteId": "m-sorted-note" },
+    { "label": "Túi bị trượt", "id": "m-missed", "value": 0, "unit": "túi", "note": "Sai thời gian hoặc chiều gạt", "noteId": "m-missed-note" },
+    { "label": "Góc cần gạt", "id": "m-angle", "value": 0, "unit": "°", "note": "Động cơ M1", "noteId": "m-angle-note" },
+    { "label": "Thời gian", "id": "m-time", "value": 0, "unit": "giây", "note": "Quan sát mỗi lượt", "noteId": "m-time-note" }
+  ],
+  "calc": "Góc quay = tốc độ góc × thời gian · cần gạt đúng chiều, đúng nhịp",
+  "hint": "<b>M2:</b> giữ đúng 13 khối theo giáo án. <b>M3:</b> đỏ gạt trái 1 giây, xanh gạt phải 0,5 giây. <b>Nâng cao:</b> đặt cả hai khối Chờ về 0,5 giây để bắt kịp dòng rác."
+}

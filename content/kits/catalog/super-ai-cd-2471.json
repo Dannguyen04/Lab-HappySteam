@@ -1,0 +1,54 @@
+{
+ "id": "super-ai-cd-2471",
+ "name": "2024 Super AI Prop Set - Interstellar Crossing (Bộ đạo cụ sa bàn 2024 Vượt Qua Liên Sao / 星际穿越道具包)",
+ "model": "JMC-CD-2471",
+ "controller": "Bộ điều khiển M5 (M5 Controller) độc lập tích hợp pin Lithium",
+ "baseKitRequired": null,
+ "pitchMm": 10,
+ "pieces": 661,
+ "countedPieces": 664,
+ "complete": false,
+ "sources": [
+  "https://www.zmrobo.net/products/96",
+  "https://www.zmrobo.com (Product ID 777 - Phần Đạo cụ)"
+ ],
+ "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2486/images/10-1.png: Ảnh studio chụp trải phẳng toàn bộ 79 chủng loại linh kiện cơ khí gồm 661 chi tiết của bộ đạo cụ; 9-1.png & 9-2.png: Chi tiết bộ điều khiển M5 và mô-đun đọc thẻ IC kèm số lượng icon-one.",
+ "parts": [
+  {
+   "code": null,
+   "count": 1,
+   "nameVi": "Bộ điều khiển tích hợp màn hình M5 Controller",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 1,
+   "nameVi": "Mô-đun đọc thẻ IC thông minh",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 661,
+   "nameVi": "Chi tiết lắp ráp cơ khí đạo cụ sa bàn (79 chủng loại)",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 1,
+   "nameVi": "Bản đồ bạt thi đấu 3000x2000mm",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  }
+ ]
+}

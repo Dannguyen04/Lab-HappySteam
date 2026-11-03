@@ -1,0 +1,98 @@
+<title>Cây đàn ghi-ta · Lớp 3 · Bài 14 · Happy STEAM</title>
+<template data-slot="header-copy">
+      <div class="eyebrow">Lớp 3 · Bài 14 · Âm nhạc và cảm biến siêu âm</div>
+      <h1>Cây đàn ghi-ta</h1>
+      <p class="lede pro-only">Lắp cây đàn ghi-ta 23 bước, điều khiển nốt nhạc bằng cách đưa tay đến gần và rời khỏi cảm biến siêu âm. Đổi thứ tự giai điệu để đáp ứng yêu cầu của khán giả.</p>
+</template>
+
+<template data-slot="mission-chips">
+    <span class="chip" id="chip-m1" title="Hoàn thành cả 23 bước lắp ráp, kiểm tra cảm biến siêu âm ở bước 20"><i>1</i>Lắp 23 bước</span>
+    <span class="chip" id="chip-m2" title="Start → Lặp → Chờ vật cản → A → Đợi đường trống → B → Hết lặp"><i>2</i>Đàn phát A–B</span>
+    <span class="chip" id="chip-m3" title="Đảo hai khối Melody A/B nhưng giữ nguyên hai khối chờ cảm biến"><i>3</i>Đổi nốt B–A</span>
+    <span class="chip" id="chip-m4" title="Chọn một trong bốn gói rồi chạy chương trình"><i>4</i>Gắn phụ kiện</span>
+    <span class="chip pro-only" id="chip-m5" title="Khán giả giữ tay lâu ngắn khác nhau; giữ đúng cả hai khối chờ và nốt B–A"><i>5</i>Ba lượt khán giả</span>
+</template>
+
+<template data-slot="victory-copy">
+      <p>Em đã lắp cây đàn ghi-ta, lập trình đúng hai trạng thái cảm biến và biểu diễn giai điệu theo yêu cầu.</p>
+      <p class="code-line">Mã tham chiếu: <code id="verify-code-output">ZM3-14</code></p>
+</template>
+
+<template data-slot="assembly-tab">
+      <i>1</i><span><b>Lắp ráp</b><small>23 bước theo sách</small></span>
+</template>
+
+<template data-slot="assembly-count">
+          <span class="pill" data-k="info"><span>Bước </span><b id="countNow">1</b><span id="countTotal"> / 23</span></span>
+</template>
+
+<template data-slot="assembly-canvas">
+              <canvas id="view" aria-label="Mô hình cây đàn ghi-ta cảm biến 3D: kéo để xoay, cuộn để phóng to"></canvas>
+</template>
+
+<template data-slot="assembly-slider">
+                <input id="slider" type="range" min="1" max="23" value="1" aria-label="Chọn bước lắp">
+</template>
+
+<template data-slot="assembly-meter-step">
+          <div class="meter"><dt>Bước</dt><dd><div class="v" id="am-step">1<small>/ 23</small></div><div class="s" id="am-step-s">Lắp phần thân đàn</div></dd></div>
+</template>
+
+<template data-slot="assembly-meter-done">
+          <div class="meter"><dt>Đã lắp xong</dt><dd><div class="v" id="am-done">0<small>/ 23</small></div><div class="bar"><b id="am-done-bar"></b></div></dd></div>
+</template>
+
+<template data-slot="book-image">
+          <img id="book-img" src="assets/lop3-bai14/step-01.jpg" alt="Bước 1 trong sách hướng dẫn lắp cây đàn ghi-ta">
+</template>
+
+<template data-slot="book-link">
+          <a id="book-pdf" class="link" href="assets/lop3-bai14/step-01.jpg" target="_blank" rel="noopener">Mở hình lớn ↗</a>
+</template>
+
+<template data-slot="creative-intro">
+          <p class="status-text">Chọn phụ kiện cho buổi diễn: <b>hộp cộng hưởng</b> vẽ sóng âm rộng hơn; <b>dây đàn màu</b> làm nốt nhạc nổi bật; <b>đèn sân khấu</b> sáng theo âm thanh; <b>giá đỡ</b> giúp đàn đứng vững. Hiệu ứng là minh họa trên sa bàn.</p>
+</template>
+
+<template data-slot="creative-canvas">
+        <div class="canvas-box stage-3d" id="creative-stage" aria-label="Mô hình cây đàn ghi-ta cảm biến 3D đang sáng tạo"></div>
+</template>
+
+<template data-slot="creative-slot-label">
+        <div class="panel-h"><h2>Tự gắn chi tiết</h2><small>Bốn vị trí nâng cấp thân đàn và sân khấu</small></div>
+</template>
+
+<template data-slot="creative-result-label">
+        <div class="panel-h"><h2>Cây đàn ghi-ta của em sẽ có</h2></div>
+</template>
+
+<template data-slot="sim-upgrade-label">
+            <small id="sim-active-upgrade-badge" class="status-tag">Ghi-ta cơ bản</small>
+</template>
+
+<template data-slot="sim-scene">
+          <canvas id="space-scene" aria-label="Sân khấu nhìn ngang có cây đàn ghi-ta và bàn tay tiến đến hoặc rời cảm biến siêu âm, hiển thị nốt A hoặc B theo chương trình"></canvas>
+          <div class="sim-stage" id="sim-stage" aria-label="Đàn ghi-ta 3D và cảm biến siêu âm"></div>
+          <p class="scene-idle" id="scene-idle">Nạp 7 khối mẫu, nhấn Start và quan sát tay khán giả đưa vào rồi rời cảm biến</p>
+</template>
+
+<template data-slot="sim-meters">
+        <dl class="meters pro-only">
+          <div class="meter"><dt>Cảm biến</dt><dd><div class="v" id="m-sensor">Đang chờ</div><div class="s" id="m-sensor-note">Bàn tay chưa che</div></dd></div>
+          <div class="meter"><dt>Nốt nhạc</dt><dd><div class="v" id="m-note">—</div><div class="s" id="m-note-note">Nốt phát ra theo khối</div></dd></div>
+          <div class="meter"><dt>Khán giả</dt><dd><div class="v" id="m-visitor">1<small>/ 3</small></div><div class="s" id="m-visitor-note">Thời gian giữ tay thay đổi</div></dd></div>
+          <div class="meter"><dt>Thời gian</dt><dd><div class="v" id="m-time">0<small>giây</small></div><div class="s" id="m-time-note">Một lượt biểu diễn</div></dd></div>
+        </dl>
+</template>
+
+<template data-slot="sim-calculation">
+        <div class="panel-h"><h2>Tính toán</h2><small>Có vật cản → nốt thứ nhất · Hết vật cản → nốt thứ hai</small></div>
+        <div class="pad calc">
+          <p class="calc-eq" id="calc-eq1"></p>
+          <p class="calc-eq" id="calc-eq2"></p>
+        </div>
+</template>
+
+<template data-slot="sim-hint">
+            <p class="hint"><b>NV2:</b> bảy khối mẫu cho A–B. <b>NV3:</b> đổi vị trí A và B thành B–A nhưng giữ hai khối chờ. <b>Nâng cao:</b> thử ba lượt khán giả giữ tay khác thời gian; một nốt sai hoặc phát sớm sẽ trượt.</p>
+</template>

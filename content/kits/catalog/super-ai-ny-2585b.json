@@ -1,0 +1,105 @@
+{
+ "id": "super-ai-ny-2585b",
+ "name": "2025 Super AI Independent Competition Kit - Tower Conquest (Bộ thi đấu độc lập 2025 Đoạt Tháp Kỳ Binh / 夺塔奇兵)",
+ "model": "JMC-NY-2585B",
+ "controller": "Bộ điều khiển kép: E6-RCU (BE-5148) làm chủ + M6-RCU (BE-5147) làm tớ",
+ "baseKitRequired": null,
+ "pitchMm": 10,
+ "pieces": null,
+ "countedPieces": 13,
+ "complete": false,
+ "sources": [
+  "https://www.zmrobo.net/products/94",
+  "https://www.zmrobo.com (Product ID 863, JMC-NY-2585)"
+ ],
+ "evidence": "https://oss.zmrobo.com/zmrobo/static/products/JMC-NY-2585/images/5-2.png: Hộp đựng sản phẩm và bảng 7 linh kiện điện tử kèm số lượng chính thức (E6 x1, M6 x1, Large Motor x4, Medium Motor x2, 2.4G Receiver x2, Remote x1, Digital Servo x2); 5-3.png: Robot thi đấu tiêu chuẩn 2 RCU E6+M6.",
+ "parts": [
+  {
+   "code": "BE-5148",
+   "count": 1,
+   "nameVi": "Bộ điều khiển chính E6-RCU",
+   "group": "electronic",
+   "sizeMm": [
+    70.2,
+    43.8,
+    110.2
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-3582",
+   "count": 4,
+   "nameVi": "Động cơ lớn encoder",
+   "group": "electronic",
+   "sizeMm": [
+    30.1,
+    50.2,
+    70
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-5147",
+   "count": 1,
+   "nameVi": "Bộ điều khiển M6-RCU",
+   "group": "electronic",
+   "sizeMm": [
+    70,
+    32.1,
+    70.1
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-3581",
+   "count": 2,
+   "nameVi": "Động cơ vừa encoder trục đôi",
+   "group": "electronic",
+   "sizeMm": [
+    30.1,
+    40.5,
+    70
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-9262",
+   "count": 2,
+   "nameVi": "Mô-đun thu sóng không dây 2.4G",
+   "group": "electronic",
+   "sizeMm": [
+    30,
+    30.1,
+    30
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  },
+  {
+   "code": null,
+   "count": 1,
+   "nameVi": "Tay cầm điều khiển từ xa 2.4G",
+   "group": null,
+   "sizeMm": null,
+   "hasMesh": false,
+   "snapPoints": []
+  },
+  {
+   "code": "BE-9520",
+   "count": 2,
+   "nameVi": "Động cơ servo kỹ thuật số thi đấu",
+   "group": "electronic",
+   "sizeMm": [
+    30.1,
+    50,
+    70
+   ],
+   "hasMesh": true,
+   "snapPoints": []
+  }
+ ]
+}
