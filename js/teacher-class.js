@@ -1,5 +1,6 @@
 // S-05/S-06: lớp, danh sách tên gọi ngắn và màn chiếu buổi học.
 import { supabase } from './supabase-client.js';
+import { renderInvitationInbox, openClassManagement, bindLifecycleBoard, closeClassManagement } from './teacher-lifecycle.js';
 
 const $ = id => document.getElementById(id);
 const animals = ['🐱','🐶','🐼','🐻','🐰','🦊','🐯','🦁','🐸','🐵','🐨','🐷','🐮','🐴','🐙','🦉','🦄','🐧','🐢','🐳','🐬','🦋','🐝','🐞','🐌','🐿️','🦔','🦦','🦥','🦒','🐘','🦓','🦘','🦚','🦜','🦩','🦕','🦖','🦀','🦞','🐠','🐡','🦭','🐺','🐗','🦌','🦏','🦛','🐫','🐐','🦙','🦨','🦡','🐊','🐓','🦃','🦢','🦅','🦇','🐉'];
@@ -8,6 +9,7 @@ let roster = [];
 let activeSession = null;
 let poller = null;
 let refreshing = false;
+let gradebookToken = 0;
 
 const el = (tag, text, className) => {
   const node = document.createElement(tag);
@@ -22,7 +24,8 @@ function message(text, kind = '') {
 }
 function pickAvatar() {
   const occupied = new Set(roster.map(r => r.avatar));
-  return animals.find(a => !occupied.has(a)) || `🐾${roster.length + 1}`;
+  const available = animals.filter(a => !occupied.has(a));
+  return available.length ? available[Math.floor(Math.random() * available.length)] : `🐾${roster.length + 1}`;
 }
 function monday(dateString) {
   const d = new Date(dateString + 'T12:00:00');
@@ -57,7 +60,7 @@ function updateNameHints() {
     const conflict = conflicts.has(nameKey(roster[index].nickname));
     input.setAttribute('aria-invalid', String(conflict));
     hint.hidden = !conflict;
-    hint.textContent = conflict ? '⚠️ Tên trùng — thêm chữ cái họ (ví dụ: An B., An T.)' : '';
+    hint.textContent = conflict ? 'Tên trùng — thêm chữ cái họ (ví dụ: An B., An T.)' : '';
   });
 }
 function drawRoster() {
@@ -176,7 +179,7 @@ async function saveClass(event) {
     });
     if (error || !data?.ok) throw error || new Error('Không lưu được lớp');
     showEditor(false);
-    message(data.warnings?.length ? 'Đã lưu. ⚠️ ' + data.warnings.join(' · ') : 'Đã lưu lớp và danh sách học sinh.', 'ok');
+    message(data.warnings?.length ? 'Đã lưu. ' + data.warnings.join(' · ') : 'Đã lưu lớp và danh sách học sinh.', 'ok');
     await renderClassBoard();
   } catch (error) {
     message(error.message?.includes('ZM_LIMIT')
@@ -195,6 +198,7 @@ export async function renderClassBoard() {
   if (error) { message('Không tải được danh sách lớp.', 'error'); return; }
   const { data: staff } = await supabase.from('class_staff').select('class_id,role,teacher_id');
   const { data: auth } = await supabase.auth.getUser();
+  const owned = data.filter(c => staff?.some(s => s.class_id === c.id && s.teacher_id === auth?.user?.id && s.role === 'owner'));
   $('t-empty').hidden = data.length > 0;
   for (const c of data) {
     const li = el('li');
@@ -203,6 +207,14 @@ export async function renderClassBoard() {
     const content = el('div');
     content.append(title, meta);
     const actions = el('div', undefined, 't-actions');
+    const manage = el('button', 'Quản lý lớp', 'btn');
+    manage.type = 'button';
+    manage.addEventListener('click', () => openClassManagement(c, owned, renderClassBoard));
+    actions.append(manage);
+    const gradebook = el('button', 'Bảng lớp', 'btn');
+    gradebook.type = 'button';
+    gradebook.addEventListener('click', () => openGradebook(c));
+    actions.append(gradebook);
     if (c.status === 'open' && staff?.some(s => s.class_id === c.id && s.teacher_id === auth?.user?.id && s.role === 'owner')) {
       const edit = el('button', 'Sửa lớp', 'btn');
       edit.type = 'button'; edit.addEventListener('click', () => editClass(c));
@@ -215,6 +227,7 @@ export async function renderClassBoard() {
     }
     li.append(content, actions); list.append(li);
   }
+  await renderInvitationInbox(renderClassBoard);
   // Mã chiếu bảng được giữ trong sessionStorage của cùng tab sau khi tải lại.
   if (!activeSession) {
     for (const c of data) {
@@ -227,6 +240,113 @@ export async function renderClassBoard() {
     }
   }
 }
+function closeGradebook() {
+  gradebookToken++;
+  $('t-gradebook').hidden = true;
+  $('t-gradebook-table').replaceChildren();
+  $('t-gradebook-status').textContent = '';
+}
+async function openGradebook(c) {
+  const token = ++gradebookToken;
+  const panel = $('t-gradebook');
+  panel.hidden = false;
+  $('t-gradebook-title').textContent = 'Bảng lớp · ' + c.name;
+  $('t-gradebook-table').replaceChildren();
+  $('t-gradebook-status').textContent = 'Đang tải trạng thái lớp và bài học...';
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  try {
+    const [stateResult, lessonsResult, enrollmentsResult] = await Promise.all([
+      supabase.rpc('class_management_state', { p_class_id: c.id }),
+      supabase.from('lessons').select('id,title,week,current_version').eq('grade', c.grade).order('week'),
+      supabase.from('enrollments').select('id,student_id').eq('class_id', c.id)
+    ]);
+    if (stateResult.error || lessonsResult.error || enrollmentsResult.error || !stateResult.data?.ok && stateResult.data?.ok !== undefined)
+      throw stateResult.error || lessonsResult.error || enrollmentsResult.error || Error('Không đọc được dữ liệu lớp.');
+    if (token !== gradebookToken) return;
+    const students = stateResult.data.students || [];
+    const lessons = (lessonsResult.data || []).filter(lesson => lesson.current_version !== null);
+    const opened = await Promise.all(lessons.map(async lesson => {
+      const result = await supabase.rpc('lesson_open', { p_class_id: c.id, p_lesson_id: lesson.id });
+      if (result.error) throw result.error;
+      return Boolean(result.data);
+    }));
+    if (token !== gradebookToken) return;
+    // Tiến độ và mức chấm được đọc nguyên trạng, không tự suy đoán kết quả học sinh.
+    const enrollments = enrollmentsResult.data || [];
+    const enrollmentIds = enrollments.map(e => e.id);
+    const attempts = [];
+    if (enrollmentIds.length) {
+      for (let offset = 0; ; offset += 1000) {
+        const page = await supabase.from('attempts').select('id,enrollment_id,lesson_id,missions_done')
+          .in('enrollment_id', enrollmentIds).range(offset, offset + 999);
+        if (page.error) throw page.error;
+        attempts.push(...(page.data || []));
+        if ((page.data || []).length < 1000) break;
+      }
+    }
+    const levels = new Map();
+    for (let offset = 0; offset < attempts.length; offset += 100) {
+      const ids = attempts.slice(offset, offset + 100).map(a => a.id);
+      const result = await supabase.from('current_evaluations').select('attempt_id,level').in('attempt_id', ids);
+      if (result.error) throw result.error;
+      for (const evaluation of result.data || []) levels.set(evaluation.attempt_id, evaluation.level);
+    }
+    if (token !== gradebookToken) return;
+    const studentOfEnrollment = new Map(enrollments.map(e => [e.id, e.student_id]));
+    const progress = new Map();
+    for (const attempt of attempts) progress.set(`${studentOfEnrollment.get(attempt.enrollment_id)}:${attempt.lesson_id}`, attempt);
+    const table = $('t-gradebook-table');
+    const head = el('thead');
+    const headRow = el('tr');
+    const first = el('th', 'Học sinh'); first.scope = 'col'; headRow.append(first);
+    for (const lesson of lessons) {
+      const cell = el('th', `Tuần ${lesson.week} · ${lesson.title}`);
+      cell.scope = 'col'; headRow.append(cell);
+    }
+    head.append(headRow);
+    const body = el('tbody');
+    for (const student of students) {
+      const row = el('tr');
+      const name = el('th', `${student.avatar} ${student.nickname}${student.status === 'left' ? ' · Đã rời lớp' : ''}`);
+      name.scope = 'row'; row.append(name);
+      lessons.forEach((lesson, index) => {
+        const attempt = progress.get(`${student.id}:${lesson.id}`);
+        const level = attempt && levels.get(attempt.id);
+        const status = level ? `Đã chấm · ${level}` : attempt ? 'Đã bắt đầu' :
+          student.status === 'left' ? 'Đã rời lớp' : opened[index] ? 'Chưa làm' : 'Chưa mở';
+        row.append(el('td', status, level ? 'is-graded' : 'is-unavailable'));
+      });
+      body.append(row);
+    }
+    if (!students.length) {
+      const row = el('tr');
+      const empty = el('td', 'Lớp chưa có học sinh.'); empty.colSpan = lessons.length + 1;
+      row.append(empty); body.append(row);
+    }
+    table.replaceChildren(head, body);
+    $('t-gradebook-status').textContent = `${students.length} học sinh · ${lessons.length} bài · dữ liệu từ lớp, bài mở và tiến độ hiện có.`;
+  } catch (error) {
+    if (token !== gradebookToken) return;
+    $('t-gradebook-table').replaceChildren();
+    $('t-gradebook-status').textContent = 'Không tải được Bảng lớp: ' + (error.message || 'Thử lại sau.');
+  }
+}
+function setProjection(on) {
+  document.querySelector('.teacher').classList.toggle('is-projecting', on);
+  const toggle = $('t-project-toggle');
+  toggle.setAttribute('aria-pressed', String(on));
+  toggle.textContent = on ? 'Thoát màn chiếu' : 'Chiếu toàn màn hình';
+}
+async function toggleProjection() {
+  const panel = $('t-session');
+  if (document.querySelector('.teacher').classList.contains('is-projecting')) {
+    setProjection(false);
+    if (document.fullscreenElement === panel) await document.exitFullscreen().catch(() => {});
+  } else {
+    setProjection(true);
+    if (panel.requestFullscreen) await panel.requestFullscreen().catch(() => {});
+  }
+}
 async function openSession(c) {
   if (activeSession && !confirm('Đang hiển thị một buổi. Mở buổi mới?')) return;
   const { data, error } = await supabase.rpc('open_session', { p_class_id: c.id });
@@ -234,7 +354,9 @@ async function openSession(c) {
   const session = { ...data, class_id: c.id, class_name: c.name };
   sessionStorage.setItem('happy-session-' + c.id, JSON.stringify(session));
   activateSession(session);
-  message('Đã mở buổi. Chiếu mã để các em vào nhé.', 'ok');
+  message(data.closed_previous
+    ? 'Đã đóng buổi cũ và mở buổi mới. Chiếu mã mới để các em vào nhé.'
+    : 'Đã mở buổi. Chiếu mã để các em vào nhé.', 'ok');
 }
 function activateSession(session) {
   stopClassSession();
@@ -249,11 +371,21 @@ function activateSession(session) {
   $('t-session').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 export function stopClassSession() {
+  setProjection(false);
+  if (document.fullscreenElement === $('t-session')) document.exitFullscreen().catch(() => {});
   if (poller) clearInterval(poller);
   poller = null;
   activeSession = null;
   refreshing = false;
   $('t-session').hidden = true;
+}
+export function resetClassBoard() {
+  stopClassSession();
+  closeGradebook();
+  closeClassManagement();
+  $('t-invitations').hidden = true;
+  $('t-invitation-list').replaceChildren();
+  $('t-classes').replaceChildren();
 }
 async function refreshSession() {
   if (!activeSession || refreshing) return;
@@ -278,7 +410,7 @@ async function refreshSession() {
     $('t-pending').replaceChildren();
     for (const d of pending.data || []) {
       const row = el('li');
-      const label = el('span', `${d.avatar} ${d.nickname} · Máy ${d.device_tag}${d.in_use_elsewhere ? ' ⚠️ tên này đang ở máy khác' : ''}`);
+      const label = el('span', `${d.avatar} ${d.nickname} · Máy ${d.device_tag}${d.in_use_elsewhere ? ' · tên này đang ở máy khác' : ''}`);
       const approve = el('button', 'Duyệt', 'btn btn-primary');
       approve.addEventListener('click', () => decide('approve_device', d.device_id));
       const reject = el('button', 'Từ chối', 'btn');
@@ -299,7 +431,7 @@ async function decide(action, deviceId) {
     p_session_id: activeSession.session_id, p_device_id: deviceId
   });
   $('t-session-note').textContent = error?.message ||
-    (data?.warnings?.includes('BR-BH-02') ? '⚠️ Tên này có yêu cầu ở máy khác.' : 'Đã cập nhật máy.');
+    (data?.warnings?.includes('BR-BH-02') ? 'Tên này có yêu cầu ở máy khác.' : 'Đã cập nhật máy.');
   await refreshSession();
 }
 async function closeSession() {
@@ -312,10 +444,19 @@ async function closeSession() {
   message('Đã kết thúc buổi học.', 'ok');
 }
 export function bindClassBoard() {
+  bindLifecycleBoard();
   $('t-new-class').addEventListener('click', newClass);
   $('t-cancel-class').addEventListener('click', () => showEditor(false));
   $('t-add-names').addEventListener('click', addNames);
   $('t-class-form').addEventListener('submit', saveClass);
   $('t-approve-all').addEventListener('click', () => decide('approve_device', null));
   $('t-close-session').addEventListener('click', closeSession);
+  $('t-project-toggle').addEventListener('click', toggleProjection);
+  $('t-gradebook-close').addEventListener('click', closeGradebook);
+  document.addEventListener('fullscreenchange', () => {
+    if (document.fullscreenElement !== $('t-session') && document.querySelector('.teacher').classList.contains('is-projecting')) setProjection(false);
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && document.querySelector('.teacher').classList.contains('is-projecting')) setProjection(false);
+  });
 }

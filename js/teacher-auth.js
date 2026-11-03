@@ -1,6 +1,6 @@
 // js/teacher-auth.js – S-05 đăng nhập giáo viên bằng magic link (BRD F-01). Quyền đọc do RLS lo.
 import { supabase, supabaseReady } from './supabase-client.js';
-import { renderClassBoard, bindClassBoard, stopClassSession } from './teacher-class.js';
+import { renderClassBoard, bindClassBoard, resetClassBoard } from './teacher-class.js';
 
 const $ = id => document.getElementById(id);
 const panels = ['t-offline', 't-login', 't-profile', 't-home'];
@@ -15,6 +15,7 @@ function say(text, kind) {
 
 async function afterSignIn(user) {
   say('');
+  resetClassBoard();
   const { data: profile, error } = await supabase.from('profiles').select('id, full_name').eq('id', user.id).maybeSingle();
   if (error) { say('Không đọc được hồ sơ. Thầy cô thử tải lại trang nhé.', 'error'); show('t-login'); return; }
   if (!profile) { show('t-profile'); $('t-name').focus(); return; }
@@ -53,7 +54,7 @@ async function init() {
   $('t-profile-form').addEventListener('submit', onProfile);
   bindClassBoard();
   $('t-logout').addEventListener('click', async () => {
-    stopClassSession();
+    resetClassBoard();
     await supabase.auth.signOut();
     say('Đã đăng xuất.', 'ok');
     show('t-login');

@@ -26,10 +26,45 @@ async function smokeStudentHome(browser) {
     let offline = false;
     let denied = false;
     let leaveCalls = 0;
+    let leaveOpen = true;
+    const user = {
+      id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', aud: 'authenticated',
+      role: 'authenticated', is_anonymous: true,
+      app_metadata: { provider: 'anonymous', providers: ['anonymous'] },
+      user_metadata: {}, created_at: '2026-11-01T00:00:00Z'
+    };
+    const jwt = [
+      Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url'),
+      Buffer.from(JSON.stringify({ sub: user.id, role: user.role, exp: 1924992000, is_anonymous: true })).toString('base64url'),
+      'fake_signature'
+    ].join('.');
     await page.route('https://supabase.mock.invalid/**', async route => {
       const name = new URL(route.request().url()).pathname;
       if (offline) { await route.abort('failed'); return; }
-      if (name.endsWith('/rpc/student_home_state')) {
+      if (route.request().method() === 'OPTIONS') {
+        await route.fulfill({ status: 204, headers: {
+          'access-control-allow-origin': '*', 'access-control-allow-methods': 'POST,GET,OPTIONS',
+          'access-control-allow-headers': 'authorization,apikey,content-type,x-client-info'
+        } });
+      } else if (name.endsWith('/auth/v1/signup')) {
+        await route.fulfill({ status: 200, contentType: 'application/json',
+          headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({
+            access_token: jwt, token_type: 'bearer', expires_in: 31536000,
+            expires_at: 1924992000, refresh_token: 'test-refresh-token', user
+          }) });
+      } else if (name.endsWith('/auth/v1/user')) {
+        await route.fulfill({ status: 200, contentType: 'application/json',
+          headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(user) });
+      } else if (name.endsWith('/rpc/session_roster')) {
+        assert.deepEqual(route.request().postDataJSON(), { p_code: '1234' });
+        await route.fulfill({ status: 200, contentType: 'application/json',
+          headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({
+            ok: true, device_tag: 'M7', roster: [
+              { nickname: 'An', avatar: '🐱', pick: 'pick-an' },
+              { nickname: 'Bình', avatar: '🐶', pick: 'pick-binh' }
+            ]
+          }) });
+      } else if (name.endsWith('/rpc/student_home_state')) {
         if (denied) {
           await route.fulfill({ status: 403, contentType: 'application/json',
             headers: { 'access-control-allow-origin': '*' },
@@ -47,7 +82,9 @@ async function smokeStudentHome(browser) {
       } else if (name.endsWith('/rpc/leave_session')) {
         leaveCalls++;
         await route.fulfill({ status: 200, contentType: 'application/json',
-          headers: { 'access-control-allow-origin': '*' }, body: '{"ok":true}' });
+          headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({
+            ok: true, session_open: leaveOpen, join_code: leaveOpen ? '1234' : null
+          }) });
       } else throw new Error('Unexpected mock RPC: ' + name);
     });
     await page.goto(new URL('index.html', base).href);
@@ -85,8 +122,25 @@ async function smokeStudentHome(browser) {
     denied = false;
     await page.getByRole('button', { name: 'Không phải em?' }).click();
     await page.waitForURL(/\/vao-hoc\.html/);
+    await page.locator('#j-name-panel').waitFor({ state: 'visible', timeout: 12000 });
+    assert.equal(await page.locator('.join-person').count(), 2,
+      'Buổi còn mở: tự lấy lưới tên theo mã cũ');
     assert.equal(await page.evaluate(() => sessionStorage.getItem('happy-student-session')), null);
     assert.equal(leaveCalls, 1);
+    leaveOpen = false;
+    await page.goto(new URL('index.html', base).href);
+    await page.evaluate(() => sessionStorage.setItem('happy-student-session', JSON.stringify({
+      student_id: 'student-1', session_id: 'session-1', expires_at: '2027-01-01T00:00:00Z',
+      nickname: 'An', avatar: '🐱'
+    })));
+    await page.reload();
+    await page.locator('#home-switch-student').waitFor({ state: 'visible' });
+    await page.getByRole('button', { name: 'Không phải em?' }).click();
+    await page.waitForURL(/\/vao-hoc\.html/);
+    await page.locator('#j-code-panel').waitFor({ state: 'visible' });
+    assert.equal(await page.locator('#j-name-panel').isVisible(), false,
+      'Buổi đã đóng: phải nhập mã mới');
+    assert.equal(leaveCalls, 2);
     assert.deepEqual(errors, [], 'Giao diện có phiên không có lỗi JavaScript');
     await page.close();
   } finally {
@@ -113,7 +167,7 @@ async function smokeStudentHome(browser) {
     await page.reload();
     assert.match(await page.title(), /Happy STEAM/);
     assert.equal(await page.locator('.lesson-card').count(), 18, 'Lớp 1 HK I: 18 tuần (13 bài mô hình, 4 tuần dự án, trưng bày)');
-    assert.equal(await page.locator('.lesson-card.is-ready').count(), 11, 'Lớp 1 HK I: Bài 3, 9, 10, 11, 12, 13 + 4 tuần dự án + trưng bày sẵn sàng');
+    assert.equal(await page.locator('.lesson-card.is-ready').count(), 16, 'Lớp 1 HK I: các bài sẵn sàng (nay gồm cả bài 1, 4, 5, 6, 8) + 4 tuần dự án + trưng bày sẵn sàng');
     assert.equal(await page.locator('.lesson-card.is-soon').first().getAttribute('aria-disabled'), 'true');
     await page.click('#term-tabs [data-term="2"]');
     assert.equal(await page.locator('.lesson-card').count(), 17, 'Lớp 1 HK II: tuần 19–35');

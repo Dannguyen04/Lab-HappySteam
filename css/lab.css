@@ -424,6 +424,11 @@ details.more > summary::-webkit-details-marker { display: none; }
 
 /* ===== Chế độ Bé / Nâng cao ===== */
 html[data-mode="kid"] .pro-only { display: none !important; }
+html[data-mode="kid"] .zb-traffic-card .zb-traffic-pro,
+html[data-mode="pro"] .zb-traffic-card .zb-traffic-kid { display: none; }
+html[data-mode="kid"] .zb-traffic-card .zb-badge-idx { display: none; }
+html[data-mode="kid"] .zb-traffic-card .zb-traffic-kid { font-size: 18px; }
+html[data-mode="pro"] .zb-traffic-card .zb-traffic-pro { font-size: 9px; line-height: 1.15; }
 
 /* ===== Chặng 3: thẻ nhiệm vụ ===== */
 .mission-card { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
@@ -531,13 +536,13 @@ html[data-mode="kid"] .bomtable td code { display: none; }
 .back-link:hover { text-decoration: underline; }
 .home-pick { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; }
 .grade-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
-.grade-tabs button { display: grid; gap: 2px; min-width: 104px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); text-align: left; cursor: pointer; }
+.grade-tabs button { display: grid; gap: 2px; min-width: 104px; min-height: 44px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); text-align: left; cursor: pointer; }
 .grade-tabs button b { font: 700 20px/1.1 var(--f-display); }
 .grade-tabs button small { font: 600 11px/1.2 var(--f-mono); letter-spacing: .04em; color: var(--muted); }
 .grade-tabs button[aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); }
 .grade-tabs button[aria-selected="true"] small { color: inherit; opacity: .75; }
 .term-tabs { display: inline-flex; padding: 4px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); }
-.term-tabs button { border: 0; background: none; padding: 8px 18px; border-radius: 999px; font-weight: 600; cursor: pointer; color: var(--muted); }
+.term-tabs button { min-height: 44px; border: 0; background: none; padding: 8px 18px; border-radius: 999px; font-weight: 600; cursor: pointer; color: var(--muted); }
 .term-tabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
 .home-count { margin: 0 0 10px; font: 600 12px/1.4 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .lesson-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
@@ -556,14 +561,16 @@ html[data-mode="kid"] .bomtable td code { display: none; }
 .lc-eyebrow { font: 600 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .lc-title { font: 700 17px/1.25 var(--f-display); }
 .lc-about { margin: 0; font-size: 13px; color: var(--muted); }
-.lc-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; padding-top: 6px; }
+.lc-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px; margin-top: auto; padding-top: 6px; }
 .lc-type { font: 600 11px/1 var(--f-mono); padding: 5px 8px; border-radius: 999px; background: var(--sunk); color: var(--muted); }
-.lc-type[data-type="model"] { color: var(--zb-motor); }
-.lc-type[data-type="project"] { color: var(--zb-control); }
-.lc-type[data-type="theory"] { color: var(--ok); }
-.lc-type[data-type="test"] { color: var(--zb-melody); }
-.lc-go { font-size: 13px; font-weight: 700; color: var(--muted); }
-.is-ready .lc-go { color: var(--accent); }
+.lc-type[data-type="model"] { color: #075985; background: #e0f2fe; }
+.lc-type[data-type="project"] { color: #6b21a8; background: #f3e8ff; }
+.lc-type[data-type="theory"] { color: #166534; background: #dcfce7; }
+.lc-type[data-type="test"] { color: #9a3412; background: #ffedd5; }
+.lc-go { font-size: 13px; font-weight: 700; color: var(--ink); }
+.is-ready .lc-go { color: #006694; }
+.home .tools-top .iconbtn { min-height: 44px; display: inline-flex; align-items: center; }
+[data-theme="dark"] .is-ready .lc-go { color: #7dd3fc; }
 .home-foot { font-size: 12px; color: var(--muted); text-align: center; padding-top: 8px; }
 @media (max-width: 600px) {
   .grade-tabs { display: grid; grid-template-columns: repeat(5, 1fr); width: 100%; }

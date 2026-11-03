@@ -70,7 +70,7 @@
       : `<span class="lc-num" aria-hidden="true">${l.no ?? '✓'}</span>`;
     const id = `lop${l.grade}-bai${String(l.no).padStart(2, '0')}`;
     const state = !l.href ? 'soon' : !hasStudent || courseState?.lessons?.[id] === true ? 'ready' : 'locked';
-    const action = state === 'ready' ? 'Vào học →' : state === 'locked' ? '🔒 Chưa tới tuần học' : 'Sắp có';
+    const action = state === 'ready' ? 'Vào học →' : state === 'locked' ? 'Chưa tới tuần học' : 'Sắp có';
     const body = `
       <div class="lc-cover" data-type="${l.type}">${cover}</div>
       <div class="lc-body">
@@ -150,10 +150,15 @@
     const warn = text => { note.textContent = text; note.hidden = false; };
     $('home-switch-student').addEventListener('click', async () => {
       $('home-switch-student').disabled = true;
+      sessionStorage.removeItem('happy-join-code');
       sessionStorage.removeItem('happy-student-session');
       if (cacheKey) sessionStorage.removeItem(cacheKey);
       if (supabaseReady) {
-        try { await Promise.race([supabase.rpc('leave_session'), new Promise(resolve => setTimeout(resolve, 2000))]); }
+        try {
+          const { data, error } = await supabase.rpc('leave_session');
+          if (!error && data?.ok && data.session_open && /^\d{4}$/.test(data.join_code || ''))
+            sessionStorage.setItem('happy-join-code', data.join_code);
+        }
         catch { /* Vẫn cho đổi tên khi mất mạng. */ }
       }
       location.assign('vao-hoc.html');
@@ -188,10 +193,10 @@
         if (error.name === 'AccessDenied') {
           courseState = null;
           if (cacheKey) sessionStorage.removeItem(cacheKey);
-          warn('🔒 Phiên máy không còn được duyệt hoặc đã hết hạn. Chọn “Không phải em?” để vào lại.');
+          warn('Phiên máy không còn được duyệt hoặc đã hết hạn. Chọn “Không phải em?” để vào lại.');
         } else warn(courseState
-          ? '📶 Mất kết nối. Đang dùng trạng thái bài học đã lưu gần nhất.'
-          : '📶 Chưa tải được lớp. Kiểm tra mạng hoặc chọn “Không phải em?” để vào lại.');
+          ? 'Mất kết nối. Đang dùng trạng thái bài học đã lưu gần nhất.'
+          : 'Chưa tải được lớp. Kiểm tra mạng hoặc chọn “Không phải em?” để vào lại.');
         render();
       }
     })();

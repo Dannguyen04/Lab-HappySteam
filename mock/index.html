@@ -2,279 +2,107 @@
 <html lang="vi" data-theme="light">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Danh sách màn hình Mock · Happy STEAM Lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mục lục bản mẫu 76 · Happy STEAM Lab</title>
   <link rel="stylesheet" href="../css/lab.css">
-  <link rel="stylesheet" href="giao-vien-lop.css">
+  <link rel="stylesheet" href="shell.css">
+  <style>
+    :root { color-scheme: light; }
+    body { margin: 0; background: #f5f8fb; color: #183143; font: 16px/1.55 system-ui, sans-serif; }
+    .catalog { width: min(1180px, calc(100% - 32px)); margin: 30px auto 70px; }
+    .intro { padding: clamp(20px,4vw,42px); border-radius: 20px; background: #fff; border: 1px solid #d8e4eb; }
+    .intro h1 { font-size: clamp(28px,4vw,44px); line-height: 1.15; margin: 7px 0 12px; }
+    .intro p { max-width: 850px; margin: 8px 0; }
+    .eyebrow { color: #087e91; letter-spacing: .1em; font-size: 12px; font-weight: 800; text-transform: uppercase; }
+    .toc { display: flex; flex-wrap: wrap; gap: 10px; margin: 22px 0; }
+    .toc a, .action { display: inline-flex; align-items: center; text-align: center; justify-content: center; min-height: 44px; padding: 8px 14px; border-radius: 10px; background: #166f83; color: #fff; text-decoration: none; font-weight: 700; }
+    .toc a { background: #e4f3f6; color: #175567; }
+    .action:hover, .toc a:hover { filter: brightness(.91); }
+    a:focus-visible { outline: 3px solid #e5a42a; outline-offset: 3px; }
+    .heading { margin: 37px 0 14px; font-size: clamp(23px,3vw,31px); }
+    .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%,255px),1fr)); gap: 14px; }
+    .role, .flow, .screen { padding: 20px; background: #fff; border: 1px solid #d7e3eb; border-radius: 16px; }
+    .role h3, .flow h3 { font-size: 20px; margin: 0 0 8px; }
+    .role p, .flow p { margin: 0 0 14px; }
+    .role a, .flow a { margin: 5px 5px 5px 0; }
+    .role small { display: block; color: #526879; margin: 0 0 13px; }
+    .flow-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%,300px),1fr)); gap: 12px; }
+    .code { display: inline-block; font: 800 12px/1.3 ui-monospace, monospace; color: #126477; background: #e4f3f6; padding: 5px 7px; border-radius: 5px; }
+    .wait { color: #885011; background: #fff3de; border: 1px solid #edcf95; padding: 5px 8px; border-radius: 8px; font-size: 13px; font-weight: 700; }
+    .note { color: #4a6575; font-size: 14px; }
+    .table-wrap { overflow-x: auto; border-radius: 14px; border: 1px solid #d7e3eb; background: #fff; }
+    table { width: 100%; border-collapse: collapse; min-width: 570px; }
+    th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #e3ecf1; vertical-align: middle; }
+    th { background: #e9f3f6; font-size: 14px; }
+    td a { font-weight: 700; color: #075e76; }
+    tr:last-child td { border-bottom: 0; }
+    .footer-note { margin-top: 24px; color: #4d6574; }
+    @media (max-width: 600px) { .catalog { width: min(100% - 20px, 1180px); margin-top: 18px; } .role, .flow { padding: 16px; } }
+  </style>
 </head>
-<body class="mock-page">
-
-  <!-- Dải cố định góc trên theo quy chuẩn -->
-  <aside class="mock-banner" aria-label="Thông báo dữ liệu mẫu">
-    <div class="mock-banner-left">
-      <a class="mock-back-btn" href="index.html">← Danh sách màn hình</a>
-      <span class="mock-badge-sample">DỮ LIỆU MẪU – chưa lưu thật</span>
-      <span class="mock-banner-meta">Lớp 1A2 (28 học sinh) · Bài 9: Thông tin liên lạc vũ trụ · Dự án HK I</span>
-    </div>
-    <div class="mock-banner-right">
-      <a class="mock-back-btn" href="../index.html">Trang ứng dụng gốc</a>
-    </div>
-  </aside>
-
-  <main class="gv-shell">
-    <header class="gv-header">
-      <div class="gv-header-title">
-        <div class="eyebrow">Happy STEAM Lab · Bản bấm thử toàn luồng BRD v0.2</div>
-        <h1>Danh sách màn hình mẫu (MVP Mock)</h1>
-        <p class="gv-header-sub">
-          Chọn màn hình theo đúng vai trò người dùng để kiểm thử luồng nghiệp vụ với dữ liệu giả Lớp 1A2 (28 em).
-          Mọi thao tác chấm điểm, xếp nhóm, duyệt nhận xét đều phản hồi ngay và lưu tạm trong trình duyệt (khóa <code>mock.*</code>).
-        </p>
-      </div>
-      <div class="gv-kpis">
-        <div class="gv-kpi" data-tone="accent">
-          <span>Lớp mẫu</span>
-          <strong>1A2 (28 em)</strong>
-        </div>
-        <div class="gv-kpi" data-tone="ok">
-          <span>Bài trọng tâm</span>
-          <strong>Bài 9 · NV1–5</strong>
-        </div>
-        <div class="gv-kpi">
-          <span>Số màn BRD</span>
-          <strong>S-01 → S-17</strong>
-        </div>
-      </div>
-    </header>
-
-    <div class="hub-grid">
-
-      <!-- 1. GIÁO VIÊN -->
-      <section class="hub-role-card" aria-labelledby="role-gv">
-        <div class="hub-role-head">
-          <h2 id="role-gv">1. Giáo viên</h2>
-          <span class="hub-device-tag">Máy tính 1366 px · Máy chiếu</span>
-        </div>
-        <ul class="hub-screen-list">
-          <li class="hub-screen-item">
-            <div class="hub-screen-info">
-              <div class="hub-screen-title">
-                <span class="hub-code">S-07</span>
-                <strong>Bảng lớp &amp; Chấm bài</strong>
-                <span class="pill" data-k="info">Phiếu 73a</span>
-              </div>
-              <p class="hub-screen-desc">Lưới 28 em Lớp 1A2 × các bài (Bài 9 NV1–NV5), mức máy gợi ý BRD 6.2, chấm HTT/HT/CHT, chấm nhanh, lọc em chưa xong.</p>
-            </div>
-            <a class="btn btn-primary" href="giao-vien-lop.html#s07">Mở S-07</a>
-          </li>
-
-          <li class="hub-screen-item">
-            <div class="hub-screen-info">
-              <div class="hub-screen-title">
-                <span class="hub-code">S-08</span>
-                <strong>Nhóm dự án (4 em/nhóm)</strong>
-                <span class="pill" data-k="info">Phiếu 73a</span>
-              </div>
-              <p class="hub-screen-desc">Kéo thả hoặc chạm để xếp 28 em Lớp 1A2 vào các nhóm dự án 4 em, phân vai trò thành viên và chấm theo nhóm.</p>
-            </div>
-            <a class="btn btn-primary" href="giao-vien-lop.html#s08">Mở S-08</a>
-          </li>
-
-          <li class="hub-screen-item">
-            <div class="hub-screen-info">
-              <div class="hub-screen-title">
-                <span class="hub-code">S-13</span>
-                <strong>Xuất bảng tính CSV (UTF-8 BOM)</strong>
-                <span class="pill" data-k="info">Phiếu 73a</span>
-              </div>
-              <p class="hub-screen-desc">Xem trước và tải file CSV thật sinh từ dữ liệu Lớp 1A2, kèm BOM UTF-8 để mở trực tiếp trong Microsoft Excel.</p>
-            </div>
-            <a class="btn btn-primary" href="giao-vien-lop.html#s13">Mở S-13</a>
-          </li>
-
-          <li class="hub-screen-item">
-            <div class="hub-screen-info">
-              <div class="hub-screen-title">
-                <span class="hub-code">S-09</span>
-                <strong>Phiếu mời phụ huynh in A4</strong>
-                <span class="pill" data-k="ok">Phiếu 73b</span>
-              </div>
-              <p class="hub-screen-desc">Tờ A4 gồm các ô cắt rời cho từng em Lớp 1A2, kèm mã mời 8 ký tự và khung mã QR để phát về nhà.</p>
-            </div>
-            <a class="btn" href="phieu-moi.html">Mở S-09</a>
-          </li>
-
-          <li class="hub-screen-item">
-            <div class="hub-screen-info">
-              <div class="hub-screen-title">
-                <span class="hub-code">S-14</span>
-                <strong>Chuẩn bị &amp; Màn chiếu buổi trưng bày</strong>
-                <span class="pill" data-k="warn">Phiếu 73c</span>
-              </div>
-              <p class="hub-screen-desc">Đặt bộ tiêu chí chấm sao, in phiếu khách, mở/đóng buổi, chiếu bảng xếp hạng (GD-22) và hộp duyệt nhận xét.</p>
-            </div>
-            <a class="btn" href="trung-bay.html">Mở S-14</a>
-          </li>
-
-          <li class="hub-screen-item">
-            <div class="hub-screen-info">
-              <div class="hub-screen-title">
-                <span class="hub-code">S-05 · S-06</span>
-                <strong>Tạo lớp &amp; Mở buổi học (Trang thật)</strong>
-              </div>
-              <p class="hub-screen-desc">Trang thật đã có: tạo lớp, đặt lịch tuần, chiếu mã 4 số lên bảng và duyệt thiết bị học sinh.</p>
-            </div>
-            <a class="btn" href="../giao-vien.html">Mở trang thật</a>
-          </li>
-        </ul>
-      </section>
-
-      <!-- 2. HỌC SINH -->
-      <section class="hub-role-card" aria-labelledby="role-hs">
-        <div class="hub-role-head">
-          <h2 id="role-hs">2. Học sinh</h2>
-          <span class="hub-device-tag">Máy tính bảng 1024×768 px · Nút ≥ 48 px</span>
-        </div>
-        <ul class="hub-screen-list">
-          <li class="hub-screen-item">
-            <div class="hub-screen-info">
-              <div class="hub-screen-title">
-                <span class="hub-code">S-15</span>
-                <strong>Lưới nhóm &amp; Chấm sao bạn cùng lớp</strong>
-                <span class="pill" data-k="warn">Phiếu 73c</span>
-              </div>
-              <p class="hub-screen-desc">Học sinh xem các nhóm đã nộp poster, chạm chấm 1–3 sao theo từng tiêu chí và chọn tối đa 2 câu khen mẫu.</p>
-            </div>
-            <a class="btn btn-primary" href="trung-bay.html#s15">Mở S-15</a>
-          </li>
-
-          <li class="hub-screen-item">
-            <div class="hub-screen-info">
-              <div class="hub-screen-title">
-                <span class="hub-code">S-17</span>
-                <strong>"Mọi người nói gì" về nhóm em</strong>
-                <span class="pill" data-k="warn">Phiếu 73c</span>
-              </div>
-              <p class="hub-screen-desc">Mục tổng hợp trong Sổ dự án chặng 4: hiện sao trung bình tách theo 3 nguồn (BRD 6.4), câu mẫu và nhận xét đã duyệt.</p>
-            </div>
-            <a class="btn btn-primary" href="trung-bay.html#s17">Mở S-17</a>
-          </li>
-
-          <li class="hub-screen-item">
-            <div class="hub-screen-info">
-              <div class="hub-screen-title">
-                <span class="hub-code">S-01</span>
-                <strong>Vào buổi học bằng mã 4 số (Trang thật)</strong>
-              </div>
-              <p class="hub-screen-desc">Nhập mã 4 số trên bàn phím số to và chạm chọn tên + con vật đại diện của em trong ≤ 20 giây.</p>
-            </div>
-            <a class="btn" href="../vao-hoc.html">Mở S-01</a>
-          </li>
-
-          <li class="hub-screen-item">
-            <div class="hub-screen-info">
-              <div class="hub-screen-title">
-                <span class="hub-code">S-02 · S-03</span>
-                <strong>Chọn bài &amp; Bài 9: Thông tin liên lạc vũ trụ (Trang thật)</strong>
-              </div>
-              <p class="hub-screen-desc">Trang bài học 3 chặng (Lắp 3D → Sáng tạo → Lập trình &amp; thử) với nhiệm vụ NV1–NV6 của Bài 9.</p>
-            </div>
-            <a class="btn" href="../bai.html?id=lop1-bai09">Mở Bài 9</a>
-          </li>
-
-          <li class="hub-screen-item">
-            <div class="hub-screen-info">
-              <div class="hub-screen-title">
-                <span class="hub-code">S-04 · S-12</span>
-                <strong>Sổ dự án nhóm &amp; Phòng trưng bày (Trang thật)</strong>
-              </div>
-              <p class="hub-screen-desc">Sổ dự án 4 tuần "Hành trình dòng nước" và trang trưng bày sản phẩm của lớp.</p>
-            </div>
-            <a class="btn" href="../lop1-du-an.html">Mở S-04</a>
-          </li>
-        </ul>
-      </section>
-
-      <!-- 3. PHỤ HUYNH -->
-      <section class="hub-role-card" aria-labelledby="role-ph">
-        <div class="hub-role-head">
-          <h2 id="role-ph">3. Phụ huynh</h2>
-          <span class="hub-device-tag">Điện thoại 375 px</span>
-        </div>
-        <ul class="hub-screen-list">
-          <li class="hub-screen-item">
-            <div class="hub-screen-info">
-              <div class="hub-screen-title">
-                <span class="hub-code">S-10</span>
-                <strong>Đăng nhập, nhập mã mời &amp; chọn con</strong>
-                <span class="pill" data-k="ok">Phiếu 73b</span>
-              </div>
-              <p class="hub-screen-desc">Đăng nhập giả, nhập mã mời từ tờ phiếu S-09, xác nhận đồng ý lưu dữ liệu định danh (GD-14) và chọn con.</p>
-            </div>
-            <a class="btn btn-primary" href="phu-huynh.html">Mở S-10</a>
-          </li>
-
-          <li class="hub-screen-item">
-            <div class="hub-screen-info">
-              <div class="hub-screen-title">
-                <span class="hub-code">S-11</span>
-                <strong>Kết quả học tập của con</strong>
-                <span class="pill" data-k="ok">Phiếu 73b</span>
-              </div>
-              <p class="hub-screen-desc">Xem tiến độ các bài con đã học, số nhiệm vụ hoàn thành, mức đánh giá HTT/HT/CHT, nhận xét của giáo viên và ảnh mô hình.</p>
-            </div>
-            <a class="btn btn-primary" href="phu-huynh.html#s11">Mở S-11</a>
-          </li>
-
-          <li class="hub-screen-item">
-            <div class="hub-screen-info">
-              <div class="hub-screen-title">
-                <span class="hub-code">S-09</span>
-                <strong>Xem tờ phiếu mời phụ huynh (In A4)</strong>
-                <span class="pill" data-k="ok">Phiếu 73b</span>
-              </div>
-              <p class="hub-screen-desc">Tra cứu mã mời mẫu của 28 học sinh Lớp 1A2 để thử nhập ở màn S-10.</p>
-            </div>
-            <a class="btn" href="phieu-moi.html">Mở S-09</a>
-          </li>
-        </ul>
-      </section>
-
-      <!-- 4. KHÁCH THAM QUAN -->
-      <section class="hub-role-card" aria-labelledby="role-khach">
-        <div class="hub-role-head">
-          <h2 id="role-khach">4. Khách</h2>
-          <span class="hub-device-tag">Điện thoại 375 px · Quét QR tại lớp</span>
-        </div>
-        <ul class="hub-screen-list">
-          <li class="hub-screen-item">
-            <div class="hub-screen-info">
-              <div class="hub-screen-title">
-                <span class="hub-code">S-16</span>
-                <strong>Khách chấm sản phẩm qua phiếu QR</strong>
-                <span class="pill" data-k="warn">Phiếu 73c</span>
-              </div>
-              <p class="hub-screen-desc">Mở trực tiếp từ phiếu QR, không cần đăng nhập, ẩn tên học sinh (GD-14), mỗi tiêu chí một hàng 3 sao to, nút "Gửi" luôn ở đáy màn hình.</p>
-            </div>
-            <a class="btn btn-primary" href="khach.html">Mở S-16</a>
-          </li>
-
-          <li class="hub-screen-item">
-            <div class="hub-screen-info">
-              <div class="hub-screen-title">
-                <span class="hub-code">S-14</span>
-                <strong>Màn chiếu bảng xếp hạng &amp; hộp duyệt</strong>
-                <span class="pill" data-k="warn">Phiếu 73c</span>
-              </div>
-              <p class="hub-screen-desc">Xem kết quả lượt chấm của khách cập nhật lên bảng xếp hạng (nhóm dưới 3 lượt ghi "Chưa xếp hạng") và hộp duyệt chữ tự gõ.</p>
-            </div>
-            <a class="btn" href="trung-bay.html">Mở S-14</a>
-          </li>
-        </ul>
-      </section>
-
-    </div>
+<body>
+  <main class="catalog">
+    <section class="intro" aria-labelledby="title">
+      <div class="eyebrow">Happy STEAM Lab · BRD v0.2 · Phiếu 76-2</div>
+      <h1 id="title">Mục lục màn hình mẫu</h1>
+      <p>Thử dữ liệu Lớp 1A2 (28 học sinh) theo vai, theo luồng F-01 đến F-14 hoặc theo màn S-01 đến S-17. Các trang đã có dùng chung dữ liệu <code>mock.76.state</code>; chọn “Đặt lại dữ liệu mẫu” ở thanh trên để trở về ban đầu.</p>
+      <p class="note">Bước 76-2 chuẩn bị dữ liệu và khung chung. Những màn cần tạo mới ở bước 76-3 được đánh dấu rõ, chưa có bản mock để mở.</p>
+    </section>
+    <nav class="toc" aria-label="Đến mục lục"><a href="#by-role">Theo vai</a><a href="#by-flow">Đi thử luồng</a><a href="#by-screen">Theo màn S-01–S-17</a></nav>
+    <section id="by-role" aria-labelledby="role-title"><h2 class="heading" id="role-title">Chọn theo vai</h2><div class="roles" id="roles"></div></section>
+    <section id="by-flow" aria-labelledby="flow-title"><h2 class="heading" id="flow-title">Đi thử luồng F-01–F-14</h2><p class="note">Mỗi luồng dẫn tới bước mock hiện có gần nhất; bước chưa được xây dựng được ghi trong thẻ.</p><div class="flow-grid" id="flows"></div></section>
+    <section id="by-screen" aria-labelledby="screen-title"><h2 class="heading" id="screen-title">Toàn bộ 17 màn hình</h2><div class="table-wrap"><table><thead><tr><th>Màn</th><th>Vai</th><th>Chức năng</th><th>Bản mẫu</th></tr></thead><tbody id="screens"></tbody></table></div></section>
+    <p class="footer-note">Đây là bản mô phỏng dùng dữ liệu giả trong trình duyệt. Liên kết “Trang thật” chỉ dùng để đối chiếu, có thể yêu cầu đăng nhập hoặc Supabase.</p>
   </main>
-
+  <script src="data.js"></script><script src="api.js"></script><script src="shell.js"></script>
+  <script>
+    'use strict';
+    const pages = [
+      ['S-01','Học sinh','Vào học: mã buổi và chọn tên',null,'../vao-hoc.html'],
+      ['S-02','Học sinh','Chọn bài mở hoặc khóa',null,'../index.html'],
+      ['S-03','Học sinh','Bài mô hình, ba chặng và lập trình',null,'../bai.html?id=lop1-bai09'],
+      ['S-04','Học sinh','Sổ dự án nhóm',null,'../lop1-du-an.html'],
+      ['S-05','Giáo viên','Lớp, lịch tuần, tạo lớp',null,'../giao-vien.html'],
+      ['S-06','Giáo viên','Mở buổi, duyệt máy',null,'../giao-vien.html'],
+      ['S-07','Giáo viên','Bảng lớp và chấm bài','giao-vien-lop.html#s07'],
+      ['S-08','Giáo viên','Chia nhóm và phân vai','giao-vien-lop.html#s08'],
+      ['S-09','Giáo viên','In phiếu mời phụ huynh','phieu-moi.html'],
+      ['S-10','Phụ huynh','Mã mời, liên kết, đồng ý GD-14','phu-huynh.html'],
+      ['S-11','Phụ huynh','Xem tiến độ, điểm và dự án của con','phu-huynh.html'],
+      ['S-12','Trưng bày','Phòng trưng bày',null,'../lop1-trung-bay.html'],
+      ['S-13','Giáo viên','Xuất bảng CSV UTF-8','giao-vien-lop.html#s13'],
+      ['S-14','Giáo viên','Chuẩn bị, mở/đóng và duyệt nhận xét','trung-bay.html#s14'],
+      ['S-15','Học sinh','Chấm sao cho nhóm khác','trung-bay.html#s15'],
+      ['S-16','Khách','Chấm sao qua phiếu QR','khach.html'],
+      ['S-17','Học sinh','Mọi người nói gì về dự án','trung-bay.html#s17']
+    ];
+    const roles = [
+      {id:'student',name:'Học sinh',device:'Máy tính bảng 1024 × 768',codes:['S-01','S-02','S-03','S-04','S-15','S-17']},
+      {id:'teacher',name:'Giáo viên',device:'Máy tính 1366 px · Máy chiếu',codes:['S-05','S-06','S-07','S-08','S-09','S-13','S-14']},
+      {id:'parent',name:'Phụ huynh',device:'Điện thoại 375 px',codes:['S-10','S-11']},
+      {id:'guest',name:'Khách',device:'Điện thoại 375 px · Không đăng nhập',codes:['S-16']}
+    ];
+    const flows = [
+      ['F-01','Giáo viên tạo lớp','S-05 → S-09', 'S-05 chờ 76-3b','S-09'],
+      ['F-02','Mở buổi học trên lớp','S-06 → S-01', 'S-06 và S-01 chờ 76-3','S-07'],
+      ['F-03','Phụ huynh liên kết','S-09 → S-10 → S-01','Chế độ học sinh S-01 chờ 76-3a','S-10'],
+      ['F-04','Học sinh làm bài mô hình','S-02 → S-03','Cả hai màn chờ 76-3a',null],
+      ['F-05','Dự án nhóm','S-08 → S-04 → S-12','S-04 và S-12 chờ 76-3','S-08'],
+      ['F-06','Giáo viên chấm','S-07 → S-08','Đã có bảng chấm và nhóm','S-07'],
+      ['F-07','Xuất kết quả','S-13','Có xuất CSV mẫu','S-13'],
+      ['F-08','Phụ huynh xem kết quả','S-11','Đọc dữ liệu chấm chung','S-11'],
+      ['F-09','Sửa sai','S-01 → S-07','“Không phải em” chờ 76-3a','S-07'],
+      ['F-10','Lập trình kéo thả hai kiểu','S-03 → S-04','Chờ 76-3a',null],
+      ['F-11','Giáo viên mở buổi trưng bày','S-14 → Màn chiếu','Đã có bản xem thử','S-14'],
+      ['F-12','Các bạn chấm nhóm khác','S-15','Đã có bản chấm sao','S-15'],
+      ['F-13','Khách chấm qua phiếu QR','S-16','Đã có bản chấm sao','S-16'],
+      ['F-14','Duyệt và đọc nhận xét','S-14 → S-17 → S-11','Có bản duyệt và đọc nhận xét','S-14']
+    ];
+    const byCode = Object.fromEntries(pages.map(p => [p[0],p]));
+    const link = (code,label) => byCode[code][3] ? `<a class="action" href="${byCode[code][3]}">${label || 'Mở '+code}</a>` : '<span class="wait">Chờ 76-3</span>';
+    document.getElementById('roles').innerHTML = roles.map(role => `<article class="role" id="role-${role.id}"><h3>${role.name}</h3><small>${role.device}</small><p>${role.codes.join(' · ')}</p>${role.codes.map(code => byCode[code][3] ? `<a class="action" href="${byCode[code][3]}">${code}</a>` : '').join('')}<p class="note">${role.codes.filter(code => !byCode[code][3]).length} màn đang chờ 76-3.</p></article>`).join('');
+    document.getElementById('flows').innerHTML = flows.map(([code,title,path,note,entry]) => `<article class="flow"><span class="code">${code}</span><h3>${title}</h3><p>${path}</p><p class="note">${note}</p>${entry ? link(entry,'Đi thử luồng') : '<span class="wait">Chờ màn mock 76-3</span>'}</article>`).join('');
+    document.getElementById('screens').innerHTML = pages.map(([code,role,title,url,real]) => `<tr><td><span class="code">${code}</span></td><td>${role}</td><td>${title}</td><td>${url ? `<a href="${url}">Mở mock</a>` : `<span class="wait">Chờ 76-3</span>${real ? ` · <a href="${real}">Trang thật</a>` : ''}`}</td></tr>`).join('');
+  </script>
 </body>
 </html>

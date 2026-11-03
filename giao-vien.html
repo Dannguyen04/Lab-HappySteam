@@ -49,6 +49,10 @@
       <span>Đã đăng nhập: <strong id="t-user"></strong></span>
       <button type="button" class="btn" id="t-logout">Đăng xuất</button>
     </div>
+    <section id="t-invitations" class="t-subcard" hidden aria-label="Lời mời phụ trách lớp">
+      <h2>Lời mời tham gia lớp</h2>
+      <ul id="t-invitation-list" class="t-manage-list"></ul>
+    </section>
     <div class="t-row"><h2>Lớp của tôi</h2><button type="button" class="btn btn-primary" id="t-new-class">+ Tạo lớp</button></div>
     <ul class="t-classes" id="t-classes"></ul>
     <p id="t-empty" hidden>Chưa có lớp</p>
@@ -57,8 +61,8 @@
       <label for="t-class-name">Tên lớp</label>
       <input id="t-class-name" required maxlength="80" placeholder="1A – 2026">
       <div class="t-columns">
-        <label>Khối <select id="t-grade"><option value="1">Lớp 1</option><option value="3">Lớp 3</option></select></label>
-        <label>Năm học <input id="t-school-year" required maxlength="20" placeholder="2026-2027"></label>
+        <div class="t-field"><label for="t-grade">Khối</label><select id="t-grade"><option value="1">Lớp 1</option><option value="3">Lớp 3</option></select></div>
+        <div class="t-field"><label for="t-school-year">Năm học</label><input id="t-school-year" required maxlength="20" placeholder="2026-2027"></div>
       </div>
       <label for="t-week-one">Thứ Hai của tuần học đầu tiên</label>
       <input id="t-week-one" type="date" required>
@@ -71,8 +75,49 @@
       <div id="t-roster-editor" class="t-roster-editor"></div>
       <button type="submit" class="btn btn-primary" id="t-save-class">Lưu lớp</button>
     </form>
+    <section id="t-management" class="t-subcard" hidden>
+      <div class="t-row"><h2 id="t-management-title">Quản lý lớp</h2><button type="button" class="btn" id="t-management-close">Đóng</button></div>
+      <p id="t-management-message" class="t-hint" role="status" aria-live="polite"></p>
+      <div id="t-owner-tools" hidden>
+        <h3>Vòng đời và giáo viên</h3>
+        <div class="t-actions"><button type="button" class="btn" id="t-change-status">Kết thúc lớp</button></div>
+        <form id="t-invite-assistant" class="t-inline-form">
+          <label for="t-assistant-email">Mời giáo viên phụ bằng email</label>
+          <input id="t-assistant-email" type="email" required placeholder="giaovien@truong.edu.vn">
+          <button class="btn btn-primary" type="submit">Gửi lời mời</button>
+        </form>
+        <h3>Giáo viên đang phụ trách</h3>
+        <ul id="t-staff-list" class="t-manage-list"></ul>
+        <h3>Lời mời chưa phản hồi</h3>
+        <ul id="t-pending-invites" class="t-manage-list"></ul>
+      </div>
+      <button type="button" id="t-leave-class" class="btn" hidden>Rời lớp</button>
+      <div class="t-manage-group">
+        <h3>Mã mời phụ huynh</h3>
+        <p class="t-hint">Phiếu chỉ chứa tên gọi ngắn, biểu tượng con vật và mã 8 ký tự; không in họ tên thật.</p>
+        <button type="button" class="btn btn-primary" id="t-print-slips">Xem và in phiếu mời A4</button>
+      </div>
+      <form id="t-unlock-form" class="t-inline-form">
+        <label for="t-unlock-lesson">Mở sớm bài học cho lớp</label>
+        <select id="t-unlock-lesson" required></select>
+        <button class="btn" type="submit">Mở bài</button>
+      </form>
+      <div id="t-roster-management" hidden>
+        <h3>Ghi danh học sinh</h3>
+        <p class="t-hint">Có thể thêm lại em đã rời lớp, hoặc chuyển em đang học sang một lớp khác cùng khối mà thầy cô làm chủ lớp.</p>
+        <ul id="t-student-list" class="t-manage-list"></ul>
+      </div>
+    </section>
+    <section id="t-gradebook" class="t-subcard" hidden aria-labelledby="t-gradebook-title">
+      <div class="t-row"><h2 id="t-gradebook-title">Bảng lớp</h2><button type="button" id="t-gradebook-close" class="btn">Đóng bảng lớp</button></div>
+      <p class="t-hint">Học sinh × bài học · chỉ xem trạng thái hiện có. Chấm bài sẽ được bổ sung sau.</p>
+      <p id="t-gradebook-status" class="t-hint" role="status" aria-live="polite"></p>
+      <div class="t-gradebook-scroll" tabindex="0" role="region" aria-label="Bảng trạng thái học sinh theo bài học, cuộn ngang để xem thêm">
+        <table class="t-gradebook-table" id="t-gradebook-table"></table>
+      </div>
+    </section>
     <section id="t-session" class="t-subcard t-projector" hidden>
-      <div class="t-row"><h2 id="t-session-title">Buổi học</h2><button type="button" id="t-close-session" class="btn">Kết thúc buổi</button></div>
+      <div class="t-row"><h2 id="t-session-title">Buổi học</h2><div class="t-actions"><button type="button" id="t-project-toggle" class="btn" aria-pressed="false">Chiếu toàn màn hình</button><button type="button" id="t-close-session" class="btn">Kết thúc buổi</button></div></div>
       <p>Học sinh mở <strong>vao-hoc.html</strong> rồi nhập mã:</p>
       <div id="t-join-code" class="t-join-code" aria-label="Mã vào buổi"></div>
       <p id="t-session-expiry" class="t-hint"></p>
@@ -84,6 +129,10 @@
     </section>
   </section>
 </div>
+<section id="t-slips" hidden aria-label="Phiếu mời phụ huynh để in">
+  <div class="t-print-tools"><h2 id="t-slips-title">Phiếu mời phụ huynh</h2><button type="button" class="btn" id="t-slips-print">In A4</button><button type="button" class="btn" id="t-slips-close">Đóng</button></div>
+  <div id="t-slips-grid"></div>
+</section>
 <script type="module" src="js/teacher-auth.js"></script>
 </body>
 </html>

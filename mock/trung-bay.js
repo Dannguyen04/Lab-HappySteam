@@ -2,257 +2,20 @@
 (function () {
   'use strict';
 
-  const STORAGE_KEY = 'mock.trungBay.v1';
+  const STORAGE_KEY = MockAPI.KEY;
   const GUEST_TICKET_KEY = 'mock.trungBay.currentTicket';
 
   // Bộ 12 câu mẫu từ docs/ba/cau-mau.md (GD-19)
-  const PRESET_COMMENTS = [
-    { id: 'K1', kind: 'khen', text: 'Ý tưởng của nhóm hay quá!' },
-    { id: 'K2', kind: 'khen', text: 'Nhóm giúp được người khác, tuyệt vời!' },
-    { id: 'K3', kind: 'khen', text: 'Mô hình chạy rất êm.' },
-    { id: 'K4', kind: 'khen', text: 'Mô hình chắc chắn, lắp khéo ghê!' },
-    { id: 'K5', kind: 'khen', text: 'Chương trình của nhóm thông minh quá!' },
-    { id: 'K6', kind: 'khen', text: 'Poster đẹp và dễ hiểu.' },
-    { id: 'K7', kind: 'khen', text: 'Nhóm kể về dự án rất hay.' },
-    { id: 'K8', kind: 'khen', text: 'Cả nhóm làm việc cùng nhau rất vui!' },
-    { id: 'G1', kind: 'gop_y', text: 'Nhóm thử cho mô hình chạy nhanh hơn nhé.' },
-    { id: 'G2', kind: 'gop_y', text: 'Nhóm thử thêm một chi tiết sáng tạo nữa nhé.' },
-    { id: 'G3', kind: 'gop_y', text: 'Mình muốn nghe nhóm kể thêm về dự án.' },
-    { id: 'G4', kind: 'gop_y', text: 'Nhóm thử vẽ thêm hình lên poster nhé.' }
-  ];
-
-  // Danh sách 28 học sinh lớp 1A2 (tên gọi ngắn tiếng Việt + con vật đại diện không trùng, chia 7 nhóm × 4 em)
-  const STUDENTS_1A2 = [
-    // Nhóm 1: Cá Voi
-    { id: 'hs01', nickname: 'An B.', animal: 'Cá heo', groupId: 'g1', consent: true },
-    { id: 'hs02', nickname: 'Bình', animal: 'Gấu trúc', groupId: 'g1', consent: true },
-    { id: 'hs03', nickname: 'Châu', animal: 'Thỏ trắng', groupId: 'g1', consent: true },
-    { id: 'hs04', nickname: 'Dũng', animal: 'Sư tử', groupId: 'g1', consent: true },
-    // Nhóm 2: Ong Vàng
-    { id: 'hs05', nickname: 'Đạt', animal: 'Hổ con', groupId: 'g2', consent: true },
-    { id: 'hs06', nickname: 'Giang', animal: 'Cáo đỏ', groupId: 'g2', consent: true },
-    { id: 'hs07', nickname: 'Hà', animal: 'Mèo mướp', groupId: 'g2', consent: true },
-    { id: 'hs08', nickname: 'Hải', animal: 'Cún con', groupId: 'g2', consent: true },
-    // Nhóm 3: Tàu Lá
-    { id: 'hs09', nickname: 'Hân', animal: 'Gấu túi', groupId: 'g3', consent: true },
-    { id: 'hs10', nickname: 'Hiếu', animal: 'Voi con', groupId: 'g3', consent: true },
-    { id: 'hs11', nickname: 'Hoàng', animal: 'Chim cú', groupId: 'g3', consent: true },
-    { id: 'hs12', nickname: 'Huy', animal: 'Chim cánh cụt', groupId: 'g3', consent: true },
-    // Nhóm 4: Mây Xanh
-    { id: 'hs13', nickname: 'Khang', animal: 'Rùa xanh', groupId: 'g4', consent: true },
-    { id: 'hs14', nickname: 'Khánh', animal: 'Hươu cao cổ', groupId: 'g4', consent: true },
-    { id: 'hs15', nickname: 'Khôi', animal: 'Ngựa vằn', groupId: 'g4', consent: true },
-    { id: 'hs16', nickname: 'Lam', animal: 'Sóc nâu', groupId: 'g4', consent: false },
-    // Nhóm 5: Sao Băng
-    { id: 'hs17', nickname: 'Linh', animal: 'Nhím nhỏ', groupId: 'g5', consent: true },
-    { id: 'hs18', nickname: 'Long', animal: 'Rái cá', groupId: 'g5', consent: true },
-    { id: 'hs19', nickname: 'Mai', animal: 'Gấu nâu', groupId: 'g5', consent: true },
-    { id: 'hs20', nickname: 'Minh C.', animal: 'Ếch cốm', groupId: 'g5', consent: true },
-    // Nhóm 6: Tia Chớp
-    { id: 'hs21', nickname: 'Minh T.', animal: 'Khỉ con', groupId: 'g6', consent: true },
-    { id: 'hs22', nickname: 'My', animal: 'Bạch tuộc', groupId: 'g6', consent: true },
-    { id: 'hs23', nickname: 'Nam', animal: 'Kỳ lân', groupId: 'g6', consent: true },
-    { id: 'hs24', nickname: 'Ngân', animal: 'Bướm vàng', groupId: 'g6', consent: true },
-    // Nhóm 7: Giọt Sương (ĐANG LÀM)
-    { id: 'hs25', nickname: 'Ngọc', animal: 'Ong mật', groupId: 'g7', consent: true },
-    { id: 'hs26', nickname: 'Nhi', animal: 'Bọ rùa', groupId: 'g7', consent: true },
-    { id: 'hs27', nickname: 'Phong', animal: 'Ốc sên', groupId: 'g7', consent: true },
-    { id: 'hs28', nickname: 'Quân', animal: 'Công xanh', groupId: 'g7', consent: false }
-  ];
-
-  function createDefaultState() {
-    return {
-      session: {
-        id: 'tb-1a2-hk1',
-        className: '1A2',
-        teacherName: 'Cô Nguyễn Thị Lan',
-        title: 'Trưng bày Học kì I: Hành trình dòng nước & Liên lạc vũ trụ',
-        state: 'DANG_MO', // CHUAN_BI | DANG_MO | DA_DONG
-        showLeaderboard: true,
-        openedAt: '2026-11-02T08:00:00+07:00',
-        autoCloseAt: '2026-11-03T08:00:00+07:00',
-        criteria: ['Ý tưởng', 'Mô hình chạy được', 'Trình bày']
-      },
-      groups: [
-        {
-          id: 'g1',
-          name: 'Cá Voi',
-          projectTitle: 'Trạm phao vệ tinh báo mực nước sông',
-          baseLesson: 'Bài 9 · Thông tin liên lạc vũ trụ (NV1–NV5)',
-          idea: 'Gắn anten vệ tinh lên phao nổi để phát tín hiệu cảnh báo về đất liền khi nước sông dâng cao.',
-          upgrade: 'Thêm còi báo và chương trình quay anten 3 hướng bắt sóng.',
-          cover: '../assets/covers/lop1-bai09.jpg',
-          status: 'DA_NOP',
-          teacherGrade: 'HTT',
-          teacherComment: 'Nhóm kết hợp tốt mô hình vệ tinh Bài 9 với chủ đề dòng nước, chương trình chạy đủ 5 nhiệm vụ.'
-        },
-        {
-          id: 'g2',
-          name: 'Ong Vàng',
-          projectTitle: 'Cối xoay gió bơm nước tưới vườn trường',
-          baseLesson: 'Bài 10 · Bạn gió tinh nghịch',
-          idea: 'Dùng sức gió quay cánh quạt để bơm nước tự động từ bể chứa ra luống rau của lớp.',
-          upgrade: 'Lắp thêm nút bấm đổi 2 tốc độ quay nhanh và chậm.',
-          cover: '../assets/covers/lop1-bai10.jpg',
-          status: 'DA_NOP',
-          teacherGrade: 'HTT',
-          teacherComment: 'Khung cối xoay chắc chắn, các em chia việc rõ ràng và giải thích nguyên lý mạch lạc.'
-        },
-        {
-          id: 'g3',
-          name: 'Tàu Lá',
-          projectTitle: 'Guồng nước tự động vớt lá và rác mặt hồ',
-          baseLesson: 'Bài 11 · Nước từ đâu đến',
-          idea: 'Bánh xe nước vừa quay tạo dòng chảy vừa đưa lưới nhỏ vớt lá khô trên mặt hồ công viên.',
-          upgrade: 'Thêm khay đựng lá phía sau bánh răng truyền động.',
-          cover: '../assets/covers/lop1-bai11.jpg',
-          status: 'DA_NOP',
-          teacherGrade: 'HTT',
-          teacherComment: 'Ý tưởng gần gũi và thiết thực, mô hình guồng quay êm, poster vẽ sơ đồ rất sáng rõ.'
-        },
-        {
-          id: 'g4',
-          name: 'Mây Xanh',
-          projectTitle: 'Cửa đê thông minh ngăn lũ về làng',
-          baseLesson: 'Bài 12 · Thiên tai, lũ lụt – Đê ngăn lũ',
-          idea: 'Khi cảm biến phát hiện mực nước dâng, động cơ tự hạ cửa đê xuống để bảo vệ nhà dân.',
-          upgrade: 'Thêm đèn hiệu cảnh báo trên đỉnh trụ đê.',
-          cover: '../assets/covers/lop1-bai12.jpg',
-          status: 'DA_NOP',
-          teacherGrade: 'HT',
-          teacherComment: 'Mô hình cửa đê đóng mở đúng lúc, nhóm cần luyện nói to hơn khi chia sẻ.'
-        },
-        {
-          id: 'g5',
-          name: 'Sao Băng',
-          projectTitle: 'Xe dọn băng tuyết mở đường cấp nước',
-          baseLesson: 'Bài 13 · Hiện tượng thiên nhiên – Tuyết rơi',
-          idea: 'Xe tự hành gắn lưỡi gạt dọn tuyết chắn đường ống dẫn nước sạch trên vùng núi lạnh.',
-          upgrade: 'Lập trình cảm biến dừng lại khi gặp chướng ngại vật lớn.',
-          cover: '../assets/covers/lop1-bai13.jpg',
-          status: 'DA_NOP',
-          teacherGrade: 'HT',
-          teacherComment: 'Xe chạy khỏe, phần lập trình cảm biến hoạt động ổn định.'
-        },
-        {
-          id: 'g6',
-          name: 'Tia Chớp',
-          projectTitle: 'Robot Milo chở bình nước sạch vượt đồi',
-          baseLesson: 'Bài 3 · Robot thám hiểm',
-          idea: 'Robot Milo kéo rơ-moóc chở bình nước sạch lên đồi cao giúp các chú kiểm lâm.',
-          upgrade: 'Gia cố khung giữ bình nước không bị nghiêng khi leo dốc.',
-          cover: '../assets/covers/lop1-bai03.jpg',
-          status: 'DA_NOP',
-          teacherGrade: 'HT',
-          teacherComment: 'Mô hình Milo kéo hàng tốt, nhóm hợp tác vui vẻ.'
-        },
-        {
-          id: 'g7',
-          name: 'Giọt Sương',
-          projectTitle: 'Ốc sên cảm biến đo độ ẩm đất vườn',
-          baseLesson: 'Bài 19 · Ốc sên quý hiếm',
-          idea: 'Robot ốc sên bò quanh bồn cây và phát tiếng kêu báo hiệu khi đất bị khô.',
-          upgrade: 'Đang vẽ hoàn thiện mục kết quả thử nghiệm trên poster.',
-          cover: '../assets/covers/lop1-bai19.jpg',
-          status: 'DANG_LAM', // BR-TB-08: Nhóm ĐANG LÀM không hiện trong lưới chấm
-          teacherGrade: '',
-          teacherComment: ''
-        }
-      ],
-      tickets: [
-        { no: 1, code: 'K7M4P9X2', status: 'DA_DUNG', firstUsedAt: '08:25' },
-        { no: 2, code: 'R3N8W5T4', status: 'DA_DUNG', firstUsedAt: '08:30' },
-        { no: 3, code: 'B6Y2H8J5', status: 'DA_DUNG', firstUsedAt: '08:34' },
-        { no: 4, code: 'P4Q9D7F3', status: 'CHUA_DUNG', firstUsedAt: '' },
-        { no: 5, code: 'H9V2C6B8', status: 'DA_THU_HOI', firstUsedAt: '08:28' },
-        { no: 6, code: 'M5X3Z8N7', status: 'CHUA_DUNG', firstUsedAt: '' }
-      ],
-      // Các lượt chấm khớp chính xác số liệu ví dụ BRD 6.4 và 6.6:
-      // - Tàu Lá (g3): 4 bạn (3/2/3, 3/3/2, 2/2/2, 3/2/3 = 30 sao) + 2 khách (2/1/3, 3/2/2 = 13 sao) + 1 phiếu thu hồi (1/1/1)
-      //   -> TB Bạn: 2,8 / 2,3 / 2,5 (TB 2,5); TB Khách: 2,5 / 1,5 / 2,5 (TB 2,2); Xếp hạng: 6 lượt, 43 sao -> 2,4 (Hạng 3)
-      // - Cá Voi (g1): 7 lượt (5 bạn + 2 khách), tổng 52 sao -> 52/21 = 2,48 -> 2,5 (Hạng 1)
-      // - Ong Vàng (g2): 10 lượt (7 bạn + 3 khách), tổng 72 sao -> 72/30 = 2,4 (Hạng 2, 10 lượt)
-      // - Sao Băng (g5): 4 lượt (3 bạn + 1 khách), tổng 26 sao -> 26/12 = 2,17 -> 2,2 (Hạng 4)
-      // - Tia Chớp (g6): 3 lượt (2 bạn + 1 khách), tổng 19 sao -> 19/9 = 2,11 -> 2,1 (Hạng 5)
-      // - Mây Xanh (g4): 2 lượt (1 bạn + 1 khách), tổng 18 sao -> < 3 lượt -> "Chưa xếp hạng" (Đứng cuối bảng)
-      votes: [
-        // --- Nhóm Tàu Lá (g3) ---
-        { id: 'v-g3-b1', groupId: 'g3', source: 'BAN', raterId: 'hs01', stars: [3, 2, 3], presets: ['K1', 'K6'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:20' },
-        { id: 'v-g3-b2', groupId: 'g3', source: 'BAN', raterId: 'hs05', stars: [3, 3, 2], presets: ['K3'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:22' },
-        { id: 'v-g3-b3', groupId: 'g3', source: 'BAN', raterId: 'hs13', stars: [2, 2, 2], presets: ['G1'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:24' },
-        { id: 'v-g3-b4', groupId: 'g3', source: 'BAN', raterId: 'hs17', stars: [3, 2, 3], presets: ['K2', 'K8'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:26' },
-        { id: 'v-g3-k1', groupId: 'g3', source: 'KHACH', raterId: 'K7M4P9X2', stars: [2, 1, 3], presets: ['K1', 'K7'], text: 'Mô hình guồng nước quay đều, các con thuyết trình rất tự tin và lễ phép.', textStatus: 'DA_DUYET', updatedAt: '08:27' },
-        { id: 'v-g3-k2', groupId: 'g3', source: 'KHACH', raterId: 'R3N8W5T4', stars: [3, 2, 2], presets: ['K6', 'G1'], text: 'Nếu thêm phễu hứng rác rộng hơn một chút thì guồng nước sẽ vớt được nhiều lá hơn.', textStatus: 'CHO_DUYET', updatedAt: '08:31' },
-        { id: 'v-g3-k5', groupId: 'g3', source: 'KHACH', raterId: 'H9V2C6B8', stars: [1, 1, 1], presets: [], text: 'Thử bấm nhầm trên phiếu cũ.', textStatus: 'DA_AN', updatedAt: '08:29' },
-
-        // --- Nhóm Cá Voi (g1): 7 lượt = 52 sao (5 bạn = 37 sao, 2 khách = 15 sao) ---
-        { id: 'v-g1-b1', groupId: 'g1', source: 'BAN', raterId: 'hs05', stars: [3, 3, 2], presets: ['K5', 'K6'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:18' },
-        { id: 'v-g1-b2', groupId: 'g1', source: 'BAN', raterId: 'hs09', stars: [3, 2, 2], presets: ['K1'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:19' },
-        { id: 'v-g1-b3', groupId: 'g1', source: 'BAN', raterId: 'hs10', stars: [3, 3, 2], presets: ['K4', 'K8'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:21' },
-        { id: 'v-g1-b4', groupId: 'g1', source: 'BAN', raterId: 'hs13', stars: [2, 3, 2], presets: ['K3'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:23' },
-        { id: 'v-g1-b5', groupId: 'g1', source: 'BAN', raterId: 'hs21', stars: [2, 2, 3], presets: ['K7'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:25' },
-        { id: 'v-g1-k1', groupId: 'g1', source: 'KHACH', raterId: 'K7M4P9X2', stars: [3, 3, 2], presets: ['K1', 'K5'], text: 'Ứng dụng bài học Thông tin liên lạc vũ trụ vào cảnh báo lũ rất sáng tạo!', textStatus: 'DA_DUYET', updatedAt: '08:28' },
-        { id: 'v-g1-k2', groupId: 'g1', source: 'KHACH', raterId: 'B6Y2H8J5', stars: [2, 3, 2], presets: ['K4'], text: 'Anten vệ tinh quay đổi hướng mượt, các con hiểu rõ từng khối lệnh.', textStatus: 'CHO_DUYET', updatedAt: '08:35' },
-        { id: 'v-g1-gv', groupId: 'g1', source: 'GIAO_VIEN', raterId: 'gv-lan', stars: [3, 3, 3], presets: ['K5', 'K6'], text: 'Nhóm vận dụng xuất sắc kiến thức Bài 9.', textStatus: 'DA_DUYET', updatedAt: '08:40' },
-
-        // --- Nhóm Ong Vàng (g2): 10 lượt = 72 sao (7 bạn = 51 sao, 3 khách = 21 sao) ---
-        { id: 'v-g2-b1', groupId: 'g2', source: 'BAN', raterId: 'hs01', stars: [3, 2, 3], presets: ['K2', 'K4'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:15' },
-        { id: 'v-g2-b2', groupId: 'g2', source: 'BAN', raterId: 'hs02', stars: [2, 3, 2], presets: ['K3'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:16' },
-        { id: 'v-g2-b3', groupId: 'g2', source: 'BAN', raterId: 'hs09', stars: [3, 2, 2], presets: ['K6'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:17' },
-        { id: 'v-g2-b4', groupId: 'g2', source: 'BAN', raterId: 'hs11', stars: [3, 3, 2], presets: ['K1', 'K8'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:18' },
-        { id: 'v-g2-b5', groupId: 'g2', source: 'BAN', raterId: 'hs14', stars: [2, 2, 3], presets: ['K7'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:19' },
-        { id: 'v-g2-b6', groupId: 'g2', source: 'BAN', raterId: 'hs18', stars: [3, 2, 2], presets: ['G2'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:20' },
-        { id: 'v-g2-b7', groupId: 'g2', source: 'BAN', raterId: 'hs22', stars: [2, 3, 2], presets: ['K4'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:21' },
-        { id: 'v-g2-k1', groupId: 'g2', source: 'KHACH', raterId: 'K7M4P9X2', stars: [3, 2, 2], presets: ['K2', 'K4'], text: 'Cối xoay gió rất cứng cáp, ý tưởng tưới rau sân trường rất đáng khen.', textStatus: 'DA_DUYET', updatedAt: '08:26' },
-        { id: 'v-g2-k2', groupId: 'g2', source: 'KHACH', raterId: 'R3N8W5T4', stars: [2, 3, 2], presets: ['K3'], text: 'Các con phối hợp nhịp nhàng khi bấm nút đổi tốc độ gió.', textStatus: 'CHO_DUYET', updatedAt: '08:32' },
-        { id: 'v-g2-k3', groupId: 'g2', source: 'KHACH', raterId: 'B6Y2H8J5', stars: [2, 2, 3], presets: ['K7'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:36' },
-
-        // --- Nhóm Mây Xanh (g4): 2 lượt = 18 sao (< 3 lượt -> Chưa xếp hạng) ---
-        { id: 'v-g4-b1', groupId: 'g4', source: 'BAN', raterId: 'hs01', stars: [3, 3, 3], presets: ['K1', 'K4'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:29' },
-        { id: 'v-g4-k1', groupId: 'g4', source: 'KHACH', raterId: 'B6Y2H8J5', stars: [3, 3, 3], presets: ['K2'], text: 'Mô hình cửa đê rất có ý nghĩa với vùng hay ngập lụt.', textStatus: 'DA_DUYET', updatedAt: '08:37' },
-
-        // --- Nhóm Sao Băng (g5): 4 lượt = 26 sao -> 2,2 ---
-        { id: 'v-g5-b1', groupId: 'g5', source: 'BAN', raterId: 'hs02', stars: [2, 2, 2], presets: ['K3'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:22' },
-        { id: 'v-g5-b2', groupId: 'g5', source: 'BAN', raterId: 'hs06', stars: [3, 2, 2], presets: ['K4'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:24' },
-        { id: 'v-g5-b3', groupId: 'g5', source: 'BAN', raterId: 'hs10', stars: [2, 3, 2], presets: ['G4'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:27' },
-        { id: 'v-g5-k1', groupId: 'g5', source: 'KHACH', raterId: 'R3N8W5T4', stars: [2, 2, 2], presets: ['K5'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:33' },
-
-        // --- Nhóm Tia Chớp (g6): 3 lượt = 19 sao -> 2,1 ---
-        { id: 'v-g6-b1', groupId: 'g6', source: 'BAN', raterId: 'hs03', stars: [2, 2, 2], presets: ['K8'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:23' },
-        { id: 'v-g6-b2', groupId: 'g6', source: 'BAN', raterId: 'hs07', stars: [3, 2, 2], presets: ['K4'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:25' },
-        { id: 'v-g6-k1', groupId: 'g6', source: 'KHACH', raterId: 'K7M4P9X2', stars: [2, 2, 2], presets: ['G1'], text: '', textStatus: 'KHONG_CO', updatedAt: '08:30' }
-      ]
-    };
-  }
-
+  const PRESET_COMMENTS = MockData.presetComments;
+  let STUDENTS_1A2 = MockAPI.read('exhibition').students;
   let state = loadState();
 
-  function loadState() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (parsed && parsed.session && Array.isArray(parsed.groups) && Array.isArray(parsed.votes)) {
-          return parsed;
-        }
-      }
-    } catch (_) {
-      // Bỏ qua lỗi đọc bộ nhớ
-    }
-    const fresh = createDefaultState();
-    saveState(fresh);
-    return fresh;
-  }
-
+  function loadState() { const value = MockAPI.read('exhibition'); STUDENTS_1A2 = value.students; return value; }
   function saveState(nextState) {
     if (nextState) state = nextState;
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch (_) {
-      // Bỏ qua nếu trình duyệt chặn localStorage
-    }
+    state = MockAPI.write('exhibition', state);
+    STUDENTS_1A2 = state.students;
   }
-
   // ---------- Các hàm tính toán chuẩn theo BRD 6.4 & 6.6 ----------
   function roundHalfUp1(val) {
     return Math.floor(val * 10 + 0.5) / 10;
@@ -310,63 +73,7 @@
   }
 
   // BRD 6.6: Điểm xếp hạng trên màn chiếu (chỉ tính BAN + KHACH hợp lệ, < 3 lượt -> Chưa xếp hạng)
-  function calcProjectorLeaderboard() {
-    const critCount = state.session.criteria.length;
-    const submittedGroups = state.groups.filter(g => g.status === 'DA_NOP');
-    const items = submittedGroups.map(g => {
-      const peerVotes = getValidVotesForGroup(g.id, 'BAN');
-      const guestVotes = getValidVotesForGroup(g.id, 'KHACH');
-      const combined = [...peerVotes, ...guestVotes];
-      const voteCount = combined.length;
-      let totalStars = 0;
-      for (const v of combined) {
-        for (let c = 0; c < critCount; c++) {
-          totalStars += Number(v.stars[c] || 0);
-        }
-      }
-      const unranked = voteCount < 3 || critCount === 0;
-      const score = unranked ? null : roundHalfUp1(totalStars / (voteCount * critCount));
-      return {
-        group: g,
-        peerCount: peerVotes.length,
-        guestCount: guestVotes.length,
-        voteCount,
-        totalStars,
-        unranked,
-        score
-      };
-    });
-
-    items.sort((a, b) => {
-      if (a.unranked && !b.unranked) return 1;
-      if (!a.unranked && b.unranked) return -1;
-      if (a.unranked && b.unranked) return b.voteCount - a.voteCount;
-      if (b.score !== a.score) return b.score - a.score;
-      if (b.voteCount !== a.voteCount) return b.voteCount - a.voteCount;
-      return a.group.name.localeCompare(b.group.name, 'vi');
-    });
-
-    // Gán thứ hạng (bằng điểm và bằng số lượt thì cùng hạng)
-    let currentRank = 1;
-    items.forEach((item, idx) => {
-      if (item.unranked) {
-        item.rank = null;
-        return;
-      }
-      if (idx > 0 && !items[idx - 1].unranked) {
-        const prev = items[idx - 1];
-        if (prev.score === item.score && prev.voteCount === item.voteCount) {
-          item.rank = prev.rank;
-        } else {
-          item.rank = idx + 1;
-        }
-      } else {
-        item.rank = currentRank;
-      }
-    });
-
-    return items;
-  }
+  function calcProjectorLeaderboard() { return MockAPI.leaderboard(state); }
 
   // Âm báo nhẹ bằng Web Audio API & đọc câu mẫu bằng SpeechSynthesis
   function playTone(freq = 660, duration = 0.09) {
@@ -532,7 +239,7 @@
     });
 
     $('btn-reset-mock').addEventListener('click', () => {
-      saveState(createDefaultState());
+      saveState(MockAPI.reset().exhibition);
       s15EditingGroupId = null;
       renderAll();
       showToast('Đã khôi phục toàn bộ dữ liệu mẫu Lớp 1A2 về trạng thái chuẩn BRD.', 'ok');
@@ -733,7 +440,7 @@
         renderAll();
         showToast('Đã xóa tạm các lượt chấm và đưa buổi về CHUẨN BỊ. Thầy cô có thể sửa/thêm tiêu chí ngay!', 'warn');
       } else {
-        saveState(createDefaultState());
+        saveState(MockAPI.reset().exhibition);
         renderAll();
         showToast('Đã nạp lại các lượt chấm mẫu của Lớp 1A2.', 'ok');
       }

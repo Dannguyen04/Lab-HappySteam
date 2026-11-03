@@ -20,12 +20,14 @@
 .t-subcard { display: grid; gap: 12px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); padding: clamp(16px, 3vw, 24px); }
 .t-subcard h2, .t-subcard h3 { margin: 0; font-family: var(--f-display); }
 .t-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.t-columns label { display: grid; gap: 5px; }
+.t-columns .t-field { display: grid; gap: 5px; }
 .t-roster-editor { display: grid; gap: 7px; }
 .t-student-row { display: grid; grid-template-columns: 92px minmax(0, 1fr) auto; gap: 8px; }
 .t-student-row select { font-size: 24px; grid-column: 1; grid-row: 1; }
 .t-student-row input { grid-column: 2; grid-row: 1; }
 .t-student-row button { grid-column: 3; grid-row: 1; }
+.teacher .iconbtn, .t-student-row button { min-height: 44px; }
+.teacher a.iconbtn { display: inline-flex; align-items: center; color: var(--ink); text-decoration: none; }
 .t-student-row .t-name-hint { grid-column: 2 / -1; grid-row: 2; color: var(--bad); font-size: 12px; }
 .t-student-row input[aria-invalid="true"] { outline: 2px solid var(--bad); }
 .t-projector { background: var(--stage); text-align: center; }
@@ -33,4 +35,46 @@
 .t-device-list { padding: 0; margin: 0; list-style: none; display: grid; gap: 8px; text-align: left; }
 .t-device-list li { display: flex; align-items: center; flex-wrap: wrap; justify-content: space-between; gap: 10px; background: var(--surface); border: 1px solid var(--line); padding: 10px; border-radius: 10px; }
 .t-projector .t-hint { font-size: 14px; }
+.t-gradebook-scroll { max-width: 100%; overflow: auto; border: 1px solid var(--line); border-radius: 10px; }
+.t-gradebook-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; text-align: left; }
+.t-gradebook-table th, .t-gradebook-table td { min-width: 114px; padding: 10px 12px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--surface); white-space: nowrap; }
+.t-gradebook-table th { background: var(--sunk); font-weight: 700; }
+.t-gradebook-table th:first-child, .t-gradebook-table td:first-child { position: sticky; left: 0; z-index: 1; min-width: 150px; max-width: 190px; white-space: normal; }
+.t-gradebook-table thead th:first-child { z-index: 2; }
+.t-gradebook-table .is-graded { color: var(--ok); font-weight: 700; }
+.t-gradebook-table .is-unavailable { color: var(--muted); }
+.teacher.is-projecting { position: fixed; inset: 0; z-index: 1000; max-width: none; width: 100%; height: 100dvh; margin: 0; padding: 0; overflow: auto; background: var(--stage); }
+.teacher.is-projecting > .top, .teacher.is-projecting > #t-status, .teacher.is-projecting #t-home > :not(#t-session) { display: none !important; }
+.teacher.is-projecting #t-home { display: block; padding: 0; border: 0; background: transparent; }
+.teacher.is-projecting #t-session, #t-session:fullscreen { min-height: 100dvh; border: 0; border-radius: 0; padding: clamp(16px, 3vw, 36px); align-content: start; background: var(--stage); overflow: auto; }
+.teacher.is-projecting .t-join-code, #t-session:fullscreen .t-join-code { display: grid; place-items: center; min-height: 43dvh; font-size: clamp(78px, 20vw, 270px); letter-spacing: .08em; }
+body:has(.teacher.is-projecting) { overflow: hidden; }
+@media (max-width: 560px) { .teacher.is-projecting .t-join-code, #t-session:fullscreen .t-join-code { font-size: clamp(64px, 19vw, 110px); } }
 @media (max-width: 560px) { .t-columns { grid-template-columns: 1fr; } .t-student-row { grid-template-columns: 74px minmax(0, 1fr) auto; } .t-classes li .btn { min-height: 44px; } }
+.t-manage-list { list-style: none; margin: 8px 0 16px; padding: 0; display: grid; gap: 8px; }
+.t-manage-list li { background: var(--sunk); border: 1px solid var(--line); border-radius: 10px; padding: 10px; display: flex; align-items: center; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+.t-manage-list li > span { min-width: 0; overflow-wrap: anywhere; }
+.t-inline-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; margin: 12px 0; align-items: end; }
+.t-inline-form label { grid-column: 1 / -1; }
+.t-manage-group { margin: 16px 0; }
+#t-management h3 { margin: 12px 0 4px; }
+.t-manage-list-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.t-manage-list-actions .btn { min-height: 40px; }
+#t-slips[hidden], #t-slips [hidden] { display: none !important; }
+#t-slips { max-width: 210mm; margin: 20px auto; padding: 12px; background: white; color: #17222e; }
+.t-print-tools { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px; }
+.t-print-tools h2 { flex: 1; }
+#t-slips-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 3mm; }
+.t-slip { border: 1.5px dashed #777; border-radius: 4px; padding: 7mm 5mm; min-height: 62mm; break-inside: avoid; page-break-inside: avoid; display: flex; flex-direction: column; align-items: center; justify-content: space-between; text-align: center; }
+.t-slip h3 { font-size: 16px; margin: 0; }
+.t-slip .t-slip-code { font: 800 26px/1.2 monospace; letter-spacing: .10em; overflow-wrap: anywhere; }
+.t-slip p { font-size: 12px; margin: 4px 0; }
+@media (max-width: 560px) { .t-inline-form { grid-template-columns: 1fr; } #t-slips-grid { grid-template-columns: 1fr; } }
+@page { size: A4 portrait; margin: 12mm; }
+@media print {
+  body:has(#t-slips:not([hidden])) .wrap { display: none !important; }
+  body:has(#t-slips:not([hidden])) #t-slips { display: block !important; margin: 0; padding: 0; max-width: none; }
+  .t-print-tools { display: none !important; }
+  #t-slips-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 3mm; }
+  .t-slip { height: 62mm; min-height: 0; }
+}

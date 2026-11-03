@@ -6,20 +6,9 @@
   <title>Giáo viên · Lớp 1A2 · Bảng lớp, Nhóm dự án &amp; Xuất CSV · Happy STEAM</title>
   <link rel="stylesheet" href="../css/lab.css">
   <link rel="stylesheet" href="giao-vien-lop.css">
+  <link rel="stylesheet" href="shell.css">
 </head>
 <body class="mock-page">
-
-  <!-- Dải cố định góc trên theo quy chuẩn -->
-  <aside class="mock-banner" aria-label="Thông báo dữ liệu mẫu">
-    <div class="mock-banner-left">
-      <a class="mock-back-btn" href="index.html">← Danh sách màn hình</a>
-      <span class="mock-badge-sample">DỮ LIỆU MẪU – chưa lưu thật</span>
-      <span class="mock-banner-meta">Phiếu 73a · Giáo viên (1366 px) · Lưu tạm vào localStorage (mock.*)</span>
-    </div>
-    <div class="mock-banner-right">
-      <button type="button" class="mock-reset-btn" id="btn-reset-mock">Đặt lại dữ liệu mẫu</button>
-    </div>
-  </aside>
 
   <main class="gv-shell">
 
@@ -391,6 +380,9 @@
   <!-- Toast phản hồi -->
   <div class="gv-toast" id="gv-toast" role="status" aria-live="polite" hidden></div>
 
-  <script src="giao-vien-lop.js"></script>
+    <script src="data.js"></script>
+  <script src="api.js"></script>
+  <script src="shell.js"></script>
+<script src="giao-vien-lop.js"></script>
 </body>
 </html>

@@ -6,213 +6,14 @@
 (function () {
   'use strict';
 
-  const STORAGE_STUDENTS_KEY = 'mock.ph.students.v1';
-  const STORAGE_STATE_KEY = 'mock.ph.state.v1';
-
   // 28 học sinh Lớp 1A2, mỗi em một con vật đại diện không trùng, mã mời 8 ký tự (bỏ 0/O, 1/I/l)
-  const DEFAULT_STUDENTS = [
-    { id: 1, shortName: 'Nam B.', fullName: 'Bùi Hoàng Nam', dob: '2020-04-15', animal: 'Sư tử', animalKey: 'lion', code: 'K7M9P2X4', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-10 19:20', groupRole: 'Thợ lắp chính', inProjectTeam: true },
-    { id: 2, shortName: 'An P.', fullName: '', dob: '', animal: 'Gấu trúc', animalKey: 'panda', code: 'H3N8Q5R2', status: 'active', linkedCount: 1, hasConsent: false, consentAt: '', groupRole: 'Lập trình', inProjectTeam: false },
-    { id: 3, shortName: 'Bảo K.', fullName: 'Trần Gia Bảo', dob: '2020-08-22', animal: 'Gấu Koala', animalKey: 'koala', code: 'B6V4C9M3', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-09 20:05', groupRole: 'Lập trình', inProjectTeam: true },
-    { id: 4, shortName: 'Chi L.', fullName: 'Lê Mai Chi', dob: '2020-02-11', animal: 'Cáo đỏ', animalKey: 'fox', code: 'F4T6W8Y9', status: 'active', linkedCount: 2, hasConsent: true, consentAt: '2026-09-08 18:10', groupRole: 'Vẽ poster', inProjectTeam: true },
-    { id: 5, shortName: 'Dũng V.', fullName: 'Vũ Tiến Dũng', dob: '2020-06-03', animal: 'Thỏ trắng', animalKey: 'rabbit', code: 'D2G7J5K8', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-11 21:00', groupRole: 'Thợ lắp', inProjectTeam: false },
-    { id: 6, shortName: 'Đạt N.', fullName: '', dob: '', animal: 'Gấu nâu', animalKey: 'bear', code: 'R9X2C5V7', status: 'revoked', linkedCount: 0, hasConsent: false, consentAt: '', groupRole: 'Kiểm thử', inProjectTeam: false },
-    { id: 7, shortName: 'Hà T.', fullName: 'Trịnh Thu Hà', dob: '2020-11-19', animal: 'Khỉ con', animalKey: 'monkey', code: 'P5S8W3Z6', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-12 08:30', groupRole: 'Trình bày', inProjectTeam: false },
-    { id: 8, shortName: 'Hải Đ.', fullName: 'Đỗ Minh Hải', dob: '2020-01-27', animal: 'Cá heo', animalKey: 'dolphin', code: 'M4N7B2V9', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-10 17:45', groupRole: 'Thợ lắp', inProjectTeam: false },
-    { id: 9, shortName: 'Hiếu M.', fullName: 'Mai Trung Hiếu', dob: '2020-05-14', animal: 'Ếch xanh', animalKey: 'frog', code: 'T3Y6U8P4', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-10 20:15', groupRole: 'Lập trình', inProjectTeam: false },
-    { id: 10, shortName: 'Hương N.', fullName: 'Nguyễn Lan Hương', dob: '2020-09-05', animal: 'Kỳ lân', animalKey: 'unicorn', code: 'W7E3R9T2', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-11 19:00', groupRole: 'Vẽ poster', inProjectTeam: false },
-    { id: 11, shortName: 'Khánh P.', fullName: 'Phạm Quốc Khánh', dob: '2020-09-02', animal: 'Cú mèo', animalKey: 'owl', code: 'L8K4J2H6', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-12 20:40', groupRole: 'Thợ lắp', inProjectTeam: false },
-    { id: 12, shortName: 'Khoa Đ.', fullName: 'Đặng Anh Khoa', dob: '2020-03-18', animal: 'Chim cánh cụt', animalKey: 'penguin', code: 'Z5X9C3V8', status: 'active', linkedCount: 2, hasConsent: true, consentAt: '2026-09-09 19:15', groupRole: 'Lập trình', inProjectTeam: false },
-    { id: 13, shortName: 'Lâm H.', fullName: 'Hoàng Tùng Lâm', dob: '2020-07-30', animal: 'Hươu cao cổ', animalKey: 'giraffe', code: 'Q4W8E2R6', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-13 10:00', groupRole: 'Thợ lắp', inProjectTeam: false },
-    { id: 14, shortName: 'Linh C.', fullName: '', dob: '', animal: 'Nhím gai', animalKey: 'hedgehog', code: 'A9S4D7F2', status: 'active', linkedCount: 0, hasConsent: false, consentAt: '', groupRole: 'Vẽ poster', inProjectTeam: false },
-    { id: 15, shortName: 'Mai Đ.', fullName: 'Đoàn Ngọc Mai', dob: '2020-10-12', animal: 'Ong vàng', animalKey: 'bee', code: 'G6H2J8K5', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-10 21:10', groupRole: 'Trình bày', inProjectTeam: false },
-    { id: 16, shortName: 'Minh H.', fullName: 'Hồ Nhật Minh', dob: '2020-12-01', animal: 'Rùa xanh', animalKey: 'turtle', code: 'C7V3B9N4', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-08 20:30', groupRole: 'Trình bày', inProjectTeam: true },
-    { id: 17, shortName: 'My L.', fullName: 'Lương Thảo My', dob: '2020-04-08', animal: 'Voi con', animalKey: 'elephant', code: 'Y2U7P5A8', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-11 18:20', groupRole: 'Vẽ poster', inProjectTeam: false },
-    { id: 18, shortName: 'Nhi T.', fullName: 'Trương Yến Nhi', dob: '2020-08-09', animal: 'Hồng hạc', animalKey: 'flamingo', code: 'N6M3K9J4', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-12 19:50', groupRole: 'Trình bày', inProjectTeam: false },
-    { id: 19, shortName: 'Phong V.', fullName: 'Võ Hải Phong', dob: '2020-02-24', animal: 'Hải cẩu', animalKey: 'seal', code: 'R5T8Y2U6', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-10 22:00', groupRole: 'Thợ lắp', inProjectTeam: false },
-    { id: 20, shortName: 'Phúc N.', fullName: 'Nguyễn Hồng Phúc', dob: '2020-06-17', animal: 'Cua đỏ', animalKey: 'crab', code: 'E4R7T3Y9', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-11 09:15', groupRole: 'Lập trình', inProjectTeam: false },
-    { id: 21, shortName: 'Quang B.', fullName: '', dob: '', animal: 'Bướm vàng', animalKey: 'butterfly', code: 'U8P3A6S4', status: 'active', linkedCount: 0, hasConsent: false, consentAt: '', groupRole: 'Thợ lắp', inProjectTeam: false },
-    { id: 22, shortName: 'Quân L.', fullName: 'Lê Minh Quân', dob: '2020-05-29', animal: 'Khủng long', animalKey: 'dino', code: 'D9F4G7H3', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-10 19:45', groupRole: 'Lập trình', inProjectTeam: false },
-    { id: 23, shortName: 'Sơn T.', fullName: 'Trần Thái Sơn', dob: '2020-11-04', animal: 'Cá voi', animalKey: 'whale', code: 'J6K2L8Z5', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-12 17:30', groupRole: 'Thợ lắp', inProjectTeam: false },
-    { id: 24, shortName: 'Thảo P.', fullName: 'Phan Phương Thảo', dob: '2020-03-07', animal: 'Vẹt xanh', animalKey: 'parrot', code: 'X3C8V4B7', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-09 21:20', groupRole: 'Trình bày', inProjectTeam: false },
-    { id: 25, shortName: 'Trâm N.', fullName: '', dob: '', animal: 'Chuột túi', animalKey: 'kangaroo', code: 'B9N4M2Q7', status: 'active', linkedCount: 0, hasConsent: false, consentAt: '', groupRole: 'Vẽ poster', inProjectTeam: false },
-    { id: 26, shortName: 'Tú H.', fullName: 'Huỳnh Anh Tú', dob: '2020-07-14', animal: 'Sói xám', animalKey: 'wolf', code: 'W5E9R4T7', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-13 11:10', groupRole: 'Lập trình', inProjectTeam: false },
-    { id: 27, shortName: 'Việt K.', fullName: 'Kiều Quốc Việt', dob: '2020-01-12', animal: 'Hổ vằn', animalKey: 'tiger', code: 'S7D3F8G2', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-10 18:00', groupRole: 'Thợ lắp', inProjectTeam: false },
-    { id: 28, shortName: 'Vũ Đ.', fullName: 'Đinh Tuấn Vũ', dob: '2020-10-25', animal: 'Chim công', animalKey: 'peacock', code: 'H4J9K3L7', status: 'active', linkedCount: 1, hasConsent: true, consentAt: '2026-09-11 20:05', groupRole: 'Trình bày', inProjectTeam: false }
-  ];
-
-  // Dữ liệu bài học đã mở của Lớp 1A2 (Tuần 9 hiện hành, nổi bật Bài 9 NV1-NV5)
-  const STUDENT_LESSONS = {
-    1: [
-      {
-        id: 'lop1-bai09',
-        week: 9,
-        title: 'Bài 9: Thông tin liên lạc vũ trụ',
-        cover: '../assets/covers/lop1-bai09.jpg',
-        featured: true,
-        updatedAt: '02/11/2026 · 09:15',
-        creativePack: 'Gói vệ tinh năng lượng mặt trời + đĩa radar thu phát',
-        programMode: 'Kiểu ngang (ZMrobo)',
-        programBlocks: ['Bắt đầu', 'Bắt đầu lặp', 'Quay anten phải (M1)', 'Đợi 2 giây', 'Phát tín hiệu bíp', 'Nếu thấy thiên thạch → Thu cánh pin', 'Lặp lại'],
-        suggestedGrade: 'HTT',
-        teacherGrade: 'HTT',
-        gradedBy: 'Cô Nguyễn Thu Hà',
-        gradedAt: '02/11/2026',
-        comment: 'Em Nam lắp mô hình vệ tinh rất chắc chắn, tự gắn thêm tấm pin mặt trời ở chặng Sáng tạo và hoàn thành cả nhiệm vụ nâng cao NV5 tránh thiên thạch.',
-        missions: [
-          { code: 'NV1', name: 'Lắp hoàn chỉnh trạm vệ tinh liên lạc (28 bước)', type: 'basic', done: true },
-          { code: 'NV2', name: 'Gắn thêm tấm pin mặt trời và đĩa radar ở Xưởng sáng tạo', type: 'basic', done: true },
-          { code: 'NV3', name: 'Lập trình động cơ quay anten bắt đúng hướng sóng', type: 'basic', done: true },
-          { code: 'NV4', name: 'Truyền đủ 3 bản tin tín hiệu về Trái Đất an toàn', type: 'basic', done: true },
-          { code: 'NV5', name: 'Cảm biến phát hiện và gập cánh tránh thiên thạch', type: 'advanced', done: true }
-        ]
-      },
-      {
-        id: 'lop1-bai03',
-        week: 3,
-        title: 'Bài 3: Robot thám hiểm',
-        cover: '../assets/covers/lop1-bai03.jpg',
-        featured: false,
-        updatedAt: '21/09/2026 · 10:05',
-        creativePack: 'Gói bánh xích vượt địa hình sao Hỏa',
-        programMode: 'Kiểu ngang (ZMrobo)',
-        programBlocks: ['Bắt đầu', 'Chạy tiến tốc độ 2', 'Đợi cảm biến khoảng cách', 'Dừng lại', 'Phát âm báo'],
-        suggestedGrade: 'HTT',
-        teacherGrade: 'HTT',
-        gradedBy: 'Cô Nguyễn Thu Hà',
-        gradedAt: '22/09/2026',
-        comment: 'Em nhận biết nhanh các thanh truyền động, lắp robot Milo đúng 22 bước và biết đặt khối cảm biến dừng trước vật cản.',
-        missions: [
-          { code: 'NV1', name: 'Lắp hoàn chỉnh khung và động cơ robot Milo (22 bước)', type: 'basic', done: true },
-          { code: 'NV2', name: 'Gắn giỏ chở mẫu cây trên sao Hỏa', type: 'basic', done: true },
-          { code: 'NV3', name: 'Lập trình robot đi thẳng tới trạm thu mẫu', type: 'basic', done: true },
-          { code: 'NV4', name: 'Dừng lại đúng lúc khi gặp đá cản đường', type: 'basic', done: true },
-          { code: 'NV5', name: 'Lùi lại và phát âm thanh báo hiệu về trạm', type: 'advanced', done: false }
-        ]
-      },
-      {
-        id: 'lop1-bai10',
-        week: 10,
-        title: 'Bài 10: Bạn gió tinh nghịch, gió ở đâu?',
-        cover: '../assets/covers/lop1-bai10.jpg',
-        featured: false,
-        updatedAt: '01/11/2026 · 20:10 (Làm ở nhà)',
-        creativePack: 'Cối xay gió 4 cánh lớn + đèn trạm sạc',
-        programMode: 'Kiểu dọc (Scratch)',
-        programBlocks: ['Khi bấm Bắt đầu', 'Lặp lại mãi { Nếu nhấn nút chạm → Quay cánh quạt nhanh }'],
-        suggestedGrade: 'HT',
-        teacherGrade: 'NONE',
-        gradedBy: 'Chưa chấm',
-        gradedAt: 'Đang làm',
-        comment: '',
-        missions: [
-          { code: 'NV1', name: 'Lắp trụ và cánh cối xay gió (15 bước)', type: 'basic', done: true },
-          { code: 'NV2', name: 'Nối nút nhấn cảm biến chạm với bộ điều khiển', type: 'basic', done: true },
-          { code: 'NV3', name: 'Nhấn nút để đổi 2 cấp tốc độ quay cánh quạt', type: 'basic', done: true },
-          { code: 'NV4', name: 'Sạc đầy bình điện thắp sáng ngôi nhà', type: 'basic', done: false },
-          { code: 'NV5', name: 'Tự động giảm tốc khi gió quá mạnh', type: 'advanced', done: false }
-        ]
-      }
-    ],
-    2: [
-      {
-        id: 'lop1-bai09',
-        week: 9,
-        title: 'Bài 9: Thông tin liên lạc vũ trụ',
-        cover: '../assets/covers/lop1-bai09.jpg',
-        featured: true,
-        updatedAt: '02/11/2026 · 09:12',
-        creativePack: 'Gói anten định hướng cơ bản',
-        programMode: 'Kiểu ngang (ZMrobo)',
-        programBlocks: ['Bắt đầu', 'Quay anten phải (M1)', 'Đợi 3 giây', 'Phát tín hiệu bíp'],
-        suggestedGrade: 'HT',
-        teacherGrade: 'HT',
-        gradedBy: 'Cô Nguyễn Thu Hà',
-        gradedAt: '02/11/2026',
-        comment: 'Em An lắp xong khung vệ tinh và cho anten quay bắt sóng được. Em cần thử thêm vòng lặp để truyền đủ 3 bản tin.',
-        missions: [
-          { code: 'NV1', name: 'Lắp hoàn chỉnh trạm vệ tinh liên lạc (28 bước)', type: 'basic', done: true },
-          { code: 'NV2', name: 'Gắn thêm tấm pin mặt trời và đĩa radar ở Xưởng sáng tạo', type: 'basic', done: true },
-          { code: 'NV3', name: 'Lập trình động cơ quay anten bắt đúng hướng sóng', type: 'basic', done: true },
-          { code: 'NV4', name: 'Truyền đủ 3 bản tin tín hiệu về Trái Đất an toàn', type: 'basic', done: false },
-          { code: 'NV5', name: 'Cảm biến phát hiện và gập cánh tránh thiên thạch', type: 'advanced', done: false }
-        ]
-      },
-      {
-        id: 'lop1-bai03',
-        week: 3,
-        title: 'Bài 3: Robot thám hiểm',
-        cover: '../assets/covers/lop1-bai03.jpg',
-        featured: false,
-        updatedAt: '21/09/2026 · 09:50',
-        creativePack: 'Gói tiêu chuẩn',
-        programMode: 'Kiểu ngang (ZMrobo)',
-        programBlocks: ['Bắt đầu', 'Chạy tiến tốc độ 2', 'Dừng lại'],
-        suggestedGrade: 'HTT',
-        teacherGrade: 'HTT',
-        gradedBy: 'Cô Nguyễn Thu Hà',
-        gradedAt: '22/09/2026',
-        comment: 'Em An hoàn thành tốt cả 4 nhiệm vụ cơ bản của bài Robot thám hiểm.',
-        missions: [
-          { code: 'NV1', name: 'Lắp hoàn chỉnh khung và động cơ robot Milo (22 bước)', type: 'basic', done: true },
-          { code: 'NV2', name: 'Gắn giỏ chở mẫu cây trên sao Hỏa', type: 'basic', done: true },
-          { code: 'NV3', name: 'Lập trình robot đi thẳng tới trạm thu mẫu', type: 'basic', done: true },
-          { code: 'NV4', name: 'Dừng lại đúng lúc khi gặp đá cản đường', type: 'basic', done: true },
-          { code: 'NV5', name: 'Lùi lại và phát âm thanh báo hiệu về trạm', type: 'advanced', done: false }
-        ]
-      }
-    ]
-  };
-
-  // Dữ liệu Dự án nhóm 4 em (Nhóm "Tàu Lá" – đúng số liệu BRD mục 6.4)
-  const PROJECT_TEAM_DATA = {
-    teamName: 'Nhóm Tàu Lá',
-    topic: 'Dự án "Hành trình dòng nước" – Mô hình Cửa đê ngăn lũ tự động',
-    cover: '../assets/covers/lop1-bai12.jpg',
-    stage: 'Giai đoạn 4/4 · Đã nộp poster & trưng bày',
-    teacherGrade: 'HTT',
-    teacherComment: 'Nhóm Tàu Lá (4 em) phân công rõ ràng: mô hình cửa đê nâng hạ mượt, poster giải thích dễ hiểu nguyên lý giữ nước.',
-    memberIds: [1, 3, 4, 16],
-    ratingsBySource: [
-      {
-        source: 'Các bạn trong lớp',
-        count: 4,
-        note: '4 lượt chấm ẩn danh từ bạn cùng lớp 1A2',
-        avgTotal: '2,5',
-        criteria: [
-          { name: 'Ý tưởng', score: '2,8' },
-          { name: 'Mô hình chạy', score: '2,3' },
-          { name: 'Trình bày', score: '2,5' }
-        ]
-      },
-      {
-        source: 'Khách đến lớp (quét QR)',
-        count: 2,
-        note: '2 phiếu hợp lệ (không gộp chung với sao của bạn – BRD 6.4)',
-        avgTotal: '2,2',
-        criteria: [
-          { name: 'Ý tưởng', score: '2,5' },
-          { name: 'Mô hình chạy', score: '1,5' },
-          { name: 'Trình bày', score: '2,5' }
-        ]
-      },
-      {
-        source: 'Giáo viên chấm sao',
-        count: 0,
-        note: 'Giáo viên đánh giá chính thức bằng mức HTT (GD-21)',
-        avgTotal: 'Chưa có',
-        criteria: []
-      }
-    ],
-    approvedQuotes: [
-      { author: 'Một bạn trong lớp', type: 'Câu mẫu', text: 'Mô hình chạy êm và chắc chắn!' },
-      { author: 'Một bạn trong lớp', type: 'Câu mẫu', text: 'Poster vẽ rõ ràng, màu sắc đẹp.' },
-      { author: 'Một vị khách', type: 'Nhận xét đã duyệt', text: 'Ý tưởng gắn cảm biến mực nước rất thực tế, các con thuyết trình tự tin.' },
-      { author: 'Một vị khách', type: 'Câu mẫu', text: 'Trình bày dễ hiểu, mô hình sáng tạo.' }
-    ]
-  };
-
-  // Vector SVG cho con vật đại diện (không dùng ký tự emoji)
+  const STUDENT_LESSONS = MockData.parentLessons;
+  let PROJECT_TEAM_DATA = MockAPI.projectTeam();
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, char => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[char]);
+  }
   function getAnimalSvg(animalKey) {
     const palettes = {
       lion: { bg: '#fff3d6', fg: '#b85d00' },
@@ -239,48 +40,10 @@
     </svg>`;
   }
 
-  function loadStudents() {
-    try {
-      const raw = localStorage.getItem(STORAGE_STUDENTS_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length === 28) return parsed;
-      }
-    } catch (_) { /* ignore */ }
-    localStorage.setItem(STORAGE_STUDENTS_KEY, JSON.stringify(DEFAULT_STUDENTS));
-    return JSON.parse(JSON.stringify(DEFAULT_STUDENTS));
-  }
-
-  function saveStudents(students) {
-    localStorage.setItem(STORAGE_STUDENTS_KEY, JSON.stringify(students));
-  }
-
-  function loadState() {
-    const fallback = {
-      loggedIn: true,
-      parentName: 'Bùi Thanh Tâm',
-      parentEmail: 'phu.huynh.nam@gmail.com',
-      step: 's11', // 'login' | 'invite' | 'children' | 's11'
-      s11Tab: 'lessons', // 'lessons' | 'project' | 'privacy'
-      linkedStudentIds: [1, 2],
-      selectedStudentId: 1,
-      pendingInviteStudentId: null,
-      kidModeOpen: false
-    };
-    try {
-      const raw = localStorage.getItem(STORAGE_STATE_KEY);
-      if (raw) {
-        return Object.assign({}, fallback, JSON.parse(raw));
-      }
-    } catch (_) { /* ignore */ }
-    localStorage.setItem(STORAGE_STATE_KEY, JSON.stringify(fallback));
-    return fallback;
-  }
-
-  function saveState(state) {
-    localStorage.setItem(STORAGE_STATE_KEY, JSON.stringify(state));
-  }
-
+  function loadStudents() { return MockAPI.read('parentProfiles'); }
+  function saveStudents(students) { MockAPI.write('parentProfiles', students); }
+  function loadState() { return MockAPI.read('parent'); }
+  function saveState(state) { MockAPI.write('parent', state); }
   function generateCleanInviteCode() {
     const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
     let out = '';
@@ -290,14 +53,7 @@
     return out;
   }
 
-  function getLessonsForStudent(student) {
-    if (STUDENT_LESSONS[student.id]) return STUDENT_LESSONS[student.id];
-    // Sinh bài mẫu cho các học sinh khác trong 28 em khi phụ huynh liên kết thử
-    const baseLessons = JSON.parse(JSON.stringify(STUDENT_LESSONS[1]));
-    baseLessons[0].comment = `Em ${student.shortName} tích cực lắp ráp mô hình vệ tinh Bài 9 và hoàn thành tốt nhiệm vụ trên lớp.`;
-    return baseLessons;
-  }
-
+  function getLessonsForStudent(student) { return MockAPI.lessonsForStudent(student.id); }
   function gradeLabel(grade) {
     if (grade === 'HTT') return 'HTT · Hoàn thành tốt';
     if (grade === 'HT') return 'HT · Hoàn thành';
@@ -492,7 +248,7 @@
 
     if (btnReset) {
       btnReset.addEventListener('click', () => {
-        localStorage.removeItem(STORAGE_STUDENTS_KEY);
+        MockAPI.reset();
         students = loadStudents();
         renderSheets();
         showToast('Đã khôi phục 28 phiếu mời của Lớp 1A2 về dữ liệu mẫu ban đầu.', 'ok');
@@ -788,6 +544,8 @@
       students = loadStudents();
       const linked = students.filter(s => state.linkedStudentIds.includes(s.id));
       const activeStudent = students.find(s => s.id === state.selectedStudentId) || linked[0] || students[0];
+      const sharedStudent = MockAPI.read('teacher').students.find(st => st.id === activeStudent.id);
+      PROJECT_TEAM_DATA = MockAPI.projectTeam(sharedStudent?.groupId || 'G3');
       if (!activeStudent) return;
 
       // 1. Thanh chuyển đổi giữa các con đã liên kết
@@ -941,8 +699,8 @@
         const teamMembers = students.filter(s => PROJECT_TEAM_DATA.memberIds.includes(s.id));
         const projectCommentHtml = activeStudent.hasConsent
           ? `<div class="teacher-comment-box">
-               <div class="teacher-comment-meta"><span>Nhận xét nhóm (chép từ nhóm – F-06.4)</span><span>Cô Nguyễn Thu Hà</span></div>
-               <div>"${PROJECT_TEAM_DATA.teacherComment}"</div>
+               <div class="teacher-comment-meta"><span>Nhận xét nhóm (chép từ nhóm – F-06.4)</span><span>${escapeHtml(MockAPI.read('exhibition').session.teacherName)}</span></div>
+               <div>"${escapeHtml(PROJECT_TEAM_DATA.teacherComment)}"</div>
              </div>`
           : `<div class="teacher-comment-locked">
                <div><strong>Chờ phụ huynh đồng ý (BR-DY-02):</strong> Chỉ hiện mức đánh giá dự án (${PROJECT_TEAM_DATA.teacherGrade}), ẩn nhận xét bằng lời.</div>
@@ -951,10 +709,10 @@
         tabProject.innerHTML = `
           <article class="lesson-result-card is-featured">
             <div class="lesson-cover-row">
-              <img class="lesson-cover-img" src="${PROJECT_TEAM_DATA.cover}" alt="Ảnh mô hình dự án ${PROJECT_TEAM_DATA.teamName}">
+              <img class="lesson-cover-img" src="${escapeHtml(PROJECT_TEAM_DATA.cover)}" alt="Ảnh mô hình dự án ${escapeHtml(PROJECT_TEAM_DATA.teamName)}">
               <div class="lesson-head-info">
                 <span class="lesson-week-tag">${PROJECT_TEAM_DATA.stage}</span>
-                <h3 class="lesson-title-txt">${PROJECT_TEAM_DATA.teamName} (4 học sinh)</h3>
+                <h3 class="lesson-title-txt">${escapeHtml(PROJECT_TEAM_DATA.teamName)} (${teamMembers.length} học sinh)</h3>
                 <div>
                   <span class="grade-badge" data-grade="${PROJECT_TEAM_DATA.teacherGrade}">
                     ${gradeLabel(PROJECT_TEAM_DATA.teacherGrade)}
@@ -986,13 +744,13 @@
                 ${PROJECT_TEAM_DATA.ratingsBySource.map(src => `
                   <div class="source-rating-card">
                     <div class="source-rating-head">
-                      <span>${src.source}</span>
+                      <span>${escapeHtml(src.source)}</span>
                       <span class="star-score-pill">${src.avgTotal === 'Chưa có' ? 'Chưa có' : `${src.avgTotal} / 3 ★`}</span>
                     </div>
-                    <div style="font-size:12px; color:var(--muted);">${src.note}</div>
+                    <div style="font-size:12px; color:var(--muted);">${escapeHtml(src.note)}</div>
                     ${src.criteria.length ? `
                       <div class="criteria-breakdown">
-                        ${src.criteria.map(c => `<div><span>${c.name}</span><b>${c.score} ★</b></div>`).join('')}
+                        ${src.criteria.map(c => `<div><span>${escapeHtml(c.name)}</span><b>${escapeHtml(c.score)} ★</b></div>`).join('')}
                       </div>
                     ` : ''}
                   </div>
@@ -1004,8 +762,8 @@
                 <ul class="quote-list">
                   ${PROJECT_TEAM_DATA.approvedQuotes.map(q => `
                     <li class="quote-item">
-                      <span class="quote-author">${q.author} · ${q.type}</span>
-                      <span>"${q.text}"</span>
+                      <span class="quote-author">${escapeHtml(q.author)} · ${escapeHtml(q.type)}</span>
+                      <span>"${escapeHtml(q.text)}"</span>
                     </li>
                   `).join('')}
                 </ul>
@@ -1193,17 +951,18 @@
       } else if (action === 'toggle-nv-demo') {
         const stId = Number(btn.getAttribute('data-student'));
         const lessonId = btn.getAttribute('data-lesson');
-        const list = STUDENT_LESSONS[stId] || STUDENT_LESSONS[1];
-        const lesson = list.find(l => l.id === lessonId);
-        if (lesson) {
-          const nextUndone = lesson.missions.find(m => !m.done);
-          if (nextUndone) {
-            nextUndone.done = true;
-            renderS11View();
-            showToast(`Đã gộp tiến độ mới: Hoàn thành thêm ${nextUndone.code} ở nhà (GD-05: tiến độ chỉ tăng).`, 'ok');
-          } else {
-            showToast('Con đã hoàn thành toàn bộ cả 5 nhiệm vụ (NV1–NV5) của bài này!', 'ok');
-          }
+        const lesson = MockAPI.lessonsForStudent(stId).find(l => l.id === lessonId);
+        const next = lesson && lesson.missions.findIndex(m => m.type === 'basic' && !m.done);
+        if (next >= 0) {
+          const code = MockData.lessons.find(l => l.code === lessonId)?.id;
+          const cell = MockAPI.read('teacher').cells[stId + '_' + code];
+          const flags = [...cell.coreFlags];
+          flags[next] = true;
+          MockAPI.rpc('save_attempt', { p_student_id: stId, p_lesson_id: code, coreFlags: flags });
+          renderS11View();
+          showToast('Đã lưu tiến độ ' + lesson.missions[next].code + ' vào dữ liệu dùng chung.', 'ok');
+        } else {
+          showToast('Không còn nhiệm vụ cơ bản chưa hoàn thành trong bài này.', 'ok');
         }
       }
     });

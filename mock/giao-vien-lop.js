@@ -5,10 +5,6 @@
 (function () {
   'use strict';
 
-  const STORAGE_KEY = 'mock.73a.state';
-  const STORAGE_GRADES_KEY = 'mock.grades.1A2';
-  const STORAGE_GROUPS_KEY = 'mock.groups.1A2';
-
   /* ---------- Biểu tượng con vật dạng SVG thuần (không dùng emoji trang trí) ---------- */
   function animalSvg(index) {
     const shapes = [
@@ -25,124 +21,7 @@
   }
 
   /* ---------- Danh sách 28 học sinh Lớp 1A2 (5 em chưa có đồng ý PH theo GD-14/BR-DY-02) ---------- */
-  const INITIAL_STUDENTS = [
-    { id: 1,  nickname: 'Nam B.',  fullName: 'Bùi Hoàng Nam',     animal: 'Sư tử',      hasConsent: true,  groupId: 'G1', role: 'Thợ lắp chính' },
-    { id: 2,  nickname: 'An B.',   fullName: '',                  animal: 'Gấu trúc',   hasConsent: false, groupId: 'G1', role: 'Lập trình viên' },
-    { id: 3,  nickname: 'An T.',   fullName: 'Trần Bình An',      animal: 'Koala',      hasConsent: true,  groupId: 'G1', role: 'Thiết kế poster' },
-    { id: 4,  nickname: 'Bảo',     fullName: 'Nguyễn Gia Bảo',    animal: 'Cáo đỏ',     hasConsent: true,  groupId: 'G1', role: 'Người trình bày' },
-    { id: 5,  nickname: 'Chi',     fullName: 'Lê Khánh Chi',      animal: 'Thỏ trắng',  hasConsent: true,  groupId: 'G2', role: 'Thợ lắp chính' },
-    { id: 6,  nickname: 'Dũng',    fullName: 'Phạm Tiến Dũng',    animal: 'Hổ vàng',    hasConsent: true,  groupId: 'G2', role: 'Lập trình viên' },
-    { id: 7,  nickname: 'Đạt',     fullName: '',                  animal: 'Gấu nâu',    hasConsent: false, groupId: 'G2', role: 'Thiết kế poster' },
-    { id: 8,  nickname: 'Giang',   fullName: 'Hoàng Hương Giang', animal: 'Khỉ con',    hasConsent: true,  groupId: 'G2', role: 'Người trình bày' },
-    { id: 9,  nickname: 'Hà',      fullName: 'Vũ Ngân Hà',        animal: 'Cá heo',     hasConsent: true,  groupId: 'G3', role: 'Thợ lắp chính' },
-    { id: 10, nickname: 'Hải',     fullName: 'Đỗ Thanh Hải',      animal: 'Ếch xanh',   hasConsent: true,  groupId: 'G3', role: 'Lập trình viên' },
-    { id: 11, nickname: 'Hiếu',    fullName: 'Ngô Minh Hiếu',     animal: 'Kỳ lân',     hasConsent: true,  groupId: 'G3', role: 'Thiết kế poster' },
-    { id: 12, nickname: 'Hương',   fullName: 'Đặng Thu Hương',    animal: 'Cú mèo',     hasConsent: true,  groupId: 'G3', role: 'Người trình bày' },
-    { id: 13, nickname: 'Khánh',   fullName: 'Trịnh Quốc Khánh',  animal: 'Cánh cụt',   hasConsent: true,  groupId: 'G4', role: 'Thợ lắp chính' },
-    { id: 14, nickname: 'Khoa',    fullName: 'Lý Đăng Khoa',      animal: 'Hươu cao cổ',hasConsent: true,  groupId: 'G4', role: 'Lập trình viên' },
-    { id: 15, nickname: 'Lâm',     fullName: 'Phan Tùng Lâm',     animal: 'Nhím nhỏ',   hasConsent: true,  groupId: 'G4', role: 'Thiết kế poster' },
-    { id: 16, nickname: 'Linh',    fullName: '',                  animal: 'Ong chăm',   hasConsent: false, groupId: 'G4', role: 'Người trình bày' },
-    { id: 17, nickname: 'Mai',     fullName: 'Đinh Ngọc Mai',     animal: 'Rùa biển',   hasConsent: true,  groupId: 'G5', role: 'Thợ lắp chính' },
-    { id: 18, nickname: 'Minh H.', fullName: 'Hồ Nhật Minh',      animal: 'Voi con',    hasConsent: true,  groupId: 'G5', role: 'Lập trình viên' },
-    { id: 19, nickname: 'Minh N.', fullName: 'Nguyễn Quang Minh', animal: 'Hồng hạc',   hasConsent: true,  groupId: 'G5', role: 'Thiết kế poster' },
-    { id: 20, nickname: 'My',      fullName: 'Trương Hà My',      animal: 'Hải cẩu',    hasConsent: true,  groupId: 'G5', role: 'Người trình bày' },
-    { id: 21, nickname: 'Nhi',     fullName: 'Võ Yến Nhi',        animal: 'Cua đỏ',     hasConsent: true,  groupId: 'G6', role: 'Thợ lắp chính' },
-    { id: 22, nickname: 'Phong',   fullName: 'Lương Hải Phong',   animal: 'Sóc nâu',    hasConsent: true,  groupId: 'G6', role: 'Lập trình viên' },
-    { id: 23, nickname: 'Phúc',    fullName: 'Cao Hoàng Phúc',    animal: 'Rái cá',     hasConsent: true,  groupId: 'G6', role: 'Thiết kế poster' },
-    { id: 24, nickname: 'Quang',   fullName: '',                  animal: 'Khủng long', hasConsent: false, groupId: 'G6', role: 'Người trình bày' },
-    { id: 25, nickname: 'Quân',    fullName: 'Tạ Minh Quân',      animal: 'Cá voi',     hasConsent: true,  groupId: 'G7', role: 'Thợ lắp chính' },
-    { id: 26, nickname: 'Sơn',     fullName: 'Mai Trường Sơn',    animal: 'Vẹt xanh',   hasConsent: true,  groupId: 'G7', role: 'Lập trình viên' },
-    { id: 27, nickname: 'Trâm',    fullName: '',                  animal: 'Chuột túi',  hasConsent: false, groupId: '',   role: 'Thiết kế poster' },
-    { id: 28, nickname: 'Vũ',      fullName: 'Đoàn Tuấn Vũ',      animal: 'Công xanh',  hasConsent: true,  groupId: '',   role: 'Người trình bày' }
-  ];
-
-  const INITIAL_GROUPS = [
-    { id: 'G1', name: 'Nhóm Tia Chớp',     topic: 'Trạm bơm nước tự động bằng năng lượng mặt trời', status: 'submitted', starsPeer: '2,8', starsGuest: '2,5', starsTeacher: '3,0' },
-    { id: 'G2', name: 'Nhóm Sao Băng',     topic: 'Cửa đê ngăn lũ cảnh báo mực nước dâng',         status: 'submitted', starsPeer: '2,6', starsGuest: '2,4', starsTeacher: 'Chưa có' },
-    { id: 'G3', name: 'Nhóm Vệ Tinh Xanh', topic: 'Guồng nước tưới vườn rau trường học',           status: 'submitted', starsPeer: '2,9', starsGuest: '2,7', starsTeacher: '3,0' },
-    { id: 'G4', name: 'Nhóm Sóng Ngầm',    topic: 'Phễu lọc rác nổi trên kênh đào',                status: 'submitted', starsPeer: '2,4', starsGuest: '2,2', starsTeacher: 'Chưa có' },
-    { id: 'G5', name: 'Nhóm Cối Xoay Gió', topic: 'Cối xoay gió kéo gàu nước vùng cao',            status: 'working',   starsPeer: 'Chưa có', starsGuest: 'Chưa có', starsTeacher: 'Chưa có' },
-    { id: 'G6', name: 'Nhóm Đê Ngăn Lũ',   topic: 'Cầu phao tự nâng khi nước lũ về',               status: 'submitted', starsPeer: '2,5', starsGuest: '2,3', starsTeacher: 'Chưa có' },
-    { id: 'G7', name: 'Nhóm Giọt Nước',    topic: 'Hệ thống hứng nước mưa tưới cây tự động',       status: 'working',   starsPeer: 'Chưa có', starsGuest: 'Chưa có', starsTeacher: 'Chưa có' }
-  ];
-
-  /* ---------- Danh sách các bài học Lớp 1 Học kì I (bám sát js/catalog.js & js/bai09/lesson.js) ---------- */
-  const LESSONS = [
-    {
-      id: 'B1', code: 'lop1-bai01', shortLabel: 'BÀI 1', week: 1,
-      title: 'Bài 1: Làm quen bộ công cụ',
-      coreMissions: ['NV1: Nhận biết thanh thẳng, trục, chốt', 'NV2: Lắp khung xe trượt dốc', 'NV3: Thử thả xe trên mặt phẳng nghiêng', 'NV4: Thu dọn linh kiện đúng khay'],
-      advMissions: ['NV5 (Nâng cao): Nối dài thân xe để chở thêm tải']
-    },
-    {
-      id: 'B2', code: 'lop1-bai02', shortLabel: 'BÀI 2', week: 2,
-      title: 'Bài 2: Động cơ',
-      coreMissions: ['NV1: Lắp xe leo dốc có động cơ', 'NV2: Nối dây động cơ vào bộ điều khiển', 'NV3: Ghép khối chạy tiến mức 3', 'NV4: Dừng đúng vạch đích'],
-      advMissions: ['NV5 (Nâng cao): Đổi tốc độ khi lên dốc cao']
-    },
-    {
-      id: 'B3', code: 'lop1-bai03', shortLabel: 'BÀI 3', week: 3,
-      title: 'Bài 3: Robot thám hiểm',
-      coreMissions: ['NV1: Lắp robot Milo 22 bước', 'NV2: Ghép khối di chuyển trên sao Hỏa', 'NV3: Dừng khi gặp mẫu cây', 'NV4: Chở mẫu cây về trạm'],
-      advMissions: ['NV5 (Nâng cao): Phát âm báo khi tìm thấy mẫu vật']
-    },
-    {
-      id: 'B4', code: 'lop1-bai04', shortLabel: 'BÀI 4', week: 4,
-      title: 'Bài 4: Cảm biến của robot',
-      coreMissions: ['NV1: Lắp giá đỡ cảm biến', 'NV2: Thử cảm biến phát hiện khoảng cách', 'NV3: Lập trình dừng trước chướng ngại', 'NV4: Đổi chiều khi gặp vật cản'],
-      advMissions: ['NV5 (Nâng cao): Kết hợp đèn và âm thanh cảnh báo']
-    },
-    {
-      id: 'B5', code: 'lop1-bai05', shortLabel: 'BÀI 5', week: 5,
-      title: 'Bài 5: Chào hỏi, kết bạn – Spy robot',
-      coreMissions: ['NV1: Lắp mô hình Spy robot', 'NV2: Gắn cảm biến phía trước', 'NV3: Phát giai điệu chào khi thấy bạn', 'NV4: Lặp lại chu kỳ quan sát'],
-      advMissions: ['NV5 (Nâng cao): Ghi âm lời chào của nhóm']
-    },
-    {
-      id: 'B6', code: 'lop1-bai06', shortLabel: 'BÀI 6', week: 6,
-      title: 'Bài 6: Luật giao thông',
-      coreMissions: ['NV1: Lắp mô hình xe mô tô', 'NV2: Nhận biết tín hiệu đèn giao thông', 'NV3: Lập trình xe dừng trước vạch đỏ', 'NV4: Khởi hành an toàn khi đèn xanh'],
-      advMissions: ['NV5 (Nâng cao): Bấm còi báo hiệu khi qua ngã tư']
-    },
-    {
-      id: 'B7', code: 'lop1-bai07', shortLabel: 'BÀI 7', week: 7,
-      title: 'Bài 7: Trò chơi của bé',
-      coreMissions: ['NV1: Lắp khung xích đu vững chắc', 'NV2: Gắn trục truyền động động cơ', 'NV3: Lập trình quay hai chiều êm ái', 'NV4: Dừng an toàn sau 3 vòng'],
-      advMissions: ['NV5 (Nâng cao): Thêm nhạc nền khu vui chơi']
-    },
-    {
-      id: 'B8', code: 'lop1-bai08', shortLabel: 'BÀI 8', week: 8,
-      title: 'Bài 8: Ngôi nhà thông minh',
-      coreMissions: ['NV1: Lắp khung cửa tự động', 'NV2: Gắn cảm biến nhận diện người đến', 'NV3: Mở cửa và đợi 3 giây', 'NV4: Đóng cửa nhẹ nhàng'],
-      advMissions: ['NV5 (Nâng cao): Bật còi báo khi cửa kẹt vật cản']
-    },
-    {
-      id: 'B9', code: 'lop1-bai09', shortLabel: 'BÀI 9 ★', week: 9, isFocus: true,
-      title: 'Bài 9: Thông tin liên lạc vũ trụ',
-      coreMissions: [
-        'NV1: Lắp xong vệ tinh (đủ 28 bước)',
-        'NV2: Ghép khối giống hàng mẫu',
-        'NV3: Tránh đám đá thiên thạch',
-        'NV4: Thử vệ tinh sáng tạo (Cánh pin kép / Chảo ra-đa)'
-      ],
-      advMissions: [
-        'NV5 (Nâng cao): Đợi thiên thạch bay qua (gắn Cảm biến vật cản)'
-      ]
-    },
-    {
-      id: 'DA1', code: 'lop1-duan1', shortLabel: 'DỰ ÁN HK I', week: 14, isProject: true,
-      title: 'Dự án HK I: Hành trình dòng nước',
-      coreMissions: [
-        'NV1: Chọn vấn đề về nước & vẽ phác thảo',
-        'NV2: Chế tạo mô hình & ghép chương trình',
-        'NV3: Nâng cấp giải pháp & hoàn thiện poster',
-        'NV4: Chia sẻ giải pháp & tự đánh giá'
-      ],
-      advMissions: [
-        'NV5 (Nâng cao): Tích hợp cảm biến tự động đóng/mở dòng nước'
-      ]
-    }
-  ];
+  const LESSONS = MockData.lessons;
 
   const ROLES = ['Thợ lắp chính', 'Lập trình viên', 'Thiết kế poster', 'Người trình bày'];
 
@@ -154,13 +33,7 @@
   let toastTimer = null;
 
   /* ---------- Công thức BRD 6.2 ---------- */
-  function computeSuggestedGrade(coreDoneCount, totalCore) {
-    if (totalCore <= 0) return 'HT';
-    const halfCeil = Math.ceil(totalCore / 2);
-    if (coreDoneCount >= totalCore) return 'HTT';
-    if (coreDoneCount >= halfCeil) return 'HT';
-    return 'CHT';
-  }
+  const computeSuggestedGrade = MockData.computeSuggestedGrade;
 
   function gradeFullName(g) {
     if (g === 'HTT') return 'Hoàn thành tốt';
@@ -170,146 +43,8 @@
   }
 
   /* ---------- Khởi tạo dữ liệu mẫu ---------- */
-  function buildDefaultState() {
-    const students = JSON.parse(JSON.stringify(INITIAL_STUDENTS));
-    const groups = JSON.parse(JSON.stringify(INITIAL_GROUPS));
-    const cells = {};
-
-    students.forEach((st) => {
-      LESSONS.forEach((ls, lIdx) => {
-        const key = `${st.id}_${ls.id}`;
-        let coreFlags = [true, true, true, true];
-        let advFlags = [false];
-
-        if (ls.id === 'B9') {
-          // Tạo phân bổ thực tế cho Bài 9 (NV1-NV5):
-          // - 14 em xong đủ 4/4 NV cơ bản (HTT), trong đó 8 em xong cả NV5 nâng cao
-          // - 9 em xong 2/4 hoặc 3/4 NV cơ bản (HT) -> thuộc diện "em chưa xong"
-          // - 5 em mới xong 1/4 NV cơ bản (CHT) -> thuộc diện "em chưa xong"
-          if (st.id % 5 === 0) {
-            coreFlags = [true, false, false, false];
-            advFlags = [false];
-          } else if (st.id % 3 === 0) {
-            coreFlags = [true, true, true, false];
-            advFlags = [false];
-          } else if (st.id % 7 === 0) {
-            coreFlags = [true, true, false, false];
-            advFlags = [false];
-          } else {
-            coreFlags = [true, true, true, true];
-            advFlags = [st.id % 2 === 1];
-          }
-        } else if (ls.id === 'DA1') {
-          const grp = groups.find(g => g.id === st.groupId);
-          if (grp && grp.status === 'submitted') {
-            coreFlags = [true, true, true, true];
-            advFlags = [st.id % 2 === 0];
-          } else {
-            coreFlags = [true, true, false, false];
-            advFlags = [false];
-          }
-        } else {
-          // Bài 1 -> Bài 8
-          const mod = (st.id + lIdx) % 6;
-          if (mod === 0) {
-            coreFlags = [true, true, false, false];
-          } else if (mod === 1) {
-            coreFlags = [true, true, true, false];
-          } else {
-            coreFlags = [true, true, true, true];
-          }
-          advFlags = [(st.id + lIdx) % 3 === 0];
-        }
-
-        const coreDone = coreFlags.filter(Boolean).length;
-        const suggested = computeSuggestedGrade(coreDone, 4);
-
-        // Bài 1..6 đã chấm phần lớn; Bài 9 đã chấm 10/28 em để giáo viên bấm thử chấm tiếp
-        let isGraded = false;
-        let teacherGrade = '';
-        let teacherComment = '';
-        let hasRecentProgress = false;
-
-        if (lIdx <= 5 || (lIdx <= 7 && st.id % 2 === 0) || (ls.id === 'B9' && st.id <= 10)) {
-          isGraded = true;
-          teacherGrade = suggested;
-          if (st.hasConsent) {
-            if (ls.id === 'B9') {
-              teacherComment = coreDone === 4
-                ? `Em ${st.nickname} lắp xong vệ tinh 28 bước, lập trình tránh thiên thạch chính xác.`
-                : `Em ${st.nickname} đã lắp được thân vệ tinh, cần thử thêm khối lệnh tránh đá thiên thạch.`;
-            } else {
-              teacherComment = `Em ${st.nickname} hoàn thành tốt thao tác lắp ráp và chạy thử mô hình.`;
-            }
-          }
-        }
-
-        if (isGraded && ls.id === 'B9' && (st.id === 3 || st.id === 8)) {
-          hasRecentProgress = true;
-        }
-
-        const upgrades = ['Cánh pin kép (2 khung 5×7)', 'Chảo ra-đa (Bánh răng 40 răng)', 'Cảm biến né thiên thạch'];
-        const upgradePick = upgrades[(st.id - 1) % upgrades.length];
-
-        cells[key] = {
-          studentId: st.id,
-          lessonId: ls.id,
-          coreFlags,
-          advFlags,
-          suggested,
-          isGraded,
-          teacherGrade,
-          teacherComment,
-          hasRecentProgress,
-          selected: false,
-          upgradePick,
-          savedAt: '08:40 · Máy bảng #' + String((st.id % 14) + 1).padStart(2, '0'),
-          source: 'direct'
-        };
-      });
-    });
-
-    return {
-      activeTab: 's07',
-      lessonScope: 'all',
-      filterUnfinished: false,
-      filterUngraded: false,
-      searchQuery: '',
-      students,
-      groups,
-      cells,
-      lastExport: null
-    };
-  }
-
-  function loadState() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (parsed && Array.isArray(parsed.students) && parsed.cells) {
-          state = parsed;
-          return;
-        }
-      }
-    } catch (_) {
-      // Bỏ qua lỗi đọc localStorage
-    }
-    state = buildDefaultState();
-    saveState();
-  }
-
-  function saveState() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      localStorage.setItem(STORAGE_GRADES_KEY, JSON.stringify(state.cells));
-      localStorage.setItem(STORAGE_GROUPS_KEY, JSON.stringify(state.groups));
-    } catch (_) {
-      // Bỏ qua nếu trình duyệt chặn localStorage
-    }
-    updateHeaderKPIs();
-  }
-
+  function loadState() { state = MockAPI.read('teacher'); }
+  function saveState() { MockAPI.write('teacher', state); updateHeaderKPIs(); }
   function showToast(msg) {
     const el = document.getElementById('gv-toast');
     if (!el) return;
@@ -1156,7 +891,7 @@
 
     // Nút đặt lại dữ liệu mẫu
     document.getElementById('btn-reset-mock').addEventListener('click', () => {
-      state = buildDefaultState();
+      state = MockAPI.reset().teacher;
       pickedStudentId = null;
       closeDrawer();
       saveState();

@@ -8,20 +8,30 @@
 .join-panel h2 { margin: 0; font: 700 clamp(20px, 4vw, 28px)/1.2 var(--f-display); }
 .join-panel p { margin: 0; color: var(--muted); }
 .join-code { font: 700 clamp(38px, 8vw, 68px)/1.1 var(--f-mono); letter-spacing: .16em; text-align: center; background: var(--sunk); border-radius: 12px; padding: 12px; font-variant-numeric: tabular-nums; }
+.join-code.is-loading { position: relative; opacity: .75; }
+.join-code.is-loading::after { content: ''; display: inline-block; width: .25em; height: .25em; margin-left: .1em; border: 3px solid var(--muted); border-top-color: transparent; border-radius: 50%; animation: join-spin .7s linear infinite; vertical-align: middle; }
+@keyframes join-spin { to { transform: rotate(360deg); } }
+.join-code-entry { text-align: center; color: var(--accent); text-decoration: underline; font-size: 14px; cursor: pointer; }
+.join-wrap .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.join-inline-icon { width: 1em; height: 1em; vertical-align: -.1em; }
 .join-keypad { max-width: 380px; width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; justify-self: center; }
 .join-keypad button { min-height: 68px; border: 2px solid var(--line); border-radius: 16px; background: #fff; font: 700 30px/1 var(--f-display); touch-action: manipulation; cursor: pointer; }
+.join-keypad button[data-action] { background: var(--sunk); color: var(--muted); }
 .join-keypad button:active, .join-person:active { background: var(--accent-soft); transform: scale(.97); }
 .join-primary { min-height: 58px; border: 0; border-radius: 14px; background: var(--accent); color: white; font: 700 18px var(--f-body); cursor: pointer; }
 .join-primary:disabled { opacity: .45; cursor: default; }
 .join-step { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .join-link { min-height: 56px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--sunk); font-weight: 700; cursor: pointer; }
-.join-roster { display: grid; grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)); gap: 12px; }
-.join-person { min-height: 130px; padding: 14px 10px; border: 2px solid var(--line); border-radius: 16px; background: var(--sunk); display: grid; justify-items: center; align-content: center; gap: 6px; cursor: pointer; touch-action: manipulation; }
-.join-animal { font-size: 54px; line-height: 1.2; }
-.join-person-name { font: 700 18px/1.2 var(--f-body); overflow-wrap: anywhere; }
+.join-roster { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.join-person { min-height: 60px; padding: 8px 10px; border: 2px solid var(--line); border-radius: 12px; background: var(--sunk); display: flex; align-items: center; gap: 8px; text-align: left; cursor: pointer; touch-action: manipulation; min-width: 0; }
+.join-animal { font-size: 36px; flex: none; line-height: 1; }
+.join-person-name { font: 700 16px/1.2 var(--f-body); overflow-wrap: anywhere; min-width: 0; }
 .join-notice { background: var(--warn-soft); color: var(--ink); border: 2px solid var(--warn); border-radius: 14px; padding: 14px; text-align: center; font-size: 18px; font-weight: 700; }
 .join-wait { justify-items: center; text-align: center; min-height: 310px; align-content: center; }
-.join-wait-icon { font-size: 72px; }
+.join-wait-icon { color: var(--accent); width: 72px; height: 72px; }
+.join-wait-icon svg { display: block; width: 100%; height: 100%; }
+.join-wait-icon .join-icon-warning, .join-wait-icon[data-state="warning"] .join-icon-pending { display: none; }
+.join-wait-icon[data-state="warning"] .join-icon-warning { display: block; color: var(--warn); }
 .join-device-tag { padding: 10px 20px; background: var(--accent-soft); border-radius: 12px; font: 700 21px var(--f-mono); }
 .join-foot { text-align: center; color: var(--muted); font-size: 13px; margin: 0; }
 @media (max-width: 460px) {
@@ -29,6 +39,5 @@
   .join-panel { padding: 16px; }
   .join-keypad { gap: 8px; }
   .join-keypad button { min-height: 62px; }
-  .join-person { min-height: 112px; }
-  .join-roster { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .join-person { min-height: 60px; }
 }

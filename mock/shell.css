@@ -1,0 +1,55 @@
+/* Quy tắc riêng được đặt sau CSS màn hình để có cùng thanh trên mọi vai. */
+body.mock-page { padding-top: 0 !important; }
+#mock76-shell, #mock76-shell * { box-sizing: border-box; }
+#mock76-shell {
+  position: sticky; top: 0; z-index: 1200; width: 100%; min-height: 58px;
+  display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  padding: 8px clamp(10px, 2vw, 26px); background: var(--ink, #152634);
+  color: #fff; border-bottom: 3px solid var(--accent, #16a1ba);
+  font: 600 13px/1.35 var(--f-body, system-ui, sans-serif);
+}
+#mock76-shell a, #mock76-shell button, #mock76-shell select {
+  min-height: 42px; font: inherit; border-radius: 9px;
+}
+#mock76-shell .mock76-home, #mock76-shell button {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 7px 12px; border: 1px solid #7d94a5; background: #264252;
+  color: #fff; text-decoration: none; cursor: pointer;
+}
+#mock76-shell .mock76-home:focus-visible, #mock76-shell button:focus-visible,
+#mock76-shell select:focus-visible, #mock76-preview button:focus-visible {
+  outline: 3px solid #f9be50; outline-offset: 2px;
+}
+#mock76-shell .mock76-label {
+  white-space: nowrap; font: 800 11px/1.25 var(--f-mono, monospace);
+  letter-spacing: .04em; background: var(--warn-soft, #fff1c5); color: #583500;
+  padding: 9px 11px; border-radius: 7px;
+}
+#mock76-shell .mock76-field { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+#mock76-shell select { max-width: 190px; padding: 6px 28px 6px 9px; color: #162832; background: #fff; border: 1px solid #b8c4cd; }
+#mock76-shell #mock76-reset { margin-left: auto; }
+#mock76-preview[hidden] { display: none !important; }
+#mock76-preview {
+  position: fixed; z-index: 1150; inset: 58px 0 0; display: grid;
+  align-items: center; justify-items: center; overflow: auto; padding: 24px;
+  background: rgba(14, 29, 40, .85); color: var(--ink, #152634);
+}
+#mock76-preview .mock76-preview-card {
+  width: min(100%, 470px); padding: clamp(24px, 5vw, 42px); border-radius: 18px;
+  border: 2px solid var(--line, #d7e0e7); text-align: center;
+  background: var(--surface, white); box-shadow: 0 18px 50px rgba(0,0,0,.25);
+}
+#mock76-preview h2 { margin: 12px 0; font-size: clamp(21px, 5vw, 29px); }
+#mock76-preview p { font-size: 15px; line-height: 1.6; }
+#mock76-preview .mock76-preview-icon { display: block; margin: 0 auto; width: 58px; height: 58px; border-radius: 50%; background: var(--warn-soft, #ffe8bb); }
+#mock76-preview[data-mode="loading"] .mock76-preview-icon { border: 5px solid #cedde7; border-top-color: var(--accent, #099bbc); background: transparent; animation: mock76-spin 1s linear infinite; }
+#mock76-preview button { min-height: 48px; padding: 8px 18px; cursor: pointer; color: #fff; border: 0; border-radius: 9px; background: var(--accent, #0c839b); }
+@keyframes mock76-spin { to { transform: rotate(360deg); } }
+@media (max-width: 650px) {
+  #mock76-shell { gap: 8px; font-size: 12px; }
+  #mock76-shell .mock76-field { flex: 1 1 130px; }
+  #mock76-shell .mock76-field select { width: 100%; min-width: 0; }
+  #mock76-shell #mock76-reset { margin-left: 0; }
+  #mock76-preview { inset-block-start: 0; padding-top: 150px; }
+}
+@media (print) { #mock76-shell, #mock76-preview { display: none !important; } body.mock-page { padding: 0 !important; } }
