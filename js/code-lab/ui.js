@@ -3,6 +3,7 @@
 // 2. Lắp robot (gắn/gỡ cảm biến trên cổng Alpha 330, lưu localStorage, cảnh báo thiếu cảm biến)
 // 3. Viết chương trình (khối dọc chuẩn RoboSim bằng Blockly + mã Python trực tiếp + chế độ ngang Bé)
 // 4. Mô phỏng (sa bàn 2D/3D, chạy từng khối, bảng cảm biến, nhật ký, chấm sao)
+// 5. Thiết kế sa bàn 3D (js/code-lab/designer3d.js; ui.js chỉ nối nút và lưu vào 'maps')
 
 (function () {
   'use strict';
@@ -235,6 +236,8 @@
       renderCodeScreen();
     } else if (screenName === 'sim') {
       renderSimScreen();
+    } else if (screenName === 'design' && window.CodeLabDesigner) {
+      window.CodeLabDesigner.show();
     }
   }
 
@@ -1151,7 +1154,7 @@
   $('detail-start').addEventListener('click', () => { selectMap(previewId); setScreen('code'); });
   $('btn-stats').addEventListener('click', () => { $('sensor-panel').hidden = !$('sensor-panel').hidden; });
   $('home-btn-free').addEventListener('click', () => { selectMap('san-tu-do'); setScreen('code'); });
-  $('home-btn-editor').addEventListener('click', () => $('btn-editor').click());
+  $('home-btn-editor').addEventListener('click', () => setScreen('design'));
   $('home-btn-sent').addEventListener('click', () => showSentDialog());
 
   // Nút màn Lắp robot
@@ -1226,18 +1229,34 @@
   document.addEventListener('click', e => { if (!e.target.closest('#file-menu')) $('file-menu').hidden = true; });
 
   document.addEventListener('keydown', e => {
-    if (e.target.closest('input, select, textarea, dialog')) return;
+    if (e.target.closest('input, select, textarea, dialog') || state.screen === 'design') return;
     if (e.key === 'Delete' && state.selected > 0) remove(state.selected);
     if (e.key === 'Escape') { state.selected = -1; renderProgram(); renderInspector(); }
   });
 
-  $('btn-editor').addEventListener('click', () => window.CodeLabEditor.open(saved => {
-    const maps = store.get('maps', []).filter(m => m.id !== saved.id);
-    maps.push(saved);
-    store.set('maps', maps);
-    selectMap(saved.id);
-    toast('Đã lưu sa bàn – thử chạy xe nhé!');
-  }));
+  // Thiết kế sa bàn 3D (js/code-lab/designer3d.js): lưu vào localStorage 'maps' → chủ đề "Sa bàn của lớp"
+  $('btn-editor').addEventListener('click', () => { $('file-menu').hidden = true; setScreen('design'); });
+  if (window.CodeLabDesigner) {
+    window.CodeLabDesigner.init({
+      toast,
+      save(map) {
+        const maps = store.get('maps', []).filter(m => m.id !== map.id);
+        maps.push(map);
+        try {
+          localStorage.setItem('codelab.maps', JSON.stringify(maps));
+        } catch {
+          toast('Bộ nhớ trình duyệt đã đầy – hãy bỏ ảnh nền sân hoặc xóa bớt sa bàn cũ.');
+          return false;
+        }
+        return true;
+      },
+      play(id) {
+        selectMap(id);
+        setScreen('code');
+        toast('Đã lưu sa bàn – thử chạy xe nhé!');
+      }
+    });
+  }
 
   window.addEventListener('resize', () => {
     T = V.fit(canvas, sim.map);

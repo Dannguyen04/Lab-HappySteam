@@ -2371,3 +2371,147 @@ body[data-screen="home"] .rs-meter, body[data-screen="maps"] .rs-meter { display
   .cl-screen.rs-build { grid-template-columns: 200px 1fr; }
   .rs-ports { max-width: calc(100% - 20px); bottom: 64px; }
 }
+
+/* ---- Thiết kế sa bàn 3D (như RoboSim shg297-03): khay đạo cụ trái, sân 3D có viền, số đạo cụ + ảnh nền góc phải ---- */
+.rs-bar-design { display: none; align-items: center; gap: 6px; margin-left: 10px; }
+body[data-screen="design"] .rs-bar-design { display: flex; }
+.rs-bar-design .rs-ibtn:disabled { opacity: .45; cursor: default; background: var(--rs-btn); }
+body[data-screen="design"] .rs-map-chip, body[data-screen="design"] .rs-meter { display: none; }
+
+.cl-screen.rs-design {
+  padding: 0;
+  display: grid;
+  grid-template-columns: 236px 1fr;
+  height: calc(100vh - 60px);
+  min-height: 520px;
+}
+.cl-screen.rs-design[hidden] { display: none; }
+.dz-side { overflow-y: auto; min-height: 0; }
+.dz-tray { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.dz-tool {
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  padding: 3px 2px;
+  border: 1px solid #d5dbe1;
+  border-radius: 4px;
+  background: #f1f3f5;
+  color: var(--ink);
+  font-size: 10.5px;
+  line-height: 1.1;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: inset 0 -2px 0 #dde2e7;
+}
+.dz-tool svg { width: 32px; height: 32px; flex: none; }
+.dz-tool:hover { border-color: var(--rs-btn); background: #fff; }
+.dz-tool.is-on { border-color: var(--rs-bar); background: #e3f2fd; box-shadow: inset 0 0 0 2px var(--rs-btn); }
+.dz-props { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; padding-top: 8px; border-top: 1px solid #e2e8f0; }
+.dz-props label { display: flex; flex-direction: column; gap: 2px; font-size: 12px; font-weight: 600; color: #475569; }
+.dz-props input, .dz-props select, .dz-props textarea {
+  width: 100%;
+  padding: 5px 7px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink);
+  resize: vertical;
+  font-family: var(--f-body);
+}
+.dz-actions { display: flex; flex-wrap: wrap; gap: 6px; position: sticky; bottom: -10px; padding: 6px 0 10px; background: #fff; }
+.dz-actions .cl-btn { flex: 1 1 auto; padding: 6px 8px; font-size: 12.5px; }
+.dz-actions .cl-primary { flex-basis: 100%; }
+
+.dz-stage { overflow: hidden; }
+.dz-3d { position: absolute; inset: 0; }
+.dz-3d canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.dz-3d.is-flat { display: grid; place-items: center; color: #475569; padding: 20px; text-align: center; }
+.dz-viewbar {
+  position: absolute;
+  top: 10px;
+  left: 8px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 4px;
+  background: #dfe3e8;
+}
+.dz-viewbar button {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+}
+.dz-viewbar svg { width: 20px; height: 20px; fill: #8a96a3; }
+.dz-viewbar button:hover { background: #fff; }
+.dz-viewbar button:hover svg { fill: var(--rs-bar); }
+.dz-topright { position: absolute; top: 10px; right: 10px; z-index: 5; display: flex; align-items: center; gap: 8px; }
+.dz-count { font-size: 13px; font-weight: 700; color: var(--rs-bar); }
+.dz-count b { font-family: var(--f-mono); }
+.dz-bg-btn {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #d5dbe1;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+.dz-bg-btn svg { width: 24px; height: 24px; fill: var(--rs-btn); }
+.dz-bg-btn:hover { border-color: var(--rs-btn); }
+.dz-bg-clear { border: 0; background: transparent; color: var(--bad); font-size: 12px; font-weight: 700; cursor: pointer; }
+.dz-selbar {
+  position: absolute;
+  left: 50%;
+  bottom: 44px;
+  z-index: 6;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: calc(100% - 20px);
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .96);
+  box-shadow: 0 4px 14px rgba(15, 30, 50, .18);
+  white-space: nowrap;
+}
+.dz-selbar[hidden] { display: none; }
+.dz-selbar strong { font-size: 13px; color: var(--rs-bar); margin-right: 4px; }
+.dz-selbar .dz-del { color: var(--bad); }
+.dz-tip {
+  position: absolute;
+  left: 50px;
+  right: 10px;
+  bottom: 8px;
+  z-index: 5;
+  margin: 0;
+  font-size: 12.5px;
+  color: #475569;
+  text-align: center;
+  pointer-events: none;
+}
+.dz-tip[data-kind="warn"] { color: var(--bad); font-weight: 700; }
+.dz-help { top: 56px; right: 10px; width: min(380px, calc(100% - 70px)); z-index: 12; }
+.dz-help h2 { font-size: 15px; margin: 2px 0 6px; }
+.dz-help ol { margin: 0 0 10px; padding-left: 18px; font-size: 13px; display: grid; gap: 4px; }
+
+@media (max-width: 1100px) {
+  .cl-screen.rs-design { grid-template-columns: 210px 1fr; }
+  .dz-tool { font-size: 10px; }
+  .dz-tool svg { width: 28px; height: 28px; }
+}

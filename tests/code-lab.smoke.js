@@ -180,8 +180,75 @@ const { pageUrl } = require('./helpers/page-url');
     assert.match(await page.locator('#result-score-items').innerText(), /Rời bến A.*60 điểm/);
     await noOverflow('Kết quả thi đấu');
 
+    // 9. Thiết kế sa bàn 3D (79b): mở từ menu ☰ và ô trang chủ, đặt tường + ô đích + xuất phát, lưu, chạy trong "Sa bàn của lớp"
+    await page.locator('#btn-file').click();
+    await page.locator('#btn-editor').click();
+    assert.equal(await page.locator('#screen-design').isVisible(), true, 'Menu ☰ "Thiết kế sa bàn…" phải mở màn thiết kế');
+    await page.locator('.cl-nav-tab[data-screen="home"]').click();
+    await page.locator('#home-btn-editor').click();
+    assert.equal(await page.locator('#screen-design').isVisible(), true, 'Ô "Thiết kế sa bàn" phải mở màn thiết kế');
+    assert.equal(await page.locator('#tab-design').getAttribute('aria-selected'), 'true');
+    await page.locator('#design-3d canvas').waitFor({ state: 'visible', timeout: 10000 });
+    assert.ok(await page.locator('#dz-tray .dz-tool').count() >= 15, 'Khay đạo cụ đủ ô (cả vật thi đấu)');
+    for (const t of ['wall', 'box', 'line', 'zone-red', 'zone-green', 'zone-blue', 'zone-yellow', 'flag', 'goal', 'start', 'marker', 'dockA', 'dockB', 'ramp', 'button'])
+      assert.equal(await page.locator(`#dz-tray .dz-tool[data-tool="${t}"]`).count(), 1, 'Thiếu ô đạo cụ ' + t);
+    await noOverflow('Thiết kế sa bàn');
+    await page.locator('#dz-name').fill('Sân thử 79b');
+    await page.locator('#dz-size').selectOption('200x120');
+    // Chạm ô đạo cụ rồi chạm lên sân (tọa độ cm → điểm ảnh qua camera 3D)
+    const placeAt = async (tool, x, y) => {
+      await page.locator(`#dz-tray .dz-tool[data-tool="${tool}"]`).click();
+      const p = await page.evaluate(([x, y]) => CodeLabDesigner.toScreen(x, y), [x, y]);
+      await page.mouse.click(p.x, p.y);
+    };
+    await placeAt('start', 30, 60);
+    await placeAt('wall', 100, 30);
+    await placeAt('goal', 160, 60);
+    assert.equal((await page.locator('#dz-count').innerText()).trim(), '2', 'Đếm 2 đạo cụ (tường + ô đích)');
+    const d = await page.evaluate(() => CodeLabDesigner.draft);
+    assert.deepEqual([d.start.x, d.start.y], [30, 60], 'Xe đặt đúng chỗ chạm, bắt lưới 5 cm');
+    const goal = d.items.find(i => i.k === 'zone' && i.goal), wall = d.items.find(i => i.k === 'wall');
+    assert.ok(goal && Math.abs(goal.x + goal.w / 2 - 160) <= 5 && Math.abs(goal.y + goal.h / 2 - 60) <= 5, 'Ô đích đúng chỗ chạm');
+    assert.ok(wall && Math.abs(wall.x + wall.w / 2 - 100) <= 5, 'Tường đúng chỗ chạm');
+    // Chọn tường → xoay 90° → hoàn tác / làm lại bằng phím
+    const wp = await page.evaluate(() => { const w = CodeLabDesigner.draft.items.find(i => i.k === 'wall'); return CodeLabDesigner.toScreen(w.x + w.w / 2, w.y + w.h / 2); });
+    await page.mouse.click(wp.x, wp.y);
+    assert.match(await page.locator('#dz-sel-name').innerText(), /Tường/);
+    await page.locator('#dz-rotate').click();
+    assert.ok(await page.evaluate(() => { const w = CodeLabDesigner.draft.items.find(i => i.k === 'wall'); return w.h > w.w; }), 'Xoay 90° đổi chiều tường');
+    await page.locator('#dz-delete').click();
+    assert.equal((await page.locator('#dz-count').innerText()).trim(), '1');
+    await page.keyboard.press('Control+z');
+    assert.equal((await page.locator('#dz-count').innerText()).trim(), '2', 'Ctrl+Z trả lại tường');
+    await page.keyboard.press('Control+z');
+    await page.keyboard.press('Control+y');
+    assert.ok(await page.evaluate(() => { const w = CodeLabDesigner.draft.items.find(i => i.k === 'wall'); return w && w.h > w.w; }), 'Ctrl+Y làm lại phép xoay');
+    await noOverflow('Thiết kế sa bàn sau khi đặt');
+    await page.locator('#dz-save').click();
+    const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('codelab.maps') || '[]'));
+    assert.equal(saved.length, 1);
+    assert.equal(saved[0].name, 'Sân thử 79b');
+    assert.deepEqual(saved[0].size, [200, 120]);
+    assert.ok(saved[0].custom && saved[0].items.filter(i => i.k === 'wall').length === 5, 'Lưu đúng định dạng map (4 tường khung + 1 tường)');
+    // Sa bàn mới hiện ở chủ đề "Sa bàn của lớp" và chạy được về đích
+    await page.locator('.cl-nav-tab[data-screen="home"]').click();
+    await page.locator('#home-btn-quickstart').click();
+    if (await page.locator('#theme-detail').isVisible()) await page.locator('#theme-back').click();
+    await page.locator('.rs-theme[data-theme="class"]').click();
+    await page.locator('.rs-map-item').filter({ hasText: 'Sân thử 79b' }).click();
+    await page.locator('#detail-start').click();
+    assert.match(await page.locator('#map-name').innerText(), /Sân thử 79b/);
+    await page.locator('.cl-nav-tab[data-screen="sim"]').click();
+    await page.evaluate(() => {
+      codeLab.state.speed = 4;
+      codeLab.state.blocks = [CodeLab.make('start'), CodeLab.make(['move', { dir: 'fwd', speed: 75, sec: 8 }])];
+    });
+    await page.locator('#btn-run').click();
+    await page.locator('#result').waitFor({ state: 'visible', timeout: 30000 });
+    assert.equal(await page.evaluate(() => codeLab.sim.result.ok), true, 'Xe chạy thẳng về ô đích của sa bàn vừa thiết kế');
+
     assert.deepEqual(errors, [], 'Không được có lỗi console/mạng');
-    console.log('PASS: Phòng lập trình – luồng cũ, Super Track 3D, gợi ý thi đấu 150 điểm, không lỗi console/mạng, không tràn 1024×768.');
+    console.log('PASS: Phòng lập trình – luồng cũ, Super Track 3D, gợi ý thi đấu 150 điểm, thiết kế sa bàn 3D lưu và chạy được, không lỗi console/mạng, không tràn 1024×768.');
   } finally {
     await browser.close();
   }
