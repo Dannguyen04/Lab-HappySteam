@@ -45,23 +45,11 @@
     isShareDone: () => state.photos.length > 0 || (F.share?.questions || []).some(q => !!state.answers['share:' + q.id])
   };
 
-  // ---------- Đọc to bằng giọng tiếng Việt của máy ----------
-  const synth = window.speechSynthesis;
-  function speak(text) {
-    if (!synth || (window.SFX && !window.SFX.enabled)) return;
-    synth.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    const voice = synth.getVoices().find(v => /^vi/i.test(v.lang));
-    u.lang = 'vi-VN';
-    if (voice) u.voice = voice;
-    u.rate = 0.9;
-    synth.speak(u);
-  }
+  // Không đọc to (quyết định 2026-11-04): lời truyện, câu hỏi và tên khối chỉ hiện bằng chữ và hình.
 
   // Icon giao diện: nét đơn theo currentColor, cùng kiểu với icon của trình xem 3D (không dùng emoji)
   const svg = d => `<svg class="fl-svg" viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
   const ICON = {
-    say: svg('<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11"/>'),
     camera: svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),
     cube: svg('<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/>'),
     orbit: svg('<circle cx="12" cy="12" r="4"/><ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(-25 12 12)"/>'),
@@ -78,9 +66,6 @@
   function choiceBlock(scope, q, onPick) {
     const box = el('div', { class: 'fl-q' });
     box.append(el('div', { class: 'fl-q-h' }, `<p>${esc(q.text)}</p>`));
-    const say = el('button', { type: 'button', class: 'fl-say', 'aria-label': 'Đọc to câu hỏi', title: 'Đọc to' }, ICON.say);
-    say.addEventListener('click', () => speak(q.text + ' ' + q.choices.map(c => c.label).join('. ')));
-    box.firstChild.prepend(say);
     const row = el('div', { class: 'fl-choices', role: 'radiogroup', 'aria-label': q.text });
     const note = q.note ? el('p', { class: 'fl-note', text: q.note }) : null;
     const key = scope + ':' + q.id;
@@ -96,7 +81,6 @@
         save();
         paint();
         if (window.SFX) window.SFX.click();
-        speak(c.label);
         if (onPick) onPick(c);
       });
       row.append(b);
@@ -127,7 +111,7 @@
   }
 
   // ---------- Chặng Khám phá: truyện động (tự chạy, chuyển động, có lời đọc) + clip thật tùy bài ----------
-  // Khung: { img, text, audio?, move? }. audio: giọng thu sẵn (mp3/m4a), không có thì máy đọc.
+  // Khung: { img, text, move? }. Không có tiếng đọc; tự chạy thì mỗi khung đứng theo độ dài câu.
   // move: zoom-in | zoom-out | pan-left | pan-right (bỏ trống thì lần lượt). Máy bật "giảm chuyển động" thì đứng yên.
   // Clip: explore.clip = { src, poster?, caption, credit, start?, end?, muted? }: phim thật ngắn, lưu trên máy chủ của mình, ghi rõ nguồn.
   // start/end (giây) phát một đoạn của phim dài mà không cần cắt file; muted: tắt tiếng (vd. lời tiếng Anh).
@@ -163,7 +147,6 @@
         <div class="fl-caption">
           <button type="button" class="fl-say fl-play" id="fl-play" aria-label="Tự chạy truyện" aria-pressed="false" title="Tự chạy truyện"></button>
           <p id="fl-text" aria-live="polite"></p>
-          <button type="button" class="fl-say" id="fl-say" aria-label="Đọc lại khung này" title="Đọc lại">${ICON.say}</button>
         </div>
         <div class="fl-dots" id="fl-dots"></div>
       </article>${clip}
@@ -171,41 +154,18 @@
     const frames = E.frames;
     const dots = $('fl-dots');
     const img = $('fl-img');
-    let playing = false, timer = 0, poll = 0, audio = null, turn = 0;
+    let playing = false, timer = 0, turn = 0;
 
     function quiet() {
       clearTimeout(timer);
-      clearInterval(poll);
-      turn++; // lời đọc cũ kết thúc muộn thì bỏ qua
-      if (synth) synth.cancel();
-      if (audio) audio.pause();
-      audio = null;
+      turn++; // hẹn giờ cũ tới muộn thì bỏ qua
     }
-    // Đọc lời khung rồi gọi done: giọng thu sẵn > giọng máy > chỉ chờ theo độ dài câu (tắt tiếng / máy không đọc được)
+    // Tự chạy truyện: mỗi khung đứng theo độ dài câu (không có tiếng đọc) rồi gọi done
     function narrate(f, done) {
       quiet();
       const my = turn;
       const wait = Math.max(4500, f.text.length * 80);
-      const end = () => my === turn && done();
-      const after = ms => {
-        clearTimeout(timer);
-        timer = setTimeout(end, ms);
-      };
-      const soundOn = !(window.SFX && !window.SFX.enabled);
-      after(wait + 6000); // lưới an toàn nếu không nhận được tín hiệu đọc xong
-      if (soundOn && f.audio) {
-        audio = new Audio(f.audio);
-        audio.onended = () => after(700);
-        audio.play().catch(() => after(wait));
-      } else if (soundOn && synth) {
-        speak(f.text);
-        if (!synth.speaking && !synth.pending) after(wait);
-        else poll = setInterval(() => {
-          if (synth.speaking || synth.pending) return;
-          clearInterval(poll);
-          after(700);
-        }, 250);
-      } else after(wait);
+      timer = setTimeout(() => my === turn && done(), wait);
       return wait;
     }
     function animate(f, ms) {
@@ -259,7 +219,6 @@
       pane.classList.add('has-started');
       setPlaying(false);
       show(i);
-      speak(frames[state.frame].text);
     };
     frames.forEach((f, i) => {
       const d = el('button', { type: 'button', 'aria-label': 'Khung ' + (i + 1) });
@@ -268,7 +227,6 @@
     });
     $('fl-prev').addEventListener('click', () => jump(state.frame - 1));
     $('fl-next').addEventListener('click', () => jump(state.frame + 1));
-    $('fl-say').addEventListener('click', () => speak(frames[state.frame].text));
     $('fl-play').addEventListener('click', () => (playing ? setPlaying(false) : play(state.frame === frames.length - 1 ? 0 : null)));
     $('fl-start').addEventListener('click', () => play(0));
     if ($('fl-video')) $('fl-video').addEventListener('play', () => setPlaying(false));
@@ -419,7 +377,6 @@
         state.feel = f.id;
         save();
         paintFeel();
-        speak(f.label);
       });
       feels.append(b);
     }
@@ -511,7 +468,6 @@
       $('fl-go').onclick = () => next && go(next.dataset.stage);
       document.documentElement.dataset.flowStage = e.detail.stage;
       if (e.detail.stage === 'share') refreshShare();
-      if (synth) synth.cancel();
     });
     const go = stage => {
       if (window.SFX) window.SFX.click();
@@ -542,17 +498,7 @@
     tools.append(wrap);
   }
 
-  // ---------- Khối lệnh chỉ có hình (chế độ Bé): chạm khối trong khay thì đọc tên khối ----------
-  function iconBlocks() {
-    const box = $('block-toolbox');
-    if (!box) return;
-    box.addEventListener('click', e => {
-      const item = e.target.closest('.zb-item');
-      if (!item || document.documentElement.dataset.mode !== 'kid') return;
-      const cap = item.querySelector('.zb-caption');
-      if (cap) speak(cap.textContent);
-    });
-  }
+
 
   zmReady(() => {
     document.documentElement.classList.add('has-flow');
@@ -565,6 +511,5 @@
     });
     buildNextBar();
     tidyHeader();
-    iconBlocks();
   });
 })();
