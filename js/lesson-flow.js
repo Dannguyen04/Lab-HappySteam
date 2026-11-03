@@ -123,7 +123,8 @@
   // ---------- Chặng Khám phá: truyện động (tự chạy, chuyển động, có lời đọc) + clip thật tùy bài ----------
   // Khung: { img, text, audio?, move? }. audio: giọng thu sẵn (mp3/m4a), không có thì máy đọc.
   // move: zoom-in | zoom-out | pan-left | pan-right (bỏ trống thì lần lượt). Máy bật "giảm chuyển động" thì đứng yên.
-  // Clip: explore.clip = { src, poster?, caption, credit }: phim thật ngắn, lưu trên máy chủ của mình, ghi rõ nguồn.
+  // Clip: explore.clip = { src, poster?, caption, credit, start?, end?, muted? }: phim thật ngắn, lưu trên máy chủ của mình, ghi rõ nguồn.
+  // start/end (giây) phát một đoạn của phim dài mà không cần cắt file; muted: tắt tiếng (vd. lời tiếng Anh).
   const MOVES = ['zoom-in', 'pan-left', 'zoom-out', 'pan-right'];
   const KEYFRAMES = {
     'zoom-in': [{ transform: 'scale(1)' }, { transform: 'scale(1.12)' }],
@@ -142,7 +143,7 @@
     const clip = E.clip ? `
       <article class="panel fl-clip">
         <div class="panel-h"><h2>Ngoài đời thật</h2></div>
-        <video id="fl-video" controls playsinline preload="none" src="${esc(E.clip.src)}"${E.clip.poster ? ` poster="${esc(E.clip.poster)}"` : ''}></video>
+        <video id="fl-video" controls playsinline preload="none" src="${esc(E.clip.src)}${E.clip.start != null ? `#t=${+E.clip.start}${E.clip.end != null ? `,${+E.clip.end}` : ''}` : ''}"${E.clip.muted ? ' muted' : ''}${E.clip.poster ? ` poster="${esc(E.clip.poster)}"` : ''}></video>
         <p class="panel-note">${esc(E.clip.caption || '')}${E.clip.credit ? ` · Nguồn: ${esc(E.clip.credit)}` : ''}</p>
       </article>` : '';
     pane.innerHTML = `
