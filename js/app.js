@@ -253,6 +253,29 @@
       $('book-pdf').href = b.pdf;
     });
 
+    // ---------- Ca mẫu đúng/sai: bai.html?id=…&mau=<id ca> (content/<bài>/mau-lap-trinh.json) ----------
+    // Cho giáo viên mở nhanh một chương trình đúng hoặc sai để chiếu cho lớp; chạy bằng nút Chạy như thường.
+    const mauId = new URLSearchParams(location.search).get('mau');
+    const entry = window.ZM_LESSONS?.[new URLSearchParams(location.search).get('id')];
+    if (mauId && entry) {
+      fetch(`content/${entry.content}/mau-lap-trinh.json`)
+        .then(r => (r.ok ? r.json() : null))
+        .then(data => {
+          const c = data?.cases.find(x => x.id === mauId);
+          if (!c) return;
+          blockEngine.loadProgram(c.program);
+          go('sim');
+          const box = document.createElement('div');
+          box.className = 'mau-banner';
+          box.dataset.kind = c.kind;
+          box.innerHTML = '<b></b><p></p>';
+          box.querySelector('b').textContent = (c.kind === 'dung' ? '✔ Cách đúng: ' : '✘ Cách sai: ') + c.title;
+          box.querySelector('p').textContent = c.why;
+          $('stage-sim').prepend(box);
+        })
+        .catch(() => {});
+    }
+
     // ---------- Chế độ Bé / Nâng cao (mặc định Bé: ít chữ, không số đo) ----------
     const btnMode = $('btn-mode');
     function applyMode(mode) {

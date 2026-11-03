@@ -115,6 +115,14 @@
       this.notifyChange();
     }
 
+    // Nạp một chương trình theo cùng dạng với LESSON.blocks.sample (dùng cho link ?mau= ca mẫu đúng/sai)
+    loadProgram(spec) {
+      this.blocks = makeBlocks(spec);
+      this.selected = -1;
+      this.render();
+      this.notifyChange();
+    }
+
     clearProgram() {
       this.selected = -1;
       this.blocks = makeBlocks(this.opts.empty || ['start']);
