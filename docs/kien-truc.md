@@ -1,7 +1,35 @@
 # Kiến trúc & kế hoạch chuyển đổi — Happy STEAM Lab
 
-Cập nhật: 2026-10-31. Tài liệu này ghi lại các quyết định công nghệ và thứ tự làm.
+Cập nhật: 2026-11-03 (chốt tech stack mới, mục 0). Bản trước: 2026-10-31. Tài liệu này ghi lại các quyết định công nghệ và thứ tự làm.
 Ai (người hay AI) sửa dự án đều đọc file này trước.
+
+## 0. Quyết định 2026-11-03: bài học là DỮ LIỆU, không phải code
+
+Lý do: 27 bài hiện có 37.800 dòng JS riêng (~1.400 dòng/bài: `art.js` vẽ canvas tay, `*-engine.js` vật lý tự viết, `*-scene.js`), chỉ 15.400 dòng dùng chung. Nhân lên ~150 bài K1–K5 là không bảo trì được.
+
+**Luật:** một bài = `content/<lop>/<bai>/` gồm `lesson.json` + `build.json` + `assets/`. **Không có file JS/TS riêng cho bài.** Bài cần tính năng chưa có → thêm vào thư viện chung (`src/library`) để bài sau dùng lại.
+
+| Lớp | Chọn |
+|---|---|
+| Ngôn ngữ | TypeScript **strict** |
+| Giao diện | **React 19 + Vite** |
+| 3D | **Three.js qua React Three Fiber + drei**; mọi bài dùng cảnh 3D chung (mô hình kit thật + prefab + ảnh nền/SVG), thống nhất với Code Lab |
+| Vật lý | **Rapier** (`@react-three/rapier`), một engine chung, bài chỉ khai báo tham số |
+| Lập trình khối | Blockly (giữ) |
+| Hình 2D | File SVG/PNG trong `assets/`, bỏ vẽ bằng code |
+| Nội dung | JSON + lược đồ **Zod** theo loại bài; nhiệm vụ/điều kiện đạt là luật khai báo (vd `{"khi":"rocket.altitude",">=":50}`) |
+| Trạng thái | Zustand + TanStack Query |
+| Backend | Supabase (giữ). Giai đoạn 2: nội dung bài vào DB + trang soạn bài |
+| Test / Triển khai | Vitest + Playwright + kiểm lược đồ mọi bài trong CI / GitHub Pages |
+
+Cấu trúc đích: `src/engine` (runtime bài: cảnh, vật lý, luật nhiệm vụ, Blockly) · `src/library` (prefab: dốc, đường băng, gió, cảm biến, motor…) · `src/apps` (student, teacher, parent, code-lab).
+
+Chuyển đổi (strangler, không viết lại một lần):
+1. Chứng minh mô hình dữ liệu bằng 2 bài vật lý khác hẳn nhau: lớp 3 bài 13 (tên lửa) và lớp 1 bài 1 (con dốc), chạy được mà không có code riêng.
+2. Khung React; chuyển trang giáo viên/phụ huynh trước (MVP BRD).
+3. Bài cũ chạy qua lớp chuyển tiếp, chuyển dần. **Bài mới viết dạng dữ liệu từ nay.**
+
+Mục 1–4 dưới đây là kế hoạch cũ; chỗ nào mâu thuẫn thì mục 0 thắng.
 
 ## 1. Yêu cầu đã chốt
 

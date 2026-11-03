@@ -30,3 +30,8 @@ skills-lock.json
 
 # Sổ tay RoboSim tiếng Việt: dùng ảnh của sổ tay ZMROBO, chỉ để trên máy
 docs/so-tay-robosim/
+
+# GD-34: ảnh cắt từ sách ZMROBO (bước lắp, bìa) chỉ để trên máy. 357 ảnh cũ đã lên git đang chờ dọn (BRD 12.19)
+assets/*/step-*.jpg
+assets/*/step-*.png
+assets/covers/*
