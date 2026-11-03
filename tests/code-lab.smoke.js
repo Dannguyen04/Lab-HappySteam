@@ -98,6 +98,8 @@ const { pageUrl } = require('./helpers/page-url');
     // 4. Sân 3D là mặc định, phủ đúng khung; chuyển 2D rồi về 3D không lỗi
     await page.locator('#world-3d canvas').waitFor({ state: 'visible', timeout: 10000 });
     assert.equal(await page.evaluate(() => codeLab.state.viewMode), '3d');
+    // Xe là mô hình kit thật (79a): nạp bất đồng bộ, xong thì container gắn data-car-source=kit
+    await page.waitForSelector('#world-3d[data-car-source="kit"]', { state: 'attached', timeout: 15000 });
     const [box3d, wrap] = [await page.locator('#world-3d').boundingBox(), await page.locator('#canvas-wrap').boundingBox()];
     assert.ok(Math.abs(box3d.y - wrap.y) < 2 && Math.abs(box3d.height - wrap.height) < 2, '3D phải phủ đúng khung sa bàn, không nằm dưới');
     await page.locator('#btn-reset').click();
@@ -112,6 +114,7 @@ const { pageUrl } = require('./helpers/page-url');
     // 5. Gỡ cảm biến Dò vạch ở Lắp robot → khối dò vạch mờ trong khay, chạy bị chặn với lời nhắc
     await page.locator('.cl-nav-tab[data-screen="robot"]').click();
     assert.equal(await page.locator('#robot3d canvas').isVisible(), true, 'Lắp robot phải có xe 3D trên tấm đế');
+    await page.waitForSelector('#robot3d[data-car-source="kit"]', { state: 'attached', timeout: 15000 });
     await page.locator('#sensor-deck .rs-part[data-sensor="line"]').click();
     assert.equal(await page.evaluate(() => codeLab.state.sensors.line), null);
     assert.equal(await page.locator('#sensor-deck .rs-part[data-sensor="line"]').getAttribute('aria-pressed'), 'false');

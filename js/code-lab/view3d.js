@@ -4,6 +4,7 @@
 // API: window.CodeLabView3D = { create(container) -> { render(sim), resize(), dispose() } }
 
 import * as THREE from 'three';
+import { loadKitCar } from './kit-car.js';
 
 const ROBOT_SPEC = {
   length: 18, // cm
@@ -303,8 +304,14 @@ function buildAlpha330Robot(materials) {
 
   group.add(sonarBeamGroup);
 
+  // Các khối hộp dựng bằng code (xe dự phòng): bị ẩn khi mô hình kit thật nạp xong
+  const keep = new Set([ledMesh, ledLight, lineGroup, touchGroup, colorGroup, sonarBeamGroup]);
+  const boxy = group.children.filter(o => !keep.has(o));
+
   return {
     group,
+    boxy,
+    sonarBeamGroup,
     parts: { dist: sonarGroup, line: lineGroup, touch: touchGroup, color: colorGroup, led: ledMesh },
     chassisMesh,
     leftWheel,
@@ -527,6 +534,8 @@ function createView3D(container, opts = {}) {
     })
   };
 
+  let disposed = false;
+
   // 5. Khởi tạo Robot 3D
   const robot = buildAlpha330Robot(materials);
   scene.add(robot.group);
@@ -548,6 +557,28 @@ function createView3D(container, opts = {}) {
     for (const [key, part] of Object.entries(robot.parts)) part.visible = !!mounted[key];
   }
 
+  // Xe thật từ mô hình kit (kit-car.js): nạp bất đồng bộ; đang chờ/lỗi thì giữ xe hộp
+  let carSource = 'box';
+  let kitMaterials = null;
+  loadKitCar(THREE).then(kit => {
+    if (disposed) return;
+    for (const o of robot.boxy) o.visible = false;
+    robot.group.add(kit.group);
+    robot.leftWheel = kit.wheelL;
+    robot.rightWheel = kit.wheelR;
+    robot.parts.dist = kit.sonar;
+    robot.sonarBeamGroup.position.set(kit.sonarFront.x + 0.2, kit.sonarFront.y, 0);
+    // Cảm biến phụ của xe hộp đặt lại theo thân xe thật
+    robot.parts.touch.position.set(0, -2.6, 0);
+    robot.parts.led.position.y += 1.6;
+    kitMaterials = kit.materials;
+    carSource = 'kit';
+    setMounted(mounted);
+    container.dataset.carSource = 'kit';
+  }).catch(err => {
+    console.warn('Xe 3D kit không nạp được, dùng xe hộp:', err && err.message);
+  });
+
   // 6. Nhóm sa bàn (Floor, Walls, Zones, Lines, Flags)
   const mapGroup = new THREE.Group();
   scene.add(mapGroup);
@@ -560,6 +591,7 @@ function createView3D(container, opts = {}) {
   // Quản lý trạng thái map hiện tại
   let currentMapKey = '';
   let floorMesh = null;
+  let bgTex = null, bgMat = null;
   let rimMesh = null;
   let flagsData = []; // [{ group, banner, baseDisc }]
   let contestButtons = [];
@@ -588,7 +620,16 @@ function createView3D(container, opts = {}) {
 
     // Mặt sân
     const floorGeom = new THREE.PlaneGeometry(W, H);
-    floorMesh = new THREE.Mesh(floorGeom, materials.floor);
+    // Ảnh nền sân do trình thiết kế sa bàn lưu (map.bg = dataURL): vẽ làm texture mặt sân thay cho lưới
+    if (bgTex) { bgTex.dispose(); bgTex = null; }
+    if (bgMat) { bgMat.dispose(); bgMat = null; }
+    if (typeof map.bg === 'string' && map.bg.startsWith('data:image/')) {
+      bgTex = new THREE.TextureLoader().load(map.bg);
+      bgTex.colorSpace = THREE.SRGBColorSpace;
+      bgTex.anisotropy = 4;
+      bgMat = new THREE.MeshStandardMaterial({ map: bgTex, roughness: 0.85, metalness: 0.05 });
+    }
+    floorMesh = new THREE.Mesh(floorGeom, bgMat || materials.floor);
     floorMesh.rotation.x = -Math.PI / 2;
     floorMesh.position.set(cx, 0, cz);
     floorMesh.receiveShadow = true;
@@ -1147,7 +1188,8 @@ function createView3D(container, opts = {}) {
     // Kiểm tra thay đổi sa bàn hoặc tường di động
     const map = sim.map;
     const mapKey = map.id + '_' + map.size.join('x') + '_' +
-      map.items.map(it => `${it.k}:${it.x}:${it.y}:${it.w}:${it.h}`).join(';');
+      map.items.map(it => `${it.k}:${it.x}:${it.y}:${it.w}:${it.h}`).join(';') +
+      (map.bg ? '_bg' + map.bg.length + map.bg.slice(-24) : '');
 
     if (mapKey !== currentMapKey) {
       currentMapKey = mapKey;
@@ -1164,6 +1206,7 @@ function createView3D(container, opts = {}) {
 
     // Trạng thái va chạm: thân xe chuyển đỏ rực
     robot.chassisMesh.material = sim.touching ? materials.chassisHit : materials.chassis;
+    if (kitMaterials) for (const m of kitMaterials) m.emissive.setHex(sim.touching ? 0x7f1d1d : 0x000000);
 
     // Trạng thái cảm biến
     const sensors = sim.sensors();
@@ -1258,6 +1301,7 @@ function createView3D(container, opts = {}) {
 
   // 13. Phương thức giải phóng bộ nhớ
   function dispose() {
+    disposed = true;
     cancelAnimationFrame(animId);
     if (ro) ro.disconnect();
 
@@ -1275,6 +1319,8 @@ function createView3D(container, opts = {}) {
 
     // Giải phóng tài nguyên Three.js
     renderer.dispose();
+    if (bgTex) bgTex.dispose();
+    if (bgMat) bgMat.dispose();
     gridTexture.dispose();
     hazardTexture.dispose();
     checkeredTexture.dispose();
@@ -1288,7 +1334,8 @@ function createView3D(container, opts = {}) {
     render,
     resize,
     dispose,
-    setMounted
+    setMounted,
+    get carSource() { return carSource; }
   };
 }
 

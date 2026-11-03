@@ -382,7 +382,7 @@
     // Xe 3D trên tấm đế
     if (!robotView && window.CodeLabView3D && state.screen === 'robot') {
       try {
-        robotView = window.CodeLabView3D.create($('robot3d'), { hud: false, transparent: true, showcase: true, baseplate: true, spin: 0.18, radius: 48, theta: 0.5 });
+        robotView = window.CodeLabView3D.create($('robot3d'), { hud: false, transparent: true, showcase: true, baseplate: true, spin: 0.18, radius: 66, theta: 0.5 });
         robotView.render(robotSim);
       } catch { robotView = null; }
     }
