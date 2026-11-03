@@ -103,8 +103,9 @@ assert.equal(alerted.state.m3, true, 'Phát Melody B và dừng khi 90° phải 
 assert.equal(alerted.state.avoidanceMethod, 'melody-stop');
 
 const staleAlert = run([B.start, B.melody, B.low, B.wait, B.stop], 2.5);
-assert.equal(staleAlert.state.m3, false,
-  'Melody B phát trước khi vệ tinh tiếp cận không được tính là cảnh báo đúng lúc');
+assert.equal(staleAlert.state.m3, true, 'Dừng ở vùng 60°–110° là đạt NV3 (quyết định 2026-11-04)');
+assert.equal(staleAlert.state.avoidanceMethod, 'stop',
+  'Melody B phát trước khi vệ tinh tiếp cận không được tính là báo trạm đúng lúc');
 
 const skippedHazard = new Sim('none');
 skippedHazard.prog = [B.start, B.high];

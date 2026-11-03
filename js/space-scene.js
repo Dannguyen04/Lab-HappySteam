@@ -663,6 +663,11 @@
       fx.flashUntil = now + 0.8;
       if (window.SFX) window.SFX.tone(140, 0.35);
       const adv = sim.advanced;
+      // Chạy đúng mẫu trong sách thì đụng là chuyện bình thường: mẫu chưa biết tránh, đó là việc của Nhiệm vụ 3
+      if (!adv && sim.matchesSample()) {
+        toast('bad', 'Mẫu trong sách chưa biết tránh đá', 'Em đã ghép đúng mẫu rồi! Giờ sang Nhiệm vụ 3: sửa chương trình cho vệ tinh quay ngược hoặc dừng trước đám đá nhé.');
+        return;
+      }
       toast('bad', adv ? 'Ối! Vệ tinh đụng thiên thạch' : 'Ối! Vệ tinh đụng đá rồi', adv
         ? 'Hãy dừng vệ tinh trước đường bay, đợi thiên thạch bay qua rồi mới cho chạy tiếp.'
         : 'Lần sau hãy cho vệ tinh quay ngược lại hoặc dừng trước khi tới đám đá.', {
@@ -679,7 +684,11 @@
       // Đã an toàn: dừng chương trình để vệ tinh không lặp lại rồi trôi vào đám đá (đổi chiều thì cho lùi thêm một chút).
       // Nâng cao: không dừng – học sinh còn phải đợi thiên thạch qua rồi đi tiếp
       if (!sim.advanced) setTimeout(() => sim.running && sim.stop(), data === 'reverse' ? 900 : 0);
-      toast('ok', 'Giỏi quá!', data === 'reverse' ? 'Vệ tinh đã quay ngược lại, tránh được đám đá.' : 'Vệ tinh báo động rồi dừng lại, tránh được đám đá.');
+      toast('ok', 'Giỏi quá!', {
+        reverse: 'Vệ tinh đã quay ngược lại, tránh được đám đá.',
+        'melody-stop': 'Vệ tinh báo trạm rồi dừng lại, tránh được đám đá. Rất chu đáo!',
+        stop: 'Vệ tinh đã dừng kịp, tránh được đám đá. Thử thêm Âm thanh B trước khi dừng để báo cho trạm nhé!'
+      }[data]);
     } else if (type === 'pass') {
       const [x, y] = pos(heading(sim));
       for (let i = 0; i < 14; i++) {

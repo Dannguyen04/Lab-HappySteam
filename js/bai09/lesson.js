@@ -136,7 +136,7 @@
     // Thẻ nhiệm vụ ở chặng ③ theo thứ tự làm; go = nút đi tới chặng cần thiết
     cards: {
       m2: { n: 2, title: 'Ghép khối giống hàng mẫu', text: 'Đặt các khối giống hàng mẫu mờ, rồi chạm khối Start màu vàng.' },
-      m3: { n: 3, title: 'Tránh đám đá thiên thạch', text: 'Cho vệ tinh quay ngược hoặc dừng trước đám đá. Gợi ý: Motor Power mức 4 → Melody B → Stop.' },
+      m3: { n: 3, title: 'Tránh đám đá thiên thạch', text: 'Khi vệ tinh tới gần đám đá, cho nó quay ngược hoặc dừng lại. Gợi ý: Motor Power mức 4 → Melody B → Stop (Melody B để báo trạm).' },
       m4: { n: 4, title: 'Thử vệ tinh sáng tạo', text: 'Gắn thêm chi tiết ở chặng Sáng tạo, rồi quay lại chạy chương trình.', go: ['creative', 'Đến xưởng sáng tạo'] },
       m5: { n: 5, title: 'Đợi thiên thạch bay qua', text: 'Trước tiên gắn gói Cảm biến ở chặng Sáng tạo. Cho vệ tinh dừng chờ thiên thạch bay qua rồi chạy tiếp. Gợi ý: Motor Power → Chờ vật cản → Stop → Đợi đường trống → Motor Power.' },
       m6: { n: 6, title: 'Chụp ảnh vật lạ gửi về trạm', text: 'Trước tiên gắn gói Cảm biến ở chặng Sáng tạo. Gặp vật lạ (dấu ?) thì chụp ảnh gửi về. Gợi ý: Motor Power → Nếu thấy vật lạ [Chụp ảnh & gửi] → Hết Nếu, trong vòng lặp.' },
@@ -155,7 +155,7 @@
     // Chi tiết gửi kèm kết quả lên Google Sheets
     details(t) {
       const out = [];
-      if (t.state.avoidanceMethod) out.push('Cách né: ' + (t.state.avoidanceMethod === 'reverse' ? 'đổi chiều' : 'Melody B + dừng'));
+      if (t.state.avoidanceMethod) out.push('Cách né: ' + ({ reverse: 'đổi chiều', 'melody-stop': 'Melody B + dừng', stop: 'dừng' }[t.state.avoidanceMethod]));
       if (t.state.upgrades && t.state.upgrades.length) out.push('Gói nâng cấp: ' + t.state.upgrades.join(', '));
       if (t.state.photos && t.state.photos.length) out.push('Ảnh gửi về: ' + t.state.photos.join(', '));
       return out.join(' · ');

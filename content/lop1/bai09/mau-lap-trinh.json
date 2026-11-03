@@ -5,91 +5,258 @@
       "id": "dung-mau-sach",
       "kind": "dung",
       "title": "Chương trình mẫu trong sách",
-      "why": "Đúng thứ tự khối của sách nên đạt NV2. Vệ tinh quay nhanh 3 giây, đi qua vành đai thiên thạch: đây là điều NV3 yêu cầu em sửa.",
-      "program": ["start", "repeatStart", "melodyA", "highSpeed", ["wait", { "duration": 3 }], "melodyB", "highSpeed", ["wait", { "duration": 3 }], "repeatEnd"],
+      "why": "Đúng thứ tự khối của sách nên đạt NV2. Mẫu chưa biết tránh: vệ tinh quay nhanh 3 giây và đi qua vành đai thiên thạch. Sa bàn báo \"Mẫu trong sách chưa biết tránh đá\" và mời em sang NV3 để sửa.",
+      "program": [
+        "start",
+        "repeatStart",
+        "melodyA",
+        "highSpeed",
+        [
+          "wait",
+          {
+            "duration": 3
+          }
+        ],
+        "melodyB",
+        "highSpeed",
+        [
+          "wait",
+          {
+            "duration": 3
+          }
+        ],
+        "repeatEnd"
+      ],
       "seconds": 12,
-      "expect": { "m2": true, "m3": false, "crash": true }
+      "expect": {
+        "m2": true,
+        "m3": false,
+        "crash": true
+      }
     },
     {
       "id": "dung-melody-dung",
       "kind": "dung",
       "title": "Tránh thiên thạch: chậm lại, báo hiệu rồi dừng",
       "why": "Motor Power mức 4 quay 90°/giây. Melody B kéo dài 1 giây nên vệ tinh tới khoảng 90°, vừa trước vành đai (110°); Stop dừng lại kịp. Đạt NV3.",
-      "program": ["start", ["motorPower", { "power": 4 }], "melodyB", "motorStop"],
+      "program": [
+        "start",
+        [
+          "motorPower",
+          {
+            "power": 4
+          }
+        ],
+        "melodyB",
+        "motorStop"
+      ],
       "seconds": 6,
-      "expect": { "m3": true, "method": "melody-stop", "crash": false }
+      "expect": {
+        "m3": true,
+        "method": "melody-stop",
+        "crash": false
+      }
     },
     {
       "id": "dung-dao-chieu",
       "kind": "dung",
       "title": "Tránh thiên thạch: đảo chiều trước vành đai",
       "why": "Quay nhanh 180°/giây. Chờ 0,5 giây là tới 90°, đảo chiều thì vệ tinh quay ngược ra xa đám đá. Đạt NV3.",
-      "program": ["start", "highSpeed", ["wait", { "duration": 0.5 }], "motorReverse", ["wait", { "duration": 2 }], "motorStop"],
+      "program": [
+        "start",
+        "highSpeed",
+        [
+          "wait",
+          {
+            "duration": 0.5
+          }
+        ],
+        "motorReverse",
+        [
+          "wait",
+          {
+            "duration": 2
+          }
+        ],
+        "motorStop"
+      ],
       "seconds": 6,
-      "expect": { "m3": true, "method": "reverse", "crash": false }
+      "expect": {
+        "m3": true,
+        "method": "reverse",
+        "crash": false
+      }
+    },
+    {
+      "id": "dung-chi-dung",
+      "kind": "dung",
+      "title": "Tránh thiên thạch: chậm lại rồi dừng",
+      "why": "Motor Power 4 quay 90°/giây, chờ 1 giây là tới 90°, dừng trước vành đai (110°). Đạt NV3. Thêm Melody B trước khi dừng thì được ghi là có báo trạm.",
+      "program": [
+        "start",
+        [
+          "motorPower",
+          {
+            "power": 4
+          }
+        ],
+        [
+          "wait",
+          {
+            "duration": 1
+          }
+        ],
+        "motorStop"
+      ],
+      "seconds": 4,
+      "expect": {
+        "m3": true,
+        "method": "stop",
+        "crash": false
+      }
     },
     {
       "id": "sai-chay-mai",
       "kind": "sai",
       "title": "Quay nhanh mãi, không tránh",
       "why": "Không có khối nào dừng hay đổi chiều, vệ tinh đi thẳng vào vành đai thiên thạch.",
-      "program": ["start", "highSpeed", ["wait", { "duration": 5 }]],
+      "program": [
+        "start",
+        "highSpeed",
+        [
+          "wait",
+          {
+            "duration": 5
+          }
+        ]
+      ],
       "seconds": 6,
-      "expect": { "m3": false, "crash": true }
+      "expect": {
+        "m3": false,
+        "crash": true
+      }
     },
     {
       "id": "sai-dao-chieu-muon",
       "kind": "sai",
       "title": "Đảo chiều quá muộn",
       "why": "Chờ 1 giây ở tốc độ nhanh là vệ tinh đã tới 180°, đi qua vành đai (110°) rồi mới đảo chiều.",
-      "program": ["start", "highSpeed", ["wait", { "duration": 1 }], "motorReverse", ["wait", { "duration": 2 }], "motorStop"],
+      "program": [
+        "start",
+        "highSpeed",
+        [
+          "wait",
+          {
+            "duration": 1
+          }
+        ],
+        "motorReverse",
+        [
+          "wait",
+          {
+            "duration": 2
+          }
+        ],
+        "motorStop"
+      ],
       "seconds": 6,
-      "expect": { "m3": false, "crash": true }
+      "expect": {
+        "m3": false,
+        "crash": true
+      }
     },
     {
       "id": "sai-dung-som",
       "kind": "sai",
       "title": "Dừng quá sớm, chưa tới gần đám đá",
-      "why": "Dừng ở khoảng 18° là an toàn nhưng chưa phải là tránh: vệ tinh chưa tới vùng cần tránh (60°–110°), nên chưa tính NV3.",
-      "program": ["start", "highSpeed", ["wait", { "duration": 0.1 }], "motorStop"],
+      "why": "Dừng ở khoảng 18° là an toàn, nhưng vệ tinh chưa tới gần đám đá (vùng 60°–110°) nên chưa phải là tránh: chưa tính NV3.",
+      "program": [
+        "start",
+        "highSpeed",
+        [
+          "wait",
+          {
+            "duration": 0.1
+          }
+        ],
+        "motorStop"
+      ],
       "seconds": 4,
-      "expect": { "m3": false, "crash": false }
-    },
-    {
-      "id": "sai-dung-khong-bao-hieu",
-      "kind": "sai",
-      "title": "Dừng đúng chỗ nhưng quên Melody B",
-      "why": "Vệ tinh dừng ở 90°, không đụng đá, nhưng cách tránh của bài là phát Melody B báo trạm rồi dừng (hoặc đảo chiều). Thiếu tín hiệu nên chưa tính NV3.",
-      "program": ["start", ["motorPower", { "power": 4 }], ["wait", { "duration": 1 }], "motorStop"],
-      "seconds": 4,
-      "expect": { "m3": false, "crash": false }
+      "expect": {
+        "m3": false,
+        "crash": false
+      }
     },
     {
       "id": "sai-melody-qua-muon",
       "kind": "sai",
       "title": "Melody B ở tốc độ nhanh: dừng không kịp",
       "why": "Ở tốc độ nhanh, trong 1 giây phát Melody B vệ tinh đi tới 180°, qua vành đai trước khi gặp khối Stop.",
-      "program": ["start", "highSpeed", "melodyB", "motorStop"],
+      "program": [
+        "start",
+        "highSpeed",
+        "melodyB",
+        "motorStop"
+      ],
       "seconds": 4,
-      "expect": { "m3": false, "crash": true }
+      "expect": {
+        "m3": false,
+        "crash": true
+      }
     },
     {
       "id": "sai-thieu-khoi-mau",
       "kind": "sai",
       "title": "Ghép gần giống mẫu nhưng thiếu khối",
       "why": "Thiếu khối Melody B và khối Quay nhanh thứ hai so với sách nên chưa đạt NV2.",
-      "program": ["start", "repeatStart", "melodyA", "highSpeed", ["wait", { "duration": 3 }], "repeatEnd"],
+      "program": [
+        "start",
+        "repeatStart",
+        "melodyA",
+        "highSpeed",
+        [
+          "wait",
+          {
+            "duration": 3
+          }
+        ],
+        "repeatEnd"
+      ],
       "seconds": 8,
-      "expect": { "m2": false }
+      "expect": {
+        "m2": false
+      }
     },
     {
       "id": "sai-sai-so-giay",
       "kind": "sai",
       "title": "Đúng các khối nhưng sai số giây",
       "why": "Khối Chờ 2 giây thay vì 3 giây như sách: NV2 cần đúng cả số giây.",
-      "program": ["start", "repeatStart", "melodyA", "highSpeed", ["wait", { "duration": 2 }], "melodyB", "highSpeed", ["wait", { "duration": 3 }], "repeatEnd"],
+      "program": [
+        "start",
+        "repeatStart",
+        "melodyA",
+        "highSpeed",
+        [
+          "wait",
+          {
+            "duration": 2
+          }
+        ],
+        "melodyB",
+        "highSpeed",
+        [
+          "wait",
+          {
+            "duration": 3
+          }
+        ],
+        "repeatEnd"
+      ],
       "seconds": 12,
-      "expect": { "m2": false }
+      "expect": {
+        "m2": false
+      }
     }
   ]
 }

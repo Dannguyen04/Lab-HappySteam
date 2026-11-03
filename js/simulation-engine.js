@@ -750,7 +750,8 @@
       this.asteroidAvoided = true;
       this.avoidanceMethod = method;
       this.emit('avoid', method);
-      this.log('ok', `🛡️ Đã tránh vành đai thiên thạch bằng ${method === 'reverse' ? 'đảo chiều motor' : 'Melody B và dừng motor'} trước 110°.`);
+      const how = { reverse: 'đảo chiều motor', 'melody-stop': 'Melody B báo trạm rồi dừng motor', stop: 'dừng motor' }[method];
+      this.log('ok', `🛡️ Đã tránh vành đai thiên thạch bằng ${how} trước 110°.`);
       this.checkMissions();
     }
 
@@ -800,8 +801,10 @@
     onStopBlock(wasOn) {
       const angle = this.headingDegrees();
       const approaching = wasOn && this.motorDir > 0 && !this.hazardEncountered && angle >= 60 && angle < 110;
-      if (this.melodyAlertRev !== null && approaching && this.rev - this.melodyAlertRev < 50 / 360) {
-        this.recordAvoidance('melody-stop');
+      // NV3 (quyết định 2026-11-04): dừng ở 60°–110° là đạt; có Melody B ngay trước khi dừng thì ghi thêm "có báo trạm"
+      if (approaching) {
+        const alerted = this.melodyAlertRev !== null && this.rev - this.melodyAlertRev < 50 / 360;
+        this.recordAvoidance(alerted ? 'melody-stop' : 'stop');
       }
     }
 
