@@ -221,11 +221,44 @@ Hiện có hai hệ:
 6. **Robot ảo chung**: chuyển từng bài sang, bắt đầu từ lớp 3 bài 13 và lớp 1 bài 1 như `kien-truc.md` đã định.
 7. **Bổ sung kiểu LEGO**: bảng thiết bị ở mọi bài, Lái thử, trợ giúp trên khối, 3 bài Làm quen, ghi chú giáo viên.
 
+Các quy tắc giao diện P0 ở mục 11 (U1–U6, U8–U9) áp dụng ngay từ bước 2: mỗi màn hình mới hoặc sửa phải đạt các quy tắc đó.
+
 Bước 2–4 mang lại cảm giác "giống LEGO" nhanh nhất mà chưa phải viết lại phần lõi. Bước 5–6 là phần lõi lớn, làm sau khi khung đã rõ.
 
 ---
 
-## 11. Câu hỏi còn mở
+## 11. Quy tắc giao diện học từ LEGO (đã kiểm trên app thật)
+
+Nguồn: báo cáo nghiên cứu `docs/giao-viec/85-bao-cao-ux-lego.md` (tài liệu trên mạng) và báo cáo kiểm tra trực tiếp `docs/giao-viec/85b-bao-cao-app-that.md` (SPIKE bản web 3.6.1, 2026-11-04). Cả hai chỉ để trên máy. Chỉ học **cách làm**, không chép hình, màu hay bố cục của LEGO.
+
+### 11.1. Lấy về dùng
+
+| # | LEGO làm (đã thấy trên app) | Lab làm | Ưu tiên |
+|---|---|---|---|
+| U1 | Vào app không đăng nhập; từ mở app tới bấm Chạy mất 5–6 thao tác | Ở nhà: trang chủ → bài → Chạy, **tối đa 3 lần bấm**; trên lớp chỉ thêm bước mã + chọn tên | P0 |
+| U2 | **Khay khối lọc theo bài**: chỉ hiện các khối bài cần (khoảng 7 khối, vừa một màn hình), có nút mở đủ bộ | Giữ khay theo bài như hiện có; thêm nút "Tất cả khối" | P0 |
+| U3 | Khi chạy: cả chuỗi khối sáng viền; nút Chạy có vòng quay; nút Dừng đổi màu | Chuỗi khối sáng lên, **cộng** khối đang chạy sáng riêng (rõ hơn LEGO, giúp tìm lỗi) | P0 |
+| U4 | **Nhắc kiểu đèn chiếu**: làm tối màn hình, khoét sáng đúng nút cần bấm, kèm bong bóng chỉ vào nút | Dùng cho mọi lời nhắc và bài Làm quen thay cho hộp thông báo chữ | P0 |
+| U5 | Chạy được ngay trong trình duyệt những khối không cần hub (âm thanh, chờ, lặp) | Lab chạy được **mọi khối** trên robot ảo: không bao giờ có nút Chạy bị khóa | P0 |
+| U6 | Tiến độ trong bài: dãy chấm tròn kèm "1/2" cho bước con, luôn hiện ở trên cùng kể cả khi thu gọn | Thanh 5 chặng (mục 4), mỗi chặng có chấm bước con; luôn hiện | P0 |
+| U7 | Thẻ "Khối" ngay cạnh thẻ "Bài học", giải thích từng khối có hình | Trợ giúp trên khối (R5) cộng một thẻ "Khối" trong bài | P1 |
+| U8 | Dự án tự lưu, hiện ở "Gần đây" trên trang chủ | "Dự án của em" (mục 7), lưu theo em trên máy chủ, không chỉ trên trình duyệt | P0 |
+| U9 | Nút Chạy/Dừng to (60–74 px), cố định ở góc dưới phải vùng ghép khối | Nút Chạy/Dừng/Từng bước ≥ 64 px, luôn một chỗ ở mọi bài và ở Phòng lập trình | P0 |
+
+### 11.2. LEGO còn yếu, Lab làm tốt hơn
+
+| LEGO (đã thấy trên app) | Lab |
+|---|---|
+| Hướng dẫn lắp là **ảnh 2D tĩnh**, không xoay, không phóng to | Lắp **3D xoay và phóng to được**, chi tiết mới làm nổi; giữ lợi thế này |
+| Tải lại trang là **quên đang ở bước mấy** (cả bài học lẫn bước lắp) | Nhớ chặng và bước của em, lưu theo em, mở ở máy khác vẫn đúng chỗ |
+| Không có hub thì khối động cơ bị bỏ qua mà nút vẫn báo "đang chạy" mãi | Robot ảo luôn có; chạy xong thì nút tự trở về |
+| SPIKE Prime mặc định tạo dự án kiểu khối hình dù học sinh dùng khối chữ | Kiểu khối mặc định theo lớp của em (mục 6) |
+| Hộp kết nối hub chiếm cả màn hình | Không cần kết nối; chấm "Robot sẵn sàng" chỉ để báo |
+
+
+---
+
+## 12. Câu hỏi còn mở
 
 1. ~~Khối có giống app ZMROBO?~~ ĐÃ TRẢ LỜI 2026-11-03: dùng được cho nhiều bộ kit, cả ZMROBO lẫn LEGO, nên khối không gắn với hãng nào và mỗi kit có hồ sơ riêng (mục 6).
 2. Ở nhà, em có được mở **bài chưa học trên lớp** không, hay chỉ những bài giáo viên đã mở?
