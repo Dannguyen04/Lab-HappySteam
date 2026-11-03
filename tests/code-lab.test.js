@@ -38,10 +38,72 @@ assert.equal(CL.check(prog(['start', 'forever', 'if', 'else', 'end', 'end'])).ok
 for (const map of CL.MAPS) {
   if (map.rules.free) continue;
   for (let seed = 1; seed <= (map.randomWall ? 5 : 1); seed++) {
-    const { result, sim } = run(map, prog(map.hint), 90, seed);
+    const { result, sim } = run(map, prog(map.hint), map.rules.limit + 1, seed);
     assert.ok(result && result.ok, `${map.name}: gợi ý phải về đích – ${result && result.text} (t=${sim.t.toFixed(1)}, x=${sim.robot.x.toFixed(0)}, y=${sim.robot.y.toFixed(0)})`);
-    assert.ok(result.stars >= 2, `${map.name}: gợi ý được ít nhất 2 sao, được ${result.stars}`);
+    if (map.rules.score) {
+      assert.ok(result.points >= (map.id === 'st-tinh-te' ? 210 : 150), `${map.name}: điểm gợi ý đạt yêu cầu`);
+      assert.ok(result.stars >= 1, `${map.name}: điểm đổi được sao`);
+      assert.equal(sim.scoreLog.reduce((sum, row) => sum + row.points, 0), sim.score);
+      assert.equal(sim.events.filter(e => e[0] === 'score').length, sim.scoreLog.length);
+      assert.ok(sim.scoreLog.some(row => row.key === 'departure') && sim.scoreLog.some(row => row.key === 'finish'));
+    } else assert.ok(result.stars >= 2, `${map.name}: gợi ý được ít nhất 2 sao, được ${result.stars}`);
   }
+}
+
+// 3b. Thi đấu: rời bến chỉ một lần, giới hạn điểm vạch, lệch vạch bị đưa về mốc.
+{
+  const source = CL.MAPS.find(m => m.id === 'st-tap-duot');
+  const map = JSON.parse(JSON.stringify(source));
+  map.items = map.items.filter(i => i.k !== 'marker');
+  for (let i = 0; i < 12; i++) map.items.push({ k: 'marker', label: 'M' + i, x: 60, y: 72, dir: 0, len: 18 });
+  const sim = new CL.Sim(map);
+  sim.robot.x = 60; sim.robot.y = 72;
+  for (let i = 0; i < 15; i++) sim.contestStep(0);
+  assert.equal(sim.markerIndex, 12);
+  assert.equal(sim.scoreLog.filter(row => row.key.startsWith('marker:')).reduce((n, row) => n + row.points, 0), 60);
+  assert.equal(sim.scoreLog.filter(row => row.key === 'departure').length, 1);
+  assert.equal(sim.score, 120);
+}
+{
+  const map = CL.MAPS.find(m => m.id === 'st-tap-duot');
+  const sim = new CL.Sim(map);
+  sim.markerIndex = 2;
+  sim.robot.x = 80; sim.robot.y = 10;
+  sim.contestStep(1.01);
+  assert.ok(sim.events.some(e => e[0] === 'offTrack'));
+  assert.equal(sim.robot.x, map.items.filter(i => i.k === 'marker')[1].x);
+  assert.equal(sim.robot.y, map.items.filter(i => i.k === 'marker')[1].y);
+  assert.equal(sim.markerIndex, 2, 'Giữ các mốc đã qua sau đặt lại');
+}
+{
+  const map = CL.MAPS.find(m => m.id === 'st-tinh-te');
+  const sim = new CL.Sim(map);
+  const button = map.items.find(i => i.k === 'button');
+  sim.robot.x = button.x - CL.ROBOT.length / 2;
+  sim.robot.y = button.y;
+  sim.robot.th = 0;
+  sim.contestStep(0);
+  sim.contestStep(0);
+  assert.equal(sim.scoreLog.filter(row => row.key.startsWith('button:')).length, 1, 'Nút A1 chỉ cộng một lần');
+  assert.equal(sim.scoreLog.find(row => row.key === 'button:0').points, 60);
+  assert.ok(sim.scored.has('button:0'), 'Nút đã kích hoạt chuyển trạng thái');
+
+  const rampSim = new CL.Sim(map);
+  for (const x of [115, 118, 123, 128, 133, 138, 140]) {
+    rampSim.robot.x = x;
+    rampSim.robot.y = 25;
+    rampSim.robot.th = 0;
+    rampSim.contestStep(0);
+  }
+  assert.equal(rampSim.scoreLog.filter(row => row.key.startsWith('ramp')).reduce((n, row) => n + row.points, 0), 30,
+    'Qua đúng dốc, bánh chạm hai dốc và bệ: 10 + 20 điểm');
+
+  const top = new CL.Sim(map);
+  top.running = true;
+  top.score = 270; // 60 xuất phát + 60 mốc + 30 dốc + 60 nút + 60 đích.
+  top.t = 100;
+  top.finish(true, 'Về đích');
+  assert.equal(top.result.stars, 3, 'Đạt toàn bộ 270 điểm trong 180 giây được 3 sao');
 }
 // Dừng trước tường: không dùng cảm biến (chạy 6 giây) thì đâm tường và trượt
 {

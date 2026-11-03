@@ -51,6 +51,63 @@
       it.pts.forEach((p, i) => (i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1]))));
       ctx.stroke();
     }
+    if (map.blackHole) {
+      const hole = map.blackHole;
+      ctx.save();
+      for (const [i, d] of hole.diameters.entries()) {
+        ctx.beginPath();
+        ctx.arc(X(hole.x), Y(hole.y), d * s / 2, 0, Math.PI * 2);
+        ctx.fillStyle = ['rgba(25,31,44,.16)', 'rgba(19,25,39,.26)', 'rgba(10,15,26,.45)'][i];
+        ctx.fill();
+        ctx.strokeStyle = '#3d4052';
+        ctx.lineWidth = Math.max(1, s);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+    for (const it of map.items) {
+      if (it.k === 'dock') {
+        ctx.fillStyle = it.role === 'start' ? 'rgba(58,169,104,.26)' : 'rgba(45,130,214,.26)';
+        ctx.fillRect(X(it.x), Y(it.y), it.w * s, it.h * s);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = it.role === 'start' ? '#18844c' : '#1669ab';
+        ctx.strokeRect(X(it.x), Y(it.y), it.w * s, it.h * s);
+        ctx.fillStyle = '#172d40';
+        ctx.font = `bold ${Math.max(12, 13 * s)}px sans-serif`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(it.label, X(it.x + it.w / 2), Y(it.y + it.h / 2));
+      } else if (it.k === 'ramp') {
+        const segments = it.axis === 'y' ? [it.h, it.w] : [it.w, it.h];
+        ctx.save();
+        ctx.translate(X(it.x + it.w / 2), Y(it.y + it.h / 2));
+        if (it.axis === 'y') ctx.rotate(Math.PI / 2);
+        const [length, width] = segments;
+        [-1, 0, 1].forEach((section, i) => {
+          ctx.fillStyle = ['#bc9965', '#8f8e98', '#bc9965'][i];
+          ctx.fillRect((-length / 2 + [0, 5, 20][i]) * s, -width * s / 2, [5, 15, 5][i] * s, width * s);
+        });
+        ctx.restore();
+      } else if (it.k === 'marker') {
+        const nx = -Math.sin(it.dir || 0), ny = Math.cos(it.dir || 0), half = (it.len || 18) / 2;
+        ctx.beginPath();
+        ctx.moveTo(X(it.x - nx * half), Y(it.y - ny * half));
+        ctx.lineTo(X(it.x + nx * half), Y(it.y + ny * half));
+        ctx.lineWidth = Math.max(2, s);
+        ctx.strokeStyle = '#b91c1c'; ctx.stroke();
+        const fx = X(it.x + nx * half), fy = Y(it.y + ny * half);
+        ctx.fillStyle = '#b91c1c';
+        ctx.fillRect(fx - 6, fy - 16, 14, 12);
+        ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.font = 'bold 10px sans-serif'; ctx.fillText(it.label, fx + 1, fy - 10);
+      } else if (it.k === 'button') {
+        const done = opts.scored && opts.scored.has('button:' + map.items.filter(i => i.k === 'button').indexOf(it));
+        ctx.beginPath(); ctx.arc(X(it.x), Y(it.y), Math.max(4, (it.radius || 3) * s), 0, Math.PI * 2);
+        ctx.fillStyle = done ? '#16a34a' : '#dc2626'; ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = '#202733'; ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center'; ctx.fillText(it.label || 'A1', X(it.x), Y(it.y) - 10);
+      }
+    }
     for (const it of map.items) {
       if (it.k !== 'wall') continue;
       ctx.fillStyle = '#5b6b78';
@@ -102,7 +159,7 @@
   }
 
   function drawSim(ctx, sim, T) {
-    drawMap(ctx, sim.map, T, { flags: sim.flags });
+    drawMap(ctx, sim.map, T, { flags: sim.flags, scored: sim.scored });
     const { s, X, Y } = T;
     const r = sim.robot, v = sim.sensors();
     // vệt đường đi

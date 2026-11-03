@@ -104,6 +104,38 @@
         { k: 'line', w: 2.5, pts: [[20, 160], [220, 160]] }],
       rules: { free: true, limit: 600 },
       hint: ['start', ['move', { dir: 'fwd', speed: 50, sec: 2 }], ['led', { color: 'blue' }], 'soundA']
+    },
+    {
+      id: 'st-tap-duot', name: 'Tập dượt đường bay', theme: 'contest', level: 'pro', size: [160, 100],
+      about: 'Rời bến +60, mỗi vạch +6 (tối đa 60), về B đúng thứ tự +60. 90 giây; theo luật Super AI 超级轨迹 2025.',
+      start: { x: 20, y: 72, dir: 0 },
+      items: [
+        { k: 'line', w: 2.5, pts: [[20, 72], [45, 72], [60, 70], [75, 65], [90, 57], [105, 49], [120, 43], [142, 40]] },
+        { k: 'dock', label: 'A', role: 'start', x: 7.5, y: 59.5, w: 25, h: 25 },
+        { k: 'dock', label: 'B', role: 'goal', x: 127, y: 27.5, w: 25, h: 25 },
+        ...[[47, 72, 0.1], [67, 68, -0.3], [88, 58, -0.5], [106, 49, -0.4], [121, 43, -0.2]]
+          .map(([x, y, dir], i) => ({ k: 'marker', label: 'ABCDE'[i], x, y, dir, len: 18 }))
+      ],
+      rules: { limit: 90, score: { departure: 60, marker: 6, markerCap: 60, rampPass: 10, rampFull: 20, button: 60, finish: 60 } },
+      hint: ['start', ['lineFollow', { speed: 38, sec: 30 }]]
+    },
+    {
+      id: 'st-tinh-te', name: 'Siêu quỹ đạo – Tinh tế truyền kỳ', theme: 'contest', level: 'pro', size: [300, 200],
+      about: '180 giây: rời A +60, vạch +6 (tối đa 60), qua dốc +10/+20, chạm A1 +60, về B +60. Theo luật Super AI 超级轨迹 2025.',
+      start: { x: 100, y: 175, dir: Math.PI },
+      blackHole: { x: 150, y: 99, diameters: [80, 50, 30] },
+      items: [
+        { k: 'line', w: 2.5, pts: [[100, 175], [75, 175], [50, 170], [37, 160], [30, 145], [25, 125], [25, 95], [25, 70], [30, 52], [43, 38], [60, 29], [85, 25], [115, 25], [145, 25], [180, 25], [210, 25], [237, 30], [257, 41], [270, 57], [275, 78], [275, 105], [275, 130], [269, 146], [258, 160], [240, 170], [215, 175], [185, 175], [145, 175]] },
+        { k: 'dock', role: 'start', label: 'A', x: 87.5, y: 162.5, w: 25, h: 25 },
+        { k: 'dock', role: 'goal', label: 'B', x: 132.5, y: 162.5, w: 25, h: 25 },
+        ...[[70, 174, -0.2], [29, 143, -1.8], [25, 85, -Math.PI / 2], [56, 31, -0.2], [130, 25, 0],
+          [210, 25, 0], [270, 60, 1.3], [275, 125, Math.PI / 2], [237, 171, 2.9], [185, 175, Math.PI]]
+          .map(([x, y, dir], i) => ({ k: 'marker', label: 'ABCDEFGHIJ'[i], x, y, dir, len: 20 })),
+        { k: 'ramp', x: 115, y: 17.5, w: 25, h: 15, axis: 'x', dir: 1, label: 'E' },
+        { k: 'button', x: 210, y: 38, radius: 3, label: 'A1' }
+      ],
+      rules: { limit: 180, score: { departure: 60, marker: 6, markerCap: 60, rampPass: 10, rampFull: 20, button: 60, finish: 60 } },
+      hint: ['start', ['lineFollow', { speed: 36, sec: 90 }]]
     }
   ];
 
@@ -301,6 +333,13 @@
       this.doneWhileMoving = false;
       this.trail = [[s.x, s.y]];
       this.sound = null;
+      this.score = 0;
+      this.scoreLog = [];
+      this.scored = new Set();
+      this.markerIndex = 0;
+      this.offTrackTime = 0;
+      this.buttonDetourTime = 0;
+      this.rampProgress = new Map();
     }
     setProgram(blocks) {
       this.blocks = blocks.map(clone);
@@ -440,6 +479,8 @@
         r.odo += Math.abs(v * h);
         this.collide();
         if (!this.running) return;
+        if (this.map.rules.score) this.contestStep(h);
+        if (!this.running) return;
       }
       const last = this.trail[this.trail.length - 1];
       if (Math.hypot(r.x - last[0], r.y - last[1]) > 2) this.trail.push([r.x, r.y]);
@@ -475,6 +516,87 @@
         if (this.map.rules.failOnCrash) this.finish(false, 'Xe chạm tường rồi!');
       }
       this.touching = hit;
+    }
+    award(key, label, points) {
+      if (!points || this.scored.has(key)) return;
+      this.scored.add(key);
+      this.score += points;
+      const entry = { key, label, points, total: this.score, time: Math.round(this.t * 10) / 10 };
+      this.scoreLog.push(entry);
+      this.emit('score', entry);
+    }
+    contestStep(dt) {
+      const r = this.robot, items = this.map.items, rules = this.map.rules.score;
+      const c = Math.cos(r.th), s = Math.sin(r.th);
+      const wheels = [-1, 1].map(side => [r.x - s * side * ROBOT.base / 2, r.y + c * side * ROBOT.base / 2]);
+      const eyes = [-1, 1].map(side => [r.x + c * 6 - s * side * 2.5, r.y + s * 6 + c * side * 2.5]);
+      const start = items.find(i => i.k === 'dock' && i.role === 'start');
+      if (start && !this.scored.has('departure')) {
+        // Cả thân xe (hình chữ nhật xoay) phải ra khỏi bến.
+        const corners = [-1, 1].flatMap(a => [-1, 1].map(b => [r.x + c * a * ROBOT.length / 2 - s * b * ROBOT.width / 2,
+          r.y + s * a * ROBOT.length / 2 + c * b * ROBOT.width / 2]));
+        const minX = Math.min(...corners.map(p => p[0])), maxX = Math.max(...corners.map(p => p[0]));
+        const minY = Math.min(...corners.map(p => p[1])), maxY = Math.max(...corners.map(p => p[1]));
+        if (maxX < start.x || minX > start.x + start.w || maxY < start.y || minY > start.y + start.h)
+          this.award('departure', 'Rời bến A', rules.departure);
+      }
+      const markers = items.filter(i => i.k === 'marker');
+      const marker = markers[this.markerIndex];
+      if (marker) {
+        const nx = -Math.sin(marker.dir || 0), ny = Math.cos(marker.dir || 0), half = (marker.len || 18) / 2;
+        if (wheels.some(([x, y]) => distSeg(x, y, marker.x - nx * half, marker.y - ny * half,
+          marker.x + nx * half, marker.y + ny * half) <= 2.5)) {
+          this.markerIndex++;
+          if ((this.markerIndex - 1) * rules.marker < rules.markerCap)
+            this.award('marker:' + marker.label, 'Vạch ' + marker.label, Math.min(rules.marker, rules.markerCap - (this.markerIndex - 1) * rules.marker));
+        }
+      }
+      items.filter(i => i.k === 'ramp').forEach((ramp, i) => {
+        const axis = ramp.axis || 'x', pos = axis === 'x' ? r.x : r.y;
+        const low = ramp[axis], length = ramp[axis === 'x' ? 'w' : 'h'];
+        const signed = ramp.dir === -1 ? low + length - pos : pos - low;
+        const cross = axis === 'x' ? 'y' : 'x';
+        const onRamp = Math.abs(r[cross] - (ramp[cross] + ramp[cross === 'x' ? 'w' : 'h'] / 2)) <=
+          ramp[cross === 'x' ? 'w' : 'h'] / 2 + 2;
+        if (!onRamp) return;
+        const p = this.rampProgress.get(i) || { stage: 0, touched: new Set() };
+        if (signed >= 0 && signed <= 5 && p.stage === 0) p.stage = 1;
+        if (p.stage >= 1 && signed >= 5 && signed <= 20) p.stage = Math.max(2, p.stage);
+        if (p.stage >= 2 && signed >= 20 && signed <= length) p.stage = 3;
+        for (const [wx, wy] of wheels) {
+          const wpos = axis === 'x' ? wx : wy;
+          const t = ramp.dir === -1 ? low + length - wpos : wpos - low;
+          if (t >= -2.5 && t <= 7.5) p.touched.add('entry');
+          if (t >= 7.5 && t <= 17.5) p.touched.add('platform');
+          if (t >= 17.5 && t <= length + 2.5) p.touched.add('exit');
+        }
+        this.rampProgress.set(i, p);
+        if (p.stage === 3 && signed >= length - 1) {
+          this.award('ramp:' + i, 'Qua dốc ' + (ramp.label || ''), rules.rampPass);
+          if (p.touched.size === 3) this.award('ramp-full:' + i, 'Chạm đủ hai dốc và bệ', rules.rampFull);
+        }
+      });
+      const buttons = items.filter(i => i.k === 'button');
+      for (const [i, button] of buttons.entries()) {
+        const nose = [r.x + c * ROBOT.length / 2, r.y + s * ROBOT.length / 2];
+        if (Math.hypot(nose[0] - button.x, nose[1] - button.y) <= (button.radius || 3) + 2 ||
+            (this.touching && Math.hypot(nose[0] - button.x, nose[1] - button.y) < 8))
+          this.award('button:' + i, 'Khởi động tàu ' + (button.label || ''), rules.button);
+      }
+      const lines = items.filter(i => i.k === 'line');
+      const nearLine = ([x, y]) => lines.some(l => l.pts.some((p, i) => i && distSeg(x, y, ...l.pts[i - 1], ...p) <= 6));
+      const off = !nearLine([r.x, r.y]) && eyes.every(p => !nearLine(p));
+      const closeButton = buttons.some(b => !this.scored.has('button:' + buttons.indexOf(b)) && Math.hypot(r.x - b.x, r.y - b.y) < 22);
+      this.buttonDetourTime = off && closeButton ? this.buttonDetourTime + dt : 0;
+      this.offTrackTime = off && !(closeButton && this.buttonDetourTime <= 3) ? this.offTrackTime + dt : 0;
+      if (this.offTrackTime > 1) {
+        const last = markers[Math.max(0, this.markerIndex - 1)];
+        const origin = last || { ...this.map.start, dir: this.map.start.dir || 0 };
+        r.x = origin.x; r.y = origin.y; r.th = origin.dir || 0;
+        this.offTrackTime = 0;
+        this.trail.push([r.x, r.y]);
+        this.emit('offTrack', { marker: last ? last.label : 'A (xuất phát)', time: this.t });
+      }
     }
 
     // ----- chạy chương trình -----
@@ -646,20 +768,41 @@
     }
     goalReached() {
       const r = this.robot;
+      if (this.map.rules.score) {
+        const dock = this.map.items.find(i => i.k === 'dock' && i.role === 'goal');
+        if (!dock || this.markerIndex !== this.map.items.filter(i => i.k === 'marker').length) return false;
+        const c = Math.cos(r.th), s = Math.sin(r.th), wheelRadius = 2.5;
+        return [-1, 1].some(side => {
+          const x = r.x - s * side * ROBOT.base / 2, y = r.y + c * side * ROBOT.base / 2;
+          return x >= dock.x + wheelRadius && x <= dock.x + dock.w - wheelRadius &&
+            y >= dock.y + wheelRadius && y <= dock.y + dock.h - wheelRadius;
+        });
+      }
       const zone = this.map.items.find(z => z.k === 'zone' && z.goal);
       if (!zone || !inRect(r.x, r.y, zone) || this.flags.some(f => !f)) return false;
       return !this.map.rules.stop || (!r.vl && !r.vr);
     }
     checkGoal() {
       if (this.map.rules.free || !this.goalReached()) return;
+      if (this.map.rules.score) this.award('finish', 'Về bến B đúng thứ tự', this.map.rules.score.finish);
       this.finish(true, 'Tới đích!');
     }
     finish(ok, text) {
       if (!this.running) return;
       const rules = this.map.rules;
-      const stars = !ok || rules.free ? 0 : 1 + (this.t <= rules.time ? 1 : 0) +
+      // Thi đấu: 1 sao từ 120, 2 sao từ 240, 3 sao khi đạt toàn bộ điểm trong thời hạn.
+      const stars = rules.score ? (this.score >= 120 ? 1 : 0) + (this.score >= 240 ? 1 : 0) +
+        (ok && this.t <= rules.limit && this.score >= (rules.score.departure +
+          Math.min(rules.score.markerCap, this.map.items.filter(i => i.k === 'marker').length * rules.score.marker) +
+          this.map.items.filter(i => i.k === 'ramp').length * (rules.score.rampPass + rules.score.rampFull) +
+          this.map.items.filter(i => i.k === 'button').length * rules.score.button + rules.score.finish) ? 1 : 0) :
+        !ok || rules.free ? 0 : 1 + (this.t <= rules.time ? 1 : 0) +
         (rules.star3 === 'noCrash' ? (this.bumps === 0 ? 1 : 0) : countBlocks(this.blocks) <= rules.blocks ? 1 : 0);
       this.result = { ok, text, stars, t: Math.round(this.t * 10) / 10, bumps: this.bumps, blocks: countBlocks(this.blocks) };
+      if (rules.score) {
+        this.result.points = this.score;
+        this.result.scoreLog = this.scoreLog.map(x => ({ ...x }));
+      }
       this.running = false;
       this.robot.vl = this.robot.vr = 0;
       this.follow = null;

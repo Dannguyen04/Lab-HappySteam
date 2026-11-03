@@ -148,8 +148,40 @@ const { pageUrl } = require('./helpers/page-url');
     await noOverflow('Khối ngang');
     await page.locator('[data-block-mode="vertical"]').click();
 
+    // 8. Thi đấu Super Track: chọn sân, chạy gợi ý, đọc điểm trực tiếp và chi tiết.
+    await page.locator('.cl-nav-tab[data-screen="home"]').click();
+    await page.locator('#home-btn-quickstart').click();
+    if (await page.locator('#theme-detail').isVisible()) await page.locator('#theme-back').click();
+    await page.locator('.rs-theme[data-theme="contest"]').click();
+    await page.locator('.rs-map-item[data-map="st-tinh-te"]').click();
+    assert.match(await page.locator('#detail-about').innerText(), /Super AI/);
+    await noOverflow('Sân thi đấu đầy đủ');
+    await page.locator('#detail-start').click();
+    await page.locator('.cl-nav-tab[data-screen="sim"]').click();
+    await page.locator('#world-3d canvas').waitFor({ state: 'visible', timeout: 10000 });
+    assert.equal(await page.evaluate(() => codeLab.sim.map.id), 'st-tinh-te');
+    await noOverflow('3D sân thi đấu đầy đủ');
+    await page.locator('.cl-nav-tab[data-screen="home"]').click();
+    await page.locator('#home-btn-quickstart').click();
+    if (await page.locator('#theme-detail').isVisible()) await page.locator('#theme-back').click();
+    await page.locator('.rs-theme[data-theme="contest"]').click();
+    await page.locator('.rs-map-item[data-map="st-tap-duot"]').click();
+    assert.match(await page.locator('#detail-goals').innerText(), /Rời bến/);
+    await noOverflow('Chủ đề thi đấu');
+    await page.locator('#detail-start').click();
+    await page.locator('#btn-hint').click();
+    await page.evaluate(() => { codeLab.state.speed = 4; });
+    assert.equal((await page.locator('#bar-score').innerText()).trim(), '0');
+    await page.locator('#btn-code-run').click();
+    await page.locator('#result').waitFor({ state: 'visible', timeout: 30000 });
+    assert.equal(await page.evaluate(() => codeLab.sim.result.ok), true, 'Gợi ý thi đấu về bến B');
+    assert.ok(Number(await page.locator('#bar-score').innerText()) > 0, 'Thanh cúp phải là điểm số > 0');
+    assert.match(await page.locator('#result-sub').innerText(), /150 điểm/);
+    assert.match(await page.locator('#result-score-items').innerText(), /Rời bến A.*60 điểm/);
+    await noOverflow('Kết quả thi đấu');
+
     assert.deepEqual(errors, [], 'Không được có lỗi console/mạng');
-    console.log('PASS: Phòng lập trình – trang chủ xe 3D + 6 ô, chọn sa bàn theo chủ đề, khối dọc ↔ Python, chạy + tô sáng + sao, 3D bật/tắt, gỡ cảm biến, đổi sa bàn, khối ngang, không tràn 1024×768.');
+    console.log('PASS: Phòng lập trình – luồng cũ, Super Track 3D, gợi ý thi đấu 150 điểm, không lỗi console/mạng, không tràn 1024×768.');
   } finally {
     await browser.close();
   }

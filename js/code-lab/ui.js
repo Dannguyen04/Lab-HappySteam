@@ -257,7 +257,8 @@
   // ---------- LUYỆN THEO CHỦ ĐỀ: chủ đề → sa bàn (ảnh 3D lớn + danh sách) ----------
   const THEMES = [
     { key: 'kid', name: 'Cơ bản · Bé', pick: m => m.level === 'kid' && !m.custom },
-    { key: 'pro', name: 'Nâng cao · Lớp 3+', pick: m => m.level === 'pro' && !m.rules.free && !m.custom },
+    { key: 'pro', name: 'Nâng cao · Lớp 3+', pick: m => m.level === 'pro' && m.theme !== 'contest' && !m.rules.free && !m.custom },
+    { key: 'contest', name: 'Thi đấu · Super Track', pick: m => m.theme === 'contest' && !m.custom },
     { key: 'class', name: 'Sa bàn của lớp', pick: m => !!m.custom },
     { key: 'free', name: 'Sân tự do', pick: m => !!m.rules.free && !m.custom }
   ];
@@ -265,6 +266,9 @@
   function goalsHTML(m) {
     const r = m.rules, best = store.get('best.' + m.id, 0);
     if (r.free) return '<span class="cl-goal">Sân tự do – không chấm</span>';
+    if (r.score) return [`Rời bến +${r.score.departure}`, `Vạch mốc +${r.score.marker}/vạch (tối đa ${r.score.markerCap})`,
+      `Về đích +${r.score.finish}`, `Thời gian ${r.limit} giây`]
+      .map(g => `<span class="cl-goal">★ ${g}</span>`).join('');
     return [`Về đích${m.items.some(i => i.k === 'flag') ? ' (qua đủ cờ)' : ''}`, `Dưới ${r.time} giây`,
       r.star3 === 'noCrash' ? 'Không va chạm' : `Tối đa ${r.blocks} khối`]
       .map((g, i) => `<span class="cl-goal${best > i ? ' is-done' : ''}">★ ${g}</span>`).join('');
@@ -304,7 +308,7 @@
       b.className = 'rs-map-item';
       b.dataset.map = m.id;
       const best = store.get('best.' + m.id, 0);
-      b.innerHTML = `<span>${m.name}</span><small>${m.rules.free ? '' : '★'.repeat(best) + '☆'.repeat(3 - best)}</small>`;
+      b.innerHTML = `<span>${m.name}</span><small>${m.rules.score ? 'Thi đấu · ' + m.rules.limit + ' giây' : m.rules.free ? '' : '★'.repeat(best) + '☆'.repeat(3 - best)}</small>`;
       b.addEventListener('click', () => previewMap(m.id));
       list.appendChild(b);
     }
@@ -816,7 +820,7 @@
     const best = store.get('best.' + m.id, 0);
     const mg = $('mission-goals');
     if (mg) mg.innerHTML = goalsHTML(m);
-    $('bar-score').textContent = r.free ? '–' : '★'.repeat(best) + '☆'.repeat(3 - best);
+    $('bar-score').textContent = r.score ? String(sim.score) : r.free ? '–' : '★'.repeat(best) + '☆'.repeat(3 - best);
   }
 
   function selectMap(id) {
@@ -872,6 +876,12 @@
       if (type === 'start') {
         log('info', 'Bắt đầu chạy chương trình.');
         $('result').hidden = true;
+        if (sim.map.rules.score) $('bar-score').textContent = '0';
+      } else if (type === 'score') {
+        $('bar-score').textContent = String(data.total);
+        log('ok', `+${data.points} điểm: ${data.label}`);
+      } else if (type === 'offTrack') {
+        log('warn', `Rời đường bay: đặt lại tại ${data.marker}. Đồng hồ vẫn chạy.`);
       } else if (type === 'bump') {
         log('warn', 'Xe chạm tường!');
       } else if (type === 'flag') {
@@ -910,7 +920,23 @@
     store.set('last.' + sim.map.id, r);
     $('result-stars').innerHTML = [0, 1, 2].map(i => `<span class="${i < r.stars ? 'on' : ''}">★</span>`).join('');
     $('result-text').textContent = r.ok ? 'Tới đích rồi!' : r.text;
-    $('result-sub').textContent = `Thời gian ${num(r.t)} s · ${r.blocks} khối · ${r.bumps} lần va chạm`;
+    $('result-sub').textContent = `${sim.map.rules.score ? r.points + ' điểm · ' : ''}Thời gian ${num(r.t)} s · ${r.blocks} khối · ${r.bumps} lần va chạm`;
+    let scores = $('result-score-items');
+    if (!scores) {
+      scores = document.createElement('div');
+      scores.id = 'result-score-items';
+      scores.className = 'cl-score-items';
+      $('result-sub').after(scores);
+    }
+    scores.replaceChildren();
+    scores.hidden = !sim.map.rules.score;
+    if (sim.map.rules.score) {
+      for (const item of r.scoreLog) {
+        const row = document.createElement('div');
+        row.textContent = `${item.label}: +${item.points} điểm`;
+        scores.appendChild(row);
+      }
+    }
     $('btn-next-map').hidden = !r.ok;
     $('result').hidden = false;
     renderMission();

@@ -425,6 +425,19 @@ button, input, select {
   width: 100%;
 }
 
+.cl-score-items {
+  width: 100%;
+  max-height: min(180px, 25vh);
+  overflow-y: auto;
+  padding: 8px 20px;
+  background: var(--surface);
+  text-align: left;
+  font: 500 12px/1.5 var(--f-mono);
+  color: var(--ink);
+}
+
+.cl-score-items > div + div { border-top: 1px solid var(--line); }
+
 .cl-result-btns {
   display: flex;
   gap: 8px;

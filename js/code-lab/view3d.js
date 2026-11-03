@@ -562,6 +562,7 @@ function createView3D(container, opts = {}) {
   let floorMesh = null;
   let rimMesh = null;
   let flagsData = []; // [{ group, banner, baseDisc }]
+  let contestButtons = [];
   let goalMarkers = []; // 3D floating markers above goal zones
 
   function buildMap(map) {
@@ -572,6 +573,7 @@ function createView3D(container, opts = {}) {
       if (obj.geometry) obj.geometry.dispose();
     }
     flagsData = [];
+    contestButtons = [];
     goalMarkers = [];
 
     const [W, H] = map.size;
@@ -634,7 +636,31 @@ function createView3D(container, opts = {}) {
         buildWall(item, W, H);
       } else if (item.k === 'flag') {
         buildFlag(item);
+      } else if (item.k === 'dock') {
+        buildContestDock(item);
+      } else if (item.k === 'marker') {
+        buildContestMarker(item);
+      } else if (item.k === 'ramp') {
+        buildContestRamp(item);
+      } else if (item.k === 'button') {
+        buildContestButton(item);
       }
+    }
+
+    if (map.blackHole) {
+      const h = map.blackHole;
+      h.diameters.forEach((d, i) => {
+        const ring = new THREE.Mesh(new THREE.RingGeometry(d / 2 - 1.1, d / 2 + 1.1, 80),
+          new THREE.MeshBasicMaterial({ color: [0x35384d, 0x252a43, 0x111827][i], side: THREE.DoubleSide }));
+        ring.rotation.x = -Math.PI / 2;
+        ring.position.set(h.x, 0.11 + i * 0.005, h.y);
+        mapGroup.add(ring);
+      });
+      const center = new THREE.Mesh(new THREE.CircleGeometry(h.diameters.at(-1) / 2, 64),
+        new THREE.MeshBasicMaterial({ color: 0x111321 }));
+      center.rotation.x = -Math.PI / 2;
+      center.position.set(h.x, 0.09, h.y);
+      mapGroup.add(center);
     }
 
     // Đặt camera nhìn bao quát sân nếu chưa khóa
@@ -732,7 +758,8 @@ function createView3D(container, opts = {}) {
       const seg = new THREE.Mesh(segGeom, materials.tapeLine);
       seg.rotation.x = -Math.PI / 2;
       const angle = Math.atan2(dx, dy);
-      seg.rotation.z = -angle;
+      seg.rotation.z = angle; // trục dài của mặt phẳng (y) sau khi nằm ngang trỏ về -Z
+
       seg.position.set((p1[0] + p2[0]) / 2, 0.06, (p1[1] + p2[1]) / 2);
       seg.receiveShadow = true;
       mapGroup.add(seg);
@@ -792,6 +819,92 @@ function createView3D(container, opts = {}) {
 
     mapGroup.add(flagGroup);
     flagsData.push({ group: flagGroup, banner, baseDisc });
+  }
+
+  // Chữ trên cờ và bến được vẽ trực tiếp lên texture.
+  function contestLabel(label, background, foreground = '#ffffff') {
+    const canvas = document.createElement('canvas');
+    canvas.width = 256; canvas.height = 256;
+    const context = canvas.getContext('2d');
+    context.fillStyle = background;
+    context.fillRect(0, 0, 256, 256);
+    context.fillStyle = foreground;
+    context.font = `bold ${String(label).length > 1 ? 120 : 190}px Arial, sans-serif`;
+    context.textAlign = 'center'; context.textBaseline = 'middle';
+    context.fillText(label, 128, 138);
+    const texture = new THREE.CanvasTexture(canvas);
+    return new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide, transparent: true });
+  }
+
+  function buildContestDock(item) {
+    const plate = new THREE.Mesh(new THREE.PlaneGeometry(item.w, item.h),
+      new THREE.MeshBasicMaterial({ color: item.role === 'start' ? 0x77cba0 : 0x83b9ed, transparent: true, opacity: 0.55 }));
+    plate.rotation.x = -Math.PI / 2;
+    plate.position.set(item.x + item.w / 2, 0.12, item.y + item.h / 2);
+    mapGroup.add(plate);
+    const letter = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), contestLabel(item.label, '#ffffff', '#1d3553'));
+    letter.rotation.x = -Math.PI / 2;
+    letter.position.set(item.x + item.w / 2, 0.14, item.y + item.h / 2);
+    mapGroup.add(letter);
+    const border = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(item.x, 0.16, item.y), new THREE.Vector3(item.x + item.w, 0.16, item.y),
+      new THREE.Vector3(item.x + item.w, 0.16, item.y + item.h), new THREE.Vector3(item.x, 0.16, item.y + item.h)
+    ]), new THREE.LineBasicMaterial({ color: item.role === 'start' ? 0x159654 : 0x1871c0 }));
+    mapGroup.add(border);
+  }
+
+  function buildContestMarker(item) {
+    const nx = -Math.sin(item.dir || 0), ny = Math.cos(item.dir || 0), half = (item.len || 18) / 2;
+    const x = item.x + nx * half, z = item.y + ny * half;
+    buildLine({ w: 1, pts: [[item.x - nx * half, item.y - ny * half], [x, z]] });
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 11, 8),
+      new THREE.MeshStandardMaterial({ color: 0x344155 }));
+    pole.position.set(x, 5.5, z);
+    mapGroup.add(pole);
+    const flag = new THREE.Mesh(new THREE.PlaneGeometry(7, 6), contestLabel(item.label, '#b91c1c'));
+    flag.position.set(x + 3.5, 9, z);
+    mapGroup.add(flag);
+  }
+
+  function buildContestRamp(item) {
+    const group = new THREE.Group();
+    const width = item.axis === 'y' ? item.w : item.h;
+    const length = item.axis === 'y' ? item.h : item.w;
+    const mat = new THREE.MeshStandardMaterial({ color: 0xb4a68e, roughness: 0.85, side: THREE.DoubleSide });
+    for (const [a, b, heightA, heightB] of [[0, 5, 0, 2], [20, length, 2, 0]]) {
+      const shape = new THREE.Shape();
+      shape.moveTo(a, 0); shape.lineTo(b, 0); shape.lineTo(b, heightB);
+      shape.lineTo(a, heightA); shape.closePath();
+      const mesh = new THREE.Mesh(new THREE.ExtrudeGeometry(shape, { depth: width, bevelEnabled: false }), mat);
+      group.add(mesh);
+    }
+    const platform = new THREE.Mesh(new THREE.BoxGeometry(15, 2, width),
+      new THREE.MeshStandardMaterial({ color: 0x868d98, roughness: 0.7 }));
+    platform.position.set(12.5, 1, width / 2);
+    group.add(platform);
+    if (item.axis === 'y') {
+      group.rotation.y = -Math.PI / 2;
+      group.position.set(item.x + width, 0, item.y);
+    } else group.position.set(item.x, 0, item.y);
+    mapGroup.add(group);
+  }
+
+  function buildContestButton(item) {
+    const group = new THREE.Group();
+    group.position.set(item.x, 0, item.y);
+    const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(2, 2.8, 5, 16),
+      new THREE.MeshStandardMaterial({ color: 0x637282 }));
+    pedestal.position.y = 2.5;
+    group.add(pedestal);
+    const light = new THREE.Mesh(new THREE.CylinderGeometry(item.radius || 3, item.radius || 3, 1.2, 20),
+      new THREE.MeshStandardMaterial({ color: 0xdc2626, emissive: 0x8a1010 }));
+    light.position.y = 5.6;
+    group.add(light);
+    const tag = new THREE.Mesh(new THREE.PlaneGeometry(7, 5), contestLabel(item.label || 'A1', '#ba1a1a'));
+    tag.position.set(0, 10, 0);
+    group.add(tag);
+    contestButtons.push(light);
+    mapGroup.add(group);
   }
 
   // 8. Tương tác chuột và cảm ứng xoay / phóng / trượt
@@ -1107,6 +1220,11 @@ function createView3D(container, opts = {}) {
         f.banner.position.y = collected ? -3.0 : 0;
       });
     }
+    contestButtons.forEach((button, i) => {
+      const active = sim.scored && sim.scored.has('button:' + i);
+      button.material.color.setHex(active ? 0x16a34a : 0xdc2626);
+      button.material.emissive.setHex(active ? 0x0c7839 : 0x8a1010);
+    });
 
     // Cập nhật vệt đường xe chạy (Trail)
     if (sim.trail && sim.trail.length > 1) {
