@@ -72,8 +72,9 @@ for (const [id, entry] of Object.entries(reg.window.ZM_LESSONS)) {
   const presets = ((L.creative && L.creative.presets) || []).map(p => p.id);
   lessons++;
 
-  // Chỉ có Start: không được đạt nhiệm vụ lập trình
-  for (const adv of [false, true]) {
+  // Chỉ có Start: không được đạt nhiệm vụ lập trình (bỏ qua bài cơ khí không có khối, vd lớp 1 thả xe dốc)
+  const hasCode = (L.blocks.toolbox || []).length + (L.blocks.pro || []).length > 0;
+  for (const adv of hasCode ? [false, true] : []) {
     const sim = new E('sim-canvas-2d');
     let st = {};
     sim.onMissionUpdate = s => (st = s);
