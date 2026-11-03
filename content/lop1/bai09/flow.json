@@ -1,0 +1,44 @@
+{
+  "explore": {
+    "title": "Gọi cho bà ở thật xa",
+    "frames": [
+      { "img": "assets/lop1-bai09/story/1.svg", "text": "Bin và Na gọi video cho bà. Nhà bà ở rất xa, bên kia biển. Sao mình vẫn nhìn thấy bà nhỉ?" },
+      { "img": "assets/lop1-bai09/story/2.svg", "text": "Tiếng nói và hình ảnh bay lên một vệ tinh trên trời, rồi vệ tinh gửi xuống nhà bà." },
+      { "img": "assets/lop1-bai09/story/3.svg", "text": "Vệ tinh phải quay anten về phía Trái Đất để bắt sóng. Nhưng gần đó có đám đá thiên thạch!" },
+      { "img": "assets/lop1-bai09/story/4.svg", "text": "Mình cùng lắp một vệ tinh, rồi lập trình cho anten quay bắt sóng mà không đâm vào thiên thạch nhé!" }
+    ],
+    "question": {
+      "id": "path",
+      "text": "Theo em, tiếng nói của Bin đến nhà bà bằng đường nào?",
+      "choices": [
+        { "id": "cable", "icon": "assets/lop1-bai09/icons/cable.svg", "label": "Chạy theo dây điện dưới biển" },
+        { "id": "satellite", "icon": "assets/lop1-bai09/icons/satellite.svg", "label": "Bay lên vệ tinh rồi xuống" },
+        { "id": "bird", "icon": "assets/lop1-bai09/icons/bird.svg", "label": "Chim bồ câu mang đi" }
+      ]
+    }
+  },
+  "share": {
+    "photoHint": "Chụp vệ tinh em đã lắp, hoặc chụp sa bàn lúc vệ tinh đang bay.",
+    "questions": [
+      {
+        "id": "avoid",
+        "text": "Em giúp vệ tinh tránh thiên thạch bằng cách nào?",
+        "choices": [
+          { "id": "reverse", "icon": "assets/lop1-bai09/icons/reverse.svg", "label": "Cho anten quay ngược lại" },
+          { "id": "stop", "icon": "assets/lop1-bai09/icons/stop.svg", "label": "Phát nhạc rồi dừng lại" },
+          { "id": "wait", "icon": "assets/lop1-bai09/icons/wait.svg", "label": "Chờ thiên thạch bay qua" }
+        ]
+      },
+      {
+        "id": "path",
+        "text": "Bây giờ em nghĩ tiếng nói đến nhà bà bằng đường nào?",
+        "choices": [
+          { "id": "cable", "icon": "assets/lop1-bai09/icons/cable.svg", "label": "Chạy theo dây điện dưới biển" },
+          { "id": "satellite", "icon": "assets/lop1-bai09/icons/satellite.svg", "label": "Bay lên vệ tinh rồi xuống" },
+          { "id": "bird", "icon": "assets/lop1-bai09/icons/bird.svg", "label": "Chim bồ câu mang đi" }
+        ],
+        "note": "Cả dây cáp dưới biển và vệ tinh đều đưa được tiếng nói đi xa. Bài này mình làm vệ tinh."
+      }
+    ]
+  }
+}

@@ -56,6 +56,12 @@
     return new DOMParser().parseFromString(await res.text(), 'text/html');
   }
 
+  async function fetchJSON(url) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Không tải được ${url} (${res.status})`);
+    return res.json();
+  }
+
   function fillSlots(fragment) {
     const title = fragment.querySelector('title');
     if (!title) throw new Error('Trang bài thiếu tiêu đề');
@@ -95,13 +101,21 @@
     }
     show('Đang tải bài học và mô hình 3D…');
     try {
-      const [fragment] = await Promise.all([
+      const [fragment, flow] = await Promise.all([
         fetchPage(lesson.content),
+        lesson.flow ? fetchJSON(`content/${lesson.content}/flow.json`) : null,
         window.loadLesson3D(lesson.content)
       ]);
       fillSlots(fragment);
       const optional = new Set(lesson.optional || []);
-      for (const src of lesson.order) await appendScript(src, optional.has(src));
+      // Bài có flow.json: nạp js/lesson-flow.js ngay trước app.js để thêm chặng Khám phá + Chia sẻ
+      let scripts = lesson.order;
+      if (flow) {
+        window.LESSON_FLOW = flow;
+        const at = scripts.indexOf('js/app.js');
+        scripts = [...scripts.slice(0, at), 'js/lesson-flow.js', ...scripts.slice(at)];
+      }
+      for (const src of scripts) await appendScript(src, optional.has(src));
       zmReady.flush();
       cover.remove();
     } catch (err) {

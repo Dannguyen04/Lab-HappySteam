@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img"><rect width="320" height="200" fill="#dff0f8"/><rect y="150" width="320" height="50" fill="#bfe3c6"/><g transform="translate(250 150)"><path d="M-26 0v-30l26-20 26 20v30z" fill="#fff" stroke="#1e2a34" stroke-width="2"/><rect x="-7" y="-18" width="14" height="18" fill="#e8892b"/></g><circle cx="250" cy="74" r="13" fill="#f3c9a4"/><path d="M237 70 q13 -20 26 0" fill="#d9d9d9"/><circle cx="246" cy="74" r="1.6" fill="#1e2a34"/><circle cx="254" cy="74" r="1.6" fill="#1e2a34"/><path d="M246 79 q4 3 8 0" stroke="#1e2a34" stroke-width="1.5" fill="none"/>
+    <rect x="96" y="58" width="44" height="70" rx="7" fill="#1e2a34"/><rect x="100" y="64" width="36" height="56" rx="3" fill="#fff"/><circle cx="118" cy="88" r="10" fill="#f3c9a4"/><path d="M108 85 q10 -16 20 0" fill="#d9d9d9"/>
+    <g transform="translate(62 186) scale(1.05)">
+  <path d="M-8 -14 v14M8 -14 v14" stroke="#33465a" stroke-width="7" stroke-linecap="round"/>
+  <path d="M-15 -46 q15 -8 30 0 l3 34 h-36z" fill="#2a9bd8"/>
+  <path d="M-13 -40 l-6 18M13 -42 l16 -14" stroke="#2a9bd8" stroke-width="7" stroke-linecap="round"/><circle cx="31" cy="-57" r="4.5" fill="#f3c9a4"/>
+  <circle cx="0" cy="-66" r="16" fill="#f3c9a4"/>
+  <path d="M-15 -72 q2 -16 15 -16 q15 0 16 15 q-8 -6 -16 -5 q-8 1 -15 6z" fill="#3b2a20"/>
+  <circle cx="-6" cy="-67" r="2.2" fill="#1e2a34"/><circle cx="6" cy="-67" r="2.2" fill="#1e2a34"/>
+  <path d="M-5 -61 q5 5 10 0" stroke="#1e2a34" stroke-width="2" fill="none" stroke-linecap="round"/>
+</g><g transform="translate(170 186) scale(1)">
+  <path d="M-8 -14 v14M8 -14 v14" stroke="#33465a" stroke-width="7" stroke-linecap="round"/>
+  <path d="M-15 -46 q15 -8 30 0 l3 34 h-36z" fill="#e8892b"/>
+  <path d="M-13 -42 l-10 -16M13 -42 l10 -16" stroke="#e8892b" stroke-width="7" stroke-linecap="round"/><circle cx="-24" cy="-60" r="4.5" fill="#f3c9a4"/><circle cx="24" cy="-60" r="4.5" fill="#f3c9a4"/>
+  <circle cx="0" cy="-66" r="16" fill="#f3c9a4"/>
+  <circle cx="-15" cy="-84" r="7" fill="#5a3424"/><circle cx="15" cy="-84" r="7" fill="#5a3424"/><path d="M-15 -70 q0 -18 15 -18 q15 0 15 18 q-6 -8 -15 -8 q-9 0 -15 8z" fill="#5a3424"/>
+  <circle cx="-6" cy="-67" r="2.2" fill="#1e2a34"/><circle cx="6" cy="-67" r="2.2" fill="#1e2a34"/>
+  <path d="M-5 -61 q5 5 10 0" stroke="#1e2a34" stroke-width="2" fill="none" stroke-linecap="round"/>
+</g>
+    <path d="M150 50 q50 -40 90 0" fill="none" stroke="#0080b8" stroke-width="2.5" stroke-dasharray="5 6"/><text x="196" y="22" font-family="system-ui" font-size="22" font-weight="700" fill="#0080b8" text-anchor="middle">?</text></svg>

@@ -38,7 +38,21 @@ async function main() {
     assert.equal(await page.locator('html').getAttribute('data-theme'), 'light', 'Mặc định giao diện sáng như Bài 7');
     assert.equal(await page.locator('#mission-summary-badge').innerText(), '0/4 nhiệm vụ');
 
+    // ---- Mạch bài (flow.json): mở ở Khám phá, 5 chặng, câu đoán lưu sang Chia sẻ ----
+    assert.equal(await page.locator('.stage-tab').count(), 5);
+    assert.equal(await page.locator('#tab-btn-explore').getAttribute('aria-selected'), 'true');
+    assert.ok(await page.locator('#fl-explore-q').isHidden(), 'Câu đoán hiện sau khung truyện cuối');
+    await page.click('#fl-start'); // truyện tự chạy; bấm mũi tên thì dừng tự chạy
+    for (let i = 0; i < 3; i++) await page.click('#fl-next');
+    await page.click('#fl-explore-q .fl-choice[data-id="satellite"]');
+    await page.click('#tab-btn-share');
+    assert.match(await page.locator('#fl-share-q .fl-guess').innerText(), /Bay lên vệ tinh/);
+    await page.click('#fl-shot-3d');
+    await page.locator('#fl-photos img').waitFor();
+    assert.ok(await page.locator('#btn-toggle-theme').isHidden(), 'Nút giao diện nằm trong menu Cài đặt');
+
     // ---- Chặng 1: lắp ráp 28 bước ----
+    await page.click('#tab-btn-asm');
     assert.equal(await page.locator('#tab-btn-asm').getAttribute('aria-selected'), 'true');
     assert.ok(await page.locator('#stage-assembly').isVisible());
     assert.ok(await page.locator('#stage-sim').isHidden(), 'Chỉ hiện một chặng');
@@ -123,6 +137,7 @@ async function main() {
     assert.equal((await stats(page)).creative, 0);
 
     // ---- Giao diện tối được nhớ ----
+    await page.click('#btn-flow-menu');
     await page.click('#btn-toggle-theme');
     assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
     await page.reload();
@@ -130,6 +145,7 @@ async function main() {
     await page.locator('#lesson-loading').waitFor({ state: 'detached', timeout: 35000 });
     assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
     assert.equal(await page.locator('#tab-btn-creative').getAttribute('aria-selected'), 'true', 'Nhớ chặng đang học');
+    await page.click('#btn-flow-menu');
     await page.click('#btn-toggle-theme');
 
     // ---- Cả 4 nhiệm vụ qua giao diện, như học sinh làm lần lượt ----
@@ -234,7 +250,7 @@ async function main() {
     assert.equal(await mobile.evaluate(() => window.robotViewer.stats().animating), false, 'Hoạt ảnh phải kết thúc');
     await mobile.screenshot({ path: path.join(shots, 'assembly-mobile.png'), fullPage: true });
     assert.deepEqual(mobileErrors, [], 'Không được có lỗi JavaScript trên mobile');
-    console.log('PASS: 3 chặng, hình sách + đồng hồ theo bước, xưởng sáng tạo, sa bàn 3D, sáng/tối được nhớ, 4/4 nhiệm vụ, không tràn 375px.');
+    console.log('PASS: 5 chặng (Khám phá → Chia sẻ, ảnh 3D vào nhật ký), hình sách + đồng hồ theo bước, xưởng sáng tạo, sa bàn 3D, sáng/tối được nhớ, 4/4 nhiệm vụ, không tràn 375px.');
   } finally {
     await browser.close();
   }

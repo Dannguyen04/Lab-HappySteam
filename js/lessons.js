@@ -33,6 +33,7 @@
     },
     'lop1-bai09': {
       content: 'lop1/bai09',
+      flow: true, // content/lop1/bai09/flow.json: thêm chặng Khám phá + Chia sẻ (js/lesson-flow.js)
       scripts: ['js/bai09/lesson.js', 'js/space-scene.js', 'js/simulation-engine.js'],
       optional: ['js/bai09/art.js'],
       order: order('js/bai09/lesson.js', 'js/space-scene.js', 'js/simulation-engine.js')

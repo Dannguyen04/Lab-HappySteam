@@ -2152,6 +2152,13 @@ const gl = canvas ? canvas.getContext('webgl', { antialias: true, alpha: true, p
     $('loading').style.display = 'none';
     setTimeout(announceProgress, 0);
     window.robotViewer = {
+      // Ảnh PNG mô hình đang xem, vẽ ở kích thước cố định (chụp được cả khi khung 3D đang ẩn ở chặng khác)
+      snapshot(w = 960, h = 720) {
+        draw(w, h);
+        const url = canvas.toDataURL('image/png');
+        draw();
+        return url;
+      },
       buildPrint,
       recordVideo,
       buildGlb,

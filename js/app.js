@@ -79,10 +79,16 @@
     const unlockAudio = () => window.SFX && window.SFX.unlock();
     ['pointerdown', 'keydown'].forEach(evt => window.addEventListener(evt, unlockAudio, { once: true, passive: true }));
 
-    // ---------- Ba chặng ----------
+    // Phần dùng chung khác (lesson-flow.js: chặng Chia sẻ) đọc tiến độ nhiệm vụ, chương trình, sa bàn
+    window.ZMApp = { missions: missionTracker, sim: simEngine, blocks: blockEngine };
+
+    // ---------- Các chặng ----------
     // Trình xem 3D (#app) dùng chung: chặng 1 trình lắp ráp, chặng 2 xưởng sáng tạo, chặng 3 sa bàn.
-    const STAGES = { assembly: 'stage-assembly', creative: 'stage-creative', sim: 'stage-sim' };
-    let current = 'assembly';
+    // Bài có flow.json có thêm chặng Khám phá (đầu) và Chia sẻ (cuối) do lesson-flow.js dựng: đọc từ các tab.
+    const STAGES = Object.fromEntries([...document.querySelectorAll('.stage-tab')]
+      .map(tab => [tab.dataset.stage, tab.getAttribute('aria-controls')]));
+    const first = document.querySelector('.stage-tab').dataset.stage;
+    let current = first;
     function go(stage, focusTab) {
       if (!STAGES[stage]) return;
       current = stage;
@@ -107,6 +113,7 @@
         else window.ZMCreative?.close();
       }
       window.dispatchEvent(new Event('resize'));
+      window.dispatchEvent(new CustomEvent('zm:stage', { detail: { stage } }));
       try {
         localStorage.setItem(L.store + 'stage', stage);
       } catch (e) {}
@@ -126,11 +133,11 @@
         go(next.dataset.stage, true);
       });
     });
-    let saved = 'assembly';
+    let saved = first;
     try {
-      saved = localStorage.getItem(L.store + 'stage') || 'assembly';
+      saved = localStorage.getItem(L.store + 'stage') || first;
     } catch (e) {}
-    go(STAGES[saved] ? saved : 'assembly');
+    go(STAGES[saved] ? saved : first);
 
     // ---------- Chặng 1: đồng hồ đo + hình sách theo bước đang xem ----------
     window.addEventListener('zm:step', e => {
