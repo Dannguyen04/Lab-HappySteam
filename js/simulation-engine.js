@@ -227,7 +227,7 @@
               continue;
             }
             if (b.type === 'motor_reverse') {
-              this.dir = -this.dir;
+              this.dir = b.dir === 'cw' ? 1 : b.dir === 'ccw' ? -1 : -this.dir;
               this.onReverse();
               this.pc++;
               continue;

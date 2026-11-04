@@ -10,6 +10,7 @@ Mở một ca trên trang bài: `bai.html?id=lop1-bai09&mau=<id ca>`; chương t
 - Vành đai thiên thạch ở **110°**. Đi qua 110° theo chiều thuận là "đụng".
 - **NV2**: chương trình giống hệt mẫu trong sách (cả số giây) và chạy hết ít nhất một vòng lặp.
 - **NV3** (sửa 2026-11-04): khi vệ tinh đang ở **60°–110°**, đảo chiều hoặc Stop là đạt. Có Melody B ngay trước Stop (cách không quá 50°) thì ghi thêm là "có báo trạm".
+- **Motor This Way** là thẻ **chọn chiều quay** (theo giáo án ZMROBO: chạm thẻ để đổi hướng): thẻ đặt hướng thuận hoặc ngược, mặc định ngược chiều kim đồng hồ, không phải nút đảo chiều. Thẻ thuận chiều khi vệ tinh đang quay thuận thì không đổi gì.
 - Hết khối mà motor còn quay thì vệ tinh vẫn quay (như kit thật), phải bấm Dừng.
 
 ## Kết quả
@@ -18,14 +19,15 @@ Mở một ca trên trang bài: `bai.html?id=lop1-bai09&mau=<id ca>`; chương t
 |---|---|---|---|---|---|
 | ✔ Đúng: Chương trình mẫu trong sách | Bắt đầu → Bắt đầu lặp → Âm thanh A → Quay nhanh → Chờ 3s → Âm thanh B → Quay nhanh → Chờ 3s → Lặp lại | đụng thiên thạch; dừng ở 184° (5.51 vòng) | ✅ | — | ✅ |
 | ✔ Đúng: Tránh thiên thạch: chậm lại, báo hiệu rồi dừng | Bắt đầu → Tốc độ động cơ 4 → Âm thanh B → Dừng motor | không đụng; dừng ở 90° (0.25 vòng); tránh bằng Melody B + dừng | — | ✅ | ✅ |
-| ✔ Đúng: Tránh thiên thạch: đảo chiều trước vành đai | Bắt đầu → Quay nhanh → Chờ 0.5s → Đổi chiều quay → Chờ 2s → Dừng motor | không đụng; dừng ở 90° (-0.75 vòng); tránh bằng đảo chiều | — | ✅ | ✅ |
+| ✔ Đúng: Tránh thiên thạch: đảo chiều trước vành đai | Bắt đầu → Quay nhanh → Chờ 0.5s → Chiều quay → Chờ 2s → Dừng motor | không đụng; dừng ở 90° (-0.75 vòng); tránh bằng đảo chiều | — | ✅ | ✅ |
 | ✔ Đúng: Tránh thiên thạch: chậm lại rồi dừng | Bắt đầu → Tốc độ động cơ 4 → Chờ 1s → Dừng motor | không đụng; dừng ở 90° (0.25 vòng); tránh bằng Melody B + dừng | — | ✅ | ✅ |
 | ✘ Sai: Quay nhanh mãi, không tránh | Bắt đầu → Quay nhanh → Chờ 5s | đụng thiên thạch; dừng ở 4° (3.01 vòng) | — | — | ✅ |
-| ✘ Sai: Đảo chiều quá muộn | Bắt đầu → Quay nhanh → Chờ 1s → Đổi chiều quay → Chờ 2s → Dừng motor | đụng thiên thạch; dừng ở 180° (-0.5 vòng) | — | — | ✅ |
+| ✘ Sai: Đảo chiều quá muộn | Bắt đầu → Quay nhanh → Chờ 1s → Chiều quay → Chờ 2s → Dừng motor | đụng thiên thạch; dừng ở 180° (-0.5 vòng) | — | — | ✅ |
 | ✘ Sai: Dừng quá sớm, chưa tới gần đám đá | Bắt đầu → Quay nhanh → Chờ 0.1s → Dừng motor | không đụng; dừng ở 18° (0.05 vòng) | — | — | ✅ |
 | ✘ Sai: Melody B ở tốc độ nhanh: dừng không kịp | Bắt đầu → Quay nhanh → Âm thanh B → Dừng motor | đụng thiên thạch; dừng ở 180° (0.5 vòng) | — | — | ✅ |
 | ✘ Sai: Ghép gần giống mẫu nhưng thiếu khối | Bắt đầu → Bắt đầu lặp → Âm thanh A → Quay nhanh → Chờ 3s → Lặp lại | đụng thiên thạch; dừng ở 184° (3.51 vòng) | — | — | ✅ |
 | ✘ Sai: Đúng các khối nhưng sai số giây | Bắt đầu → Bắt đầu lặp → Âm thanh A → Quay nhanh → Chờ 2s → Âm thanh B → Quay nhanh → Chờ 3s → Lặp lại | đụng thiên thạch; dừng ở 184° (5.51 vòng) | — | — | ✅ |
+| ✘ Sai: Motor This Way chọn thuận chiều: không đổi hướng | Bắt đầu → Quay nhanh → Chờ 0.5s → Chiều quay → Chờ 2s → Dừng motor | đụng thiên thạch; dừng ở 90° (1.25 vòng) | — | — | ✅ |
 
 ## Link mở từng ca
 
@@ -39,6 +41,7 @@ Mở một ca trên trang bài: `bai.html?id=lop1-bai09&mau=<id ca>`; chương t
 - ✘ Melody B ở tốc độ nhanh: dừng không kịp: `bai.html?id=lop1-bai09&mau=sai-melody-qua-muon` — Ở tốc độ nhanh, trong 1 giây phát Melody B vệ tinh đi tới 180°, qua vành đai trước khi gặp khối Stop.
 - ✘ Ghép gần giống mẫu nhưng thiếu khối: `bai.html?id=lop1-bai09&mau=sai-thieu-khoi-mau` — Thiếu khối Melody B và khối Quay nhanh thứ hai so với sách nên chưa đạt NV2.
 - ✘ Đúng các khối nhưng sai số giây: `bai.html?id=lop1-bai09&mau=sai-sai-so-giay` — Khối Chờ 2 giây thay vì 3 giây như sách: NV2 cần đúng cả số giây.
+- ✘ Motor This Way chọn thuận chiều: không đổi hướng: `bai.html?id=lop1-bai09&mau=sai-chon-huong-thuan` — Thẻ Motor This Way là thẻ chọn chiều quay. Chọn thuận chiều kim đồng hồ (cùng chiều đang quay) thì vệ tinh vẫn đi tiếp vào vành đai. Chạm thẻ để đổi sang ngược chiều.
 
 ## Đã sửa theo quyết định 2026-11-04
 

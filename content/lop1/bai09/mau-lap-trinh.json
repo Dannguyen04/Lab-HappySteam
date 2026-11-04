@@ -257,6 +257,40 @@
       "expect": {
         "m2": false
       }
+    },
+    {
+      "id": "sai-chon-huong-thuan",
+      "kind": "sai",
+      "title": "Motor This Way chọn thuận chiều: không đổi hướng",
+      "why": "Thẻ Motor This Way là thẻ chọn chiều quay. Chọn thuận chiều kim đồng hồ (cùng chiều đang quay) thì vệ tinh vẫn đi tiếp vào vành đai. Chạm thẻ để đổi sang ngược chiều.",
+      "program": [
+        "start",
+        "highSpeed",
+        [
+          "wait",
+          {
+            "duration": 0.5
+          }
+        ],
+        [
+          "motorReverse",
+          {
+            "dir": "cw"
+          }
+        ],
+        [
+          "wait",
+          {
+            "duration": 2
+          }
+        ],
+        "motorStop"
+      ],
+      "seconds": 6,
+      "expect": {
+        "m3": false,
+        "crash": true
+      }
     }
   ]
 }

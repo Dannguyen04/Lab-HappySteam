@@ -15,7 +15,8 @@
     melody: (tune) => `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3"><circle cx="21" cy="22" r="13"/><text x="21" y="28.5" text-anchor="middle" fill="#fff" stroke="none" font-family="'Chakra Petch', sans-serif" font-weight="700" font-size="18">${tune}</text><path d="M5 4v8" stroke-width="2.2"/><circle cx="3.6" cy="12" r="2.2" fill="#fff" stroke="none"/></svg>`,
     wait: (s) => `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.5"><path d="M12 8h16M12 32h16M15 8v4c0 3 5 6 5 8s-5 5-5 8v4M25 8v4c0 3-5 6-5 8s5 5 5 8v4" stroke-linecap="round"/><circle cx="20" cy="25" r="2.2" fill="#fff"/></svg>`,
     display: `<svg viewBox="0 0 40 40" fill="#fff"><rect x="9" y="9" width="5" height="5" rx="1.5"/><rect x="17.5" y="9" width="5" height="5" rx="1.5"/><rect x="26" y="9" width="5" height="5" rx="1.5"/><rect x="9" y="17.5" width="5" height="5" rx="1.5"/><rect x="17.5" y="17.5" width="5" height="5" rx="1.5"/><rect x="26" y="17.5" width="5" height="5" rx="1.5"/><rect x="9" y="26" width="5" height="5" rx="1.5"/><rect x="17.5" y="26" width="5" height="5" rx="1.5"/><rect x="26" y="26" width="5" height="5" rx="1.5"/></svg>`,
-    motorReverse: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15h18l-5-5M30 25H12l5 5"/></svg>`,
+    // Motor This Way: mũi tên cung tròn, thuận (cw) hoặc ngược (ccw) chiều kim đồng hồ
+    motorReverse: dir => `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><g${dir === 'cw' ? '' : ' transform="translate(40 0) scale(-1 1)"'}><path d="M31 14a12 12 0 1 0 3 9"/><path d="M31 6v8h-8"/></g></svg>`,
     obstacle: `<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><rect x="8" y="15" width="24" height="14" rx="3"/><circle cx="15" cy="22" r="2.8" fill="#fff"/><circle cx="25" cy="22" r="2.8" fill="#fff"/><path d="M14 10a8 8 0 0 1 12 0"/></svg>`,
     trafficLight: color => `<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="11" y="2" width="18" height="36" rx="7" fill="#27364b" stroke="#fff" stroke-width="1.5"/><circle cx="20" cy="9" r="5" fill="${color === 'red' ? '#ff5454' : '#708091'}"/><circle cx="20" cy="20" r="5" fill="${color === 'yellow' ? '#ffdd55' : '#708091'}"/><circle cx="20" cy="31" r="5" fill="${color === 'green' ? '#45e59a' : '#708091'}"/></svg>`,
     colorSensor: color => `<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="8" width="30" height="24" rx="6" fill="#283b49" stroke="#fff" stroke-width="2"/><circle cx="20" cy="20" r="9" fill="${color === 'red' ? '#ff6268' : '#519efc'}" stroke="#fff" stroke-width="2"/><circle cx="20" cy="20" r="3" fill="#fff"/></svg>`,
@@ -48,7 +49,8 @@
     lowSpeed: { type: 'motor', name: 'Low Speed', speed: 'low', dir: 'cw', color: 'motor', label: 'Quay chậm' },
     mediumSpeed: { type: 'motor', name: 'Medium Speed', speed: 'medium', dir: 'cw', color: 'motor', label: 'Quay vừa' },
     motorPower: { type: 'motor_power', name: 'Motor Power', power: 8, color: 'motor', label: 'Tốc độ động cơ' },
-    motorReverse: { type: 'motor_reverse', name: 'Motor This Way', color: 'motor', label: 'Đổi chiều quay' },
+    // Thẻ chọn chiều quay (theo giáo án ZMROBO: chạm thẻ để đổi hướng); mặc định ngược chiều kim đồng hồ
+    motorReverse: { type: 'motor_reverse', name: 'Motor This Way', dir: 'ccw', color: 'motor', label: 'Chiều quay' },
     motorStop: { type: 'stop', name: 'Stop', color: 'motor', label: 'Dừng motor' },
     wait: { type: 'wait', name: 'Wait', duration: 3, color: 'wait', label: 'Chờ' },
     display: { type: 'display', name: 'Display', icon: 'smile', color: 'display', label: 'Màn hình' },
@@ -152,7 +154,7 @@
         else if (tpl.type === 'melody') iconHtml = SVG_ICONS.melody(tpl.tune);
         else if (tpl.type === 'motor') iconHtml = portTag(tpl) + motorIcon(tpl.speed, tpl.dir);
         else if (tpl.type === 'motor_power') iconHtml = SVG_ICONS.motorPower(tpl.power);
-        else if (tpl.type === 'motor_reverse') iconHtml = SVG_ICONS.motorReverse;
+        else if (tpl.type === 'motor_reverse') iconHtml = SVG_ICONS.motorReverse(tpl.dir);
         else if (tpl.type === 'stop') iconHtml = SVG_ICONS.motorStop;
         else if (tpl.type === 'wait') iconHtml = `<span class="zb-param-val">${tpl.duration || 3}s</span>`;
         else if (tpl.type === 'sensor_obstacle') iconHtml = SVG_ICONS.obstacle;
@@ -248,6 +250,8 @@
         b.tune = b.tune === 'Do' ? 'Mi' : b.tune === 'Mi' ? 'Do' : b.tune === 'A' ? 'B' : 'A';
         b.name = b.tune === 'Do' || b.tune === 'Mi' ? 'Nốt ' + b.tune : 'Melody ' + b.tune;
         b.label = b.tune === 'Do' || b.tune === 'Mi' ? 'Phát nốt ' + b.tune : 'Âm thanh ' + b.tune;
+      } else if (b.type === 'motor_reverse') {
+        b.dir = b.dir === 'cw' ? 'ccw' : 'cw';
       } else if (b.type === 'motor_power') {
         // Giáo án: đổi mức mặc định 8 xuống 2 – mỗi lần chạm giảm 1 mức, sau 1 quay về 8
         b.power = b.power > 1 ? b.power - 1 : 8;
@@ -332,8 +336,8 @@
           iconContent = SVG_ICONS.motorPower(b.power);
           paramLabel = `Tốc độ mức ${b.power} (chạm để đổi)`;
         } else if (b.type === 'motor_reverse') {
-          iconContent = SVG_ICONS.motorReverse;
-          paramLabel = 'Đổi chiều quay';
+          iconContent = SVG_ICONS.motorReverse(b.dir);
+          paramLabel = (b.dir === 'cw' ? 'Quay thuận chiều kim đồng hồ' : 'Quay ngược chiều kim đồng hồ') + ' (chạm để đổi)';
         } else if (b.type === 'stop') {
           iconContent = SVG_ICONS.motorStop;
           paramLabel = 'Stop';
@@ -380,7 +384,7 @@
             return;
           }
           this.selected = i;
-          if (b.type === 'wait' || b.type === 'melody' || b.type === 'motor' || b.type === 'motor_power' || (b.type === 'sensor_obstacle' && this.opts.sensorRange && document.documentElement.dataset.mode === 'pro')) {
+          if (b.type === 'wait' || b.type === 'melody' || b.type === 'motor' || b.type === 'motor_power' || b.type === 'motor_reverse' || (b.type === 'sensor_obstacle' && this.opts.sensorRange && document.documentElement.dataset.mode === 'pro')) {
             this.cycleParam(i);
           } else {
             this.render();
